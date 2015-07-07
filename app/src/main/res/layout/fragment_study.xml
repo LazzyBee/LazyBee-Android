@@ -1,0 +1,96 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.born2go.lazzybee.fragment.FragmentStudy">
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0"
+            android:id="@+id/lbCount"
+            android:layout_marginLeft="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0"
+            android:id="@+id/lbCountTotalVocabulary"
+            android:layout_marginLeft="16dp"
+            android:textColor="#ffff0e1a" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0"
+            android:id="@+id/lb"
+            android:layout_marginLeft="16dp"
+            android:textColor="#ff1e1eff" />
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/mWebViewLeadDetaisl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_dark"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnShowAnswer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Answer" />
+
+        <LinearLayout
+            android:id="@+id/mLayoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnAgain1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="1 minute" />
+
+            <Button
+                android:id="@+id/btnAgain2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="10 minute" />
+
+            <Button
+                android:id="@+id/btnAgain3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="4  day" />
+
+            <Button
+                android:id="@+id/btnAgain4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="6  day" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
