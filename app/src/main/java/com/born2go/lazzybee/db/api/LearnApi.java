@@ -17,7 +17,6 @@ public interface LearnApi {
 
     /**
      * Get list card from today
-     *
      */
     List<Card> _getListCardForToday();
 
@@ -34,5 +33,20 @@ public interface LearnApi {
      */
     List<Card> _searchCard(String query);
 
+    /**
+     * Get Random list card from today
+     *
+     * @param number
+     */
     List<Card> _getRandomCard(int number);
+
+    /**
+     * export to SqlIte form ListCard
+     *
+     * @param cardList
+     * @return 1 if export complete else 2 to false
+     */
+    int export(List<Card> cardList);
+
+
 }
