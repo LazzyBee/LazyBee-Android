@@ -34,5 +34,5 @@ public interface LearnApi {
      */
     List<Card> _searchCard(String query);
 
-
+    List<Card> _getRandomCard(int number);
 }
