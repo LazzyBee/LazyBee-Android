@@ -122,6 +122,27 @@ public class LearnApiImplements implements LearnApi {
     }
 
     /**
+     * Get Random list card from today
+     *
+     * @param number
+     */
+    @Override
+    public List<Card> _getRandomCard(int number) {
+        return null;
+    }
+
+    /**
+     * export to SqlIte form ListCard
+     *
+     * @param cardList
+     * @return 1 if export complete else 2 to false
+     */
+    @Override
+    public int export(List<Card> cardList) {
+        return 0;
+    }
+
+    /**
      *
      * */
     private List<Card> _getListCard() {
