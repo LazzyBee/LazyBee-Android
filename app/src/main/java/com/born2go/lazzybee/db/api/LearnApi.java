@@ -41,12 +41,12 @@ public interface LearnApi {
     List<Card> _getRandomCard(int number);
 
     /**
-     * export to SqlIte form ListCard
+     * _export to SqlIte form ListCard
      *
      * @param cardList
-     * @return 1 if export complete else 2 to false
+     * @return 1 if _export complete else 2 to false
      */
-    int export(List<Card> cardList);
+    int _export(List<Card> cardList);
 
 
 }

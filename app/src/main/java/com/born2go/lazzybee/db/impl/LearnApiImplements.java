@@ -132,13 +132,13 @@ public class LearnApiImplements implements LearnApi {
     }
 
     /**
-     * export to SqlIte form ListCard
+     * _export to SqlIte form ListCard
      *
      * @param cardList
-     * @return 1 if export complete else 2 to false
+     * @return 1 if _export complete else 2 to false
      */
     @Override
-    public int export(List<Card> cardList) {
+    public int _export(List<Card> cardList) {
         return 0;
     }
 
