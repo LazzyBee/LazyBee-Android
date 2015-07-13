@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.DataBaseHelper;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.HashMap;
@@ -52,8 +52,8 @@ public class FragmentStudy extends Fragment {
     }
 
     FragmentStudyListener fragmentStudyListener;
-    DataBaseHelper dataBaseHelper;
-    TextToSpeech tts;
+    LearnApiImplements dataBaseHelper;
+    TextToSpeech textToSpeech;
     WebView mWebViewLeadDetails;
     Button btnShowAnswer;
     LinearLayout mLayoutButton;
@@ -91,19 +91,19 @@ public class FragmentStudy extends Fragment {
         lbCountTotalVocabulary = (TextView) view.findViewById(R.id.lbCountTotalVocabulary);
 
         //db
-        initDatabase();
+        _initDatabase();
 
-        //_getListCard
-        List<Card> cardListToDay = dataBaseHelper._getListCard();
+        //_getListCard random to day
+        List<Card> cardListToDay = dataBaseHelper._getRandomCard(10);
 
         //Check Queue Word
-        if (CheckQueueWord()) {
-            cardListToDay = getListVocabularyQueue(cardListToDay);
+        if (_CheckQueueWord()) {
+            cardListToDay = _getListVocabularyQueue(cardListToDay);
         }
 
 
         //set data
-        setDataforWebView(cardListToDay);
+        _setDataforWebView(cardListToDay);
 
 
         //@JavascriptInterface
@@ -116,7 +116,7 @@ public class FragmentStudy extends Fragment {
      *
      * @return listvocabulary
      */
-    private List<Card> getListVocabularyQueue(List<Card> cardListToDay) {
+    private List<Card> _getListVocabularyQueue(List<Card> cardListToDay) {
         return null;
     }
 
@@ -127,7 +127,7 @@ public class FragmentStudy extends Fragment {
      * <p>not have</p>
      * <p>return false</p>
      */
-    private boolean CheckQueueWord() {
+    private boolean _CheckQueueWord() {
         return false;
     }
 
@@ -139,7 +139,7 @@ public class FragmentStudy extends Fragment {
      * <p/>
      * Define JavaScrip to Speek Text.
      */
-    private void setDataforWebView(final List<Card> cardList) {
+    private void _setDataforWebView(final List<Card> cardList) {
         //init position
         final int[] position = {0};
 
@@ -157,11 +157,11 @@ public class FragmentStudy extends Fragment {
         //Current Card
         final Card[] currentCard = {cardList.get(0)};
         //int TextToSpeech
-        tts = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
+        textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    tts.setLanguage(Locale.UK);
+                    textToSpeech.setLanguage(Locale.UK);
                 }
             }
         });
@@ -176,9 +176,9 @@ public class FragmentStudy extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
 
                 //Speak text
-                speakText(toSpeak);
+                _speakText(toSpeak);
 
-                //tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
         mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
@@ -191,13 +191,13 @@ public class FragmentStudy extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
 
                 //Speak text
-                speakText(toSpeak);
+                _speakText(toSpeak);
 
-                //tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "answers");
         //Load data for webview
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getQuestionDisplay(currentCard[0].getQuestion()), mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard[0].getQuestion()), mime, encoding, null);
         //btnShowAnswer onCLick
         btnShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +210,7 @@ public class FragmentStudy extends Fragment {
                 //Show answer question
                 //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
                 // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
-                loadWebView(LazzyBeeShare.getAnswerHTML(card));
+                _loadWebView(LazzyBeeShare.getAnswerHTML(card));
                 currentCard[0] = card;
 
 
@@ -229,8 +229,8 @@ public class FragmentStudy extends Fragment {
                 if (position[0] <= size - 1) {
                     //next vocabulary
                     currentCard[0] = cardList.get(position[0]);
-                    loadWebView(getQuestionDisplay(cardList.get(position[0]).getQuestion()));
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getQuestionDisplay(cardList.get(position[0]).getQuestion()), mime, encoding, null);
+                    _loadWebView(_getQuestionDisplay(cardList.get(position[0]).getQuestion()));
+                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(cardList.get(position[0]).getQuestion()), mime, encoding, null);
 
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
@@ -243,7 +243,7 @@ public class FragmentStudy extends Fragment {
 
                 } else {
                     //end
-                    completeLean();
+                    _completeLean();
                 }
 
             }
@@ -260,8 +260,8 @@ public class FragmentStudy extends Fragment {
                 if (position[0] <= size - 1) {
                     currentCard[0] = cardList.get(position[0]);
                     //next vocabulary
-                    loadWebView(getQuestionDisplay(cardList.get(position[0]).getQuestion()));
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getQuestionDisplay(cardList.get(position[0]).getQuestion()), mime, encoding, null);
+                    _loadWebView(_getQuestionDisplay(cardList.get(position[0]).getQuestion()));
+                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(cardList.get(position[0]).getQuestion()), mime, encoding, null);
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
                     //reset total vocabilary
@@ -270,7 +270,7 @@ public class FragmentStudy extends Fragment {
                     lbCountTotalVocabulary.setTag(current_count);
                 } else {
                     //end
-                    completeLean();
+                    _completeLean();
                 }
 
             }
@@ -287,8 +287,8 @@ public class FragmentStudy extends Fragment {
                 if (position[0] <= size - 1) {
                     currentCard[0] = cardList.get(position[0]);
                     //next vocabulary
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getQuestionDisplay(cardList.get(position[0]).getQuestion()), mime, encoding, null);
-                    loadWebView(getQuestionDisplay(cardList.get(position[0]).getQuestion()));
+                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(cardList.get(position[0]).getQuestion()), mime, encoding, null);
+                    _loadWebView(_getQuestionDisplay(cardList.get(position[0]).getQuestion()));
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
                     //reset total vocabilary
@@ -297,7 +297,7 @@ public class FragmentStudy extends Fragment {
                     lbCountTotalVocabulary.setTag(current_count);
                 } else {
                     //end
-                    completeLean();
+                    _completeLean();
 
                 }
 
@@ -315,7 +315,7 @@ public class FragmentStudy extends Fragment {
                 if (position[0] <= size - 1) {
                     currentCard[0] = cardList.get(position[0]);
                     //next vocabulary
-                    loadWebView(getQuestionDisplay(cardList.get(position[0]).getQuestion()));
+                    _loadWebView(_getQuestionDisplay(cardList.get(position[0]).getQuestion()));
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
                     //reset total vocabilary
@@ -324,7 +324,7 @@ public class FragmentStudy extends Fragment {
                     lbCountTotalVocabulary.setTag(current_count);
                 } else {
                     //end
-                    completeLean();
+                    _completeLean();
                 }
             }
         });
@@ -334,7 +334,7 @@ public class FragmentStudy extends Fragment {
     /**
      * Load string Html
      */
-    private void loadWebView(String questionDisplay) {
+    private void _loadWebView(String questionDisplay) {
         //Clear View
         if (Build.VERSION.SDK_INT < 18) {
             mWebViewLeadDetails.clearView();
@@ -351,17 +351,15 @@ public class FragmentStudy extends Fragment {
     /**
      * Init db sqlite
      */
-    private void initDatabase() {
-        dataBaseHelper = new DataBaseHelper(getActivity());
-        //Open data base
-        dataBaseHelper.openDataBase();
+    private void _initDatabase() {
+        dataBaseHelper = new LearnApiImplements(getActivity());
     }
 
 
     /**
      * return DetalsCourse
      */
-    private void completeLean() {
+    private void _completeLean() {
         Toast.makeText(getActivity().getApplicationContext(), "Hoan thanh", Toast.LENGTH_SHORT);
         fragmentStudyListener.completeCourse();
 
@@ -371,7 +369,7 @@ public class FragmentStudy extends Fragment {
     /**
      * init HTML question
      */
-    private String getQuestionDisplay(String s) {
+    private String _getQuestionDisplay(String s) {
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
@@ -421,6 +419,7 @@ public class FragmentStudy extends Fragment {
             return "question";
         }
     }
+
     /*
     *Java Scrip Object Answers
     * */
@@ -435,24 +434,24 @@ public class FragmentStudy extends Fragment {
     /**
      * Speak text theo version andorid
      */
-    public void speakText(String toSpeak) {
+    public void _speakText(String toSpeak) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ttsGreater21(toSpeak);
+            _textToSpeechGreater21(toSpeak);
         } else {
-            ttsUnder20(toSpeak);
+            _textToSpeechUnder20(toSpeak);
         }
     }
 
     @SuppressWarnings("deprecation")
-    private void ttsUnder20(String text) {
+    private void _textToSpeechUnder20(String text) {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, map);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void ttsGreater21(String text) {
+    private void _textToSpeechGreater21(String text) {
         String utteranceId = this.hashCode() + "";
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 }

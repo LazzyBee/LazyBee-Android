@@ -4,14 +4,13 @@ package com.born2go.lazzybee.db;
  * Created by Hue on 7/1/2015.
  */
 public class Card {
+
     int id;
     String question;
     String answers;
     String categories;
     String subcat;
-
     int status;
-
     int gId;
 
 

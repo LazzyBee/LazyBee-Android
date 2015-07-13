@@ -15,90 +15,110 @@
             android:id="@+id/view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lbNameCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="#ffffffff"
+                        android:text="10000 EngLish Word "
+                        android:textAlignment="center"
+                        android:textSize="35dp" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/lbNameCourse"
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="10000 EngLish Word "
-                    android:textColor="@android:color/black"
-                    android:textSize="35dp" />
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/textView"
-                    android:layout_gravity="center_horizontal" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
                     android:id="@+id/textView3"
-                    android:layout_gravity="center_horizontal" />
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_gravity="center_horizontal"
                     android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
                     android:id="@+id/textView4"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:id="@+id/mCardViewStudy"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
             android:layout_marginTop="10dp">
+
 
             <Button
                 android:id="@+id/btnStudy"
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:background="@color/teal_500"
                 android:onClick="_onBtnStudyOnClick"
-                android:text="Study" />
-        </LinearLayout>
+                android:text="Study"
+                android:textColor="#ffffffff" />
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
+
 
             <Button
                 android:id="@+id/btnReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.3"
+                android:layout_weight="1"
                 android:onClick="_onbtnReviewOnClick"
-                android:text="@string/review" />
+                android:text="@string/review"
+                android:textColor="@color/teal_500" />
+
 
             <Button
                 android:id="@+id/btnCustomStudy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_weight="0.5"
                 android:onClick="_btnCustomStudyOnClick"
-                android:text="@string/custom_study" />
+                android:text="@string/custom_study"
+                android:textColor="@color/teal_500" />
+
         </LinearLayout>
 
     </LinearLayout>

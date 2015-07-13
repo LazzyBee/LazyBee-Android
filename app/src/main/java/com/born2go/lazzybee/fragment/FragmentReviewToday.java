@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
-import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 
 import java.util.List;
@@ -38,14 +38,14 @@ public class FragmentReviewToday extends Fragment {
         View view = inflater.inflate(R.layout.fragment_review_today, container, false);
 
         //init DB SQLIte
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity().getApplicationContext());
+        LearnApiImplements dataBaseHelper = new LearnApiImplements(getActivity().getApplicationContext());
 
         //Init RecyclerView and Layout Manager
         RecyclerView mRecyclerViewReviewTodayList = (RecyclerView) view.findViewById(R.id.mRecyclerViewReviewTodayList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewReviewTodayList.getContext(), 1);
 
         //get review List Card today
-        List<Card> vocabularies = dataBaseHelper.getReviewListVocabulary();
+        List<Card> vocabularies = dataBaseHelper._getReviewListCard();
 
         //Init Adapter
         RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(vocabularies);

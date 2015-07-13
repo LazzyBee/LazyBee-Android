@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewSearchResultListAdapter;
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.DataBaseHelper;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class FragmentSearch extends Fragment {
 
     public static final String QUERY_TEXT = "query";
     public static final String TAG = "FragmentSearch";
-    String query;
+    String query="a";
 
     public FragmentSearch() {
         // Required empty public constructor
@@ -58,7 +58,7 @@ public class FragmentSearch extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         //init DB SQLIte
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity().getApplicationContext());
+        LearnApiImplements dataBaseHelper = new LearnApiImplements(getActivity().getApplicationContext());
 
         //Init RecyclerView and Layout Manager
         RecyclerView mRecyclerViewSearchResults = (RecyclerView) view.findViewById(R.id.mRecyclerViewSearchResults);

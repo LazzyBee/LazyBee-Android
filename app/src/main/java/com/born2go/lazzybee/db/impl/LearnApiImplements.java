@@ -164,6 +164,42 @@ public class LearnApiImplements implements LearnApi {
     }
 
     /**
+     * _updateListCardByStatus to SqlIte form ListCard
+     *
+     * @param cardList
+     * @param status
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _updateListCardByStatus(List<Card> cardList, int status) {
+        return 0;
+    }
+
+    /**
+     * _updateCompleteCard to SqlIte form System Table
+     *
+     * @param cardId
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _updateCompleteCard(String cardId) {
+        return 0;
+    }
+
+    /**
+     * _updateQueueCard to SqlIte form System Table
+     *
+     * @param cardId
+     * @param queue
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _updateQueueCard(String cardId, int queue) {
+        return 0;
+    }
+
+
+    /**
      *
      * */
     private List<Card> _getListCard() {
@@ -203,4 +239,5 @@ public class LearnApiImplements implements LearnApi {
                 new String[]{String.valueOf(card.getId())});
 
     }
+
 }

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.DataBaseHelper;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.HashMap;
@@ -54,10 +54,10 @@ public class FragmentCardDetails extends Fragment {
         WebView mWebViewCardDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
 
         //init Db
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity());
+        LearnApiImplements cardApi = new LearnApiImplements(getActivity());
 
         //Get Card by ID
-        final Card card = dataBaseHelper._getCardByID(cardId);
+        final Card card = cardApi._getCardByID(cardId);
 
         //get html
         String htmlView = LazzyBeeShare.getAnswerHTML(card);
@@ -88,7 +88,7 @@ public class FragmentCardDetails extends Fragment {
                 //Speak text
                 speakText(toSpeak);
 
-                //tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
 
@@ -104,7 +104,7 @@ public class FragmentCardDetails extends Fragment {
                 //Speak text
                 speakText(toSpeak);
 
-                //tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "answers");
 
