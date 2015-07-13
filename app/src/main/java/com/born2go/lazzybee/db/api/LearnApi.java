@@ -49,4 +49,32 @@ public interface LearnApi {
     int _export(List<Card> cardList);
 
 
+    /**
+     * _updateListCardByStatus to SqlIte form ListCard
+     *
+     * @param cardList
+     * @param status
+     * @return 1 if update complete else -1 false
+     */
+    int _updateListCardByStatus(List<Card> cardList, int status);
+
+
+    /**
+     * _updateCompleteCard to SqlIte form System Table
+     *
+     * @param cardId
+     * @return 1 if update complete else -1 false
+     */
+    int _updateCompleteCard(String cardId);
+
+    /**
+     * _updateQueueCard to SqlIte form System Table
+     *
+     * @param cardId
+     * @param queue
+     * @return 1 if update complete else -1 false
+     */
+    int _updateQueueCard(String cardId,int queue);
+
+
 }

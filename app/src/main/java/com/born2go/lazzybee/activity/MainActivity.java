@@ -1,11 +1,11 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -21,21 +21,18 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.DataBaseHelper;
-import com.born2go.lazzybee.fragment.FragmentCardDetails;
 import com.born2go.lazzybee.fragment.FragmentCourse;
-import com.born2go.lazzybee.fragment.FragmentListCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.FragmentReviewToday;
 import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.fragment.FragmentSetting;
-import com.born2go.lazzybee.fragment.FragmentStudy;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 
 import java.io.IOException;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentStudy.FragmentStudyListener, SearchView.OnQueryTextListener,FragmentSearch.FragmentSearchListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String TAG = "MainActivity";
     /**
@@ -118,22 +115,26 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        switch (position) {
-            case 0:
-                String courseId = "";
-                _gotoCourseDetails(courseId);
-                break;
-            case 1:
-                //Goto List Course
-                FragmentListCourse fragmentListCourse = new FragmentListCourse();
-                //replace from container to fragmentCourse
-                fragmentTransaction.replace(R.id.container, fragmentListCourse)
-                        .addToBackStack(FragmentListCourse.TAG).commit();
-                break;
-            default:
-                courseId = "";
-                _gotoCourseDetails(courseId);
-        }
+        String courseId = "";
+        _gotoCourseDetails(courseId);
+
+
+//        switch (position) {
+//            case 0:
+//                String courseId = "";
+//                _gotoCourseDetails(courseId);
+//                break;
+//            case 1:
+//                //Goto List Course
+//                FragmentListCourse fragmentListCourse = new FragmentListCourse();
+//                //replace from container to fragmentCourse
+//                fragmentTransaction.replace(R.id.container, fragmentListCourse)
+//                        .addToBackStack(FragmentListCourse.TAG).commit();
+//                break;
+//            default:
+////                courseId = "";
+////                _gotoCourseDetails(courseId);
+//        }
 
 
     }
@@ -193,9 +194,9 @@ public class MainActivity extends ActionBarActivity
             getMenuInflater().inflate(R.menu.main, menu);
             MenuItem searchItem = menu.findItem(R.id.action_search);
             //init mSearchView
-            mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            mSearchView.setOnQueryTextListener(this);
-            mSearchView.setQueryHint(getString(R.string.action_search));
+//            mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//            mSearchView.setOnQueryTextListener(this);
+//            mSearchView.setQueryHint(getString(R.string.action_search));
             _restoreActionBar();
             return true;
         }
@@ -211,8 +212,8 @@ public class MainActivity extends ActionBarActivity
         //switch id action action bar
         switch (id) {
             case android.R.id.home:
-                Toast.makeText(this, "BACK", Toast.LENGTH_SHORT).show();
-                onBackPressed();
+//                Toast.makeText(this, "BACK", Toast.LENGTH_SHORT).show();
+//                onBackPressed();
                 break;
             case R.id.action_settings:
                 _gotoSetting();
@@ -228,8 +229,9 @@ public class MainActivity extends ActionBarActivity
                 //Search
                 Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
                 _setUpSearchActionBar();
+                _gotoSeach("a");
                 //
-                mSearchView.setIconified(false);
+//                mSearchView.setIconified(false);
                 break;
         }
 
@@ -283,64 +285,52 @@ public class MainActivity extends ActionBarActivity
                 .addToBackStack(FragmentSetting.TAG).commit();
     }
 
-    @Override
-    public void completeCourse() {
-        int flag_complete_course = 1;
-        onBackPressed();
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, query, Toast.LENGTH_LONG).show();
-        _gotoSeach(query);
-        return true;
-    }
 
     /**
      * Goto FragemenSearch with query
      */
     private void _gotoSeach(String query) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //New fragmentSearch
-        FragmentSearch fragmentSearch = new FragmentSearch();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set QUERY_TEXT
-        bundle.putString(FragmentSearch.QUERY_TEXT, query);
-        //setArguments for fragmentSearch
-        fragmentSearch.setArguments(bundle);
-        //replace from container to fragmentSearch
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentSearch)
-                .addToBackStack(FragmentSearch.TAG).commit();
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        //New fragmentSearch
+//        FragmentSearch fragmentSearch = new FragmentSearch();
+//        //New bunder
+//        Bundle bundle = new Bundle();
+//        //Set QUERY_TEXT
+//        bundle.putString(FragmentSearch.QUERY_TEXT, query);
+//        //setArguments for fragmentSearch
+//        fragmentSearch.setArguments(bundle);
+//        //replace from container to fragmentSearch
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, fragmentSearch)
+//                .addToBackStack(FragmentSearch.TAG).commit();
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(FragmentSearch.QUERY_TEXT, "a");
+        this.startActivityForResult(intent, 2);
     }
 
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
 
-    /**
-     * Goto Card Details with card id
-     *
-     * @param cardId
-     */
-    @Override
-    public void _gotoCardDetail(String cardId) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //New fragmentCardDetails
-        FragmentCardDetails fragmentCardDetails = new FragmentCardDetails();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set QUERY_TEXT
-        bundle.putString(FragmentCardDetails.CARD_ID, cardId);
-        //setArguments for fragmentCardDetails
-        fragmentCardDetails.setArguments(bundle);
-        //replace from container to fragmentCardDetails
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentCardDetails)
-                .addToBackStack(FragmentCardDetails.TAG).commit();
-    }
+//    /**
+//     * Goto Card Details with card id
+//     *
+//     * @param cardId
+//     */
+//    @Override
+//    public void _gotoCardDetail(String cardId) {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        //New fragmentCardDetails
+//        FragmentCardDetails fragmentCardDetails = new FragmentCardDetails();
+//        //New bunder
+//        Bundle bundle = new Bundle();
+//        //Set QUERY_TEXT
+//        bundle.putString(FragmentCardDetails.CARD_ID, cardId);
+//        //setArguments for fragmentCardDetails
+//        fragmentCardDetails.setArguments(bundle);
+//        //replace from container to fragmentCardDetails
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, fragmentCardDetails)
+//                .addToBackStack(FragmentCardDetails.TAG).commit();
+//    }
 
 
     /**
@@ -418,19 +408,36 @@ public class MainActivity extends ActionBarActivity
     private void _gotoStudy() {
 
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //New fragmentStudy
-        FragmentStudy fragmentStudy = new FragmentStudy();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set COURSE_ID
-        bundle.putString(FragmentStudy.COURSE_ID, "");
-        //setArguments for fragmentStudy
-        fragmentStudy.setArguments(bundle);
-        //replace from container to fragmentStudy
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentStudy)
-                .addToBackStack(FragmentStudy.TAG).commit();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        //New fragmentStudy
+//        FragmentStudy fragmentStudy = new FragmentStudy();
+//        //New bunder
+//        Bundle bundle = new Bundle();
+//        //Set COURSE_ID
+//        bundle.putString(FragmentStudy.COURSE_ID, "");
+//        //setArguments for fragmentStudy
+//        fragmentStudy.setArguments(bundle);
+//        //replace from container to fragmentStudy
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, fragmentStudy)
+//                .addToBackStack(FragmentStudy.TAG).commit();
+        Intent intent = new Intent(this, StudyActivity.class);
+        this.startActivityForResult(intent, 1);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //
+        int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
+        //Log.i(TAG, "backStackcount:" + backStackcount);
+        try {
+            String back_stack = getSupportFragmentManager().getBackStackEntryAt(0).getName();
+            Log.i(TAG, "back_stack:" + back_stack);
+        } catch (Exception e) {
+            this.finish();
+            System.exit(0);
+        }
+
+    }
 }

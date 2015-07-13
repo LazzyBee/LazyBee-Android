@@ -38,12 +38,16 @@ public class FragmentListCourse extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_course, container, false);
         //init mRecyclerViewListCourse
         RecyclerView mRecyclerViewListCourse = (RecyclerView) view.findViewById(R.id.mRecyclerViewListCourse);
+
         //init Grid layout
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewListCourse.getContext(), 1);
+
         //init list course
         List<Course> cursorList = LazzyBeeShare.initListCourse();
+
         //init adpter
         RecyclerViewListCourseAdapter recyclerViewListCourseAdapter = new RecyclerViewListCourseAdapter(cursorList);
+
         //init touch  listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity().getApplicationContext(), mRecyclerViewListCourse, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
@@ -51,6 +55,7 @@ public class FragmentListCourse extends Fragment {
                 Toast.makeText(getActivity(), "show comfinm add course", Toast.LENGTH_SHORT).show();
             }
         });
+
         //set up mRecyclerViewListCourse+
         mRecyclerViewListCourse.setLayoutManager(gridLayoutManager);
         mRecyclerViewListCourse.setAdapter(recyclerViewListCourseAdapter);

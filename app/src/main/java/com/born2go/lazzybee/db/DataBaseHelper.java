@@ -1,8 +1,6 @@
 package com.born2go.lazzybee.db;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -15,8 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Hue on 6/29/2015.
@@ -265,110 +261,100 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.
-    public List<Card> _getListCard() {
-        List<Card> datas = new ArrayList<Card>();
-        //select query
-        String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY;
-        //select limit 5 row
-        String selectLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " LIMIT 5 ";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        //query for cursor
-        Cursor cursor = db.rawQuery(selectLimitQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    Card card = new Card(id, question, answers, categories, subcat, 1);
-                    datas.add(card);
-                } while (cursor.moveToNext());
-        }
-        return datas;
-    }
-
-    /**
-     * Update Status Card and Time Again Lean
-     */
-    public int updateStatusAndTimeAgainVocabulary(Card card) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_STATUS, card.getStatus());
-        return db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-                new String[]{String.valueOf(card.getId())});
-
-    }
-
-    /**
-     * Get Review List Today
-     * <p>List vocabulary complete in today</p>
-     */
-    public List<Card> getReviewListVocabulary() {
-        return _getListCard();
-    }
-
-    /**
-     * Seach vocabulary
-     */
-    public List<Card> _searchCard(String query) {
-        List<Card> datas = new ArrayList<Card>();
-
-        //select like query
-        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        //query for cursor
-        Cursor cursor = db.rawQuery(likeQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    Card card = new Card(id, question, answers, categories, subcat, 1);
-                    datas.add(card);
-                } while (cursor.moveToNext());
-        }
-        return datas;
-    }
-
-    /**
-     * Get card by ID form sqlite
-     *
-     * @param cardId
-     */
-    public Card _getCardByID(String cardId) {
-        Card card = new Card();
-
-        String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        //query for cursor
-        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    // Card card = new Card(id, question, answers, categories, subcat, 1);
-                    card.setId(id);
-                    card.setQuestion(question);
-                    card.setAnswers(answers);
-                    card.setCategories(categories);
-                    card.setSubcat(subcat);
-                } while (cursor.moveToNext());
-        }
-        return card;
-    }
+//    public List<Card> _getListCard() {
+//        List<Card> datas = new ArrayList<Card>();
+//        //select query
+//        String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY;
+//        //select limit 5 row
+//        String selectLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " LIMIT 5 ";
+//
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        //query for cursor
+//        Cursor cursor = db.rawQuery(selectLimitQuery, null);
+//        if (cursor.moveToFirst()) {
+//            if (cursor.getCount() > 0)
+//                do {
+//                    //get data from sqlite
+//                    int id = cursor.getInt(0);
+//                    String question = cursor.getString(1);
+//                    String answers = cursor.getString(2);
+//                    String categories = cursor.getString(3);
+//                    String subcat = cursor.getString(4);
+//                    Card card = new Card(id, question, answers, categories, subcat, 1);
+//                    datas.add(card);
+//                } while (cursor.moveToNext());
+//        }
+//        return datas;
+//    }
+//
+//
+//
+//    /**
+//     * Get Review List Today
+//     * <p>List vocabulary complete in today</p>
+//     */
+//    public List<Card> getReviewListVocabulary() {
+//        return _getListCard();
+//    }
+//
+//    /**
+//     * Seach vocabulary
+//     */
+//    public List<Card> _searchCard(String query) {
+//        List<Card> datas = new ArrayList<Card>();
+//
+//        //select like query
+//        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        //query for cursor
+//        Cursor cursor = db.rawQuery(likeQuery, null);
+//        if (cursor.moveToFirst()) {
+//            if (cursor.getCount() > 0)
+//                do {
+//                    //get data from sqlite
+//                    int id = cursor.getInt(0);
+//                    String question = cursor.getString(1);
+//                    String answers = cursor.getString(2);
+//                    String categories = cursor.getString(3);
+//                    String subcat = cursor.getString(4);
+//                    Card card = new Card(id, question, answers, categories, subcat, 1);
+//                    datas.add(card);
+//                } while (cursor.moveToNext());
+//        }
+//        return datas;
+//    }
+//
+//    /**
+//     * Get card by ID form sqlite
+//     *
+//     * @param cardId
+//     */
+//    public Card _getCardByID(String cardId) {
+//        Card card = new Card();
+//
+//        String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        //query for cursor
+//        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+//        if (cursor.moveToFirst()) {
+//            if (cursor.getCount() > 0)
+//                do {
+//                    //get data from sqlite
+//                    int id = cursor.getInt(0);
+//                    String question = cursor.getString(1);
+//                    String answers = cursor.getString(2);
+//                    String categories = cursor.getString(3);
+//                    String subcat = cursor.getString(4);
+//                    // Card card = new Card(id, question, answers, categories, subcat, 1);
+//                    card.setId(id);
+//                    card.setQuestion(question);
+//                    card.setAnswers(answers);
+//                    card.setCategories(categories);
+//                    card.setSubcat(subcat);
+//                } while (cursor.moveToNext());
+//        }
+//        return card;
+//    }
 }

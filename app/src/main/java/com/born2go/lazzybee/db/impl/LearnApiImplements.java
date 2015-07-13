@@ -128,7 +128,28 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _getRandomCard(int number) {
-        return null;
+        //SELECT * FROM "vocabulary"ORDER BY RANDOM() LIMIT 5;
+        List<Card> datas = new ArrayList<Card>();
+        //select random limit 5 row
+        String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE + " ORDER BY RANDOM() LIMIT "+number;
+
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(selectRandomAndLimitQuery, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    //get data from sqlite
+                    int id = cursor.getInt(0);
+                    String question = cursor.getString(1);
+                    String answers = cursor.getString(2);
+                    String categories = cursor.getString(3);
+                    String subcat = cursor.getString(4);
+                    Card card = new Card(id, question, answers, categories, subcat, 1);
+                    datas.add(card);
+                } while (cursor.moveToNext());
+        }
+        return datas;
     }
 
     /**
@@ -141,6 +162,42 @@ public class LearnApiImplements implements LearnApi {
     public int _export(List<Card> cardList) {
         return 0;
     }
+
+    /**
+     * _updateListCardByStatus to SqlIte form ListCard
+     *
+     * @param cardList
+     * @param status
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _updateListCardByStatus(List<Card> cardList, int status) {
+        return 0;
+    }
+
+    /**
+     * _updateCompleteCard to SqlIte form System Table
+     *
+     * @param cardId
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _updateCompleteCard(String cardId) {
+        return 0;
+    }
+
+    /**
+     * _updateQueueCard to SqlIte form System Table
+     *
+     * @param cardId
+     * @param queue
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _updateQueueCard(String cardId, int queue) {
+        return 0;
+    }
+
 
     /**
      *
@@ -182,4 +239,5 @@ public class LearnApiImplements implements LearnApi {
                 new String[]{String.valueOf(card.getId())});
 
     }
+
 }
