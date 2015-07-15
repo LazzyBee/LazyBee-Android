@@ -23,9 +23,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
-import com.born2go.lazzybee.fragment.FragmentReviewToday;
 import com.born2go.lazzybee.fragment.FragmentSearch;
-import com.born2go.lazzybee.fragment.FragmentSetting;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 
 import java.io.IOException;
@@ -112,11 +110,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        String courseId = "";
-        _gotoCourseDetails(courseId);
+        if (position == 1) {
+            _gotoAddCourse();
+        } else {
+            // update the main content by replacing fragments
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            String courseId = "";
+            _gotoCourseDetails(courseId);
+        }
 
 
 //        switch (position) {
@@ -135,6 +137,15 @@ public class MainActivity extends ActionBarActivity
 ////                courseId = "";
 ////                _gotoCourseDetails(courseId);
 //        }
+
+
+    }
+
+    private void _gotoAddCourse() {
+        //init intent
+        Intent intent = new Intent(this, AddCourseActivity.class);
+        //start intents
+        startActivity(intent);
 
 
     }
@@ -275,14 +286,20 @@ public class MainActivity extends ActionBarActivity
      * Goto fragment setting
      */
     private void _gotoSetting() {
-        Toast.makeText(this, getString(R.string.action_settings), Toast.LENGTH_SHORT).show();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //intit
-        FragmentSetting fragmentSetting = new FragmentSetting();
-        //replace from container to fragmentSetting
-        fragmentTransaction.replace(R.id.container, fragmentSetting)
-                .addToBackStack(FragmentSetting.TAG).commit();
+//        Toast.makeText(this, getString(R.string.action_settings), Toast.LENGTH_SHORT).show();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        //intit
+//        FragmentSetting fragmentSetting = new FragmentSetting();
+//        //replace from container to fragmentSetting
+//        fragmentTransaction.replace(R.id.container, fragmentSetting)
+//                .addToBackStack(FragmentSetting.TAG).commit();
+
+
+        //init inten Setting
+        Intent intent = new Intent(this, SettingActivity.class);
+        //Start Intent
+        this.startActivity(intent);
     }
 
 
@@ -389,19 +406,24 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void _gotoReviewToday() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //New fragmentReview
-        FragmentReviewToday fragmentReview = new FragmentReviewToday();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set COURSE_ID
-        bundle.putString(FragmentReviewToday.COURSE_ID, "");
-        //setArguments for fragmentReview
-        fragmentReview.setArguments(bundle);
-        //replace from container to fragmentReview
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentReview)
-                .addToBackStack(FragmentReviewToday.TAG).commit();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        //New fragmentReview
+//        FragmentReviewToday fragmentReview = new FragmentReviewToday();
+//        //New bunder
+//        Bundle bundle = new Bundle();
+//        //Set COURSE_ID
+//        bundle.putString(FragmentReviewToday.COURSE_ID, "");
+//        //setArguments for fragmentReview
+//        fragmentReview.setArguments(bundle);
+//        //replace from container to fragmentReview
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, fragmentReview)
+//                .addToBackStack(FragmentReviewToday.TAG).commit();
+
+        //init inten
+        Intent intent = new Intent(this, ReviewCardActivity.class);
+        //start intent
+        startActivity(intent);
     }
 
 

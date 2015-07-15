@@ -4,12 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +34,13 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_RELATED = "related";
     private static final String KEY_TAGS = "tags";
     //Table name
-    private static final String TABLE = "vocabulary";
+    private static final String TABLE_VOCABULARY = "vocabulary";
+    private static final String TABLE_SYSTEM = "system";
+    private static final String TAG = "LearnApiImplements";
+    private static final int STATUS_CARD_LEARN_TODAY = 1;
+    private static final String QUEUE_LIST = "queue_List";
+    private static final String KEY_SYSTEM = "key";
+    private static final String KEY_SYSTEM_VALUE = "value";
 
 
     Context context;
@@ -48,7 +61,7 @@ public class LearnApiImplements implements LearnApi {
     public Card _getCardByID(String cardId) {
         Card card = new Card();
 
-        String selectbyIDQuery = "SELECT  * FROM " + TABLE + " WHERE " + KEY_ID + " = " + cardId;
+        String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
         //query for cursor
@@ -100,7 +113,7 @@ public class LearnApiImplements implements LearnApi {
         List<Card> datas = new ArrayList<Card>();
 
         //select like query
-        String likeQuery = "SELECT  * FROM " + TABLE + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
+        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
         //query for cursor
@@ -123,33 +136,161 @@ public class LearnApiImplements implements LearnApi {
 
     /**
      * Get Random list card from today
+     * Check List Card
+     * Get random card->update List card and update statu card
      *
      * @param number
      */
     @Override
     public List<Card> _getRandomCard(int number) {
-        //SELECT * FROM "vocabulary"ORDER BY RANDOM() LIMIT 5;
-        List<Card> datas = new ArrayList<Card>();
-        //select random limit 5 row
-        String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE + " ORDER BY RANDOM() LIMIT "+number;
-
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
-        //query for cursor
-        Cursor cursor = db.rawQuery(selectRandomAndLimitQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    Card card = new Card(id, question, answers, categories, subcat, 1);
+        List<Card> datas = new ArrayList<Card>();
+
+        //Check today list card
+        boolean checkListToday = _checkListTodayExit();
+        if (checkListToday) {
+//
+            //TODO: get data from sqlite
+            String value = _getValueFromSystemByKey(QUEUE_LIST);
+            try {
+                //TODO:Pass string value to object
+                JSONObject jsonObject = new JSONObject(value);
+
+                //TODO:get List card array
+                JSONArray jsonArray = jsonObject.getJSONArray("card");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    //TODO:g
+                    String cardId = jsonArray.getString(i);
+
+                    //TODO:get Card by id
+                    Card card = _getCardByID(cardId);
+
+                    //TODO:add card
                     datas.add(card);
-                } while (cursor.moveToNext());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } else {
+            //select random limit 5 row
+            String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " ORDER BY RANDOM() LIMIT " + number;
+
+//            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+            //query for cursor
+            Cursor cursor = db.rawQuery(selectRandomAndLimitQuery, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0)
+                    do {
+                        //get data from sqlite
+                        int id = cursor.getInt(0);
+                        String question = cursor.getString(1);
+                        String answers = cursor.getString(2);
+                        String categories = cursor.getString(3);
+                        String subcat = cursor.getString(4);
+                        Card card = new Card(id, question, answers, categories, subcat, 1);
+                        datas.add(card);
+                        _updateStatusCard("" + id, STATUS_CARD_LEARN_TODAY);
+
+                    } while (cursor.moveToNext());
+            }
+            //TODO: ADD QUEUE LIST TO SYSTEM
+            _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas));
         }
+
+
         return datas;
+    }
+
+    private String _listCardTodayToArrayListCardId(List<Card> datas) {
+        //TODO: init ListCardID
+        List<String> listCardId = new ArrayList<String>();
+        for (Card card : datas) {
+            listCardId.add("" + card.getId());
+        }
+
+        //TODO new date create List Today
+        Date nowdate = new Date();
+        long now_date_long = nowdate.getTime();//get Time by @param nowdate
+
+        //TODO: Init Obj josn
+        JSONObject valueJoson = new JSONObject();
+        try {
+            JSONArray cardIDArray = new JSONArray(listCardId);//TODO:init cardID Array
+
+            //todo: put properties of @param valueJoson
+            valueJoson.put("date", now_date_long);
+            valueJoson.put("card", cardIDArray);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String jsonValuestr = "";//Todo: init string json value
+
+        jsonValuestr = valueJoson.toString();
+        Log.i(TAG, "jsonValuestr:" + jsonValuestr);
+        return jsonValuestr;
+    }
+
+    private boolean _checkListTodayExit() {
+
+        //TODO:get value queue List
+        String value = _getValueFromSystemByKey(QUEUE_LIST);
+        if (value == null) {
+            //TODO: NO List Queue
+            return false;
+        } else {
+            //TODO Yes,Compareto Date
+            try {
+                //Pass string value to object
+                JSONObject jsonObject = new JSONObject(value);
+
+                //TODO:get date create list today
+                long _long_date = jsonObject.getLong("date");
+                Log.i(TAG, "-Long date:" + _long_date);
+
+                Date _date = new Date(_long_date);
+                //new date
+                Date _now_date = new Date();
+
+                Log.i(TAG, "_date:" + _date);
+                Log.i(TAG, "_now_date:" + _now_date);
+
+                //TODO:Compare Date
+                String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+
+                String outputPattern = "dd-MM-yyyy";
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+                SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+                try {
+                    //TODO: format date to string
+                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
+                    Date date_now = inputFormat.parse(_now_date.toString());
+
+                    String str_date_create_list_card_today_parse = outputFormat.format(date_create_list_card_today_parse);
+                    String str_date_now = outputFormat.format(date_now);
+                    if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
+                        Log.i(TAG, "date_create_list_card_today_parse is equal to date_now");
+                        return true;
+                    } else {
+                        Log.i(TAG, "date_create_list_card_today_parse is not equal to date_now");
+                        return false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+
     }
 
     /**
@@ -198,6 +339,31 @@ public class LearnApiImplements implements LearnApi {
         return 0;
     }
 
+    /**
+     * _insertListTodayCard to SqlIte form System Table
+     *
+     * @param cardList
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _insertListTodayCard(List<Card> cardList) {
+        List<String> listCardId = new ArrayList<String>();
+        for (Card card : cardList) {
+            listCardId.add("" + card.getId());
+        }
+        Date date = new Date();
+        JSONObject valueObj = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray(listCardId);
+            valueObj.put("date", date.getTime());
+            valueObj.put("card", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "Quere Obj:" + valueObj.toString());
+        return 0;
+    }
+
 
     /**
      *
@@ -205,9 +371,9 @@ public class LearnApiImplements implements LearnApi {
     private List<Card> _getListCard() {
         List<Card> datas = new ArrayList<Card>();
         //select query
-        String selectQuery = "SELECT  * FROM " + TABLE;
+        String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY;
         //select limit 5 row
-        String selectLimitQuery = "SELECT  * FROM " + TABLE + " LIMIT 5 ";
+        String selectLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " LIMIT 5 ";
 
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
@@ -223,6 +389,7 @@ public class LearnApiImplements implements LearnApi {
                     String subcat = cursor.getString(4);
                     Card card = new Card(id, question, answers, categories, subcat, 1);
                     datas.add(card);
+
                 } while (cursor.moveToNext());
         }
         return datas;
@@ -235,9 +402,98 @@ public class LearnApiImplements implements LearnApi {
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_STATUS, card.getStatus());
-        return db.update(TABLE, values, KEY_ID + " = ?",
+        return db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(card.getId())});
 
     }
 
+
+    @Override
+    public int _updateStatusCard(String cardId, int status) {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_STATUS, status);
+
+        return db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(cardId)});
+    }
+
+    /**
+     * add to system config
+     * Key and value JSON
+     *
+     * @param key   key of system
+     * @param value format json string
+     * @return 1 if update complete else -1 false
+     */
+    @Override
+    public int _insertOrUpdateToSystemTable(String key, String value) {
+        Log.i(TAG, "value:" + value);
+
+
+        //TODO check value by key
+        String valuebyKey = _getValueFromSystemByKey(key);
+        if (_getValueFromSystemByKey(key) == null) {
+            Log.i(TAG, "Insert list card");
+            //Todo: No,Then insert
+            ContentValues values = new ContentValues();
+
+            //TODO put value
+            values.put(KEY_SYSTEM, key);
+            values.put(KEY_SYSTEM_VALUE, value);
+
+            //TODO insert to system table
+            SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
+            long long_insert_results = db_insert.insert(TABLE_SYSTEM, null, values);
+            Log.i(TAG, "Insert Results:" + long_insert_results);
+            db_insert.close();
+            return (int) long_insert_results;
+        } else {
+            Log.i(TAG, "Update list card today:" + valuebyKey);
+            //Todo: Yes,update for key
+            ContentValues values = new ContentValues();
+            //TODO put value
+            values.put(KEY_SYSTEM_VALUE, value);
+            //TODO update to system table
+            SQLiteDatabase db_update = this.dataBaseHelper.getWritableDatabase();
+            try {
+                int update_results = db_update.update(TABLE_SYSTEM, values, KEY_SYSTEM + " = ?",
+                        new String[]{String.valueOf(key)});
+                Log.i(TAG, "update_results:" + update_results);
+                String valuebyKeyafterUpdate = _getValueFromSystemByKey(key);
+                Log.i(TAG, "valuebyKeyafterUpdate:" + valuebyKeyafterUpdate);
+                return update_results;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -1;
+            }
+
+        }
+
+    }
+
+    @Override
+    public String _getValueFromSystemByKey(String key) {
+        String queue_List_value = null;
+
+        String selectValueByKey = "SELECT value FROM " + TABLE_SYSTEM + " where key = '" + key + "'";
+
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        try {
+            //Todo query for cursor
+            Cursor cursor = db.rawQuery(selectValueByKey, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0)
+                    do {
+                        //TODO:get data from sqlite
+                        String value = cursor.getString(0);
+                        queue_List_value = value;
+                    } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return queue_List_value;
+    }
 }

@@ -2,5 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.born2go.lazzybee.activity.SearchActivity">
-
+ <!--   <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_black"
+        android:title="@string/action_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="withText|ifRoom" />-->
 </menu>

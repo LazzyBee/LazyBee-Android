@@ -1,13 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.born2go.lazzybee.activity.SearchActivity">
+    tools:context="com.born2go.lazzybee.activity.SearchActivity"
+    android:orientation="vertical"
+    android:id="@+id/main">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/result"
+        android:id="@+id/lbResultCount"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp" />
 
-    <fragment
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:name="com.born2go.lazzybee.fragment.FragmentSearch"
-        android:id="@+id/fragmentSearch"
-        android:layout_alignParentStart="true" />
+    <view
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="android.support.v7.widget.RecyclerView"
+        android:id="@+id/mRecyclerViewSearchResults" />
 
-</RelativeLayout>
+
+</LinearLayout>

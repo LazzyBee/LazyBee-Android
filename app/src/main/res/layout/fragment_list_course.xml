@@ -6,19 +6,6 @@
     tools:context="com.born2go.lazzybee.fragment.FragmentListCourse">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar_main"
-        android:layout_width="fill_parent"
-        android:layout_height="55dp">
-
-        <view
-            android:id="@+id/view2"
-            class="android.support.v7.widget.SearchView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right" />
-
-    </android.support.v7.widget.Toolbar>
 
 
     <view

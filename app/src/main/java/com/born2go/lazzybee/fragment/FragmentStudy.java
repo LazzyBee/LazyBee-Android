@@ -96,15 +96,22 @@ public class FragmentStudy extends Fragment {
         //_getListCard random to day
         List<Card> cardListToDay = dataBaseHelper._getRandomCard(10);
 
-        //Check Queue Word
-        if (_CheckQueueWord()) {
-            cardListToDay = _getListVocabularyQueue(cardListToDay);
-        }
+        //Add List Card in Today Table
+        //dataBaseHelper._insertListTodayCard(cardListToDay);
+
+//        //Check Queue List Word
+//        if (_CheckQueueWord()) {
+        //  cardListToDay = _getListVocabularyQueue(cardListToDay);
+//        }else {
+//
+//        }
 
 
         //set data
-        _setDataforWebView(cardListToDay);
-
+        if (cardListToDay.size() > 0)
+            _setDataforWebView(cardListToDay);
+        else
+            Log.i(TAG, "List Card Empty");
 
         //@JavascriptInterface
 

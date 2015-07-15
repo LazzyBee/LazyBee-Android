@@ -26,4 +26,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_seating">SeatingActivity</string>
+    <string name="title_activity_review_card">ReviewCardActivity</string>
+    <string name="title_activity_add_course">AddCourseActivity</string>
+    <string name="hint_search">Search</string>
+    <string name="title_activity_card_details">CardDetailsActivity</string>
 </resources>

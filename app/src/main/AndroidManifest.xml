@@ -30,6 +30,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/title_activity_seating" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.ReviewCardActivity"
+            android:label="@string/title_activity_review_card" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.AddCourseActivity"
+            android:label="@string/title_activity_add_course" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CardDetailsActivity"
+            android:label="@string/title_activity_card_details" >
+        </activity>
     </application>
 
 </manifest>
