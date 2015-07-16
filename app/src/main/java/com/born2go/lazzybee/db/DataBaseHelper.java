@@ -58,7 +58,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         this.myContext = context;
     }
 
-    public DataBaseHelper getGlobalDB(){
+    public static DataBaseHelper getGlobalDB(){
         if (globalDB==null){//Init DB here
             //TODO: Work out
         }

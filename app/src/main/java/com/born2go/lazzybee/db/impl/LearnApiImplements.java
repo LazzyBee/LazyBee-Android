@@ -41,6 +41,7 @@ public class LearnApiImplements implements LearnApi {
     private static final String QUEUE_LIST = "queue_List";
     private static final String KEY_SYSTEM = "key";
     private static final String KEY_SYSTEM_VALUE = "value";
+    private static final int STATUS_NO_LEARN = -1;
 
 
     Context context;
@@ -147,7 +148,7 @@ public class LearnApiImplements implements LearnApi {
         List<Card> datas = new ArrayList<Card>();
 
         //Check today list card
-        boolean checkListToday = _checkListTodayExit();
+        boolean checkListToday = _checkListTodayExit(number);
         if (checkListToday) {
 //
             //TODO: get data from sqlite
@@ -234,7 +235,7 @@ public class LearnApiImplements implements LearnApi {
         return jsonValuestr;
     }
 
-    private boolean _checkListTodayExit() {
+    private boolean _checkListTodayExit(int number) {
 
         //TODO:get value queue List
         String value = _getValueFromSystemByKey(QUEUE_LIST);
@@ -245,10 +246,11 @@ public class LearnApiImplements implements LearnApi {
             //TODO Yes,Compareto Date
             try {
                 //Pass string value to object
-                JSONObject jsonObject = new JSONObject(value);
+                JSONObject valueObj = new JSONObject(value);
 
                 //TODO:get date create list today
-                long _long_date = jsonObject.getLong("date");
+                long _long_date = valueObj.getLong("date");//get Long date
+                JSONArray cardListIDArray = valueObj.getJSONArray("card");//get List card ID
                 Log.i(TAG, "-Long date:" + _long_date);
 
                 Date _date = new Date(_long_date);
@@ -266,17 +268,49 @@ public class LearnApiImplements implements LearnApi {
                 SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
                 SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
                 try {
-                    //TODO: format date to string
+                    //TODO: parse date
                     Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
                     Date date_now = inputFormat.parse(_now_date.toString());
 
+                    //TODO: format date to string
                     String str_date_create_list_card_today_parse = outputFormat.format(date_create_list_card_today_parse);
                     String str_date_now = outputFormat.format(date_now);
+
+                    //TODO: compareTo date learn vs now date
                     if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
+                        //TODO: Equal then return true
                         Log.i(TAG, "date_create_list_card_today_parse is equal to date_now");
+
                         return true;
                     } else {
+                        //TODO: Not equal then return false
+
+                        //TODO: Check yesterday  learn
+                        if (cardListIDArray != null) {
+                            int lenght_list_card_id_json_array = cardListIDArray.length();//Get lenght list card id json aray
+                            if (lenght_list_card_id_json_array == number) {
+                                //TODO: NO Learn,Update status =NO_LEARN
+                                int lengh = cardListIDArray.length();//get lenght
+
+                                for (int i = 0; i < lengh; i++) {
+                                    try {
+
+                                        String cardId = cardListIDArray.getString(i);//get CardId by index
+
+                                        _updateStatusCard(cardId, STATUS_NO_LEARN);//Update status by cardid
+
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+
+                        }
+
                         Log.i(TAG, "date_create_list_card_today_parse is not equal to date_now");
+
                         return false;
                     }
                 } catch (Exception e) {
@@ -291,6 +325,37 @@ public class LearnApiImplements implements LearnApi {
         }
 
 
+    }
+
+    /**
+     * _get List Card By List CardId JsonArray
+     *
+     * @param cardListIDArray JsonArray String
+     * @return list card
+     */
+    private List<Card> _getListCardByListCardIdJsonArray(JSONArray cardListIDArray) {
+        //TODO:
+
+
+        List<Card> cardList = new ArrayList<Card>();//init Card List
+
+        int lengh = cardListIDArray.length();//get lenght
+
+        for (int i = 0; i < lengh; i++) {
+            try {
+
+                String cardId = cardListIDArray.getString(i);//get CardId by index
+
+                Card card = _getCardByID(cardId);//get card by @param cardId
+
+                cardList.add(card);//Add card to list
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return cardList;
     }
 
     /**
@@ -375,9 +440,12 @@ public class LearnApiImplements implements LearnApi {
         //select limit 5 row
         String selectLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " LIMIT 5 ";
 
+        //TODO query select List Card by status=learned
+        String selectListCardByStatus = "SELECT  * FROM " + TABLE_VOCABULARY + " where status = 1 ";
+
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
-        Cursor cursor = db.rawQuery(selectLimitQuery, null);
+        Cursor cursor = db.rawQuery(selectListCardByStatus, null);
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 do {
@@ -410,12 +478,19 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public int _updateStatusCard(String cardId, int status) {
+        //TODO: Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_STATUS, status);
 
-        return db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_STATUS, status);//put Status
+
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(cardId)});
+        Log.i(TAG, "Update Status Card Complete: Update Result Code:" + update_result);
+        return update_result;
+
     }
 
     /**
