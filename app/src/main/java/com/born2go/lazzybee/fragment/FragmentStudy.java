@@ -119,6 +119,27 @@ public class FragmentStudy extends Fragment {
         //get Card list due to day
         cardListDueDay = dataBaseHelper._getListCardByQueue(new Date().getTime());
 
+
+        int cardListAgainDaysize = cardListAgainDay.size();//get card List Again size
+
+        //Todo:
+        if (cardListAgainDaysize > 0) {
+            //todo:Check cardListToDay contains cardAgain
+
+            //Loop cardListAgainDay
+            for (Card cardAgain : cardListAgainDay) {
+                Log.i(TAG, cardAgain.toString());
+                if (cardListToDay.contains(cardAgain)) {
+                    //todo: yes contains,Remove
+                    cardListToDay.remove(cardAgain);
+                } else {
+                    Log.i(TAG, "No contain");
+                }
+
+            }
+        }
+
+
         //Add List Card in Today Table
         //dataBaseHelper._insertListTodayCard(cardListToDay);
 
@@ -149,13 +170,8 @@ public class FragmentStudy extends Fragment {
         return view;
     }
 
-    private void _setCountCardList() {
 
-        //list_card_new_size vocabulary list
-        final int list_card_new_size = cardListToDay.size();
-        //set total vocabilary
-        lbCountTotalVocabulary.setText("" + list_card_new_size);
-        lbCountTotalVocabulary.setTag(list_card_new_size);
+    private void _setCountCardList() {
 
 
         final int list_card_again_in_today_size = cardListAgainDay.size();
@@ -163,6 +179,19 @@ public class FragmentStudy extends Fragment {
 
         lbCountAgainInday.setText("" + list_card_again_in_today_size);
         lbCountAgainInday.setTag(list_card_again_in_today_size);
+
+
+        //list_card_new_size vocabulary list
+        int list_card_new_size = cardListToDay.size();
+
+        //todo: set count list card new
+        if (list_card_again_in_today_size > 0) {
+            list_card_new_size = list_card_new_size - list_card_again_in_today_size;
+        }
+
+        //set total vocabilary
+        lbCountTotalVocabulary.setText("" + list_card_new_size);
+        lbCountTotalVocabulary.setTag(list_card_new_size);
 
 
 //        final int list_card_due_day_size = cardListDueDay.size();
@@ -174,7 +203,7 @@ public class FragmentStudy extends Fragment {
 
     }
 
-    private  void _setCountDueCardList(){
+    private void _setCountDueCardList() {
         final int list_card_due_day_size = cardListDueDay.size();
         //set total vocabilary
 
@@ -218,25 +247,29 @@ public class FragmentStudy extends Fragment {
         final int[] position = {0};
 
 
-        //Set JavaScripEnabled
+        //Todo: Set  JavaScripEnabled for webview
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
 
 
         //list_card_new_size vocabulary list
         final int list_card_new_size = listCardNew.size();
+
         //Current Card
         final Card[] currentCard = {cardListToDay.get(0)};
-        //int TextToSpeech
+
+        //Todo:init TextToSpeech
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
+                    //setLangguage
                     textToSpeech.setLanguage(Locale.UK);
                 }
             }
         });
 
+        //Todo: addJavascriptInterface play question
         mWebViewLeadDetails.addJavascriptInterface(new JsObjectQuestion() {
             @JavascriptInterface
             public void playQuestion() {
@@ -252,6 +285,8 @@ public class FragmentStudy extends Fragment {
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
+
+        //Todo: addJavascriptInterface play answer
         mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
             @JavascriptInterface
             public void playAnswers() {
@@ -267,8 +302,12 @@ public class FragmentStudy extends Fragment {
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "answers");
-        //Load data for webview
+
+
+        //Todo: Load first card
         mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard[0].getQuestion()), mime, encoding, null);
+
+
         //btnShowAnswer onCLick
         btnShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,13 +345,14 @@ public class FragmentStudy extends Fragment {
 
                 Card old_card = listCardNew.get(position[0]);
 
-                //
+                //todo:next position
                 position[0] = position[0] + 1;
 
 
-                //Check if go to end eles back
+                //Todo:Check if go to end eles back
                 if (position[0] <= list_card_new_size - 1) {
-                    //next vocabulary
+
+                    //todo:next vocabulary
                     currentCard[0] = listCardNew.get(position[0]);
                     //
                     if ((position[0] - 1) != -1) {
@@ -353,8 +393,9 @@ public class FragmentStudy extends Fragment {
 //                        _setQueueCard(currentCardId, timeQueueCard);
 //
 //                    }
-                    //Demo:set again word 60s
+                    //Todo: set queue card 60s
                     _setQueueCard(currentCardId, 60l);
+                    //Remo
 
                 } else {
                     //end
@@ -470,7 +511,7 @@ public class FragmentStudy extends Fragment {
 ////                        }
 //                    }
 
-                   // _setCountCardList();
+                    // _setCountCardList();
 
 
                     //next vocabulary
@@ -481,7 +522,7 @@ public class FragmentStudy extends Fragment {
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
 
                     //reset total vocabilary
-                    int current_count = _count - position[0];
+                    int current_count = _count - 1;
                     lbCountTotalVocabulary.setText("" + current_count);
                     lbCountTotalVocabulary.setTag(current_count);
 //
@@ -539,7 +580,7 @@ public class FragmentStudy extends Fragment {
 ////                        }
 //                    }
 
-                   // _setCountCardList();
+                    // _setCountCardList();
 
 
                     //next vocabulary
@@ -549,7 +590,7 @@ public class FragmentStudy extends Fragment {
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
 
                     //reset total vocabilary
-                    int current_count = _count - position[0];
+                    int current_count = _count - 1;
                     lbCountTotalVocabulary.setText("" + current_count);
                     lbCountTotalVocabulary.setTag(current_count);
 
@@ -582,7 +623,7 @@ public class FragmentStudy extends Fragment {
      * @param timeQueueCard Time queue
      */
     private void _setQueueCard(String currentCardId, Long timeQueueCard) {
-        //TOdo:Check time inday
+        dataBaseHelper._updateQueueCard(currentCardId, timeQueueCard);
 
     }
 
