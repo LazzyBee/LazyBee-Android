@@ -258,12 +258,12 @@ public class LearnApiImplements implements LearnApi {
                 //TODO:Compare Date
                 try {
                     //TODO: parse date
-                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
-                    Date date_now = inputFormat.parse(_now_date.toString());
-
+//                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
+//                    Date date_now = inputFormat.parse(_now_date.toString());
+                    
                     //TODO: format date to string
-                    String str_date_create_list_card_today_parse = outputFormat.format(date_create_list_card_today_parse);
-                    String str_date_now = outputFormat.format(date_now);
+                    String str_date_create_list_card_today_parse = outputFormat.format(_date);
+                    String str_date_now = outputFormat.format(_now_date);
 
                     //TODO: compareTo date learn vs now date
                     if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
