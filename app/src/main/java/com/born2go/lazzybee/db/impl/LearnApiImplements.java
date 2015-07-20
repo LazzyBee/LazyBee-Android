@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,12 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_SYSTEM_VALUE = "value";
     private static final int STATUS_NO_LEARN = -1;
 
+    String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+
+    String outputPattern = "dd-MM-yyyy";
+
+    SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+    SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
     Context context;
     DataBaseHelper dataBaseHelper;
@@ -111,27 +118,14 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _searchCard(String query) {
-        List<Card> datas = new ArrayList<Card>();
+
 
         //select like query
         String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
-        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
-        //query for cursor
-        Cursor cursor = db.rawQuery(likeQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    Card card = new Card(id, question, answers, categories, subcat, 1);
-                    datas.add(card);
-                } while (cursor.moveToNext());
-        }
+        //Todo:Seach card
+        List<Card> datas = _getListCardQueryString(likeQuery);
+
         return datas;
     }
 
@@ -261,12 +255,6 @@ public class LearnApiImplements implements LearnApi {
                 Log.i(TAG, "_now_date:" + _now_date);
 
                 //TODO:Compare Date
-                String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
-
-                String outputPattern = "dd-MM-yyyy";
-
-                SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-                SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
                 try {
                     //TODO: parse date
                     Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
@@ -445,7 +433,7 @@ public class LearnApiImplements implements LearnApi {
 
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
-        Cursor cursor = db.rawQuery(selectListCardByStatus, null);
+        Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 do {
@@ -570,5 +558,112 @@ public class LearnApiImplements implements LearnApi {
         }
 
         return queue_List_value;
+    }
+
+    @Override
+    public List<Card> _getListCardByStatus(int status) {
+
+        //Query select_list_card_by_status
+        String select_list_card_by_status = "SELECT  * FROM " + TABLE_VOCABULARY + " where status = " + status;
+
+        //Get card list by status
+        List cardListByStatus = _getListCardQueryString(select_list_card_by_status);
+        return cardListByStatus;
+    }
+
+    /**
+     * Get List Card by queue
+     *
+     * @param queue
+     */
+    @Override
+    public List<Card> _getListCardByQueue(long queue) {
+
+        if (queue <= 600l) {
+
+            //Query select_list_card_by_queue
+            String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue <= 600 and queue >= 60";
+
+            //Get card list by status
+            List<Card> cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
+
+            return cardListByQueue;
+        } else {
+            //select query
+            String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue > 600";
+
+            //
+            Date now_date = new Date(queue);
+
+            //Get card list by status
+            List<Card> cardListAll = _getListCardQueryString(selectQuery);
+
+
+            List<Card> cardListDueToday = new ArrayList<Card>();
+            //TODO: Check queue date
+            for (Card card : cardListAll) {
+                //TODO:CompateTo date_due vs now date
+                Date card_due_date = new Date(card.getQueue());
+                if (_compreaToDate(card_due_date, now_date)) {
+                    cardListDueToday.add(card);
+                }
+
+            }
+            return cardListDueToday;
+        }
+
+
+    }
+
+    private boolean _compreaToDate(Date card_due_date, Date now_date) {
+        try {
+            Date date_compateTo = inputFormat.parse(card_due_date.toString());
+            Date date_now = inputFormat.parse(now_date.toString());
+
+            //TODO: format date to string
+            String str_date_create_list_card_today_parse = outputFormat.format(date_compateTo);
+            String str_date_now = outputFormat.format(date_now);
+
+            //TODO: compareTo date learn vs now date
+            if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
+                //TODO: Equal then return true
+                Log.i(TAG, "date_compateTo is equal to date_now");
+
+                return true;
+            } else {
+                //TODO: Not equal then return false
+                return false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    /**
+     *
+     * */
+    private List<Card> _getListCardQueryString(String query) {
+        List<Card> datas = new ArrayList<Card>();
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    //get data from sqlite
+                    int id = cursor.getInt(0);
+                    String question = cursor.getString(1);
+                    String answers = cursor.getString(2);
+                    String categories = cursor.getString(3);
+                    String subcat = cursor.getString(4);
+                    Card card = new Card(id, question, answers, categories, subcat, 1);
+
+                    datas.add(card);
+
+                } while (cursor.moveToNext());
+        }
+        return datas;
     }
 }

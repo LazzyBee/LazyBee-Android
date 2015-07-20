@@ -111,4 +111,19 @@ public interface LearnApi {
     String _getValueFromSystemByKey(String key);
 
 
+    /**
+     * Get List Card by Status
+     * @param status
+     *
+     */
+    List<Card> _getListCardByStatus(int status);
+
+    /**
+     * Get List Card by queue
+     * @param queue
+     *
+     */
+    List<Card> _getListCardByQueue(long queue);
+
+
 }

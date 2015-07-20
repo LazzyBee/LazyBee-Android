@@ -12,6 +12,7 @@ public class Card {
     String subcat;
     int status;
     int gId;
+    long queue;
 
 
     public Card() {
@@ -95,6 +96,15 @@ public class Card {
         this.gId = gId;
     }
 
+
+    public long getQueue() {
+        return queue;
+    }
+
+    public void setQueue(long queue) {
+        this.queue = queue;
+    }
+
     @Override
     public String toString() {
         return "Card{" +
@@ -106,4 +116,6 @@ public class Card {
                 ", status=" + status +
                 '}';
     }
+
+
 }
