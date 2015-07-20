@@ -74,7 +74,7 @@ public interface LearnApi {
      * @param queue
      * @return 1 if update complete else -1 false
      */
-    int _updateQueueCard(String cardId,int queue);
+    int _updateQueueCard(String cardId,long queue);
 
     /**
      * _insertListTodayCard to SqlIte form System Table

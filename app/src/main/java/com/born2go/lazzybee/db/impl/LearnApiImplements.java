@@ -43,6 +43,7 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_SYSTEM = "key";
     private static final String KEY_SYSTEM_VALUE = "value";
     private static final int STATUS_NO_LEARN = -1;
+    private static final String KEY_QUEUE = "queue";
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
 
@@ -388,8 +389,21 @@ public class LearnApiImplements implements LearnApi {
      * @return 1 if update complete else -1 false
      */
     @Override
-    public int _updateQueueCard(String cardId, int queue) {
-        return 0;
+    public int _updateQueueCard(String cardId, long queue) {
+
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(KEY_QUEUE, queue);//put Status
+
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(cardId)});
+        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        return update_result;
     }
 
     /**
