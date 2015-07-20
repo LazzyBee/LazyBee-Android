@@ -84,12 +84,7 @@ public class LearnApiImplements implements LearnApi {
                     String answers = cursor.getString(2);
                     String categories = cursor.getString(3);
                     String subcat = cursor.getString(4);
-                    // Card card = new Card(id, question, answers, categories, subcat, 1);
-                    card.setId(id);
-                    card.setQuestion(question);
-                    card.setAnswers(answers);
-                    card.setCategories(categories);
-                    card.setSubcat(subcat);
+                    card = new Card(id, question, answers, categories, subcat, 1);
                 } while (cursor.moveToNext());
         }
         return card;
@@ -260,7 +255,7 @@ public class LearnApiImplements implements LearnApi {
                     //TODO: parse date
 //                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
 //                    Date date_now = inputFormat.parse(_now_date.toString());
-                    
+
                     //TODO: format date to string
                     String str_date_create_list_card_today_parse = outputFormat.format(_date);
                     String str_date_now = outputFormat.format(_now_date);
