@@ -29,7 +29,7 @@ public class FragmentSearch extends Fragment {
 
     public static final String QUERY_TEXT = "query";
     public static final String TAG = "FragmentSearch";
-    String query="a";
+    String query = "a";
 
     public FragmentSearch() {
         // Required empty public constructor
@@ -49,6 +49,7 @@ public class FragmentSearch extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             query = getArguments().getString(QUERY_TEXT);
+            Log.i(FragmentSearch.TAG, QUERY_TEXT + ":" + query);
         }
     }
 

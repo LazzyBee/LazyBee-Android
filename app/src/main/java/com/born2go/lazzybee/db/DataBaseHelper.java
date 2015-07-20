@@ -18,6 +18,7 @@ import java.io.OutputStream;
  * Created by Hue on 6/29/2015.
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
+    private static DataBaseHelper globalDB;
     private static final String TABLE_VOCABULARY = "vocabulary";    //The Android's default system path of your application database.
     private static final String TAG = "DataBaseHelper";
     private static final String SDCARD = "sdcard";
@@ -55,6 +56,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         super(context, DB_NAME, null, 1);
         this.myContext = context;
+    }
+
+    public static DataBaseHelper getGlobalDB(){
+        if (globalDB==null){//Init DB here
+            //TODO: Work out
+        }
+        return globalDB;
     }
 
     /**

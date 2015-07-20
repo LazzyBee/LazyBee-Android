@@ -76,5 +76,54 @@ public interface LearnApi {
      */
     int _updateQueueCard(String cardId,int queue);
 
+    /**
+     * _insertListTodayCard to SqlIte form System Table
+     *
+     * @param cardList
+     * @return 1 if update complete else -1 false
+     */
+    int _insertListTodayCard(List<Card> cardList);
+
+    /**
+     * update Status Card
+     *
+     * @param cardId
+     * @param status
+     * @return 1 if update complete else -1 false
+     */
+    int _updateStatusCard(String cardId,int status);
+
+    /**
+     * add to system config
+     * Key and value JSON
+     *
+     * @param key
+     * @param value json string
+     * @return 1 if update complete else -1 false
+     */
+    int _insertOrUpdateToSystemTable(String key, String value);
+
+    /**
+     * get value Json by key from System Table
+     * @param key
+     * @return JSON Value String
+     */
+    String _getValueFromSystemByKey(String key);
+
+
+    /**
+     * Get List Card by Status
+     * @param status
+     *
+     */
+    List<Card> _getListCardByStatus(int status);
+
+    /**
+     * Get List Card by queue
+     * @param queue
+     *
+     */
+    List<Card> _getListCardByQueue(long queue);
+
 
 }
