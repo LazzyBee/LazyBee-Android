@@ -43,6 +43,7 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_SYSTEM = "key";
     private static final String KEY_SYSTEM_VALUE = "value";
     private static final int STATUS_NO_LEARN = -1;
+    private static final String KEY_QUEUE = "queue";
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
 
@@ -257,12 +258,12 @@ public class LearnApiImplements implements LearnApi {
                 //TODO:Compare Date
                 try {
                     //TODO: parse date
-                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
-                    Date date_now = inputFormat.parse(_now_date.toString());
-
+//                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
+//                    Date date_now = inputFormat.parse(_now_date.toString());
+                    
                     //TODO: format date to string
-                    String str_date_create_list_card_today_parse = outputFormat.format(date_create_list_card_today_parse);
-                    String str_date_now = outputFormat.format(date_now);
+                    String str_date_create_list_card_today_parse = outputFormat.format(_date);
+                    String str_date_now = outputFormat.format(_now_date);
 
                     //TODO: compareTo date learn vs now date
                     if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
@@ -388,8 +389,21 @@ public class LearnApiImplements implements LearnApi {
      * @return 1 if update complete else -1 false
      */
     @Override
-    public int _updateQueueCard(String cardId, int queue) {
-        return 0;
+    public int _updateQueueCard(String cardId, long queue) {
+
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(KEY_QUEUE, queue);//put Status
+
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(cardId)});
+        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        return update_result;
     }
 
     /**
