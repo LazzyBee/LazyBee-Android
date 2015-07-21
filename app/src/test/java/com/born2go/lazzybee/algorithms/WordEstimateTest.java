@@ -1,0 +1,67 @@
+package com.born2go.lazzybee.algorithms;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.robolectric.RobolectricGradleTestRunner;
+//import org.robolectric.RobolectricTestRunner;
+//import org.robolectric.annotation.Config;
+
+/**
+ * Created by Nobody on 7/9/2015.
+ */
+
+//@RunWith(RobolectricGradleTestRunner.class)
+//@Config(constants = BuildConfig.class)//, emulateSdk = 17)
+public class WordEstimateTest{
+    private static final double DELTA = 1e-6;
+    WordEstimate testEstimate;
+    @Before
+    public void setUp() throws Exception {
+        testEstimate = new WordEstimate();
+        testEstimate.setUpParams(1, 600, 20, 20); // 100% level 1 => voca = 600
+        testEstimate.setUpParams(2, 600, 30, 25); // voca +=
+        testEstimate.setUpParams(3, 600, 20, 10);
+        testEstimate.setUpParams(4, 600, 20, 5);
+        testEstimate.setUpParams(5, 600, 15, 3);
+        testEstimate.setUpParams(6, 600, 10, 1);
+        testEstimate.setUpParams(7, 200, 5, 0);
+    }
+
+    @Test
+    public void test_estimateVoca() throws Exception {
+        System.out.println("Your estimated vocablary is " + testEstimate._estimateVoca() + " words.");
+    }
+
+    @Test
+    public void test_getLastResult() throws Exception {
+        Assert.fail(); // Just want to have a failure test
+    }
+
+    @Test
+    public void testUpdateVoca() throws Exception {
+        testEstimate.updateVoca(1, true);
+        Assert.assertEquals(1730.0, testEstimate._estimateVoca(), DELTA);
+    }
+
+    @Test
+    public void testUpdateVoca1() throws Exception {
+
+    }
+
+    @Test
+    public void testGetVoca() throws Exception {
+
+    }
+
+    @Test
+    public void testjsonArrayToIntArray()throws Exception {
+
+    }
+
+    @Test
+    public void testintArrayToJSONArray()throws Exception {
+        System.out.println(WordEstimate.intArrayToJSONArray(testEstimate.wordTotal));
+    }
+}
