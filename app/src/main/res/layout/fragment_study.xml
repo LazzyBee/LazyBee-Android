@@ -45,57 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnShowAnswer"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Answer" />
-
-        <LinearLayout
-            android:id="@+id/mLayoutButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <Button
-                android:id="@+id/btnAgain1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="1 minute" />
-
-            <Button
-                android:id="@+id/btnAgain2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="10 minute" />
-
-            <Button
-                android:id="@+id/btnAgain3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="4  day" />
-
-            <Button
-                android:id="@+id/btnAgain4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="6  day" />
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="fill_parent"
@@ -103,6 +52,61 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/black">
     </com.google.android.gms.ads.AdView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnShowAnswer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Show Answer" />
+
+        <LinearLayout
+            android:id="@+id/mLayoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnAgain0"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.3"
+                android:text="@string/EASE_AGAIN" />
+
+            <Button
+                android:id="@+id/btnHard1"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.3"
+                android:text="@string/EASE_HARD" />
+
+            <Button
+                android:id="@+id/btnGood2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.3"
+                android:text="@string/EASE_GOOD" />
+
+            <Button
+                android:id="@+id/btnEasy3"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.3"
+                android:text="@string/EASE_EASY" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </LinearLayout>
