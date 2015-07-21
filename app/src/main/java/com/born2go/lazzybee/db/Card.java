@@ -15,7 +15,14 @@ public class Card {
     long queue;
 
 
-    public Card() {
+    
+
+
+    public Card(int id, String question, String answers, int status) {
+        this.id = id;
+        this.question = question;
+        this.answers = answers;
+        this.status = status;
     }
 
     public Card(int id, String question, String answers, String categories, String subcat, int status, int gId) {
@@ -27,6 +34,7 @@ public class Card {
         this.status = status;
         this.gId = gId;
     }
+
     public Card(int id, String question, String answers, String categories, String subcat, int status) {
         this.id = id;
         this.question = question;
@@ -37,7 +45,9 @@ public class Card {
 
     }
 
+    public Card() {
 
+    }
 
 
     public int getId() {
@@ -111,11 +121,10 @@ public class Card {
                 "id=" + id +
                 ", question='" + question + '\'' +
                 ", answers='" + answers + '\'' +
-                ", categories='" + categories + '\'' +
-                ", subcat='" + subcat + '\'' +
                 ", status=" + status +
                 '}';
     }
+
 
 
 }

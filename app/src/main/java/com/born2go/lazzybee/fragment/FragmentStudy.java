@@ -26,6 +26,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,8 @@ public class FragmentStudy extends Fragment {
     String mime = "text/html";
     String encoding = "utf-8";
     String ASSETS = "file:///android_asset/";
+
+    int index=0;
 
     public FragmentStudy() {
         // Required empty public constructor
@@ -126,17 +129,77 @@ public class FragmentStudy extends Fragment {
         if (cardListAgainDaysize > 0) {
             //todo:Check cardListToDay contains cardAgain
 
-            //Loop cardListAgainDay
-            for (Card cardAgain : cardListAgainDay) {
-                Log.i(TAG, cardAgain.toString());
-                if (cardListToDay.contains(cardAgain)) {
-                    //todo: yes contains,Remove
-                    cardListToDay.remove(cardAgain);
-                } else {
-                    Log.i(TAG, "No contain");
-                }
+//            Iterator<Card> cardListToDay_Iterator = cardListToDay.iterator();
+//            Iterator<Card> cardListAgainDay_Iterator = cardListAgainDay.iterator();
+//
+//
+//            while (cardListToDay_Iterator.hasNext()) {
+//                while (cardListAgainDay_Iterator.hasNext()) {
+//
+//                    Card card = cardListToDay_Iterator.next();
+//
+//                    Card cardAgain = cardListAgainDay_Iterator.next();
+//
+//                    if (card.getId() == cardAgain.getId()) {
+//
+//                        try {
+//                            Log.i(TAG, "-card:" + card.toString());
+//                            //cardListToDay_Iterator.remove();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                      //  break;
+//                    } else {
+//                        Log.i(TAG, "-card not compare");
+//                    }
+//                }
+//            }
 
+            /*Remove card*/
+            List<Card> listcardRemove = new ArrayList<Card>();
+            //Loop cardListAgainDay
+            for (Card card : cardListToDay) {
+                for (Card cardAgain : cardListAgainDay) {
+                    if (card.getId() == cardAgain.getId()) {
+                        Log.i(TAG, "-card:" + card.toString());
+                        try {
+                            listcardRemove.add(card);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    } else {
+                        Log.i(TAG, "-card not compare");
+                    }
+
+                }
             }
+            for (Card card : listcardRemove) {
+                cardListToDay.remove(card);
+            }
+//            for (Card cardAgain : cardListAgainDay) {
+//                    Log.i(TAG, "-card:" + card);
+
+//                Log.i(TAG, "-cardAgain:" + cardAgain.getQuestion() + ":" + cardListToDay.contains(cardAgain));
+//                Log.i(TAG, "-cardAgain:" + cardAgain.toString());
+//                    if (card.getQuestion().toString().equals(cardAgain.getQuestion().toString())) {
+//                        Log.i(TAG, "-Question:" + card.getQuestion());
+//                        cardListToDay.remove(card);
+//                    }
+//                else {
+//                    Log.i(TAG, "-Question:" + card.getQuestion());
+//                }
+//                if (cardListToDay.contains(cardAgain)) {
+//
+//                    //todo: yes contains,Remove
+//                    cardListToDay.remove(cardAgain);
+//                } else {
+////                    Log.i(TAG, "No contain");
+//                    Log.i(TAG, "-Question:" + cardAgain.getQuestion());
+//                }
+
+//            }
+//            }
         }
 
 
@@ -185,9 +248,9 @@ public class FragmentStudy extends Fragment {
         int list_card_new_size = cardListToDay.size();
 
         //todo: set count list card new
-        if (list_card_again_in_today_size > 0) {
-            list_card_new_size = list_card_new_size - list_card_again_in_today_size;
-        }
+//        if (list_card_again_in_today_size > 0) {
+//            list_card_new_size = list_card_new_size - list_card_again_in_today_size;
+//        }
 
         //set total vocabilary
         lbCountTotalVocabulary.setText("" + list_card_new_size);
@@ -305,6 +368,9 @@ public class FragmentStudy extends Fragment {
 
 
         //Todo: Load first card
+        if (cardListAgainDay.size() > 0)
+            currentCard[0] = cardListAgainDay.get(index);
+
         mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard[0].getQuestion()), mime, encoding, null);
 
 
@@ -312,6 +378,7 @@ public class FragmentStudy extends Fragment {
         btnShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //hide btnShowAnswer and show mLayoutButton
                 btnShowAnswer.setVisibility(View.GONE);
                 mLayoutButton.setVisibility(View.VISIBLE);
@@ -394,7 +461,7 @@ public class FragmentStudy extends Fragment {
 //
 //                    }
                     //Todo: set queue card 60s
-                    _setQueueCard(currentCardId, 60l);
+                    _setQueueCard("" + old_card.getId(), 60l);
                     //Remo
 
                 } else {

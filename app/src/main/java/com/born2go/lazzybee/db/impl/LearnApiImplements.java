@@ -84,7 +84,7 @@ public class LearnApiImplements implements LearnApi {
                     String answers = cursor.getString(2);
                     String categories = cursor.getString(3);
                     String subcat = cursor.getString(4);
-                    card = new Card(id, question, answers, categories, subcat, 1);
+                    card = new Card(id, question, answers, 1);
                 } while (cursor.moveToNext());
         }
         return card;
@@ -667,8 +667,8 @@ public class LearnApiImplements implements LearnApi {
                     String answers = cursor.getString(2);
                     String categories = cursor.getString(3);
                     String subcat = cursor.getString(4);
-                    Card card = new Card(id, question, answers, categories, subcat, 1);
-
+                    //Card card = new Card(id, question, answers, categories, subcat, 1);
+                    Card card = new Card(id, question, answers, 1);
                     datas.add(card);
 
                 } while (cursor.moveToNext());
