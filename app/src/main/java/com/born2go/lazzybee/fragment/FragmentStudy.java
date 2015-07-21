@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -44,7 +46,7 @@ public class FragmentStudy extends Fragment {
     String encoding = "utf-8";
     String ASSETS = "file:///android_asset/";
 
-    int index=0;
+    int index = 0;
 
     public FragmentStudy() {
         // Required empty public constructor
@@ -63,7 +65,7 @@ public class FragmentStudy extends Fragment {
     WebView mWebViewLeadDetails;
     Button btnShowAnswer;
     LinearLayout mLayoutButton;
-    Button btnAgain1, btnAgain2, btnAgain3, btnAgain4;
+    Button btnAgain0, btnHard1, btnGood2, btnEasy3;
 
     TextView lbCountTotalVocabulary;
 
@@ -74,6 +76,7 @@ public class FragmentStudy extends Fragment {
     List<Card> cardListToDay;
     List<Card> cardListAgainDay;
     List<Card> cardListDueDay;
+    CardSched cardSched;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,11 +99,11 @@ public class FragmentStudy extends Fragment {
         //init mLayoutButton
         mLayoutButton = (LinearLayout) view.findViewById(R.id.mLayoutButton);
 
-        //init btnAgain
-        btnAgain1 = (Button) view.findViewById(R.id.btnAgain1);
-        btnAgain2 = (Button) view.findViewById(R.id.btnAgain2);
-        btnAgain3 = (Button) view.findViewById(R.id.btnAgain3);
-        btnAgain4 = (Button) view.findViewById(R.id.btnAgain4);
+        //init button
+        btnAgain0 = (Button) view.findViewById(R.id.btnAgain0);
+        btnHard1 = (Button) view.findViewById(R.id.btnHard1);
+        btnGood2 = (Button) view.findViewById(R.id.btnGood2);
+        btnEasy3 = (Button) view.findViewById(R.id.btnEasy3);
 
         //init lbCount
         lbCountTotalVocabulary = (TextView) view.findViewById(R.id.lbCountTotalVocabulary);
@@ -113,14 +116,21 @@ public class FragmentStudy extends Fragment {
         //db
         _initDatabase();
 
+        //init cardSched
+        cardSched = new CardSched();
+
+
+        _initTextToSpeed();
+
+
         //get new random card list to day
         cardListToDay = dataBaseHelper._getRandomCard(10);
 
         //get card list again to day
-        cardListAgainDay = dataBaseHelper._getListCardByQueue(60l);
+        cardListAgainDay = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2);
 
         //get Card list due to day
-        cardListDueDay = dataBaseHelper._getListCardByQueue(new Date().getTime());
+        cardListDueDay = dataBaseHelper._getListCardByQueue(Card.QUEUE_DAY_LRN3);
 
 
         int cardListAgainDaysize = cardListAgainDay.size();//get card List Again size
@@ -233,6 +243,19 @@ public class FragmentStudy extends Fragment {
         return view;
     }
 
+    private void _initTextToSpeed() {
+        //Todo:init TextToSpeech
+        textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    //setLangguage
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            }
+        });
+    }
+
 
     private void _setCountCardList() {
 
@@ -298,13 +321,13 @@ public class FragmentStudy extends Fragment {
     /**
      * Set data for webview.
      * <p/>
-     * <p>Difine onclick btnAnswer and btnAgain.</p>
+     * <p>Difine onclick btnAnswer and btnAgain0.</p>
      * <p/>
      * Define JavaScrip to Speek Text.
      */
     private void _setDataforWebView() {
 
-        final List<Card> listCardNew = cardListToDay;
+        //final List<Card> cardListToDay = this.cardListToDay;
 
         //init position
         final int[] position = {0};
@@ -316,21 +339,11 @@ public class FragmentStudy extends Fragment {
 
 
         //list_card_new_size vocabulary list
-        final int list_card_new_size = listCardNew.size();
+        final int list_card_new_size = cardListToDay.size();
 
         //Current Card
-        final Card[] currentCard = {cardListToDay.get(0)};
+        final Card[] currentCard = {this.cardListToDay.get(0)};
 
-        //Todo:init TextToSpeech
-        textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    //setLangguage
-                    textToSpeech.setLanguage(Locale.UK);
-                }
-            }
-        });
 
         //Todo: addJavascriptInterface play question
         mWebViewLeadDetails.addJavascriptInterface(new JsObjectQuestion() {
@@ -384,7 +397,7 @@ public class FragmentStudy extends Fragment {
                 mLayoutButton.setVisibility(View.VISIBLE);
 
                 //get card
-                Card card = listCardNew.get(position[0]);
+                Card card = cardListToDay.get(position[0]);
 
                 //Show answer question
                 //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
@@ -393,24 +406,36 @@ public class FragmentStudy extends Fragment {
                 //Load Answer
                 _loadWebView(LazzyBeeShare.getAnswerHTML(card));
 
+                //set current card
                 currentCard[0] = card;
 
-                //Load Time queue
+                //get  next Ivl String List
+                String[] ivlStrList = cardSched.nextIvlStrLst(card);
 
-                _loadTimeQueue(card);
-
-
+                //set text btn
+                btnAgain0.setText(Html.fromHtml(ivlStrList[0] + "<br/>" + getString(R.string.EASE_AGAIN)));
+                btnHard1.setText(Html.fromHtml(ivlStrList[1] + "<br/>" + getString(R.string.EASE_HARD)));
+                btnGood2.setText(Html.fromHtml(ivlStrList[2] + "<br/>" + getString(R.string.EASE_GOOD)));
+                btnEasy3.setText(Html.fromHtml(ivlStrList[3] + "<br/>" + getString(R.string.EASE_EASY)));
             }
         });
 
-        btnAgain1.setOnClickListener(new View.OnClickListener() {
+        final long curren_time=new Date().getTime();/*curent time*/
+
+        //Todo:btnAgain on click
+        btnAgain0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show btnShowAnswer and hide btnAgain
+                //show btnShowAnswer and hide btnAgain0
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
 
-                Card old_card = listCardNew.get(position[0]);
+                //get current Card
+                Card old_card = cardListToDay.get(position[0]);
+
+                //set queue = review and
+                int due_time= (int) (curren_time+600);
+                _updateCardQueueAndCardDue(old_card.getId(),Card.QUEUE_REV2,due_time);
 
                 //todo:next position
                 position[0] = position[0] + 1;
@@ -420,20 +445,20 @@ public class FragmentStudy extends Fragment {
                 if (position[0] <= list_card_new_size - 1) {
 
                     //todo:next vocabulary
-                    currentCard[0] = listCardNew.get(position[0]);
+                    currentCard[0] = cardListToDay.get(position[0]);
                     //
                     if ((position[0] - 1) != -1) {
                         //Todo:Remove Card
-                        // listCardNew.remove(old_card);
+                        // cardListToDay.remove(old_card);
 
                         //Todo:Set queue
-                        old_card.setQueue(60l);
+                        old_card.setQueue(60);
 
                         cardListAgainDay.add(old_card);
 //                        if (position[0] + 1 > list_card_new_size)
-//                            cardListAgainDay.add(listCardNew.get(position[0] + 1));
+//                            cardListAgainDay.add(cardListToDay.get(position[0] + 1));
 //                        else {
-//                            cardListAgainDay.add(listCardNew.get(position[0] - 1));
+//                            cardListAgainDay.add(cardListToDay.get(position[0] - 1));
 //
 //                        }
                     }
@@ -441,8 +466,8 @@ public class FragmentStudy extends Fragment {
 
                     String currentCardId = String.valueOf(currentCard[0].getId());//get current cardId
 
-                    _loadWebView(_getQuestionDisplay(listCardNew.get(position[0]).getQuestion()));
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(listCardNew.get(position[0]).getQuestion()), mime, encoding, null);
+                    _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
+                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()), mime, encoding, null);
 
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
@@ -452,10 +477,10 @@ public class FragmentStudy extends Fragment {
                     lbCountTotalVocabulary.setTag(current_count);
 
                     //TODO:Check Tag
-//                    if (btnAgain1.getTag() != null) {
+//                    if (btnAgain0.getTag() != null) {
 //
-//                        //TODO:Get Time Queue by Tag btnAgain2
-//                        Long timeQueueCard = (long) btnAgain1.getTag();
+//                        //TODO:Get Time Queue by Tag btnHard1
+//                        Long timeQueueCard = (long) btnAgain0.getTag();
 //
 //                        _setQueueCard(currentCardId, timeQueueCard);
 //
@@ -471,14 +496,14 @@ public class FragmentStudy extends Fragment {
 
             }
         });
-        btnAgain2.setOnClickListener(new View.OnClickListener() {
+        btnHard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show btnShowAnswer and hide btnAgain
+                //show btnShowAnswer and hide btnAgain0
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
                 //Todo:Get current card
-                Card old_card = listCardNew.get(position[0]);
+                Card old_card = cardListToDay.get(position[0]);
 
                 //Todo:Get next position
                 position[0] = position[0] + 1;
@@ -486,26 +511,26 @@ public class FragmentStudy extends Fragment {
                 //TODO:Check if go to end eles back
                 if (position[0] <= list_card_new_size - 1) {
                     //Todo: get next Card
-                    currentCard[0] = listCardNew.get(position[0]);
+                    currentCard[0] = cardListToDay.get(position[0]);
 
                     String currentCardId = String.valueOf(currentCard[0].getId());//get next carrdid
 
                     //Todo: add card to Card list again today
                     if ((position[0] - 1) != -1) {
 
-                        // listCardNew.remove(old_card);
+                        // cardListToDay.remove(old_card);
 
                         //Todo:Set queue
-                        old_card.setQueue(600l);
+                        old_card.setQueue(600);
 
 
                         //add card aagain to day
                         cardListAgainDay.add(old_card);
 
 //                        if (position[0] + 1 > list_card_new_size)
-//                            cardListAgainDay.add(listCardNew.get(position[0] + 1));
+//                            cardListAgainDay.add(cardListToDay.get(position[0] + 1));
 //                        else {
-//                            cardListAgainDay.add(listCardNew.get(position[0] - 1));
+//                            cardListAgainDay.add(cardListToDay.get(position[0] - 1));
 //
 //                        }
                     }
@@ -514,9 +539,9 @@ public class FragmentStudy extends Fragment {
 
 
                     //Load next card
-                    _loadWebView(_getQuestionDisplay(listCardNew.get(position[0]).getQuestion()));
+                    _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
 
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(listCardNew.get(position[0]).getQuestion()), mime, encoding, null);
+                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()), mime, encoding, null);
 
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
@@ -527,10 +552,10 @@ public class FragmentStudy extends Fragment {
                     lbCountTotalVocabulary.setTag(current_count);
 
                     //TODO:Check Tag
-                    if (btnAgain2.getTag() != null) {
+                    if (btnHard1.getTag() != null) {
 
-                        //TODO:Get Time Queue by Tag btnAgain2
-                        Long timeQueueCard = (long) btnAgain2.getTag();
+                        //TODO:Get Time Queue by Tag btnHard1
+                        Long timeQueueCard = (long) btnHard1.getTag();
 
                         _setQueueCard(currentCardId, timeQueueCard);
 
@@ -546,44 +571,41 @@ public class FragmentStudy extends Fragment {
 
             }
         });
-        btnAgain3.setOnClickListener(new View.OnClickListener() {
+
+        //btnGood2 onClick
+        //set display card queue==2
+        //update due
+        //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
+        //if end card else complete
+        btnGood2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show btnShowAnswer and hide btnAgain
+                //show btnShowAnswer and hide btnAgain0
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
 
-                //Todo: get current card
-                Card old_card = listCardNew.get(position[0]);
+                // get current card
+                Card old_card = cardListToDay.get(position[0]);
 
-                //Todo: get next posotion
+                //Todo:Update card queue and card Due
+
+                //_updateCardQueueAndCardDue(old_card.getId(), Card.QUEUE_REV2,curren_time+600);
+
+                // get next posotion
                 position[0] = position[0] + 1;
 
                 if (position[0] <= list_card_new_size - 1) {
-                    //Todo: Get next card
-                    currentCard[0] = listCardNew.get(position[0]);
+                    // Get next card
+                    currentCard[0] = cardListToDay.get(position[0]);
+
                     String currentCardId = String.valueOf(currentCard[0].getId());//get next cardId
 
-//                    if ((position[0] - 1) != -1) {
-//                        // listCardNew.remove(old_card);
-//                        //Todo:Set queue
-//                        old_card.setQueue(1l);
-//
-//                        cardListDueDay.add(old_card);
-////                        if (position[0] + 1 > list_card_new_size)
-////                            cardListAgainDay.add(listCardNew.get(position[0] + 1));
-////                        else {
-////                            cardListAgainDay.add(listCardNew.get(position[0] - 1));
-////
-////                        }
-//                    }
+                    //Todo: Remove display card in card list new
+                    cardListToDay.remove(old_card);
 
-                    // _setCountCardList();
+                    //Todo:Display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
+                    _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
 
-
-                    //next vocabulary
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(listCardNew.get(position[0]).getQuestion()), mime, encoding, null);
-                    _loadWebView(_getQuestionDisplay(listCardNew.get(position[0]).getQuestion()));
 
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
@@ -592,57 +614,47 @@ public class FragmentStudy extends Fragment {
                     int current_count = _count - 1;
                     lbCountTotalVocabulary.setText("" + current_count);
                     lbCountTotalVocabulary.setTag(current_count);
-//
-//                    //TODO:Check Tag
-//                    if (btnAgain3.getTag() != null) {
-//
-//                        //TODO:Get Time Queue by Tag btnAgain3
-//                        Long timeQueueCard = (long) btnAgain3.getTag();
-//
-//                        _setQueueCard(currentCardId, timeQueueCard);
-//
-//                    } else {
-//                        //Demo:set again word 1 day
-//                        _setQueueCard(currentCardId, 86400l);
-//
-//                    }
+
+
                 } else {
-                    //end
+                    //Todo: end study
                     _completeLean();
 
                 }
 
             }
         });
-        btnAgain4.setOnClickListener(new View.OnClickListener() {
+
+
+        btnEasy3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show btnShowAnswer and hide btnAgain
+                //show btnShowAnswer and hide btnAgain0
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
 
                 //Todo: get current card
-                Card old_card = listCardNew.get(position[0]);
+                Card old_card = cardListToDay.get(position[0]);
 
                 //Todo: get next posotion
                 position[0] = position[0] + 1;
 
                 //Check if go to end eles back
                 if (position[0] <= list_card_new_size - 1) {
-                    currentCard[0] = listCardNew.get(position[0]);
+                    currentCard[0] = cardListToDay.get(position[0]);
 
                     String currentCardId = String.valueOf(currentCard[0].getId());//get current cardId
 
 //                    if ((position[0] - 1) != -1) {
-//                        // listCardNew.remove(old_card);
+//                        // cardListToDay.remove(old_card);
 //                        //Todo:Set queue
 //                        old_card.setQueue(4l);
 //                        //
 //                        cardListDueDay.add(old_card);
 ////                        if (position[0] + 1 > list_card_new_size)
-////                            cardListAgainDay.add(listCardNew.get(position[0] + 1));
+////                            cardListAgainDay.add(cardListToDay.get(position[0] + 1));
 ////                        else {
-////                            cardListAgainDay.add(listCardNew.get(position[0] - 1));
+////                            cardListAgainDay.add(cardListToDay.get(position[0] - 1));
 ////
 ////                        }
 //                    }
@@ -651,7 +663,7 @@ public class FragmentStudy extends Fragment {
 
 
                     //next vocabulary
-                    _loadWebView(_getQuestionDisplay(listCardNew.get(position[0]).getQuestion()));
+                    _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
 
                     //get total vocabulary by tag
                     int _count = Integer.valueOf(lbCountTotalVocabulary.getTag().toString());
@@ -662,10 +674,10 @@ public class FragmentStudy extends Fragment {
                     lbCountTotalVocabulary.setTag(current_count);
 
 //                    //TODO:Check Tag
-//                    if (btnAgain4.getTag() != null) {
+//                    if (btnEasy3.getTag() != null) {
 //
-//                        //TODO:Get Time Queue by Tag btnAgain4
-//                        Long timeQueueCard = (long) btnAgain4.getTag();
+//                        //TODO:Get Time Queue by Tag btnEasy3
+//                        Long timeQueueCard = (long) btnEasy3.getTag();
 //
 //                        _setQueueCard(currentCardId, timeQueueCard);
 //
@@ -683,6 +695,11 @@ public class FragmentStudy extends Fragment {
 
     }
 
+    private void _updateCardQueueAndCardDue(int old_cardId, int id, int queueDone2) {
+
+
+    }
+
     /**
      * Set queue time for card
      *
@@ -690,18 +707,18 @@ public class FragmentStudy extends Fragment {
      * @param timeQueueCard Time queue
      */
     private void _setQueueCard(String currentCardId, Long timeQueueCard) {
-        dataBaseHelper._updateQueueCard(currentCardId, timeQueueCard);
+        // dataBaseHelper._updateQueueCard(currentCardId, timeQueueCard);
 
     }
 
     /**
      * Load Time queue
-     * <p>set Text btnAgain</p>
+     * <p>set Text btnAgain0</p>
      *
      * @param card
      */
     private void _loadTimeQueue(Card card) {
-        btnAgain1.setTag(60000);
+        btnAgain0.setTag(60000);
 
     }
 
