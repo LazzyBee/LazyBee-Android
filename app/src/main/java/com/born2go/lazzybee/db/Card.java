@@ -12,7 +12,14 @@ public class Card {
     String subcat;
     int status;
     int gId;
-    long queue;
+    int queue;
+    long due;
+    String _package;
+    int level;
+
+    int rev_count;
+    String user_note;
+    int last_ivl;
 
 
     /*Static variables for queue value in database*/
@@ -23,10 +30,10 @@ public class Card {
     public static int QUEUE_SUSPENDED_1 = -1;
     public static int QUEUE_DONE_2 = -2;
 
-    public final static int EASE_AGAIN = 1;
-    public final static int EASE_HARD = 2;
-    public final static int EASE_GOOD = 3;
-    public final static int EASE_EASY = 4;
+    public final static int EASE_AGAIN = 0;
+    public final static int EASE_HARD = 1;
+    public final static int EASE_GOOD = 2;
+    public final static int EASE_EASY = 3;
 
 
     public Card(int id, String question, String answers, int status) {
@@ -54,6 +61,19 @@ public class Card {
         this.subcat = subcat;
         this.status = status;
 
+    }
+
+    public Card(int id, String question, String answers, String categories, String subcat, int status, int queue, long due, String _package, int level) {
+        this.id = id;
+        this.question = question;
+        this.answers = answers;
+        this.categories = categories;
+        this.subcat = subcat;
+        this.status = status;
+        this.queue = queue;
+        this.due = due;
+        this._package = _package;
+        this.level = level;
     }
 
     public Card() {
@@ -118,12 +138,60 @@ public class Card {
     }
 
 
-    public long getQueue() {
+    public int getQueue() {
         return queue;
     }
 
-    public void setQueue(long queue) {
+    public void setQueue(int queue) {
         this.queue = queue;
+    }
+
+    public long getDue() {
+        return due;
+    }
+
+    public void setDue(long due) {
+        this.due = due;
+    }
+
+    public String getPackage() {
+        return _package;
+    }
+
+    public void setPackage(String _package) {
+        this._package = _package;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getRev_count() {
+        return rev_count;
+    }
+
+    public void setRev_count(int rev_count) {
+        this.rev_count = rev_count;
+    }
+
+    public String getUser_note() {
+        return user_note;
+    }
+
+    public void setUser_note(String user_note) {
+        this.user_note = user_note;
+    }
+
+    public int getLast_ivl() {
+        return last_ivl;
+    }
+
+    public void setLast_ivl(int last_ivl) {
+        this.last_ivl = last_ivl;
     }
 
     @Override
