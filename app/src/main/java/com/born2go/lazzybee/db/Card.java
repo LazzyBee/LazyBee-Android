@@ -23,6 +23,11 @@ public class Card {
     public static int QUEUE_SUSPENDED_1 = -1;
     public static int QUEUE_DONE_2 = -2;
 
+    public final static int EASE_AGAIN = 1;
+    public final static int EASE_HARD = 2;
+    public final static int EASE_GOOD = 3;
+    public final static int EASE_EASY = 4;
+
 
     public Card(int id, String question, String answers, int status) {
         this.id = id;

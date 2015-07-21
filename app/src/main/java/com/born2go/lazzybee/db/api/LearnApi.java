@@ -123,7 +123,7 @@ public interface LearnApi {
      * @param queue
      *
      */
-    List<Card> _getListCardByQueue(long queue);
+    List<Card> _getListCardByQueue(int queue);
 
 
 }
