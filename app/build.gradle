@@ -35,5 +35,5 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:3.20.0'
     compile(name: 'identitytoolkit-api11', ext: 'aar')
 
-
+    testCompile 'junit:junit:4.12'
 }
