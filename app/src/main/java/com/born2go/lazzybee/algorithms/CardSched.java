@@ -1,12 +1,6 @@
 package com.born2go.lazzybee.algorithms;
 
-import com.born2go.lazzybee.activity.MainActivity;
-
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.Utils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Nobody on 7/14/2015.
@@ -40,7 +34,7 @@ public class CardSched {
      */
     public String[] nextIvlStrLst(Card card) {
         String ret[] = new String[4];
-        for (int i = 1; i < 4; i++){
+        for (int i = 0; i < 4; i++){
             ret[i] = _nextIvlStr(card, i);
         }
         return ret;
@@ -53,9 +47,9 @@ public class CardSched {
         int ivl = nextIvl(card, ease);
         double day = ivl / SECONDS_PERDAY;
         if (day < 1)
-            str =  "<10min";
+            str =  "< 10min";
         else {
-            str = Math.round(day) + "day";
+            str = Math.round(day) + " day";
         }
         return str;
     }
