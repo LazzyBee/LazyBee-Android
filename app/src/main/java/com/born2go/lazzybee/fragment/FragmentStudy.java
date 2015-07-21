@@ -420,7 +420,7 @@ public class FragmentStudy extends Fragment {
             }
         });
 
-        final long curren_time=new Date().getTime();/*curent time*/
+        final long curren_time = new Date().getTime();/*curent time*/
 
         //Todo:btnAgain on click
         btnAgain0.setOnClickListener(new View.OnClickListener() {
@@ -433,13 +433,18 @@ public class FragmentStudy extends Fragment {
                 //get current Card
                 Card old_card = cardListToDay.get(position[0]);
 
-                //set queue = review and
-                int due_time= (int) (curren_time+600);
-                _updateCardQueueAndCardDue(old_card.getId(),Card.QUEUE_REV2,due_time);
+                //Todo:update queue and Due
+                int due_time = (int) (curren_time + 600);
+                _updateCardQueueAndCardDue(old_card.getId(), Card.QUEUE_REV2, due_time);
+
+                //TODO:Add current card in CardAgainList and Remove CardListNew  to day
+                cardListAgainDay.add(old_card);
+                cardListToDay.remove(old_card);
+
+                _setCountCardList();
 
                 //todo:next position
                 position[0] = position[0] + 1;
-
 
                 //Todo:Check if go to end eles back
                 if (position[0] <= list_card_new_size - 1) {
@@ -462,10 +467,11 @@ public class FragmentStudy extends Fragment {
 //
 //                        }
                     }
-                    _setCountCardList();
+
 
                     String currentCardId = String.valueOf(currentCard[0].getId());//get current cardId
 
+                    //TODO:Display next card
                     _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
                     //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()), mime, encoding, null);
 
