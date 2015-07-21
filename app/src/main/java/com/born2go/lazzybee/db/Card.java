@@ -15,7 +15,13 @@ public class Card {
     long queue;
 
 
-    
+    /*Static variables for queue value in database*/
+    public static int QUEUE_NEW_CRAM0 = 0;
+    public static int QUEUE_LNR1 = 1;
+    public static int QUEUE_REV2 = 2;
+    public static int QUEUE_DAY_LRN3 = 3;// Don't know what to do
+    public static int QUEUE_SUSPENDED_1 = -1;
+    public static int QUEUE_DONE_2 = -2;
 
 
     public Card(int id, String question, String answers, int status) {
@@ -124,7 +130,6 @@ public class Card {
                 ", status=" + status +
                 '}';
     }
-
 
 
 }
