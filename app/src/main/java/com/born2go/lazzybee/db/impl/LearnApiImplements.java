@@ -641,26 +641,6 @@ public class LearnApiImplements implements LearnApi {
 
     }
 
-    /**
-     * Get last interver of card
-     *
-     * @param cardId return iterver second
-     */
-    @Override
-    public int _getLastInterval(String cardId) {
-        return 0;
-    }
-
-    /**
-     * Get Card by id & update increase  one revew_user
-     * param cardId
-     *
-     * @param cardId
-     */
-    @Override
-    public void _increaseRev_user(String cardId) {
-
-    }
 
     /**
      * Update queue and due card
