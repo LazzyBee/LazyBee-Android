@@ -207,19 +207,15 @@ public class Card {
     /**
      * Get last interver of card
      *
-     * @param cardId return iterver second
      */
-    public int _getLastInterval(String cardId) {
+    public int getLastInterval() {
         return 0;
     }
 
     /**
-     * Get Card by id & update increase  one revew_user
-     * param cardId
-     *
-     * @param cardId
+     * Get Card by id & update increase one revew_user
      */
-    public void _increaseRev_user(String cardId) {
+    public void increaseRev_user() {
 
     }
 
