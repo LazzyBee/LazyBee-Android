@@ -44,6 +44,7 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_SYSTEM_VALUE = "value";
     private static final int STATUS_NO_LEARN = -1;
     private static final String KEY_QUEUE = "queue";
+    private static final String KEY_DUE = "due";
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
 
@@ -670,7 +671,19 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _updateCardQueueAndCardDue(String cardId, int queue, int due) {
-        return 0;
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(KEY_QUEUE, queue);//put Status
+        values.put(KEY_DUE,due);
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(cardId)});
+        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        return update_result;
     }
 
     private boolean _compreaToDate(Date card_due_date, Date now_date) {
