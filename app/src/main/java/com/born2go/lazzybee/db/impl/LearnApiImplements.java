@@ -721,6 +721,7 @@ public class LearnApiImplements implements LearnApi {
 
                 } while (cursor.moveToNext());
         }
+        Log.i(TAG, "Query String: "+query+" --Result card count:" + datas.size());
         return datas;
     }
 }
