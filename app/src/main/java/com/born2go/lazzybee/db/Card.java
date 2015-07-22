@@ -6,20 +6,32 @@ package com.born2go.lazzybee.db;
 public class Card {
 
     int id;
+
     String question;
+
     String answers;
+
     String categories;
+
     String subcat;
+
     int status;
-    int gId;
+
+    int gId;/*"global unique id */
+
     int queue;
-    long due;
+
+    int due;/*Time future,second*/
+
     String _package;
+
     int level;
 
-    int rev_count;
-    String user_note;
-    int last_ivl;
+    int rev_count;/*Number of review count*/
+
+    String user_note;/*Anything user can note about this word*/
+
+    int last_ivl;/*Last interval by second*/
 
 
     /*Static variables for queue value in database*/
@@ -63,7 +75,7 @@ public class Card {
 
     }
 
-    public Card(int id, String question, String answers, String categories, String subcat, int status, int queue, long due, String _package, int level) {
+    public Card(int id, String question, String answers, String categories, String subcat, int status, int queue, int due, String _package, int level) {
         this.id = id;
         this.question = question;
         this.answers = answers;
@@ -150,7 +162,7 @@ public class Card {
         return due;
     }
 
-    public void setDue(long due) {
+    public void setDue(int due) {
         this.due = due;
     }
 
