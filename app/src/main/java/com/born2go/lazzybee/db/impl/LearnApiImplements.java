@@ -44,6 +44,7 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_SYSTEM_VALUE = "value";
     private static final int STATUS_NO_LEARN = -1;
     private static final String KEY_QUEUE = "queue";
+    private static final String KEY_DUE = "due";
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
 
@@ -80,11 +81,27 @@ public class LearnApiImplements implements LearnApi {
                 do {
                     //get data from sqlite
                     int id = cursor.getInt(0);
+
                     String question = cursor.getString(1);
+
                     String answers = cursor.getString(2);
+
                     String categories = cursor.getString(3);
+
                     String subcat = cursor.getString(4);
-                    card = new Card(id, question, answers, 1);
+
+                    int status = 1;
+
+                    int queue = cursor.getInt(9);
+
+                    String _package = cursor.getString(10);
+
+                    int level = cursor.getInt(11);
+
+                    long due = cursor.getLong(12);
+
+                    card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
+
                 } while (cursor.moveToNext());
         }
         return card;
@@ -624,6 +641,31 @@ public class LearnApiImplements implements LearnApi {
 
     }
 
+
+    /**
+     * Update queue and due card
+     *
+     * @param cardId
+     * @param queue  queue
+     * @param due    due time review card
+     */
+    @Override
+    public int _updateCardQueueAndCardDue(String cardId, int queue, int due) {
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(KEY_QUEUE, queue);//put Status
+        values.put(KEY_DUE,due);
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(cardId)});
+        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        return update_result;
+    }
+
     private boolean _compreaToDate(Date card_due_date, Date now_date) {
         try {
             Date date_compateTo = inputFormat.parse(card_due_date.toString());
@@ -667,8 +709,13 @@ public class LearnApiImplements implements LearnApi {
                     String answers = cursor.getString(2);
                     String categories = cursor.getString(3);
                     String subcat = cursor.getString(4);
-                    //Card card = new Card(id, question, answers, categories, subcat, 1);
-                    Card card = new Card(id, question, answers, 1);
+                    int status = 1;
+                    int queue = cursor.getInt(9);
+                    String _package = cursor.getString(10);
+                    int level = cursor.getInt(11);
+                    long due = cursor.getLong(12);
+
+                    Card card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
                     datas.add(card);
 
                 } while (cursor.moveToNext());

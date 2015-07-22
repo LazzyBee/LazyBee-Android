@@ -126,17 +126,12 @@ public interface LearnApi {
     List<Card> _getListCardByQueue(int queue);
 
     /**
-     * Get last interver of card
+     * Update queue and due card
      * @param cardId
-     * return iterver second
+     * @param queue queue
+     * @param due due time review card
+     *
      * */
-    int _getLastInterval(String cardId);
-
-    /**
-     * Get Card by id & update increase  one revew_user
-     * param cardId
-     * */
-    void _increaseRev_user(String cardId);
-
+    int _updateCardQueueAndCardDue(String cardId,int queue,int due);
 
 }
