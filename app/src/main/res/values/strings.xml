@@ -12,7 +12,7 @@
 
     <string name="action_settings">Settings</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_course">Add Course</string>
     <string name="action_profile">Profile</string>
@@ -32,4 +32,11 @@
     <string name="hint_search">Search</string>
     <string name="title_activity_card_details">CardDetailsActivity</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+    <string name="EASE_AGAIN">AGAIN</string>
+    <string name="EASE_HARD">HARD</string>
+    <string name="EASE_GOOD">GOOD</string>
+    <string name="EASE_EASY">EASY</string>
+
+
 </resources>

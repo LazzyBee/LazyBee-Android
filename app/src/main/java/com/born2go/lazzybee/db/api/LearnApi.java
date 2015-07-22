@@ -123,7 +123,20 @@ public interface LearnApi {
      * @param queue
      *
      */
-    List<Card> _getListCardByQueue(long queue);
+    List<Card> _getListCardByQueue(int queue);
+
+    /**
+     * Get last interver of card
+     * @param cardId
+     * return iterver second
+     * */
+    int _getLastInterval(String cardId);
+
+    /**
+     * Get Card by id & update increase  one revew_user
+     * param cardId
+     * */
+    void _increaseRev_user(String cardId);
 
 
 }
