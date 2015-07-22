@@ -134,9 +134,17 @@ public interface LearnApi {
 
     /**
      * Get Card by id & update increase  one revew_user
-     * param cardId
+     * @param cardId
      * */
     void _increaseRev_user(String cardId);
 
+    /**
+     * Update queue and due card
+     * @param cardId
+     * @param queue queue
+     * @param due due time review card
+     *
+     * */
+    int _updateCardQueueAndCardDue(String cardId,int queue,int due);
 
 }
