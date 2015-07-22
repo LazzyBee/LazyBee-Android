@@ -98,7 +98,7 @@ public class LearnApiImplements implements LearnApi {
 
                     int level = cursor.getInt(11);
 
-                    long due = cursor.getLong(12);
+                    int due = cursor.getInt(12);
 
                     card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
 
@@ -606,14 +606,18 @@ public class LearnApiImplements implements LearnApi {
     public List<Card> _getListCardByQueue(int queue) {
 //
 //        if (queue <= 600l) {
+
         //get current time
-        int curent_time = (int) new Date().getTime();
+        long long_curent_time = new Date().getTime();
+        
+        int curent_time = (int) (long_curent_time/1000);
+        Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
+
         //Query select_list_card_by_queue
         String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
 
         //Get card list by status
         List<Card> cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
-
         return cardListByQueue;
 //        } else {
 //            //select query
@@ -714,14 +718,14 @@ public class LearnApiImplements implements LearnApi {
                     int queue = cursor.getInt(9);
                     String _package = cursor.getString(10);
                     int level = cursor.getInt(11);
-                    long due = cursor.getLong(12);
+                    int due = cursor.getInt(12);
 
                     Card card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
                     datas.add(card);
 
                 } while (cursor.moveToNext());
         }
-        Log.i(TAG, "Query String: "+query+" --Result card count:" + datas.size());
+        Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
         return datas;
     }
 }
