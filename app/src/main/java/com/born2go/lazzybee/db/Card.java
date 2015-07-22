@@ -21,7 +21,7 @@ public class Card {
 
     int queue;
 
-    int due;/*Time future,second*/
+    long due;/*Time future,second*/
 
     String _package;
 
@@ -75,7 +75,7 @@ public class Card {
 
     }
 
-    public Card(int id, String question, String answers, String categories, String subcat, int status, int queue, int due, String _package, int level) {
+    public Card(int id, String question, String answers, String categories, String subcat, int status, int queue, long due, String _package, int level) {
         this.id = id;
         this.question = question;
         this.answers = answers;
@@ -162,7 +162,7 @@ public class Card {
         return due;
     }
 
-    public void setDue(int due) {
+    public void setDue(long due) {
         this.due = due;
     }
 
