@@ -6,20 +6,32 @@ package com.born2go.lazzybee.db;
 public class Card {
 
     int id;
+
     String question;
+
     String answers;
+
     String categories;
+
     String subcat;
+
     int status;
-    int gId;
+
+    int gId;/*"global unique id */
+
     int queue;
-    long due;
+
+    long due;/*Time future,second*/
+
     String _package;
+
     int level;
 
-    int rev_count;
-    String user_note;
-    int last_ivl;
+    int rev_count;/*Number of review count*/
+
+    String user_note;/*Anything user can note about this word*/
+
+    int last_ivl;/*Last interval by second*/
 
 
     /*Static variables for queue value in database*/
@@ -207,19 +219,15 @@ public class Card {
     /**
      * Get last interver of card
      *
-     * @param cardId return iterver second
      */
-    public int _getLastInterval(String cardId) {
+    public int getLastInterval() {
         return 0;
     }
 
     /**
-     * Get Card by id & update increase  one revew_user
-     * param cardId
-     *
-     * @param cardId
+     * Get Card by id & update increase one revew_user
      */
-    public void _increaseRev_user(String cardId) {
+    public void increaseRev_user() {
 
     }
 
