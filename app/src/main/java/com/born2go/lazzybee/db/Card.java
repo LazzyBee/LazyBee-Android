@@ -6,33 +6,26 @@ package com.born2go.lazzybee.db;
 public class Card {
 
     int id;
-
-    String question;
-
-    String answers;
-
-    String categories;
-
-    String subcat;
-
-    int status;
-
     int gId;/*"global unique id */
 
+    String question;
+    String answers;
+
+    int status;
     int queue;
 
-    long due;/*Time future,second*/
-
+    String categories;
+    String subcat;
     String _package;
 
-    int level;
-
-    int rev_count;/*Number of review count*/
-
-    String user_note;/*Anything user can note about this word*/
+    int level;      /*classify by popular rating */
+    int rev_count;  /*Number of review count*/
+    int factor;     /*Easy factor. Change every time user learns*/
 
     int last_ivl;/*Last interval by second*/
+    long due;/*Time future,second*/
 
+    String user_note;/*Anything user can note about this word*/
 
     /*Static variables for queue value in database*/
     public static int QUEUE_NEW_CRAM0 = 0;
@@ -46,47 +39,7 @@ public class Card {
     public final static int EASE_HARD = 1;
     public final static int EASE_GOOD = 2;
     public final static int EASE_EASY = 3;
-
-
-    public Card(int id, String question, String answers, int status) {
-        this.id = id;
-        this.question = question;
-        this.answers = answers;
-        this.status = status;
-    }
-
-    public Card(int id, String question, String answers, String categories, String subcat, int status, int gId) {
-        this.id = id;
-        this.question = question;
-        this.answers = answers;
-        this.categories = categories;
-        this.subcat = subcat;
-        this.status = status;
-        this.gId = gId;
-    }
-
-    public Card(int id, String question, String answers, String categories, String subcat, int status) {
-        this.id = id;
-        this.question = question;
-        this.answers = answers;
-        this.categories = categories;
-        this.subcat = subcat;
-        this.status = status;
-
-    }
-
-    public Card(int id, String question, String answers, String categories, String subcat, int status, int queue, long due, String _package, int level) {
-        this.id = id;
-        this.question = question;
-        this.answers = answers;
-        this.categories = categories;
-        this.subcat = subcat;
-        this.status = status;
-        this.queue = queue;
-        this.due = due;
-        this._package = _package;
-        this.level = level;
-    }
+    
 
     public Card() {
 
@@ -218,7 +171,6 @@ public class Card {
 
     /**
      * Get last interver of card
-     *
      */
     public int getLastInterval() {
         return 0;
@@ -227,9 +179,15 @@ public class Card {
     /**
      * Get Card by id & update increase one revew_user
      */
-    public void increaseRev_user() {
-
+    public void increaseRevCount() {
+        rev_count ++;
     }
 
+    public int getFactor() {
+        return factor;
+    }
 
+    public void setFactor(int factor) {
+        this.factor = factor;
+    }
 }

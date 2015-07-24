@@ -98,7 +98,7 @@ public class LearnApiImplements implements LearnApi {
 
                     int level = cursor.getInt(11);
 
-                    int due = cursor.getInt(12);
+                    long due = cursor.getLong(12);
 
                     card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
 
@@ -609,7 +609,7 @@ public class LearnApiImplements implements LearnApi {
 
         //get current time
         long long_curent_time = new Date().getTime();
-        
+
         int curent_time = (int) (long_curent_time/1000);
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 

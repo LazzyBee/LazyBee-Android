@@ -122,7 +122,7 @@ public class CardSched {
     public void answerCard(Card card, int ease){
         int nextIvl = nextIvlBySeconds(card, ease);
         card.setLast_ivl(_nextIntervalByDays(card, ease));
-        card._increaseRev_user("Dont care about me");
+        card.increaseRevCount();
 
         long current = Utils.intNow();
 

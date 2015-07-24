@@ -382,7 +382,7 @@ public class NavigationDrawerFragment extends Fragment {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(resource, parent, false);
             TextView lbNameCourse = (TextView) rowView.findViewById(R.id.lbNameCourse);
-            //TextView lbCountTotalVocabulary = (TextView) rowView.findViewById(R.id.lbCountTotalVocabulary);
+            //TextView lbCountNew = (TextView) rowView.findViewById(R.id.lbCountNew);
             lbNameCourse.setText(strings.get(position));
             return rowView;
         }
