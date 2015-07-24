@@ -39,7 +39,7 @@ public class Card {
     public final static int EASE_HARD = 1;
     public final static int EASE_GOOD = 2;
     public final static int EASE_EASY = 3;
-    
+
 
     public Card() {
 
@@ -169,12 +169,7 @@ public class Card {
                 '}';
     }
 
-    /**
-     * Get last interver of card
-     */
-    public int getLastInterval() {
-        return 0;
-    }
+  
 
     /**
      * Get Card by id & update increase one revew_user
