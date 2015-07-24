@@ -62,6 +62,25 @@ public class LearnApiImplements implements LearnApi {
         dataBaseHelper = new DataBaseHelper(context);
     }
 
+    static int CARD_INDEX_ID = 0;
+    static int CARD_INDEX_QUESTION = 1;
+    static int CARD_INDEX_ANSWER = 2;
+    static int CARD_INDEX_CATRGORIES = 3;
+    static int CARD_INDEX_SUBCAT = 4;
+    static int CARD_INDEX_TAGS = 5;
+    static int CARD_INDEX_RELATED = 6;
+    static int CARD_INDEX_GID = 7;
+    static int CARD_INDEX_STATUS = 8;
+    static int CARD_INDEX_QUEUE = 9;
+    static int CARD_INDEX_PACKAGE = 10;
+    static int CARD_INDEX_LEVEL = 11;
+    static int CARD_INDEX_DUE = 12;
+    static int CARD_INDEX_REV_COUNT = 13;
+    static int CARD_INDEX_USER_NOTE = 14;
+    static int CARD_INDEX_LAST_IVL = 15;
+    static int CARD_INDEX_E_FACTOR = 16;
+
+
     /**
      * Get card by ID form sqlite
      *
@@ -69,7 +88,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public Card _getCardByID(String cardId) {
-        Card card = new Card();
+        Card card = null;
 
         String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
@@ -79,28 +98,25 @@ public class LearnApiImplements implements LearnApi {
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 do {
+                    card = new Card();
                     //get data from sqlite
-                    int id = cursor.getInt(0);
+                    card.setId(cursor.getInt(CARD_INDEX_ID));
 
-                    String question = cursor.getString(1);
+                    card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
+                    card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
+                    card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+                    card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
-                    String answers = cursor.getString(2);
+                    card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+                    card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+                    card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+                    card.setDue(cursor.getLong(CARD_INDEX_DUE));
 
-                    String categories = cursor.getString(3);
+                    card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+                    card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+                    card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+                    card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
-                    String subcat = cursor.getString(4);
-
-                    int status = 1;
-
-                    int queue = cursor.getInt(9);
-
-                    String _package = cursor.getString(10);
-
-                    int level = cursor.getInt(11);
-
-                    long due = cursor.getLong(12);
-
-                    card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
 
                 } while (cursor.moveToNext());
         }
@@ -193,14 +209,25 @@ public class LearnApiImplements implements LearnApi {
                 if (cursor.getCount() > 0)
                     do {
                         //get data from sqlite
-                        int id = cursor.getInt(0);
-                        String question = cursor.getString(1);
-                        String answers = cursor.getString(2);
-                        String categories = cursor.getString(3);
-                        String subcat = cursor.getString(4);
-                        Card card = new Card(id, question, answers, categories, subcat, 1);
+                        Card card = new Card();
+                        card.setId(cursor.getInt(CARD_INDEX_ID));
+
+                        card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
+                        card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
+                        card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+                        card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+
+                        card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+                        card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+                        card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+                        card.setDue(cursor.getLong(CARD_INDEX_DUE));
+
+                        card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+                        card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+                        card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+                        card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
                         datas.add(card);
-                        _updateStatusCard("" + id, STATUS_CARD_LEARN_TODAY);
+                        _updateStatusCard("" + card.getId(), STATUS_CARD_LEARN_TODAY);
 
                     } while (cursor.moveToNext());
             }
@@ -448,7 +475,6 @@ public class LearnApiImplements implements LearnApi {
      *
      * */
     private List<Card> _getListCard() {
-        List<Card> datas = new ArrayList<Card>();
         //select query
         String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY;
         //select limit 5 row
@@ -456,24 +482,7 @@ public class LearnApiImplements implements LearnApi {
 
         //TODO query select List Card by status=learned
         String selectListCardByStatus = "SELECT  * FROM " + TABLE_VOCABULARY + " where status = 1 ";
-
-        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
-        //query for cursor
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    Card card = new Card(id, question, answers, categories, subcat, 1);
-                    datas.add(card);
-
-                } while (cursor.moveToNext());
-        }
+        List<Card> datas = _getListCardQueryString(selectQuery);
         return datas;
     }
 
@@ -610,7 +619,7 @@ public class LearnApiImplements implements LearnApi {
         //get current time
         long long_curent_time = new Date().getTime();
 
-        int curent_time = (int) (long_curent_time/1000);
+        int curent_time = (int) (long_curent_time / 1000);
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
         //Query select_list_card_by_queue
@@ -708,19 +717,25 @@ public class LearnApiImplements implements LearnApi {
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 do {
-                    //get data from sqlite
-                    int id = cursor.getInt(0);
-                    String question = cursor.getString(1);
-                    String answers = cursor.getString(2);
-                    String categories = cursor.getString(3);
-                    String subcat = cursor.getString(4);
-                    int status = 1;
-                    int queue = cursor.getInt(9);
-                    String _package = cursor.getString(10);
-                    int level = cursor.getInt(11);
-                    int due = cursor.getInt(12);
+                    Card card = new Card();
+                    card.setId(cursor.getInt(CARD_INDEX_ID));
 
-                    Card card = new Card(id, question, answers, categories, subcat, status, queue, due, _package, level);
+                    card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
+                    card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
+                    card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+                    card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+
+                    card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+                    card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+                    card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+                    card.setDue(cursor.getLong(CARD_INDEX_DUE));
+
+                    card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+                    card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+                    card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+                    card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+
+
                     datas.add(card);
 
                 } while (cursor.moveToNext());
