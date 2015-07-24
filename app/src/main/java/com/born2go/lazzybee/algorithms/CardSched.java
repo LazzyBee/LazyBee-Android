@@ -73,7 +73,7 @@ public class CardSched {
     /**
      * Ideal next interval by days for CARD, given EASE > 0
      */
-    private int _nextIntervalByDays(Card card, int ease) {
+    public int _nextIntervalByDays(Card card, int ease) {
         assert (ease > 0 && ease <= EASE_EASY);
 
         long delay = _daysLate(card);
@@ -99,8 +99,13 @@ public class CardSched {
      * Number of days later than scheduled.
      */
     private long _daysLate(Card card) {
+        long due;
         long now = Utils.intNow();
-        long due = card.getDue();
+        
+        if(card.getQueue() == Card.QUEUE_REV2)
+            due = card.getDue();
+        else due = now;
+
         long diff_day = (now - due)/SECONDS_PERDAY;
         return Math.max(0, diff_day );
     }
