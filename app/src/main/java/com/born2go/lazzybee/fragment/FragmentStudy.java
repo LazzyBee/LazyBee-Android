@@ -343,7 +343,7 @@ public class FragmentStudy extends Fragment {
 
         //init position
         final int[] position = {0};
-        final int[] position_again = {0};
+        final int[] position_again = {-2};
         final int[] position_due = {0};
 
 
@@ -396,6 +396,7 @@ public class FragmentStudy extends Fragment {
 
         //Todo: Load first card
         if (cardListAgain.size() > 0) {
+            Log.i(TAG, "Load first again card ");
             currentCard[0] = cardListAgain.get(position_again[0]);
 
             lbCountDue.setBackgroundResource(R.color.white);
@@ -403,12 +404,15 @@ public class FragmentStudy extends Fragment {
             lbCountNew.setBackgroundResource(R.color.white);
         } else if (cardListDue.size() > 0) {
             //Todo: get next Card
+            Log.i(TAG, "Load first duecard ");
             currentCard[0] = cardListDue.get(position_due[0]);
+
+
             lbCountDue.setBackgroundResource(R.color.teal_200);
             lbCountAgain.setBackgroundResource(R.color.white);
             lbCountNew.setBackgroundResource(R.color.white);
         } else if (cardListToDay.size() > 0) {
-
+            Log.i(TAG, "Load first new card ");
             currentCard[0] = cardListToDay.get(position[0]);
 
             lbCountDue.setBackgroundResource(R.color.white);
@@ -459,186 +463,90 @@ public class FragmentStudy extends Fragment {
         final long curren_time = new Date().getTime() / 1000;/*curent time*/
 
         //Todo:btnAgain on click
-        //set display card queue==2
-        //update due
-        //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
-        //if end card else complete
-        //update rev_count
         btnAgain0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //set display card queue==2
+                //update due
+                //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
+                //if end card else complete
+                //update rev_count
                 //show btnShowAnswer and hide btnAgain0
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
                 int flag_queue = 1;
                 int due_time = (int) (curren_time + 10);
                 try {
-                    if (currentCard[0].getQueue() == Card.QUEUE_LNR1) {
-                        Log.e(TAG, "Card.QUEUE_LNR1");
-                        currentCard[0].setQueue(Card.QUEUE_LNR1);
-                        currentCard[0].setDue(due_time);
-                        cardListAgain.add(currentCard[0]);
-                        cardListAgainToday.add(currentCard[0]);
-
-                        //Card again next card is due
-                        if (cardListDue.size() > 0) {
-                            //Size>0 next card is card due
-                            Log.e(TAG, "Card.QUEUE_LNR1:DUE LIST");
-                            currentCard[0] = cardListDue.get(position_again[0]);
-
-                            lbCountDue.setBackgroundResource(R.color.teal_200);
-                            lbCountAgain.setBackgroundResource(R.color.white);
-                            lbCountNew.setBackgroundResource(R.color.white);
-
-                            //TODO:Display next card
-                            _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
-                        } else {
-                            //Size<0 next card new card
-                            Log.e(TAG, "Card.QUEUE_LNR1:NEW LIST");
-                            if (cardListToDay.size() > 0) {
-
-                                position[0]++;
-
-                                if (position[0] <= list_card_new_size - 1) {
-                                    //get next card again
-                                    currentCard[0] = cardListToDay.get(position[0]);
-
-                                    lbCountDue.setBackgroundResource(R.color.white);
-                                    lbCountAgain.setBackgroundResource(R.color.white);
-                                    lbCountNew.setBackgroundResource(R.color.teal_200);
+                    //getCurrent Card Queue
+                    int currentCardQueue = currentCard[0].getQueue();
+                    currentCard[0].setQueue(Card.QUEUE_LNR1);
+                    currentCard[0].setDue(due_time);
 
 
-                                    //TODO:Display next card
-                                    _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+                    cardListAgain.add(currentCard[0]);
+                    cardListAgainToday.add(currentCard[0]);
 
-                                } else {
-                                    _completeLean();
-                                }
-                            } else {
-                                //
-                                _completeLean();
-                            }
-                        }
-                    } else if (currentCard[0].getQueue() == Card.QUEUE_REV2) {
-                        Log.e(TAG, "Card.QUEUE_REV2:");
-                        currentCard[0].setQueue(Card.QUEUE_LNR1);
-                        currentCard[0].setDue(due_time);
-                        cardListAgain.add(currentCard[0]);
-                        cardListAgainToday.add(currentCard[0]);
+                    int _count = cardListToDay.size();
+                    //reset total vocabilary
+                    int current_count = _count - cardListAgainToday.size();
+                    lbCountNew.setText("" + current_count);
 
-                        //Card d?a next card is new
-                        if (cardListToDay.size() > 0) {
-                            Log.e(TAG, "Card.QUEUE_REV2:NEW LIST");
-                            //
-                            position[0]++;
-                            if (position[0] <= list_card_new_size - 1) {
-                                //get next card again
-                                currentCard[0] = cardListToDay.get(position[0]);
-
-                                lbCountDue.setBackgroundResource(R.color.white);
-                                lbCountAgain.setBackgroundResource(R.color.white);
-                                lbCountNew.setBackgroundResource(R.color.teal_200);
-
-                                //TODO:Display next card
-                                _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
-
-                            } else {
-                                _completeLean();
-                            }
-                        } else {
-                            //next is again
-                            _completeLean();
-                        }
-
-                    } else if (currentCard[0].getQueue() == Card.QUEUE_NEW_CRAM0) {
-                        currentCard[0].setQueue(Card.QUEUE_LNR1);
-                        currentCard[0].setDue(due_time);
-                        cardListAgain.add(currentCard[0]);
-                        cardListAgainToday.add(currentCard[0]);
-
-                        Log.e(TAG, "Card.QUEUE_NEW_CRAM0:");
-                        if (cardListAgain.size() > 0 && position_again[0] <= cardListToDay.size() - 1) {
-
-                            long currenTime = new Date().getTime() / 1000;
+                    //Update Count Again
+                    int count_card_list_again = cardListAgain.size();
+                    //reset total vocabilary
+                    lbCountAgain.setText("" + count_card_list_again);
 
 
-                            Log.e(TAG, "Card.QUEUE_NEW_CRAM0:AGAIN LIST:" + position_again[0]);
-                            try {
-                                position_again[0]++;
-                                currentCard[0] = cardListAgain.get(position_again[0]);
-                                boolean check_again = false;
-                                for (Card cardAgain : cardListAgain) {
-                                    currentCard[0] = cardAgain;
-                                    if (currentCard[0].getDue() < currenTime) {
-                                        lbCountDue.setBackgroundResource(R.color.white);
-                                        lbCountAgain.setBackgroundResource(R.color.teal_200);
-                                        lbCountNew.setBackgroundResource(R.color.white);
-
-                                        //TODO:Display next card
-                                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
-                                        check_again = true;
-                                        //break;
-                                    } else {
-                                        check_again = false;
-                                    }
-                                }
-                                if (!check_again) {
-                                    if (cardListToDay.size() > 0) {
-
-                                        position[0] = position[0] + 1;
-                                        if (position[0] <= list_card_new_size - 1) {
-                                            //get next card again
-                                            currentCard[0] = cardListToDay.get(position[0]);
-
-                                            lbCountDue.setBackgroundResource(R.color.white);
-                                            lbCountAgain.setBackgroundResource(R.color.white);
-                                            lbCountNew.setBackgroundResource(R.color.teal_200);
+                    if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
+                        //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if cardListAgain.size>0
+                        Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
+                        _nextAgainCard();
 
 
-                                            //TODO:Display next card
-                                            _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
-
-                                        } else {
-                                            _completeLean();
-                                        }
-
-                                    }
-                                }
-
-                            } catch (Exception e) {
+                    } else if (currentCardQueue == Card.QUEUE_LNR1) {
+                        Log.i(TAG, "Card.QUEUE_LNR1");
+                        _nextDueCard();
 
 
-                                if (cardListToDay.size() > 0) {
+                    } else if (currentCardQueue == Card.QUEUE_REV2) {
+                        Log.i(TAG, "Card.QUEUE_REV2");
+                        _nextNewCard();
 
-                                    position[0] = position[0] + 1;
-                                    if (position[0] <= list_card_new_size - 1) {
-                                        //get next card again
-                                        currentCard[0] = cardListToDay.get(position[0]);
-
-                                        lbCountDue.setBackgroundResource(R.color.white);
-                                        lbCountAgain.setBackgroundResource(R.color.white);
-                                        lbCountNew.setBackgroundResource(R.color.teal_200);
+                    }
 
 
-                                        //TODO:Display next card
-                                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                                    } else {
-                                        _completeLean();
-                                    }
 
-                                }
-                            }
-                        } else {
-
-//                            Log.e(TAG, "Card.QUEUE_NEW_CRAM0:NEW LIST");
-//                            currentCard[0].setQueue(Card.QUEUE_LNR1);
-//                            currentCard[0].setDue(due_time);
-//                            cardListAgain.add(currentCard[0]);
+//                try {
+//                    if (currentCard[0].getQueue() == Card.QUEUE_LNR1) {
+//                        Log.e(TAG, "Card.QUEUE_LNR1");
+//                        currentCard[0].setQueue(Card.QUEUE_LNR1);
+//                        currentCard[0].setDue(due_time);
+//                        cardListAgain.add(currentCard[0]);
+//                        cardListAgainToday.add(currentCard[0]);
 //
+//                        //Card again next card is due
+//                        if (cardListDue.size() > 0) {
+//                            //Size>0 next card is card due
+//                            Log.e(TAG, "Card.QUEUE_LNR1:DUE LIST");
+//                            currentCard[0] = cardListDue.get(position_again[0]);
+//
+//                            lbCountDue.setBackgroundResource(R.color.teal_200);
+//                            lbCountAgain.setBackgroundResource(R.color.white);
+//                            lbCountNew.setBackgroundResource(R.color.white);
+//
+//                            //TODO:Display next card
+//                            _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+//                        } else {
+//                            //Size<0 next card new card
+//                            Log.e(TAG, "Card.QUEUE_LNR1:NEW LIST");
 //                            if (cardListToDay.size() > 0) {
 //
-//                                position[0] = position[0] + 1;
+//                                position[0]++;
+//
 //                                if (position[0] <= list_card_new_size - 1) {
 //                                    //get next card again
 //                                    currentCard[0] = cardListToDay.get(position[0]);
@@ -654,84 +562,306 @@ public class FragmentStudy extends Fragment {
 //                                } else {
 //                                    _completeLean();
 //                                }
-//
-//
 //                            } else {
 //                                //
 //                                _completeLean();
 //                            }
-                            _completeLean();
-                        }
-
-                    }
-
-
-                    int _count = cardListToDay.size();
-                    //reset total vocabilary
-                    int current_count = _count - cardListAgainToday.size();
-                    lbCountNew.setText("" + current_count);
-
-                    //Update Count Again
-                    int count_card_list_again = cardListAgain.size();
-                    //reset total vocabilary
-                    lbCountAgain.setText("" + count_card_list_again);
-
-
-//                    //todo:next position
-//                    position[0] = position[0] + 1;
-//                    if (cardListAgain.size() > 0) {
-//                        if (position[0] <= list_card_new_size - 1) {
-//                            //get next card again
-//                            currentCard[0] = cardListAgain.get(position[0]);
+//                        }
+//                    } else if (currentCard[0].getQueue() == Card.QUEUE_REV2) {
+//                        Log.e(TAG, "Card.QUEUE_REV2:");
+//                        currentCard[0].setQueue(Card.QUEUE_LNR1);
+//                        currentCard[0].setDue(due_time);
+//                        cardListAgain.add(currentCard[0]);
+//                        cardListAgainToday.add(currentCard[0]);
 //
-//                            lbCountDue.setBackgroundResource(R.color.white);
-//                            lbCountAgain.setBackgroundResource(R.color.teal_200);
-//                            lbCountNew.setBackgroundResource(R.color.white);
+//                        //Card d?a next card is new
+//                        if (cardListToDay.size() > 0) {
+//                            Log.e(TAG, "Card.QUEUE_REV2:NEW LIST");
+//                            //
+//                            position[0]++;
+//                            if (position[0] <= list_card_new_size - 1) {
+//                                //get next card again
+//                                currentCard[0] = cardListToDay.get(position[0]);
 //
-//                            //TODO:Display next card
-//                            _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+//                                lbCountDue.setBackgroundResource(R.color.white);
+//                                lbCountAgain.setBackgroundResource(R.color.white);
+//                                lbCountNew.setBackgroundResource(R.color.teal_200);
 //
+//                                //TODO:Display next card
+//                                _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+//
+//                            } else {
+//                                _completeLean();
+//                            }
 //                        } else {
-//                            //end
+//                            //next is again
 //                            _completeLean();
 //                        }
 //
-//                    } else {
-//                        if (cardListDue.size() > 0) {
-//                            //Todo: get next Card
-//                            currentCard[0] = cardListDue.get(position[0]);
-//                            lbCountDue.setBackgroundResource(R.color.teal_200);
-//                            lbCountAgain.setBackgroundResource(R.color.white);
-//                            lbCountNew.setBackgroundResource(R.color.white);
-//                        } else if (cardListToDay.size() > 0) {
-//                            currentCard[0] = cardListToDay.get(position[0]);
+//                    } else if (currentCard[0].getQueue() == Card.QUEUE_NEW_CRAM0) {
+//                        currentCard[0].setQueue(Card.QUEUE_LNR1);
+//                        currentCard[0].setDue(due_time);
+//                        cardListAgain.add(currentCard[0]);
+//                        cardListAgainToday.add(currentCard[0]);
 //
-//                            lbCountDue.setBackgroundResource(R.color.white);
-//                            lbCountAgain.setBackgroundResource(R.color.white);
-//                            lbCountNew.setBackgroundResource(R.color.teal_200);
+//                        Log.e(TAG, "Card.QUEUE_NEW_CRAM0:");
+//                        if (cardListAgain.size() > 0 && position_again[0] <= cardListToDay.size() - 1) {
+//
+//                            long currenTime = new Date().getTime() / 1000;
+//
+//
+//                            Log.e(TAG, "Card.QUEUE_NEW_CRAM0:AGAIN LIST:" + position_again[0]);
+//                            try {
+//                                position_again[0]++;
+//                                currentCard[0] = cardListAgain.get(position_again[0]);
+//                                boolean check_again = false;
+//                                for (Card cardAgain : cardListAgain) {
+//                                    currentCard[0] = cardAgain;
+//                                    if (currentCard[0].getDue() < currenTime) {
+//                                        lbCountDue.setBackgroundResource(R.color.white);
+//                                        lbCountAgain.setBackgroundResource(R.color.teal_200);
+//                                        lbCountNew.setBackgroundResource(R.color.white);
+//
+//                                        //TODO:Display next card
+//                                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+//                                        check_again = true;
+//                                        //break;
+//                                    } else {
+//                                        check_again = false;
+//                                    }
+//                                }
+//                                if (!check_again) {
+//                                    if (cardListToDay.size() > 0) {
+//
+//                                        position[0] = position[0] + 1;
+//                                        if (position[0] <= list_card_new_size - 1) {
+//                                            //get next card again
+//                                            currentCard[0] = cardListToDay.get(position[0]);
+//
+//                                            lbCountDue.setBackgroundResource(R.color.white);
+//                                            lbCountAgain.setBackgroundResource(R.color.white);
+//                                            lbCountNew.setBackgroundResource(R.color.teal_200);
+//
+//
+//                                            //TODO:Display next card
+//                                            _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+//
+//                                        } else {
+//                                            _completeLean();
+//                                        }
+//
+//                                    }
+//                                }
+//
+//                            } catch (Exception e) {
+//
+//
+//                                if (cardListToDay.size() > 0) {
+//
+//                                    position[0] = position[0] + 1;
+//                                    if (position[0] <= list_card_new_size - 1) {
+//                                        //get next card again
+//                                        currentCard[0] = cardListToDay.get(position[0]);
+//
+//                                        lbCountDue.setBackgroundResource(R.color.white);
+//                                        lbCountAgain.setBackgroundResource(R.color.white);
+//                                        lbCountNew.setBackgroundResource(R.color.teal_200);
+//
+//
+//                                        //TODO:Display next card
+//                                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+//
+//                                    } else {
+//                                        _completeLean();
+//                                    }
+//
+//                                }
+//                            }
+//                        } else {
+//
+////                            Log.e(TAG, "Card.QUEUE_NEW_CRAM0:NEW LIST");
+////                            currentCard[0].setQueue(Card.QUEUE_LNR1);
+////                            currentCard[0].setDue(due_time);
+////                            cardListAgain.add(currentCard[0]);
+////
+////                            if (cardListToDay.size() > 0) {
+////
+////                                position[0] = position[0] + 1;
+////                                if (position[0] <= list_card_new_size - 1) {
+////                                    //get next card again
+////                                    currentCard[0] = cardListToDay.get(position[0]);
+////
+////                                    lbCountDue.setBackgroundResource(R.color.white);
+////                                    lbCountAgain.setBackgroundResource(R.color.white);
+////                                    lbCountNew.setBackgroundResource(R.color.teal_200);
+////
+////
+////                                    //TODO:Display next card
+////                                    _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+////
+////                                } else {
+////                                    _completeLean();
+////                                }
+////
+////
+////                            } else {
+////                                //
+////                                _completeLean();
+////                            }
+//                            _completeLean();
 //                        }
+//
 //                    }
 //
 //
-//                    //Todo:Check if go to end eles back
-//                    if (position[0] <= list_card_new_size - 1) {
+//                    int _count = cardListToDay.size();
+//                    //reset total vocabilary
+//                    int current_count = _count - cardListAgainToday.size();
+//                    lbCountNew.setText("" + current_count);
 //
-//                        //todo:next vocabulary
-//                        currentCard[0] = cardListToDay.get(position[0]);
+//                    //Update Count Again
+//                    int count_card_list_again = cardListAgain.size();
+//                    //reset total vocabilary
+//                    lbCountAgain.setText("" + count_card_list_again);
 //
-//                        //TODO:Display next card
-//                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
 //
-//                    } else {
-//                        //end
-//                        _completeLean();
-//                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+////                    //todo:next position
+////                    position[0] = position[0] + 1;
+////                    if (cardListAgain.size() > 0) {
+////                        if (position[0] <= list_card_new_size - 1) {
+////                            //get next card again
+////                            currentCard[0] = cardListAgain.get(position[0]);
+////
+////                            lbCountDue.setBackgroundResource(R.color.white);
+////                            lbCountAgain.setBackgroundResource(R.color.teal_200);
+////                            lbCountNew.setBackgroundResource(R.color.white);
+////
+////                            //TODO:Display next card
+////                            _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+////
+////                        } else {
+////                            //end
+////                            _completeLean();
+////                        }
+////
+////                    } else {
+////                        if (cardListDue.size() > 0) {
+////                            //Todo: get next Card
+////                            currentCard[0] = cardListDue.get(position[0]);
+////                            lbCountDue.setBackgroundResource(R.color.teal_200);
+////                            lbCountAgain.setBackgroundResource(R.color.white);
+////                            lbCountNew.setBackgroundResource(R.color.white);
+////                        } else if (cardListToDay.size() > 0) {
+////                            currentCard[0] = cardListToDay.get(position[0]);
+////
+////                            lbCountDue.setBackgroundResource(R.color.white);
+////                            lbCountAgain.setBackgroundResource(R.color.white);
+////                            lbCountNew.setBackgroundResource(R.color.teal_200);
+////                        }
+////                    }
+////
+////
+////                    //Todo:Check if go to end eles back
+////                    if (position[0] <= list_card_new_size - 1) {
+////
+////                        //todo:next vocabulary
+////                        currentCard[0] = cardListToDay.get(position[0]);
+////
+////                        //TODO:Display next card
+////                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+////
+////                    } else {
+////                        //end
+////                        _completeLean();
+////                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
             }
+
+            private void _nextAgainCard() {
+                long curren_time = new Date().getTime() / 1000;
+
+                if (cardListAgain.size() > 0) {//Check cardListAgain.size()>0
+                    Log.i(TAG, "Have Card Again,Next card is again card");
+                    Log.i(TAG, "---" + curren_time);
+                    boolean check_again = false;
+
+
+                    currentCard[0] = cardListAgain.get(position_again[0]);
+                    if (position[0] < cardListAgain.size())
+                        position[0]++;
+                    
+                    Log.i(TAG, currentCard[0].getDue() + "==" + curren_time);
+
+                    if (currentCard[0].getDue() < curren_time) {
+
+                        lbCountDue.setBackgroundResource(R.color.white);
+                        lbCountAgain.setBackgroundResource(R.color.teal_200);
+                        lbCountNew.setBackgroundResource(R.color.white);
+
+                        //TODO:Display next card
+                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+                    } else {
+
+                    }
+
+                    if (!check_again) {
+                        Log.i(TAG, "No Card Again,Next card is new card");
+                        _nextNewCard();
+                    }
+
+                } else if (cardListDue.size() > 0) {//Check cardListDue.size()>0
+
+                    Log.i(TAG, "Have Card Due,Next card is due card");
+                    _nextDueCard();
+                } else {
+
+                    _nextNewCard();
+                }
+            }
+
+            private void _nextDueCard() {
+                if (cardListDue.size() > 0) {//Check cardListAgain.size()>0
+
+                    Log.i(TAG, "Have Card Due,Next card is due card");
+
+
+                } else {//Check cardListDue.size()>0
+
+                    _nextNewCard();
+                }
+            }
+
+            private void _nextNewCard() {
+                Log.i(TAG, "Next new card");
+                if (cardListToDay.size() > 0) {
+                    position[0]++;
+
+                    if (position[0] <= list_card_new_size - 1) {
+                        //get next card again
+                        currentCard[0] = cardListToDay.get(position[0]);
+
+                        //set BackBackground color
+                        lbCountDue.setBackgroundResource(R.color.white);
+                        lbCountAgain.setBackgroundResource(R.color.white);
+                        lbCountNew.setBackgroundResource(R.color.teal_200);
+
+
+                        //TODO:Display next card
+                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
+
+                    } else {
+                        _completeLean();
+                    }
+                } else {
+                    _completeLean();
+                }
+            }
         });
+        //
+
         btnHard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

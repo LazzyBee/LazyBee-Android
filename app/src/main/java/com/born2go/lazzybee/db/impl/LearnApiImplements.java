@@ -118,6 +118,8 @@ public class LearnApiImplements implements LearnApi {
                     card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                     card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
+                    Log.i(TAG, card.toString());
+                    System.out.print(card.toString());
 
                 } while (cursor.moveToNext());
         }
@@ -219,6 +221,7 @@ public class LearnApiImplements implements LearnApi {
                         card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
                         card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+
                         card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                         card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
                         card.setDue(cursor.getLong(CARD_INDEX_DUE));
@@ -227,6 +230,10 @@ public class LearnApiImplements implements LearnApi {
                         card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
                         card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                         card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+
+                        Log.i(TAG, card.toString());
+                        System.out.print(card.toString());
+
                         datas.add(card);
                         _updateStatusCard("" + card.getId(), STATUS_CARD_LEARN_TODAY);
 

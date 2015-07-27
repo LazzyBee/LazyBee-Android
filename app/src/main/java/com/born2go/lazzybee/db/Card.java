@@ -164,12 +164,13 @@ public class Card {
         return "Card{" +
                 "id=" + id +
                 ", question='" + question + '\'' +
-                ", answers='" + answers + '\'' +
                 ", status=" + status +
+                ", queue=" + queue +
+                ", _package='" + _package + '\'' +
+                ", level=" + level +
+                ", due=" + due +
                 '}';
     }
-
-
 
     /**
      * Get Card by id & update increase one revew_user
