@@ -634,8 +634,16 @@ public class LearnApiImplements implements LearnApi {
         int curent_time = (int) (long_curent_time / 1000);
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
-        //Query select_list_card_by_queue
-        String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+        String select_list_card_by_queue = "";
+        if (queue == Card.QUEUE_LNR1)
+            //Query select_list_card_by_queue
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+        else if (queue == Card.QUEUE_REV2) {
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+        } else {
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+        }
+
 
         //Get card list by status
         List<Card> cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
