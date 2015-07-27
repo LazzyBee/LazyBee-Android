@@ -73,13 +73,20 @@ public class FragmentStudy extends Fragment {
 
     TextView lbCountDue;
 
-    List<Card> cardListToDay;
-    List<Card> cardListAgain;
-    List<Card> cardListDue;
+    List<Card> cardListToDay = new ArrayList<Card>();
+    List<Card> cardListAgain = new ArrayList<Card>();
+    List<Card> cardListDue = new ArrayList<Card>();
     List<Card> cardListAgainToday = new ArrayList<Card>();
     List<Card> cardListAddDueToDay = new ArrayList<Card>();
+
     CardSched cardSched;
-    List<Card> cardList;
+
+    //Current Card
+    Card currentCard = new Card();
+    //init position
+    int position = 0;
+    int position_again = 0;
+    int position_due = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,44 +142,12 @@ public class FragmentStudy extends Fragment {
         //get Card list due to day
         cardListDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_DAY_LRN3);
 
-        cardList = new ArrayList<Card>();
-        cardList.addAll(cardListToDay);
-        cardList.addAll(cardListAgain);
-        cardList.addAll(cardListDue);
-
 
         int cardListAgainDaysize = cardListAgain.size();//get card List Again size
 
         //Todo:
         if (cardListAgainDaysize > 0) {
             //todo:Check cardListToDay contains cardAgain
-
-//            Iterator<Card> cardListToDay_Iterator = cardListToDay.iterator();
-//            Iterator<Card> cardListAgainDay_Iterator = cardListAgain.iterator();
-//
-//
-//            while (cardListToDay_Iterator.hasNext()) {
-//                while (cardListAgainDay_Iterator.hasNext()) {
-//
-//                    Card card = cardListToDay_Iterator.next();
-//
-//                    Card cardAgain = cardListAgainDay_Iterator.next();
-//
-//                    if (card.getId() == cardAgain.getId()) {
-//
-//                        try {
-//                            Log.i(TAG, "-card:" + card.toString());
-//                            //cardListToDay_Iterator.remove();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                      //  break;
-//                    } else {
-//                        Log.i(TAG, "-card not compare");
-//                    }
-//                }
-//            }
-
             /*Remove card*/
             List<Card> listcardRemove = new ArrayList<Card>();
             //Loop cardListAgain
@@ -341,11 +316,6 @@ public class FragmentStudy extends Fragment {
 
         //final List<Card> cardListToDay = this.cardListToDay;
 
-        //init position
-        final int[] position = {0};
-        final int[] position_again = {-2};
-        final int[] position_due = {0};
-
 
         //Todo: Set  JavaScripEnabled for webview
         WebSettings ws = mWebViewLeadDetails.getSettings();
@@ -355,72 +325,41 @@ public class FragmentStudy extends Fragment {
         //list_card_new_size vocabulary list
         final int list_card_new_size = cardListToDay.size();
 
-        //Current Card
-        final Card[] currentCard = {this.cardListToDay.get(0)};
+
+        try {
+            //Todo: Load first card
+            if (cardListAgain.size() > 0) {
+                Log.i(TAG, "Load first again card ");
+                currentCard = cardListAgain.get(position_again);
+
+                lbCountDue.setBackgroundResource(R.color.white);
+                lbCountAgain.setBackgroundResource(R.color.teal_200);
+                lbCountNew.setBackgroundResource(R.color.white);
+            } else if (cardListDue.size() > 0) {
+                //Todo: get next Card
+                Log.i(TAG, "Load first duecard ");
+                currentCard = cardListDue.get(position_due);
 
 
-        //Todo: addJavascriptInterface play question
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectQuestion() {
-            @JavascriptInterface
-            public void playQuestion() {
-                //get text to Speak
-                String toSpeak = currentCard[0].getQuestion();
+                lbCountDue.setBackgroundResource(R.color.teal_200);
+                lbCountAgain.setBackgroundResource(R.color.white);
+                lbCountNew.setBackgroundResource(R.color.white);
+            } else if (cardListToDay.size() > 0) {
 
-                //Toast Text Speak
-                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Load first new card ");
+                currentCard = cardListToDay.get(position);
 
-                //Speak text
-                _speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                lbCountDue.setBackgroundResource(R.color.white);
+                lbCountAgain.setBackgroundResource(R.color.white);
+                lbCountNew.setBackgroundResource(R.color.teal_200);
             }
-        }, "question");
-
-        //Todo: addJavascriptInterface play answer
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
-            @JavascriptInterface
-            public void playAnswers() {
-                //get text to Speak
-                String toSpeak = currentCard[0].getAnswers();
-
-                //Toast Text Speak
-                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
-
-                //Speak text
-                _speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, "answers");
-
-
-        //Todo: Load first card
-        if (cardListAgain.size() > 0) {
-            Log.i(TAG, "Load first again card ");
-            currentCard[0] = cardListAgain.get(position_again[0]);
-
-            lbCountDue.setBackgroundResource(R.color.white);
-            lbCountAgain.setBackgroundResource(R.color.teal_200);
-            lbCountNew.setBackgroundResource(R.color.white);
-        } else if (cardListDue.size() > 0) {
-            //Todo: get next Card
-            Log.i(TAG, "Load first duecard ");
-            currentCard[0] = cardListDue.get(position_due[0]);
-
-
-            lbCountDue.setBackgroundResource(R.color.teal_200);
-            lbCountAgain.setBackgroundResource(R.color.white);
-            lbCountNew.setBackgroundResource(R.color.white);
-        } else if (cardListToDay.size() > 0) {
-            Log.i(TAG, "Load first new card ");
-            currentCard[0] = cardListToDay.get(position[0]);
-
-            lbCountDue.setBackgroundResource(R.color.white);
-            lbCountAgain.setBackgroundResource(R.color.white);
-            lbCountNew.setBackgroundResource(R.color.teal_200);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard[0].getQuestion()), mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
+
+        _addJavascriptInterfaceQuestionAndAnswer();
 
 
         //btnShowAnswer onCLick
@@ -433,7 +372,7 @@ public class FragmentStudy extends Fragment {
                 mLayoutButton.setVisibility(View.VISIBLE);
                 try {
                     //get card
-                    Card card = currentCard[0];
+                    Card card = currentCard;
                     //Show answer question
                     //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
                     // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
@@ -452,6 +391,7 @@ public class FragmentStudy extends Fragment {
                     btnHard1.setText(Html.fromHtml(ivlStrList[Card.EASE_HARD] + "<br/>" + getString(R.string.EASE_HARD)));
                     btnGood2.setText(Html.fromHtml(ivlStrList[Card.EASE_GOOD] + "<br/>" + getString(R.string.EASE_GOOD)));
                     btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -475,16 +415,30 @@ public class FragmentStudy extends Fragment {
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
                 int flag_queue = 1;
-                int due_time = (int) (curren_time + 10);
+                int due_time = (int) (curren_time + 600);
                 try {
                     //getCurrent Card Queue
-                    int currentCardQueue = currentCard[0].getQueue();
-                    currentCard[0].setQueue(Card.QUEUE_LNR1);
-                    currentCard[0].setDue(due_time);
+                    int currentCardQueue = currentCard.getQueue();
+
+                    //Check Contains
+                    if (cardListAgain.contains(currentCard)) {
+                        Log.i(TAG, "Card Contains cardListAgain");
+                        //remove current Card
+                        cardListAgain.remove(currentCard);
+                    }
+                    if (cardListAgainToday.contains(currentCard)) {
+                        Log.i(TAG, "Card Contains in cardListAgainToday");
+                        //remove current Card
+                        cardListAgainToday.remove(currentCard);
+                    }
 
 
-                    cardListAgain.add(currentCard[0]);
-                    cardListAgainToday.add(currentCard[0]);
+                    currentCard.setQueue(Card.QUEUE_LNR1);
+                    currentCard.setDue(due_time);
+
+
+                    cardListAgain.add(currentCard);
+                    cardListAgainToday.add(currentCard);
 
                     int _count = cardListToDay.size();
                     //reset total vocabilary
@@ -496,21 +450,26 @@ public class FragmentStudy extends Fragment {
                     //reset total vocabilary
                     lbCountAgain.setText("" + count_card_list_again);
 
-
-                    if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
-                        //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if cardListAgain.size>0
-                        Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
-                        _nextAgainCard();
-
-
-                    } else if (currentCardQueue == Card.QUEUE_LNR1) {
-                        Log.i(TAG, "Card.QUEUE_LNR1");
-                        _nextDueCard();
+                    if (position < cardListToDay.size()) {
+                        if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
+                            //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if cardListAgain.size>0
+                            Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
+                            _nextAgainCard();
 
 
-                    } else if (currentCardQueue == Card.QUEUE_REV2) {
-                        Log.i(TAG, "Card.QUEUE_REV2");
-                        _nextNewCard();
+                        } else if (currentCardQueue == Card.QUEUE_LNR1) {
+                            Log.i(TAG, "Card.QUEUE_LNR1");
+                            _nextDueCard();
+
+
+                        } else if (currentCardQueue == Card.QUEUE_REV2) {
+                            Log.i(TAG, "Card.QUEUE_REV2");
+                            _nextNewCard();
+
+                        }
+                    } else {
+                        _completeLean();
+
 
                     }
 
@@ -780,85 +739,7 @@ public class FragmentStudy extends Fragment {
 
             }
 
-            private void _nextAgainCard() {
-                long curren_time = new Date().getTime() / 1000;
 
-                if (cardListAgain.size() > 0) {//Check cardListAgain.size()>0
-                    Log.i(TAG, "Have Card Again,Next card is again card");
-                    Log.i(TAG, "---" + curren_time);
-                    boolean check_again = false;
-
-
-                    currentCard[0] = cardListAgain.get(position_again[0]);
-                    if (position[0] < cardListAgain.size())
-                        position[0]++;
-                    
-                    Log.i(TAG, currentCard[0].getDue() + "==" + curren_time);
-
-                    if (currentCard[0].getDue() < curren_time) {
-
-                        lbCountDue.setBackgroundResource(R.color.white);
-                        lbCountAgain.setBackgroundResource(R.color.teal_200);
-                        lbCountNew.setBackgroundResource(R.color.white);
-
-                        //TODO:Display next card
-                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
-                    } else {
-
-                    }
-
-                    if (!check_again) {
-                        Log.i(TAG, "No Card Again,Next card is new card");
-                        _nextNewCard();
-                    }
-
-                } else if (cardListDue.size() > 0) {//Check cardListDue.size()>0
-
-                    Log.i(TAG, "Have Card Due,Next card is due card");
-                    _nextDueCard();
-                } else {
-
-                    _nextNewCard();
-                }
-            }
-
-            private void _nextDueCard() {
-                if (cardListDue.size() > 0) {//Check cardListAgain.size()>0
-
-                    Log.i(TAG, "Have Card Due,Next card is due card");
-
-
-                } else {//Check cardListDue.size()>0
-
-                    _nextNewCard();
-                }
-            }
-
-            private void _nextNewCard() {
-                Log.i(TAG, "Next new card");
-                if (cardListToDay.size() > 0) {
-                    position[0]++;
-
-                    if (position[0] <= list_card_new_size - 1) {
-                        //get next card again
-                        currentCard[0] = cardListToDay.get(position[0]);
-
-                        //set BackBackground color
-                        lbCountDue.setBackgroundResource(R.color.white);
-                        lbCountAgain.setBackgroundResource(R.color.white);
-                        lbCountNew.setBackgroundResource(R.color.teal_200);
-
-
-                        //TODO:Display next card
-                        _loadWebView(_getQuestionDisplay(currentCard[0].getQuestion()));
-
-                    } else {
-                        _completeLean();
-                    }
-                } else {
-                    _completeLean();
-                }
-            }
         });
         //
 
@@ -869,44 +750,48 @@ public class FragmentStudy extends Fragment {
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
 
+                int currentCardQueue = currentCard.getQueue();
+
+                //Check Contains and Remove
+                _checkContainsAndRemove(cardListDue);
+                _checkContainsAndRemove(cardListAddDueToDay);
+
+
+                //set answer Card
+                cardSched.answerCard(currentCard, Card.EASE_HARD);
+
+                cardListDue.add(currentCard);
+                cardListAddDueToDay.add(currentCard);
+
+                int _count = cardListToDay.size();
+                //reset total vocabilary
+                int current_count = _count - cardListAddDueToDay.size();
+                lbCountNew.setText("" + current_count);
+
                 try {
-                    //Todo:Get current card
-                    Card old_card = cardListToDay.get(position[0]);
+                    if (position < cardListToDay.size()) {
+                        if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
+                            //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if cardListAgain.size>0
+                            Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
+                            _nextAgainCard();
 
 
-                    int due_time = (int) (long) (curren_time + 84600);
-
-                    _updateCardQueueAndCardDue(/*get card id*/old_card.getId(), Card.QUEUE_REV2, due_time);
-
-                    old_card.setDue(due_time);
-                    old_card.setQueue(Card.QUEUE_REV2);
-                    cardListAddDueToDay.add(old_card);
-
-                    //get total vocabulary by tag
-                    int _count = cardListToDay.size();
-                    int size_card_list_add_due_to_day = cardListAddDueToDay.size();
-
-                    //Todo: reset count new card
-                    int current_count = _count - size_card_list_add_due_to_day;
-                    lbCountNew.setText("" + current_count);
-                    lbCountNew.setTag(current_count);
+                        } else if (currentCardQueue == Card.QUEUE_LNR1) {
+                            Log.i(TAG, "Card.QUEUE_LNR1");
+                            _nextDueCard();
 
 
-                    //Todo:Get next position
-                    position[0] = position[0] + 1;
+                        } else if (currentCardQueue == Card.QUEUE_REV2) {
+                            Log.i(TAG, "Card.QUEUE_REV2");
+                            _nextNewCard();
 
-                    //TODO:Check if go to end eles back
-//                    if (position[0] <= list_card_new_size - 1) {
-//
-//                        //
-//                        //Load next card
-//                        _loadWebView(_getQuestionDisplay(/*get question for show*/currentCard[0].getQuestion()));
-//
-//
-//                    } else {
-//                        //end
-//                        _completeLean();
-//                    }
+                        }
+                    } else {
+                        _completeLean();
+
+
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -926,44 +811,50 @@ public class FragmentStudy extends Fragment {
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
 
-                // get current card
-                Card old_card = cardListToDay.get(position[0]);
+                int currentCardQueue = currentCard.getQueue();
 
-                //Todo:Update card queue and card Due
+                //Check Contains and Remove
+                _checkContainsAndRemove(cardListDue);
+                _checkContainsAndRemove(cardListAddDueToDay);
 
-                //_updateCardQueueAndCardDue(old_card.getId(), Card.QUEUE_REV2,curren_time+600);
+                //set answer Card
+                cardSched.answerCard(currentCard, Card.EASE_GOOD);
 
-                // get next posotion
-                position[0] = position[0] + 1;
+                cardListDue.add(currentCard);
+                cardListAddDueToDay.add(currentCard);
 
-                if (position[0] <= list_card_new_size - 1) {
-                    // Get next card
-                    currentCard[0] = cardListToDay.get(position[0]);
+                int _count = cardListToDay.size();
+                //reset total vocabilary
+                int current_count = _count - cardListAddDueToDay.size();
+                lbCountNew.setText("" + current_count);
 
-                    String currentCardId = String.valueOf(currentCard[0].getId());//get next cardId
-
-                    //Todo: Remove display card in card list new
-                    cardListToDay.remove(old_card);
-
-                    //Todo:Display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
-                    _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
-
-
-                    //get total vocabulary by tag
-                    int _count = Integer.valueOf(lbCountNew.getTag().toString());
-
-                    //reset total vocabilary
-                    int current_count = _count - 1;
-                    lbCountNew.setText("" + current_count);
-                    lbCountNew.setTag(current_count);
+                try {
+                    if (position < cardListToDay.size()) {
+                        if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
+                            //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if cardListAgain.size>0
+                            Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
+                            _nextAgainCard();
 
 
-                } else {
-                    //Todo: end study
-                    _completeLean();
+                        } else if (currentCardQueue == Card.QUEUE_LNR1) {
+                            Log.i(TAG, "Card.QUEUE_LNR1");
+                            _nextDueCard();
 
+
+                        } else if (currentCardQueue == Card.QUEUE_REV2) {
+                            Log.i(TAG, "Card.QUEUE_REV2");
+                            _nextNewCard();
+
+                        }
+                    } else {
+                        _completeLean();
+
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             }
         });
 
@@ -975,66 +866,98 @@ public class FragmentStudy extends Fragment {
                 btnShowAnswer.setVisibility(View.VISIBLE);
                 mLayoutButton.setVisibility(View.GONE);
 
-                //Todo: get current card
-                Card old_card = cardListToDay.get(position[0]);
+                int currentCardQueue = currentCard.getQueue();
 
-                //Todo: get next posotion
-                position[0] = position[0] + 1;
+                //Check Contains and Remove
+                _checkContainsAndRemove(cardListDue);
+                _checkContainsAndRemove(cardListAddDueToDay);
 
-                //Check if go to end eles back
-                if (position[0] <= list_card_new_size - 1) {
-                    currentCard[0] = cardListToDay.get(position[0]);
+                //set answer Card
+                cardSched.answerCard(currentCard, Card.EASE_EASY);
 
-                    String currentCardId = String.valueOf(currentCard[0].getId());//get current cardId
-
-//                    if ((position[0] - 1) != -1) {
-//                        // cardListToDay.remove(old_card);
-//                        //Todo:Set queue
-//                        old_card.setQueue(4l);
-//                        //
-//                        cardListDue.add(old_card);
-////                        if (position[0] + 1 > list_card_new_size)
-////                            cardListAgain.add(cardListToDay.get(position[0] + 1));
-////                        else {
-////                            cardListAgain.add(cardListToDay.get(position[0] - 1));
-////
-////                        }
-//                    }
-
-                    // _setCountCardList();
+                cardListDue.add(currentCard);
+                cardListAddDueToDay.add(currentCard);
 
 
-                    //next vocabulary
-                    _loadWebView(_getQuestionDisplay(cardListToDay.get(position[0]).getQuestion()));
+                int _count = cardListToDay.size();
+                //reset total vocabilary
+                int current_count = _count - cardListAddDueToDay.size();
+                lbCountNew.setText("" + current_count);
 
-                    //get total vocabulary by tag
-                    int _count = Integer.valueOf(lbCountNew.getTag().toString());
+                try {
+                    if (position < cardListToDay.size()) {
+                        if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
+                            //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if cardListAgain.size>0
+                            Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
+                            _nextAgainCard();
 
-                    //reset total vocabilary
-                    int current_count = _count - 1;
-                    lbCountNew.setText("" + current_count);
-                    lbCountNew.setTag(current_count);
 
-//                    //TODO:Check Tag
-//                    if (btnEasy3.getTag() != null) {
-//
-//                        //TODO:Get Time Queue by Tag btnEasy3
-//                        Long timeQueueCard = (long) btnEasy3.getTag();
-//
-//                        _setQueueCard(currentCardId, timeQueueCard);
-//
-//                    } else {
-//                        //Demo:set again word 4 day
-//                        _setQueueCard(currentCardId, 86400l * 4);
-//
-//                    }
-                } else {
-                    //end
-                    _completeLean();
+                        } else if (currentCardQueue == Card.QUEUE_LNR1) {
+                            Log.i(TAG, "Card.QUEUE_LNR1");
+                            _nextDueCard();
+
+
+                        } else if (currentCardQueue == Card.QUEUE_REV2) {
+                            Log.i(TAG, "Card.QUEUE_REV2");
+                            _nextNewCard();
+
+                        }
+                    } else {
+                        _completeLean();
+
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
 
+    }
+
+    private void _addJavascriptInterfaceQuestionAndAnswer() {
+        //Todo: addJavascriptInterface play question
+        mWebViewLeadDetails.addJavascriptInterface(new JsObjectQuestion() {
+            @JavascriptInterface
+            public void playQuestion() {
+                //get text to Speak
+                String toSpeak = currentCard.getQuestion();
+
+                //Toast Text Speak
+                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+
+                //Speak text
+                _speakText(toSpeak);
+
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, "question");
+
+        //Todo: addJavascriptInterface play answer
+        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
+            @JavascriptInterface
+            public void playAnswers() {
+                //get text to Speak
+                String toSpeak = currentCard.getAnswers();
+
+                //Toast Text Speak
+                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+
+                //Speak text
+                _speakText(toSpeak);
+
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, "answers");
+    }
+
+    private void _checkContainsAndRemove(List<Card> cardLis) {
+        if (cardListDue.contains(currentCard)) {
+            Log.i(TAG, "Card Contains cardList");
+            //remove current Card
+            cardLis.remove(currentCard);
+        }
     }
 
     private void _updateCardQueueAndCardDue(int card_id, int queue, int due) {
@@ -1042,28 +965,121 @@ public class FragmentStudy extends Fragment {
 
     }
 
-    /**
-     * Set queue time for card
-     *
-     * @param currentCardId cardId
-     * @param timeQueueCard Time queue
-     */
-    private void _setQueueCard(String currentCardId, Long timeQueueCard) {
-        // dataBaseHelper._updateQueueCard(currentCardId, timeQueueCard);
+    private void _nextNewCard() {
+        Log.i(TAG, "Next new card");
+        if (cardListToDay.size() > 0) {
+            position++;
+
+            if (position <= cardListToDay.size() - 1) {
+                //get next card again
+                currentCard = cardListToDay.get(position);
+
+                //set BackBackground color
+                lbCountDue.setBackgroundResource(R.color.white);
+                lbCountAgain.setBackgroundResource(R.color.white);
+                lbCountNew.setBackgroundResource(R.color.teal_200);
+
+
+                //TODO:Display next card
+                _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+
+            } else {
+                _completeLean();
+            }
+        } else {
+            _completeLean();
+        }
+    }
+
+    private void _nextDueCard() {
+        if (cardListDue.size() > 0) {//Check cardListAgain.size()>0
+            Log.i(TAG, "Have Card Due,Next card is due card");
+            try {
+                currentCard = cardListDue.get(position_due);
+
+                lbCountDue.setBackgroundResource(R.color.teal_200);
+                lbCountAgain.setBackgroundResource(R.color.white);
+                lbCountNew.setBackgroundResource(R.color.white);
+
+                //TODO:Display next card
+                _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                position_due++;
+                if (position_due < (cardListDue.size() - 1)) {
+
+                    currentCard = cardListAgain.get(position_due);
+
+                    lbCountDue.setBackgroundResource(R.color.teal_200);
+                    lbCountAgain.setBackgroundResource(R.color.white);
+                    lbCountNew.setBackgroundResource(R.color.white);
+
+                    //TODO:Display next card
+                    _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                } else {
+                    Log.i(TAG, "_nextDueCard:New Card");
+                    _nextNewCard();
+                }
+            }
+
+
+        } else if (cardListDue.size() > 0) {//Check cardListDue.size()>0
+
+            Log.i(TAG, "Have Card Due,Next card is due card");
+            _nextDueCard();
+        } else {
+            _nextNewCard();
+        }
+
 
     }
 
-    /**
-     * Load Time queue
-     * <p>set Text btnAgain0</p>
-     *
-     * @param card
-     */
-    private void _loadTimeQueue(Card card) {
-        btnAgain0.setTag(60000);
+    private void _nextAgainCard() {
+        int current_time = (int) (new Date().getTime() / 1000);
+        int due = (int) currentCard.getDue();
+        if (current_time - due >= 600) {
+            if (cardListAgain.size() > 0) {//Check cardListAgain.size()>0
+                Log.i(TAG, "Have Card Again,Next card is again card");
+                try {
+                    currentCard = cardListAgain.get(position_again);
 
+                    lbCountDue.setBackgroundResource(R.color.white);
+                    lbCountAgain.setBackgroundResource(R.color.teal_200);
+                    lbCountNew.setBackgroundResource(R.color.white);
+
+                    //TODO:Display next card
+                    _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    position_again++;
+                    if (position_again < (cardListAgain.size() - 1)) {
+
+                        currentCard = cardListAgain.get(position_again);
+
+                        lbCountDue.setBackgroundResource(R.color.white);
+                        lbCountAgain.setBackgroundResource(R.color.teal_200);
+                        lbCountNew.setBackgroundResource(R.color.white);
+
+                        //TODO:Display next card
+                        _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                    } else {
+                        Log.i(TAG, "_nextAgainCard:New Card");
+                        _nextNewCard();
+                    }
+                }
+
+
+            } else if (cardListDue.size() > 0) {//Check cardListDue.size()>0
+
+                Log.i(TAG, "Have Card Due,Next card is due card");
+                _nextDueCard();
+            } else {
+                _nextNewCard();
+            }
+        } else {
+            _nextNewCard();
+        }
     }
-
     /**
      * Load string Html
      */
@@ -1144,8 +1160,8 @@ public class FragmentStudy extends Fragment {
     }
 
     /*
-   *Java Scrip Object Question
-   * */
+    *Java Scrip Object Question
+    * */
     public class JsObjectQuestion {
         @JavascriptInterface
         public String toString() {
@@ -1161,6 +1177,7 @@ public class FragmentStudy extends Fragment {
         public String toString() {
             return "answers";
         }
+
     }
 
 
