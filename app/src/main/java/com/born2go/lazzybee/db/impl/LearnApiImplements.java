@@ -107,6 +107,7 @@ public class LearnApiImplements implements LearnApi {
                     card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
                     card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
+                    card.setStatus(0);
                     card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
                     card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
@@ -725,6 +726,7 @@ public class LearnApiImplements implements LearnApi {
                     card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
                     card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
+                    card.setStatus(0);
                     card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
                     card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
