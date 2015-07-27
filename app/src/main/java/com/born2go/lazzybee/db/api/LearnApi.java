@@ -74,7 +74,7 @@ public interface LearnApi {
      * @param queue
      * @return 1 if update complete else -1 false
      */
-    int _updateQueueCard(String cardId,long queue);
+    int _updateQueueCard(String cardId, long queue);
 
     /**
      * _insertListTodayCard to SqlIte form System Table
@@ -91,7 +91,7 @@ public interface LearnApi {
      * @param status
      * @return 1 if update complete else -1 false
      */
-    int _updateStatusCard(String cardId,int status);
+    int _updateStatusCard(String cardId, int status);
 
     /**
      * add to system config
@@ -105,6 +105,7 @@ public interface LearnApi {
 
     /**
      * get value Json by key from System Table
+     *
      * @param key
      * @return JSON Value String
      */
@@ -113,25 +114,32 @@ public interface LearnApi {
 
     /**
      * Get List Card by Status
-     * @param status
      *
+     * @param status
      */
     List<Card> _getListCardByStatus(int status);
 
     /**
      * Get List Card by queue
-     * @param queue
      *
+     * @param queue
      */
     List<Card> _getListCardByQueue(int queue);
 
     /**
      * Update queue and due card
-     * @param cardId
-     * @param queue queue
-     * @param due due time review card
      *
-     * */
-    int _updateCardQueueAndCardDue(String cardId,int queue,int due);
+     * @param cardId
+     * @param queue  queue
+     * @param due    due time review card
+     */
+    int _updateCardQueueAndCardDue(String cardId, int queue, int due);
+
+    /**
+     * Update card
+     *
+     * @param card
+     */
+    int _updateCard(Card card);
 
 }

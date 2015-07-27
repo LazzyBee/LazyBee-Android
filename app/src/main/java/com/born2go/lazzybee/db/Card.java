@@ -39,7 +39,7 @@ public class Card {
     public final static int EASE_HARD = 1;
     public final static int EASE_GOOD = 2;
     public final static int EASE_EASY = 3;
-    
+
 
     public Card() {
 
@@ -164,16 +164,12 @@ public class Card {
         return "Card{" +
                 "id=" + id +
                 ", question='" + question + '\'' +
-                ", answers='" + answers + '\'' +
                 ", status=" + status +
+                ", queue=" + queue +
+                ", _package='" + _package + '\'' +
+                ", level=" + level +
+                ", due=" + due +
                 '}';
-    }
-
-    /**
-     * Get last interver of card
-     */
-    public int getLastInterval() {
-        return 0;
     }
 
     /**

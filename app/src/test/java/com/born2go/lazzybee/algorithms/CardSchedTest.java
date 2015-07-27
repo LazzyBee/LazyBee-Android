@@ -1,6 +1,8 @@
 package com.born2go.lazzybee.algorithms;
 
+import com.born2go.lazzybee.algorithms.CardSched;
 import static org.junit.Assert.*;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +11,7 @@ import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 
 import java.lang.System;
+
 
 /**
  * Created by nobody on 7/21/2015.
@@ -23,6 +26,7 @@ public class CardSchedTest extends CardSched{
     @Test
     public void test__daysLate(){
         Card card = new Card();
+
 
     }
     @Test

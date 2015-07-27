@@ -45,6 +45,10 @@ public class LearnApiImplements implements LearnApi {
     private static final int STATUS_NO_LEARN = -1;
     private static final String KEY_QUEUE = "queue";
     private static final String KEY_DUE = "due";
+    private static final String KEY_REV_COUNT = "rev_count";
+    private static final String KEY_LAT_IVL = "last_ivl";
+    private static final String KEY_FACTOR = "e_factor";
+
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
 
@@ -107,6 +111,7 @@ public class LearnApiImplements implements LearnApi {
                     card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
                     card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
+                    card.setStatus(0);
                     card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
                     card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
@@ -117,6 +122,8 @@ public class LearnApiImplements implements LearnApi {
                     card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                     card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
+                    Log.i(TAG, card.toString());
+                    System.out.print(card.toString());
 
                 } while (cursor.moveToNext());
         }
@@ -218,6 +225,7 @@ public class LearnApiImplements implements LearnApi {
                         card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
                         card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+
                         card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                         card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
                         card.setDue(cursor.getLong(CARD_INDEX_DUE));
@@ -226,6 +234,10 @@ public class LearnApiImplements implements LearnApi {
                         card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
                         card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                         card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+
+                        Log.i(TAG, card.toString());
+                        System.out.print(card.toString());
+
                         datas.add(card);
                         _updateStatusCard("" + card.getId(), STATUS_CARD_LEARN_TODAY);
 
@@ -725,6 +737,7 @@ public class LearnApiImplements implements LearnApi {
                     card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
                     card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
+                    card.setStatus(0);
                     card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
                     card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
@@ -742,5 +755,37 @@ public class LearnApiImplements implements LearnApi {
         }
         Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
         return datas;
+    }
+
+    /**
+     * Update card
+     *
+     * @param card
+     */
+    @Override
+    public int _updateCard(Card card) {
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(KEY_QUEUE, card.getQueue());
+
+        if (card.getDue() != 0)
+            values.put(KEY_DUE, card.getDue());
+        if (card.getLast_ivl() != 0)
+            values.put(KEY_LAT_IVL, card.getLast_ivl());
+        if (card.getRev_count() != 0)
+            values.put(KEY_REV_COUNT, card.getRev_count());
+        if (card.getFactor() != 0)
+            values.put(KEY_FACTOR, card.getFactor());
+
+
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(card.getId())});
+        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        return update_result;
     }
 }
