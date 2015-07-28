@@ -3,8 +3,10 @@ package com.born2go.lazzybee.shared;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +24,7 @@ public class LazzyBeeShare {
      * Init data demo List Course
      */
     public static List<Course> initListCourse() {
-        List<Course> courses=new ArrayList<Course>();
+        List<Course> courses = new ArrayList<Course>();
         courses.add(new Course("Spain"));
         courses.add(new Course("Italia"));
         courses.add(new Course("Korea"));
@@ -61,6 +63,12 @@ public class LazzyBeeShare {
                         + "</body>\n" +
                         "</html>";
         return html;
+    }
+
+    static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
+    public static boolean compareDate(Date date1, Date date2) {
+        return fmt.format(date1).equals(fmt.format(date2));
     }
 
 }
