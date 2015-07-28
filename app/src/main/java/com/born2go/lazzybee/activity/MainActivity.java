@@ -443,6 +443,7 @@ public class MainActivity extends ActionBarActivity
 //        fragmentManager.beginTransaction()
 //                .replace(R.id.container, fragmentStudy)
 //                .addToBackStack(FragmentStudy.TAG).commit();
+
         Intent intent = new Intent(this, StudyActivity.class);
         this.startActivityForResult(intent, 1);
     }
