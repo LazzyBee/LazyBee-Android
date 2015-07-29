@@ -25,7 +25,6 @@ import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
-import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.IOException;
 
@@ -446,10 +445,12 @@ public class MainActivity extends ActionBarActivity
 //                .replace(R.id.container, fragmentStudy)
 //                .addToBackStack(FragmentStudy.TAG).commit();
 
-        Intent intent = new Intent(this, StudyActivity.class);
-        intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) tag);
-        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + (Boolean) tag);
-        this.startActivityForResult(intent, 1);
+//        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + (Boolean) tag);
+//
+//        Intent intent = new Intent(this, StudyActivity.class);
+//        intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) tag);
+//
+//        this.startActivityForResult(intent, 1);
     }
 
     @Override

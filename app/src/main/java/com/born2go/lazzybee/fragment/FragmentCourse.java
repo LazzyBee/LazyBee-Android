@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.activity.StudyActivity;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -89,6 +91,7 @@ public class FragmentCourse extends Fragment {
                 Log.i(TAG, "Study");
             } else if (checkTodayExit == 0) {
                 btnCustomStudy.setTag(true);
+                btnStudy.setTag(null);
                 btnStudy.setText("Complete Learn");
                 Log.i(TAG, "Learn more");
             }
@@ -97,17 +100,30 @@ public class FragmentCourse extends Fragment {
             Log.i(TAG, "Learn more ");
         }
 
-//        btnStudy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
-//
-//                Intent intent = new Intent(getActivity(), StudyActivity.class);
-//                intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
-//
-//                getActivity().startActivityForResult(intent, 1);
-//            }
-//        });
+        btnStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
+                if (btnStudy.getTag() != null) {
+                    Intent intent = new Intent(getActivity(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
+                    getActivity().startActivityForResult(intent, 1);
+                }
+            }
+        });
+        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                if (btnCustomStudy.getTag() != null) {
+                    Intent intent = new Intent(getActivity(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    getActivity().startActivityForResult(intent, 1);
+                }
+            }
+        });
 
 
         return view;

@@ -93,6 +93,8 @@ public class FragmentStudy extends Fragment {
 
     public boolean leanrmore = false;
 
+    StudyActivity studyActivity;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +106,7 @@ public class FragmentStudy extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_study, container, false);
-        StudyActivity studyActivity = (StudyActivity) getActivity();
+        studyActivity = (StudyActivity) getActivity();
         //init Webview
         mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
 
@@ -135,10 +137,10 @@ public class FragmentStudy extends Fragment {
         againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1);
         dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2);
 
-//        if (getArguments() != null)
-        leanrmore = studyActivity.isLearn_more();
-//        else
-//            Log.i(TAG, "Arguments null");
+        if (getArguments() != null)
+            leanrmore = getArguments().getBoolean(LazzyBeeShare.LEARN_MORE);
+        else
+            Log.i(TAG, "Arguments null");
 
         Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + leanrmore);
 
@@ -818,7 +820,8 @@ public class FragmentStudy extends Fragment {
      */
     private void _completeLean() {
         Toast.makeText(getActivity().getApplicationContext(), "Hoan thanh", Toast.LENGTH_SHORT);
-        fragmentStudyListener.completeCourse();
+        if (fragmentStudyListener != null)
+            fragmentStudyListener.completeCourse();
 
     }
 
