@@ -173,13 +173,13 @@ public class LearnApiImplements implements LearnApi {
      * @param number
      */
     @Override
-    public List<Card> _getRandomCard(int number) {
+    public List<Card> _getRandomCard(int number, boolean learnmore) {
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         List<Card> datas = new ArrayList<Card>();
 
         //Check today list card
-        boolean checkListToday = _checkListTodayExit(number);
-        if (checkListToday) {
+        int checkListToday = _checkListTodayExit(number);
+        if (checkListToday != -1 && !learnmore) {
 
             //TODO: get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
@@ -267,13 +267,12 @@ public class LearnApiImplements implements LearnApi {
         return jsonValuestr;
     }
 
-    private boolean _checkListTodayExit(int number) {
-
+    public int _checkListTodayExit(int number) {
         //TODO:get value queue List
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
             //TODO: NO List Queue
-            return false;
+            return -1;
         } else {
             //TODO Yes,Compareto Date
             try {
@@ -289,6 +288,7 @@ public class LearnApiImplements implements LearnApi {
                 //new date
                 Date _nowDate = new Date();
 
+                int countListId = listIdArray.length();
                 int _intNewDate = (int) (_nowDate.getTime() / 1000);
                 int _intQueueDate = (int) (_longQueueDate / 1000);
                 int compare = _intNewDate - _intQueueDate;
@@ -296,11 +296,13 @@ public class LearnApiImplements implements LearnApi {
                 Log.i(TAG, _intNewDate + "-" + _intQueueDate + "=" + compare);
 
                 if (compare > 0 && compare < 84600) {
-                    Log.i(TAG, "INDAY");
-                    return true;
+
+                    Log.i(TAG, "INDAY:");
+                    return countListId;
+
                 } else {
                     Log.i(TAG, "OUTDAY");
-                    return false;
+                    return -1;
                 }
 
 //                //TODO:Compare Date
@@ -353,7 +355,7 @@ public class LearnApiImplements implements LearnApi {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                return false;
+                return -1;
             }
         }
 
@@ -849,4 +851,5 @@ public class LearnApiImplements implements LearnApi {
 
         return update_result;
     }
+
 }

@@ -15,10 +15,13 @@ import java.util.List;
 public class LazzyBeeShare {
 
     public static final int COURSE_ID_TEST = 100;
+    public static final String LEARN_MORE = "LEARN_MORE";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
+    public static final int MAX_LEARN_PER_DAY = 10;
+
 
     /**
      * Init data demo List Course
@@ -70,5 +73,37 @@ public class LazzyBeeShare {
     public static boolean compareDate(Date date1, Date date2) {
         return fmt.format(date1).equals(fmt.format(date2));
     }
+
+//    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
+//        String value = "";
+//        Date date = new Date();
+//
+//        long long_date = date.getTime() / 1000;
+//        JSONObject jsonObject = new JSONObject();
+//
+//        try {
+//            jsonObject.put("date", long_date);
+//            jsonObject.put("max", maxlearn);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        value = jsonObject.toString();
+//        return value;
+//    }
+//
+//    public static int getMaxLearnPerDay(String maxlearn) {
+//        int value = MAX_LEARN_PER_DAY;
+//
+//        try {
+//            JSONObject jsonObject = new JSONObject(maxlearn);
+//            value = jsonObject.getInt("date");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        return value;
+//    }
 
 }
