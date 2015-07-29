@@ -44,7 +44,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/lbTotalCountCardLearnToDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -52,7 +52,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/lbCountCardLeanedToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -60,7 +60,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/lbDueToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
