@@ -25,6 +25,7 @@ import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.IOException;
 
@@ -392,11 +393,12 @@ public class MainActivity extends ActionBarActivity
 
     public void _onBtnStudyOnClick(View view) {
         Toast.makeText(this, "Goto Study", Toast.LENGTH_SHORT).show();
-        _gotoStudy();
+        _gotoStudy(view.getTag());
     }
 
     public void _btnCustomStudyOnClick(View view) {
-        Toast.makeText(this, "under con", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "under con", Toast.LENGTH_SHORT).show();
+        _gotoStudy(view.getTag());
 
     }
 
@@ -427,7 +429,7 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-    private void _gotoStudy() {
+    private void _gotoStudy(Object tag) {
 
 
 //        FragmentManager fragmentManager = getSupportFragmentManager();
@@ -445,6 +447,8 @@ public class MainActivity extends ActionBarActivity
 //                .addToBackStack(FragmentStudy.TAG).commit();
 
         Intent intent = new Intent(this, StudyActivity.class);
+        intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) tag);
+        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + (Boolean) tag);
         this.startActivityForResult(intent, 1);
     }
 
