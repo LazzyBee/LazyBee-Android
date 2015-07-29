@@ -8,7 +8,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:name="com.born2go.lazzybee.fragment.FragmentStudy"
-        android:id="@+id/fragment"
+        android:id="@+id/fragmentStudy"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+
+        />
 </RelativeLayout>
