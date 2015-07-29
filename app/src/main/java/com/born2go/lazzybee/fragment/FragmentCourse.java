@@ -91,7 +91,7 @@ public class FragmentCourse extends Fragment {
                 Log.i(TAG, "Study");
             } else if (checkTodayExit == 0) {
                 btnCustomStudy.setTag(true);
-                btnStudy.setTag(null);
+                btnStudy.setTag(false);
                 btnStudy.setText("Complete Learn");
                 Log.i(TAG, "Learn more");
             }
