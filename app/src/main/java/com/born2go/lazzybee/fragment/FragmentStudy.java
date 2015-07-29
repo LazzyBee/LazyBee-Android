@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.activity.StudyActivity;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -43,6 +44,7 @@ public class FragmentStudy extends Fragment {
     public static final String COURSE_ID = "lean_id";
     public static final String TAG = "FragmentStudy";
     private static final int MAX_LEARN_PER_DAY = 10;
+
     String mime = "text/html";
     String encoding = "utf-8";
     String ASSETS = "file:///android_asset/";
@@ -89,6 +91,8 @@ public class FragmentStudy extends Fragment {
     int position_again = 0;
     int position_due = 0;
 
+    public boolean leanrmore = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +104,7 @@ public class FragmentStudy extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_study, container, false);
-
+        StudyActivity studyActivity = (StudyActivity) getActivity();
         //init Webview
         mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
 
@@ -131,12 +135,19 @@ public class FragmentStudy extends Fragment {
         againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1);
         dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2);
 
+//        if (getArguments() != null)
+        leanrmore = studyActivity.isLearn_more();
+//        else
+//            Log.i(TAG, "Arguments null");
+
+        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + leanrmore);
+
         //get new random card list to day
         //TODO: only take new cards if total learn today not exceed MAX_LEARN_PER_DAY
         //int newCount = 10 - (againList.size() + dueList.size);
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
-        todayList = dataBaseHelper._getRandomCard(MAX_LEARN_PER_DAY);
+        todayList = dataBaseHelper._getRandomCard(MAX_LEARN_PER_DAY, leanrmore);
 
         //int againCount = againList.size();//get card List Again size
 //        //Todo:
@@ -202,7 +213,7 @@ public class FragmentStudy extends Fragment {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
+                    textToSpeech.setLanguage(Locale.UK);
                 }
             }
         });
