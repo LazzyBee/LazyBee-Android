@@ -38,7 +38,7 @@ public interface LearnApi {
      *
      * @param number
      */
-    List<Card> _getRandomCard(int number);
+    List<Card> _getRandomCard(int number,boolean learnmore);
 
     /**
      * _export to SqlIte form ListCard

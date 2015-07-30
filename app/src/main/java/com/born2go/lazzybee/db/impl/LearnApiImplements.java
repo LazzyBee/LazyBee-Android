@@ -173,37 +173,17 @@ public class LearnApiImplements implements LearnApi {
      * @param number
      */
     @Override
-    public List<Card> _getRandomCard(int number) {
+    public List<Card> _getRandomCard(int number, boolean learnmore) {
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         List<Card> datas = new ArrayList<Card>();
 
         //Check today list card
-        boolean checkListToday = _checkListTodayExit(number);
-        if (checkListToday) {
-//
+        int checkListToday = _checkListTodayExit(number);
+        if (checkListToday != -1 && !learnmore) {
+
             //TODO: get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
-            try {
-                //TODO:Pass string value to object
-                JSONObject jsonObject = new JSONObject(value);
-
-                //TODO:get List card array
-                JSONArray jsonArray = jsonObject.getJSONArray("card");
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    //TODO:g
-                    String cardId = jsonArray.getString(i);
-
-                    //TODO:get Card by id
-                    Card card = _getCardByID(cardId);
-
-                    //TODO:add card
-                    datas.add(card);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            datas = _getListCardFromStringArray(value);
 
         } else {
             //select random limit 5 row
@@ -244,50 +224,55 @@ public class LearnApiImplements implements LearnApi {
                     } while (cursor.moveToNext());
             }
             //TODO: ADD QUEUE LIST TO SYSTEM
-            _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas));
+            _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas, null));
         }
 
 
         return datas;
     }
 
-    private String _listCardTodayToArrayListCardId(List<Card> datas) {
-        //TODO: init ListCardID
-        List<String> listCardId = new ArrayList<String>();
-        for (Card card : datas) {
-            listCardId.add("" + card.getId());
-        }
+    private String _listCardTodayToArrayListCardId(List<Card> datas, List<String> _listCardId) {
+        String jsonValuestr = "";//Todo: init string json value
+        JSONObject valueJoson = new JSONObject();
 
-        //TODO new date create List Today
         Date nowdate = new Date();
         long now_date_long = nowdate.getTime();//get Time by @param nowdate
 
-        //TODO: Init Obj josn
-        JSONObject valueJoson = new JSONObject();
+        //TODO: init ListCardID
         try {
+            List<String> listCardId = new ArrayList<String>();
+            if (_listCardId != null && !_listCardId.isEmpty()) {
+                listCardId = _listCardId;
+            } else {
+                if (datas != null) {
+                    for (Card card : datas) {
+                        listCardId.add("" + card.getId());
+                    }
+                }
+            }
+
             JSONArray cardIDArray = new JSONArray(listCardId);//TODO:init cardID Array
 
             //todo: put properties of @param valueJoson
             valueJoson.put("date", now_date_long);
             valueJoson.put("card", cardIDArray);
 
+            jsonValuestr = valueJoson.toString();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String jsonValuestr = "";//Todo: init string json value
 
-        jsonValuestr = valueJoson.toString();
         Log.i(TAG, "jsonValuestr:" + jsonValuestr);
         return jsonValuestr;
     }
 
-    private boolean _checkListTodayExit(int number) {
-
+    public int _checkListTodayExit(int number) {
         //TODO:get value queue List
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
             //TODO: NO List Queue
-            return false;
+            return -1;
         } else {
             //TODO Yes,Compareto Date
             try {
@@ -295,72 +280,82 @@ public class LearnApiImplements implements LearnApi {
                 JSONObject valueObj = new JSONObject(value);
 
                 //TODO:get date create list today
-                long _long_date = valueObj.getLong("date");//get Long date
-                JSONArray cardListIDArray = valueObj.getJSONArray("card");//get List card ID
-                Log.i(TAG, "-Long date:" + _long_date);
+                long _longQueueDate = (valueObj.getLong("date"));//get Long date
+                JSONArray listIdArray = valueObj.getJSONArray("card");//get List card ID
+                Log.i(TAG, "-Long date:" + _longQueueDate);
 
-                Date _date = new Date(_long_date);
+                Date _date = new Date(_longQueueDate);
                 //new date
-                Date _now_date = new Date();
+                Date _nowDate = new Date();
 
-                Log.i(TAG, "_date:" + _date);
-                Log.i(TAG, "_now_date:" + _now_date);
+                int countListId = listIdArray.length();
+                int _intNewDate = (int) (_nowDate.getTime() / 1000);
+                int _intQueueDate = (int) (_longQueueDate / 1000);
+                int compare = _intNewDate - _intQueueDate;
 
-                //TODO:Compare Date
-                try {
-                    //TODO: parse date
-//                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
-//                    Date date_now = inputFormat.parse(_now_date.toString());
+                Log.i(TAG, _intNewDate + "-" + _intQueueDate + "=" + compare);
 
-                    //TODO: format date to string
-                    String str_date_create_list_card_today_parse = outputFormat.format(_date);
-                    String str_date_now = outputFormat.format(_now_date);
+                if (compare > 0 && compare < 84600) {
 
-                    //TODO: compareTo date learn vs now date
-                    if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
-                        //TODO: Equal then return true
-                        Log.i(TAG, "date_create_list_card_today_parse is equal to date_now");
+                    Log.i(TAG, "INDAY:");
+                    return countListId;
 
-                        return true;
-                    } else {
-                        //TODO: Not equal then return false
-
-                        //TODO: Check yesterday  learn
-                        if (cardListIDArray != null) {
-                            int lenght_list_card_id_json_array = cardListIDArray.length();//Get lenght list card id json aray
-                            if (lenght_list_card_id_json_array == number) {
-                                //TODO: NO Learn,Update status =NO_LEARN
-                                int lengh = cardListIDArray.length();//get lenght
-
-                                for (int i = 0; i < lengh; i++) {
-                                    try {
-
-                                        String cardId = cardListIDArray.getString(i);//get CardId by index
-
-                                        _updateStatusCard(cardId, STATUS_NO_LEARN);//Update status by cardid
-
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                        Log.i(TAG, "date_create_list_card_today_parse is not equal to date_now");
-
-                        return false;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
+                } else {
+                    Log.i(TAG, "OUTDAY");
+                    return -1;
                 }
+
+//                //TODO:Compare Date
+//                try {
+//                    //TODO: parse date
+////                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
+////                    Date date_now = inputFormat.parse(_nowDate.toString());
+//
+//                    //TODO: format date to string
+//                    String str_date_create_list_card_today_parse = outputFormat.format(_date);
+//                    String str_date_now = outputFormat.format(_nowDate);
+//
+//                    //TODO: compareTo date learn vs now date
+//                    if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
+//                        //TODO: Equal then return true
+//                        Log.i(TAG, "date_create_list_card_today_parse is equal to date_now");
+//
+//                        return true;
+//                    } else {
+//                        //TODO: Check yesterday  learn
+//                        if (listIdArray != null) {
+//                            int count_list_id = listIdArray.length();//Get lenght list card id json aray
+//                            if (count_list_id == number) {
+//                                //TODO: NO Learn,Update status =NO_LEARN
+//                                int lengh = listIdArray.length();//get lenght
+//
+//                                for (int i = 0; i < lengh; i++) {
+//                                    try {
+//                                        String cardId = listIdArray.getString(i);//get CardId by index
+//
+//                                        _updateStatusCard(cardId, Card.QUEUE_NEW_CRAM0);//Update status by cardid
+//
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//                        Log.i(TAG, "date_create_list_card_today_parse is not equal to date_now");
+//
+//                        return false;
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return false;
+//                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                return false;
+                return -1;
             }
         }
 
@@ -607,6 +602,48 @@ public class LearnApiImplements implements LearnApi {
         return queue_List_value;
     }
 
+
+    List<Card> _getListCardFromStringArray(String value) {
+        List<Card> cardList = new ArrayList<Card>();
+        try {
+            //Pass string value to object
+            JSONObject valueObj = new JSONObject(value);
+            JSONArray listIdArray = valueObj.getJSONArray("card");//get List card ID
+
+            for (int i = 0; i < listIdArray.length(); i++) {
+                String cardId = listIdArray.getString(i);
+
+                //TODO:get Card by id
+                Card card = _getCardByID(cardId);
+
+                cardList.add(card);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cardList;
+    }
+
+    List<String> _getListCardIdFromStringArray(String value) {
+        List<String> cardListId = new ArrayList<String>();
+        try {
+            //Pass string value to object
+            JSONObject queueObj = new JSONObject(value);
+            JSONArray listIdArray = queueObj.getJSONArray("card");//get List card ID
+
+            for (int i = 0; i < listIdArray.length(); i++) {
+
+                String cardId = listIdArray.getString(i);
+                cardListId.add(cardId);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cardListId;
+    }
+
     @Override
     public List<Card> _getListCardByStatus(int status) {
 
@@ -634,8 +671,16 @@ public class LearnApiImplements implements LearnApi {
         int curent_time = (int) (long_curent_time / 1000);
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
-        //Query select_list_card_by_queue
-        String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+        String select_list_card_by_queue = "";
+        if (queue == Card.QUEUE_LNR1)
+            //Query select_list_card_by_queue
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+        else if (queue == Card.QUEUE_REV2) {
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+        } else {
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+        }
+
 
         //Get card list by status
         List<Card> cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
@@ -764,6 +809,8 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _updateCard(Card card) {
+        String cardId = String.valueOf(card.getId());
+
         //TODO: Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
 
@@ -784,8 +831,25 @@ public class LearnApiImplements implements LearnApi {
 
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-                new String[]{String.valueOf(card.getId())});
+                new String[]{cardId});
         Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+
+        //TODO:Update queue_list system table
+        String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
+
+        //Get Card list id form system tabele
+        List<String> cardListId = _getListCardIdFromStringArray(queue_list);
+
+        //Check cardListId.contains(cardId)==true remeve carId
+        if (cardListId.contains(cardId)) {
+            cardListId.remove(cardId);
+
+            //update queue list
+            _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardListId));
+        }
+
+
         return update_result;
     }
+
 }

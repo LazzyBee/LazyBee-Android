@@ -1,13 +1,19 @@
 package com.born2go.lazzybee.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.activity.StudyActivity;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +31,9 @@ public class FragmentCourse extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private LearnApiImplements dataBaseHelper;
+
+    Button btnStudy, btnCustomStudy;
 
 
     /**
@@ -62,10 +71,75 @@ public class FragmentCourse extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_course, container, false);
+        View view = inflater.inflate(R.layout.fragment_course, container, false);
+
+        _intInterfaceView(view);
+
+        _initDatabase();
+
+
+        //Update MAX_LEARN_PER_DAY
+        //dataBaseHelper._insertOrUpdateToSystemTable("MAX_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
+
+        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
+        if (checkTodayExit > -1) {
+            //
+            if (checkTodayExit > 0) {
+                btnStudy.setText("Study");
+                btnStudy.setTag(false);
+                btnCustomStudy.setTag(false);
+                Log.i(TAG, "Study");
+            } else if (checkTodayExit == 0) {
+                btnCustomStudy.setTag(true);
+                btnStudy.setTag(null);
+                btnStudy.setText("Complete Learn");
+                Log.i(TAG, "Learn more");
+            }
+
+        } else {
+            Log.i(TAG, "Learn more ");
+        }
+
+        btnStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
+                if (btnStudy.getTag() != null) {
+                    Intent intent = new Intent(getActivity(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
+                    getActivity().startActivityForResult(intent, 1);
+                }
+            }
+        });
+        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                if (btnCustomStudy.getTag() != null) {
+                    Intent intent = new Intent(getActivity(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    getActivity().startActivityForResult(intent, 1);
+                }
+            }
+        });
+
+
+        return view;
     }
 
+    private void _intInterfaceView(View view) {
+        btnStudy = (Button) view.findViewById(R.id.btnStudy);
+        btnCustomStudy = (Button) view.findViewById(R.id.btnCustomStudy);
+    }
 
+    /**
+     * Init db sqlite
+     */
+    private void _initDatabase() {
+        dataBaseHelper = new LearnApiImplements(getActivity());
+    }
 
 
 }
