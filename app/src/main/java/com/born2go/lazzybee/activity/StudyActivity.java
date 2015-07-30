@@ -109,7 +109,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         Log.i(TAG, "todayCount:" + todayCount);
 
         //set data
-        if (againCount > 0 || dueCount > 0 || todayCount > 0) {
+//        if (againCount > 0 || dueCount > 0 || todayCount > 0) {
+        if (todayCount > 0) {
             _setDataforWebView();
 
             final int list_card_again_in_today_size = againList.size();
@@ -409,7 +410,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
             }
             if (currentQueue == Card.QUEUE_REV2) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_REV2");
+                Log.i(TAG, "_answerAgainCard:Card.QUEUE_REV2");
                 _nextNewCard();
             }
         } catch (Exception e) {
@@ -632,24 +633,39 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 _completeLean();
             }
         } else if (againList.size() > 0) {
-            complete_new_learn = true;
+            Log.i(TAG, "_nextNewCard:Next card is Again card");
+            //complete_new_learn = true;
             _nextAgainCard();
+            //_completeLean();
 
         } else if (dueList.size() > 0) {
-
+            Log.i(TAG, "_nextNewCard:Next card is Due card");
             _nextDueCard();
+            //_completeLean();
         } else {
-
-            _completeLean();
+            if (todayList.size() == 0) {
+                Log.i(TAG, "_nextNewCard:_completeLean");
+                _completeLean();
+            } else {
+                Log.i(TAG, "_nextNewCard:Next card is New card");
+                _nextNewCard();
+            }
         }
     }
+
+    boolean flag_due = true;
 
     private void _nextDueCard() {
         Log.i(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
         if (dueList.size() > 0) {//Check dueList.size()>0
+            if (flag_due) {
+                position_due = 0;
+            } else {
+                position_due++;
+            }
             Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
 
-            position_due = (dueList.size() - 1);
+            // position_due = (dueList.size() - 1);
             currentCard = dueList.get(position_due);
 
             lbCountDue.setBackgroundResource(R.color.teal_200);
@@ -663,12 +679,19 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             Log.i(TAG, "_nextDueCard:Next card is again card");
             _nextAgainCard();
         } else {
-            Log.i(TAG, "_nextDueCard:Next card is new card");
-            _nextNewCard();
+            if (todayList.size() == 0) {
+                Log.i(TAG, "_nextDueCard:_completeLean");
+                _completeLean();
+            } else {
+                Log.i(TAG, "_nextDueCard:Next card is new card");
+                _nextNewCard();
+            }
         }
 
 
     }
+
+    boolean flag_one = true;
 
     private void _nextAgainCard() {
         Log.i(TAG, "_nextAgainCard:Current Card:" + currentCard.toString());
@@ -677,54 +700,76 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         if (againList.size() > 0) {//Check againList.size()>0
 
             try {
-                currentCard = againList.get(position_again);
-                //get current time and du card
-                int current_time = (int) (new Date().getTime() / 1000);
-                int due = (int) currentCard.getDue();
-                Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
-                if (current_time - due >= 600 || complete_new_learn) {
-                    Log.i(TAG, "_nextAgainCard:Next card is again card 1");
-
-                    lbCountDue.setBackgroundResource(R.color.white);
-                    lbCountAgain.setBackgroundResource(R.color.teal_200);
-                    lbCountNew.setBackgroundResource(R.color.white);
-
-                    //TODO:Display next card
-                    _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
-
+                if (flag_one) {
+                    position_again = 0;
                 } else {
-                    Log.i(TAG, "_nextAgainCard:Next card is new card 1");
-                    _nextNewCard();
+                    position_again++;
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                position_again++;
                 if (position_again < (againList.size() - 1)) {
-
                     currentCard = againList.get(position_again);
 
                     //get current time and du card
                     int current_time = (int) (new Date().getTime() / 1000);
                     int due = (int) currentCard.getDue();
 
-                    if (current_time - due >= 600 || complete_new_learn) {
-                        Log.i(TAG, "_nextAgainCard:Next card is again card 2");
+                    Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
+                    if (current_time - due >= 600 || todayList.size() == 0) {
+
+                        Log.i(TAG, "_nextAgainCard:Next card is again card 1");
 
                         lbCountDue.setBackgroundResource(R.color.white);
                         lbCountAgain.setBackgroundResource(R.color.teal_200);
                         lbCountNew.setBackgroundResource(R.color.white);
 
+                        flag_one = false;
                         //TODO:Display next card
                         _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+
+
                     } else {
-                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+                        Log.i(TAG, "_nextAgainCard:Next card is new card 1");
                         _nextNewCard();
                     }
                 } else {
-                    Log.i(TAG, "_nextAgainCard:Next card is new card 3");
-                    _nextNewCard();
+                    if (todayList.size() > 0) {
+                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+                        _nextNewCard();
+                    } else {
+                        _completeLean();
+                    }
                 }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i(TAG, "_nextAgainCard:AAAAA");
+//                position_again++;
+//                if (position_again < (againList.size() - 1)) {
+//
+//                    currentCard = againList.get(position_again);
+//
+//                    //get current time and du card
+//                    int current_time = (int) (new Date().getTime() / 1000);
+//                    int due = (int) currentCard.getDue();
+//
+//                    if (current_time - due >= 600 || todayList.size() == 0) {
+//                        Log.i(TAG, "_nextAgainCard:Next card is again card 2");
+//
+//                        lbCountDue.setBackgroundResource(R.color.white);
+//                        lbCountAgain.setBackgroundResource(R.color.teal_200);
+//                        lbCountNew.setBackgroundResource(R.color.white);
+//
+//                        //TODO:Display next card
+//                        _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+//                    } else {
+//                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+//                        _nextNewCard();
+//                    }
+//                } else {
+//                    Log.i(TAG, "_nextAgainCard:Next card is new card 3");
+//                    _nextNewCard();
+//                }
             }
 
 
