@@ -23,6 +23,7 @@ public class LazzyBeeShare {
     public static final int COURSE_ID_TEST = 100;
     public static final String LEARN_MORE = "LEARN_MORE";
     private static final String TAG = "LazzyBeeShare";
+    private static final String EMPTY = "";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
@@ -84,40 +85,58 @@ public class LazzyBeeShare {
             String explain = Html.fromHtml(commonObj.getString("explain")).toString();
             String example = Html.fromHtml(commonObj.getString("example")).toString();
 
+
+            String explainTagA = EMPTY;
+            String exampleTagA = EMPTY;
+
             Log.i(TAG, "meaning" + meaning);
             Log.i(TAG, "explain" + explain);
             Log.i(TAG, "example" + example);
 
-            if (!meaning.isEmpty())
-                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_play_black.png'/></a>";
-            else
-                meaning = "";
+//            if (!meaning.isEmpty())
+//                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_play_black.png'/></a>";
+//            else
+//                meaning = "";
 
             if (!explain.isEmpty())
-                explain = explain + "<a onclick='explain.playQuestion();'><img src='ic_play_black.png'/></a>";
-            else
-                explain = "";
+                explainTagA = "<a onclick='explain.playExplain();'><img src='ic_play_black.png'/></a>";
 
             if (!example.isEmpty())
-                example = example + "<a onclick='example.playQuestion();'><img src='ic_play_black.png'/></a>";
-            else
-                example = "";
+                exampleTagA = "<a onclick='example.playExample();'><img src='ic_play_black.png'/></a>";
+
+            String imageURL = EMPTY;
 
             html = "<html>\n" +
                     "<head>\n" +
                     "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
                     "name=\"viewport\">\n" +
-                    "</head><h1 style=\"text-align: center;\">" + card.getQuestion() + "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a></h1>\n" +
+                    "</head>\n" +
+                    "<div style='width:100%'>\n" +
+                    "<div style='float:left;width:90%;text-align: center;'>\n" +
+                    "<strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
+                    "</div>\n" +
+                    "<div style='float:left;width:10%'>\n" +
+                    "<p><a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a><p>\n" +
+                    "</div>\n" +
+                    "</div>\n" +
+                    "<div div style='width:90%'>\n" +
                     "<p style=\"text-align: center;\">" + pronoun + "</p>\n" +
+                    "</div>\n" +
+                    "<p style=\"text-align: center;\">" + imageURL + "</p>\n" +
                     "<div style=\"width:100%\">\n" +
-                    "    <div style=\"float:left;width:30%\"></div>\n" +
-                    "    <div style=\"float:right;;width:70%\">\n " +
-                    "<p>" + explain + "</p>\n" +
-                    "<p>" + meaning + "</p>\n" +
-                    "<p>" + example + "</p>\n" +
+                    "    <div style=\"float:left;width:90%\">" +
+                    "<p><strong>Explain:</strong></br>" + explain + "</p>\n" +
+                    "<p><strong>Meaning:</strong></br>" + meaning + "</p>\n" +
+                    "<p><strong>Example:</strong></br>" + example + "</p>\n" +
+                    "</div>\n" +
+                    "    <div style=\"float:right;;width:10%\">\n " +
+                    "<p></br>" + explainTagA + "</p>\n" +
+                    "<p></br></p>\n" +
+                    "<p></br>" + exampleTagA + "</p>\n" +
                     "    </div>\n" +
-                    "</div></html>";
-            Log.i(TAG, "html:" + html);
+                    "</div>\n" +
+                    "</html>\n";
+            Log.v(TAG, "html:" + html);
         } catch (JSONException e) {
             e.printStackTrace();
         }
