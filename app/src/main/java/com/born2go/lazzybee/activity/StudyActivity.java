@@ -265,7 +265,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             e.printStackTrace();
         }
 
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
 
         _addJavascriptInterfaceQuestionAndAnswer();
 
@@ -626,7 +626,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
 
                 //TODO:Display next card
-                _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -673,7 +673,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             lbCountNew.setBackgroundResource(R.color.white);
 
             //TODO:Display next card
-            _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
 
         } else if (againList.size() > 0) {//Check againList.size()>0
             Log.i(TAG, "_nextDueCard:Next card is again card");
@@ -724,7 +724,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
                         flag_one = false;
                         //TODO:Display next card
-                        _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                        _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
 
 
                     } else {
@@ -800,37 +800,37 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
     }
 
-    /**
-     * init HTML question
-     */
-    private String _getQuestionDisplay(String s) {
-        String html =
-                "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<head>\n" +
-                        "<style>\n" +
-                        " figure {" +
-                        "   text-align: center;" +
-                        "   margin: auto;" +
-                        "}" +
-                        "figure.image img {" +
-                        "   width: 100% !important;" +
-                        "   height: auto !important;" +
-                        "}" +
-                        "figcaption {" +
-                        "   font-size: 10px;" +
-                        "}" +
-                        "a {" +
-                        " margin-top:5px;" +
-                        "}" +
-                        "</style>\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "<h1>" + s + "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a></h1>"
-                        + "</body>\n" +
-                        "</html>";
-        return html;
-    }
+//    /**
+//     * init HTML question
+//     */
+//    private String _getQuestionDisplay(String s) {
+//        String html =
+//                "<!DOCTYPE html>\n" +
+//                        "<html>\n" +
+//                        "<head>\n" +
+//                        "<style>\n" +
+//                        " figure {" +
+//                        "   text-align: center;" +
+//                        "   margin: auto;" +
+//                        "}" +
+//                        "figure.image img {" +
+//                        "   width: 100% !important;" +
+//                        "   height: auto !important;" +
+//                        "}" +
+//                        "figcaption {" +
+//                        "   font-size: 10px;" +
+//                        "}" +
+//                        "a {" +
+//                        " margin-top:5px;" +
+//                        "}" +
+//                        "</style>\n" +
+//                        "</head>\n" +
+//                        "<body>\n" +
+//                        "<h1 >" + s + "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a></h1>"
+//                        + "</body>\n" +
+//                        "</html>";
+//        return html;
+//    }
 
     /*
     *Java Scrip Object Question

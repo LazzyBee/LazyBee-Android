@@ -143,6 +143,42 @@ public class LazzyBeeShare {
         return html;
     }
 
+    /**
+     * init HTML question
+     */
+    public static String _getQuestionDisplay(String s) {
+        String html =
+                "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<head>\n" +
+                        "<style>\n" +
+                        " figure {" +
+                        "   text-align: center;" +
+                        "   margin: auto;" +
+                        "}" +
+                        "figure.image img {" +
+                        "   width: 100% !important;" +
+                        "   height: auto !important;" +
+                        "}" +
+                        "figcaption {" +
+                        "   font-size: 10px;" +
+                        "}" +
+                        "a {" +
+                        " margin-top:5px;" +
+                        "}" +
+                        "</style>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<div style='width:100%'>\n" +
+                        "<div style='float:left;width:90%;text-align: center;'>\n" +
+                        "<strong style='font-size:25pt;'>" + s + "</strong>\n" +
+                        "</div>\n"
+                        + "</body>\n" +
+                        "</html>";
+        return html;
+    }
+
+
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
     public static boolean compareDate(Date date1, Date date2) {
