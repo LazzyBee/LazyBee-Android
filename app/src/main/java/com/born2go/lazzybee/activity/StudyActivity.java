@@ -578,23 +578,56 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
-
-        //Todo: addJavascriptInterface play answer
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
+        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExplain() {
             @JavascriptInterface
-            public void playAnswers() {
+            public void playQuestion() {
                 //get text to Speak
-                String toSpeak = currentCard.getAnswers();
+                String toSpeak = currentCard.getQuestion();
 
                 //Toast Text Speak
-                //Toast.makeText(this, toSpeak, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
 
                 //Speak text
                 _speakText(toSpeak);
 
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
-        }, "answers");
+        }, "explain");
+        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExample() {
+            @JavascriptInterface
+            public void playQuestion() {
+                //get text to Speak
+                String toSpeak = currentCard.getQuestion();
+
+                //Toast Text Speak
+                //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+
+                //Speak text
+                _speakText(toSpeak);
+
+                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, "example");
+
+//        //Todo: addJavascriptInterface play answer
+//        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
+//            @JavascriptInterface
+//            public void playAnswers() {
+//                //get text to Speak
+//                String toSpeak = currentCard.getAnswers();
+//
+//                //Toast Text Speak
+//                //Toast.makeText(this, toSpeak, Toast.LENGTH_SHORT).show();
+//
+//                //Speak text
+//                _speakText(toSpeak);
+//
+//                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        }, "answers");
+
+
+
     }
 
     private void _checkContainsAndRemove(List<Card> cardLis) {
@@ -843,12 +876,22 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     }
 
     /*
-    *Java Scrip Object Answers
-    * */
-    public class JsObjectAnswers {
+   *Java Scrip Object explain
+   * */
+    public class JsObjectExplain {
         @JavascriptInterface
         public String toString() {
-            return "answers";
+            return "explain";
+        }
+
+    }
+    /*
+  *Java Scrip Object example
+  * */
+    public class JsObjectExample {
+        @JavascriptInterface
+        public String toString() {
+            return "example";
         }
 
     }
