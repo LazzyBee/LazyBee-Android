@@ -80,7 +80,40 @@ public class FragmentCourse extends Fragment {
 
         //Update MAX_LEARN_PER_DAY
         //dataBaseHelper._insertOrUpdateToSystemTable("MAX_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
+        _checkListTodayExit();
 
+
+        btnStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _checkListTodayExit();
+                Log.i(TAG, "btnStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
+                if (btnStudy.getTag() != null) {
+                    Intent intent = new Intent(getActivity(), StudyActivity.class);
+                    //intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
+                    getActivity().startActivityForResult(intent, 1);
+                }
+            }
+        });
+        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                _checkListTodayExit();
+                if (btnCustomStudy.getTag() != null) {
+                    Intent intent = new Intent(getActivity(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    getActivity().startActivityForResult(intent, 1);
+                }
+            }
+        });
+
+
+        return view;
+    }
+
+    private void _checkListTodayExit() {
         int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
         Log.i(TAG, "checkTodayExit: " + checkTodayExit);
         if (checkTodayExit > -1) {
@@ -105,40 +138,13 @@ public class FragmentCourse extends Fragment {
             Log.i(TAG, "Study");
 
         }
-
-        btnStudy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.i(TAG, "btnStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
-                if (btnStudy.getTag() != null) {
-                    Intent intent = new Intent(getActivity(), StudyActivity.class);
-                    //intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
-                    getActivity().startActivityForResult(intent, 1);
-                }
-            }
-        });
-        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
-                if (btnCustomStudy.getTag() != null) {
-                    Intent intent = new Intent(getActivity(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
-                    getActivity().startActivityForResult(intent, 1);
-                }
-            }
-        });
-
-
-        return view;
     }
 
     private void _intInterfaceView(View view) {
         btnStudy = (Button) view.findViewById(R.id.btnStudy);
         btnCustomStudy = (Button) view.findViewById(R.id.btnCustomStudy);
     }
+
 
     /**
      * Init db sqlite
