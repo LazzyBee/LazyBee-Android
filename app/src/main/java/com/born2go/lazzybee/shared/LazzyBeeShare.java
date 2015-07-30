@@ -99,10 +99,10 @@ public class LazzyBeeShare {
 //                meaning = "";
 
             if (!explain.isEmpty())
-                explainTagA = "<a onclick='explain.playExplain();'><img src='ic_play_black.png'/></a>";
+                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_play_black.png'/></a>";
 
             if (!example.isEmpty())
-                exampleTagA = "<a onclick='example.playExample();'><img src='ic_play_black.png'/></a>";
+                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_play_black.png'/></a>";
 
             String imageURL = EMPTY;
 
@@ -172,6 +172,10 @@ public class LazzyBeeShare {
                         "<div style='width:100%'>\n" +
                         "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<strong style='font-size:25pt;'>" + s + "</strong>\n" +
+                        "</div>\n" +
+                        "<div style='float:left;width:10%'>\n" +
+                        "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/><p>\n" +
+                        "</div>\n" +
                         "</div>\n"
                         + "</body>\n" +
                         "</html>";
@@ -183,6 +187,25 @@ public class LazzyBeeShare {
 
     public static boolean compareDate(Date date1, Date date2) {
         return fmt.format(date1).equals(fmt.format(date2));
+    }
+
+    public static String _getValueFromKey(String answer, String key) {
+        String value = EMPTY;
+
+        try {
+            JSONObject answerObj = new JSONObject(answer);
+            JSONObject packagesObj = answerObj.getJSONObject("packages");//Get json package
+            JSONObject commonObj = packagesObj.getJSONObject("common");//Get json by package name
+
+            //get value by key
+            value = Html.fromHtml(commonObj.getString(key)).toString();
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return value;
     }
 
 //    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
