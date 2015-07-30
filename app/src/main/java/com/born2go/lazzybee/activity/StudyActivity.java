@@ -580,33 +580,24 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }, "question");
         mWebViewLeadDetails.addJavascriptInterface(new JsObjectExplain() {
             @JavascriptInterface
-            public void playQuestion() {
-                //get text to Speak
-                String toSpeak = currentCard.getQuestion();
-
-                //Toast Text Speak
-                //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+            public void speechExplain() {
+                //get answer json
+                String answer = currentCard.getAnswers();
+                String toSpeech=LazzyBeeShare._getValueFromKey(answer,"explain");
 
                 //Speak text
-                _speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                _speakText(toSpeech);
             }
         }, "explain");
         mWebViewLeadDetails.addJavascriptInterface(new JsObjectExample() {
             @JavascriptInterface
-            public void playQuestion() {
-                //get text to Speak
-                String toSpeak = currentCard.getQuestion();
-
-                //Toast Text Speak
-                //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+            public void speechExample() {
+                //get answer json
+                String answer = currentCard.getAnswers();
+                String toSpeech=LazzyBeeShare._getValueFromKey(answer,"example");
 
                 //Speak text
-                _speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
+                _speakText(toSpeech);            }
         }, "example");
 
 //        //Todo: addJavascriptInterface play answer
