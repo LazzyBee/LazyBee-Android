@@ -19,9 +19,10 @@ public class CardSched {
     public final static int EASE_GOOD = 2;
     public final static int EASE_EASY = 3;
 
-    final static int SECONDS_PERDAY = 86400;
+    private static final int SECONDS_PERDAY = 86400;
     private static final int[] FACTOR_ADDITION_VALUES = { 0, -150, 0, 150 };
-    private static double BONUS_EASY = 1.4;
+    private static final double BONUS_EASY = 1.4;
+    private static final int MIN_FACTOR = 1300;
 
     public CardSched(){
     }
@@ -52,6 +53,10 @@ public class CardSched {
             else {
                 double month = day / 30;
                 str = month + " month";
+                if (month > 12) {
+                    double year = day / 365;
+                    str = year + " year";
+                }
             }
         }
         return str;
@@ -119,11 +124,19 @@ public class CardSched {
         return (int) Math.max(ivl, prev + 1);
     }
 
-    /*
-    * Whenever a Card is answered, call this function on Card:
-    * - Scheduler will update the DUE, last_ivl, queue
-    * - After 'answerCard', the caller will check Card's data for further decisions
-     */
+    /**
+    * Whenever a Card is answered, call this function on Card.
+    * Scheduler will update the following parameters into Card's instance:
+    * <ul>
+    * <li>due
+    * <li>last_ivl
+    * <li>queue
+    * <li>e_factor
+    * <li>rev_count
+    * </ul>
+    * After 'answerCard', the caller will check Card's data for further decisions
+     * (update database or/and put it back to app's queue)
+    */
     public void answerCard(Card card, int ease){
         int nextIvl = nextIvlBySeconds(card, ease);
         card.increaseRevCount();
@@ -140,7 +153,7 @@ public class CardSched {
             card.setQueue(Card.QUEUE_REV2);
             card.setDue(current + nextIvl);
             card.setLast_ivl(_nextIntervalByDays(card, ease));
-            card.setFactor(Math.max(1300, card.getFactor() + FACTOR_ADDITION_VALUES[ease]));
+            card.setFactor(Math.max(MIN_FACTOR, card.getFactor() + FACTOR_ADDITION_VALUES[ease]));
         }
     }
 }

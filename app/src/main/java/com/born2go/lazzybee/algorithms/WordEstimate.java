@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 /**
  * Created by nobody on 7/9/2015.
- * Calculate the vocabulary's side of user, base on result tests
+ * Calculate the vocabulary's size of user, base on result tests
  * We save the new result after every test.
  * More test, more accurate result
  *
@@ -29,6 +29,16 @@ public class WordEstimate {
         wordTestOk = new int[MAX_LEVEL + 1];
     }
 
+    /**
+     * At the begining, we have to setup initial params base on results in the
+     * past, plus system voca number
+     *
+     * @param level popular level of word, from 1 - 7. Smaller is more popular
+     * @param total total number of vocabulary in <b>level<b/>.
+     * @param tested total vocabulary user had tested in <b>level<b/>.
+     * @param testok number of vocabulary user confirmed he/she knows
+     *
+     */
     public void setUpParams(int level, int total, int tested, int testok){
         if (level > 0 && level <= MAX_LEVEL) {
             wordTotal[level] = total;
@@ -37,6 +47,10 @@ public class WordEstimate {
         }
     }
 
+    /**
+     * Calculate the user's vocabulary, update <b>voca</b> variable
+     * @return vocabulary size of user
+     */
     public double _estimateVoca(){
         voca = 0;
         for (int i = 1; i <= MAX_LEVEL; i++){
@@ -50,7 +64,9 @@ public class WordEstimate {
         return voca;
     }
 
-    /* Get last voca's result from database */
+    /**
+     *  Get last voca's result from database
+     */
     public void _getLastResult(){
         //TODO: Query database for voca,
     }
@@ -73,12 +89,23 @@ public class WordEstimate {
         return jsonArray;
     }
 
-    /*Update voca in real-time each word answered*/
+    /**
+     * Update voca in real-time after each word answered
+     * @param level popular level of word, from 1 - 7. Smaller is more popular
+     * @param answer true if user's known already, false otherwise
+     */
     public double updateVoca(int level, boolean answer){
         return updateVoca(level, answer, false);
     }
 
-    /*If redo, you have to set level & answer exactly as doing answer - NOT in reverted way*/
+    /**
+     * Update voca in real-time after each word answered.
+     * If redo is true, you have to set level & answer exactly as doing answer - NOT in reverted way
+     *
+     * @param level popular level of word, from 1 - 7. Smaller is more popular
+     * @param answer true if user's known already, false otherwise
+     * @param redo true if user want to revert the previous answer
+     */
     public double updateVoca(int level, boolean answer, boolean redo){
         if (level > 0 && level <= MAX_LEVEL) {
             if (!redo) {
@@ -96,6 +123,7 @@ public class WordEstimate {
     }
 
     public double getVoca(){
+        _estimateVoca();
         return voca;
     }
 
