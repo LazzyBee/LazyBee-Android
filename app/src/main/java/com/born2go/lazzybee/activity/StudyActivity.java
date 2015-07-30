@@ -265,7 +265,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             e.printStackTrace();
         }
 
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, _getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
 
         _addJavascriptInterfaceQuestionAndAnswer();
 
@@ -578,23 +578,47 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
-
-        //Todo: addJavascriptInterface play answer
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
+        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExplain() {
             @JavascriptInterface
-            public void playAnswers() {
-                //get text to Speak
-                String toSpeak = currentCard.getAnswers();
-
-                //Toast Text Speak
-                //Toast.makeText(this, toSpeak, Toast.LENGTH_SHORT).show();
+            public void speechExplain() {
+                //get answer json
+                String answer = currentCard.getAnswers();
+                String toSpeech=LazzyBeeShare._getValueFromKey(answer,"explain");
 
                 //Speak text
-                _speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                _speakText(toSpeech);
             }
-        }, "answers");
+        }, "explain");
+        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExample() {
+            @JavascriptInterface
+            public void speechExample() {
+                //get answer json
+                String answer = currentCard.getAnswers();
+                String toSpeech=LazzyBeeShare._getValueFromKey(answer,"example");
+
+                //Speak text
+                _speakText(toSpeech);            }
+        }, "example");
+
+//        //Todo: addJavascriptInterface play answer
+//        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
+//            @JavascriptInterface
+//            public void playAnswers() {
+//                //get text to Speak
+//                String toSpeak = currentCard.getAnswers();
+//
+//                //Toast Text Speak
+//                //Toast.makeText(this, toSpeak, Toast.LENGTH_SHORT).show();
+//
+//                //Speak text
+//                _speakText(toSpeak);
+//
+//                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        }, "answers");
+
+
+
     }
 
     private void _checkContainsAndRemove(List<Card> cardLis) {
@@ -626,7 +650,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
 
                 //TODO:Display next card
-                _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -673,7 +697,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             lbCountNew.setBackgroundResource(R.color.white);
 
             //TODO:Display next card
-            _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
 
         } else if (againList.size() > 0) {//Check againList.size()>0
             Log.i(TAG, "_nextDueCard:Next card is again card");
@@ -724,7 +748,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
                         flag_one = false;
                         //TODO:Display next card
-                        _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+                        _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
 
 
                     } else {
@@ -800,37 +824,37 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
     }
 
-    /**
-     * init HTML question
-     */
-    private String _getQuestionDisplay(String s) {
-        String html =
-                "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<head>\n" +
-                        "<style>\n" +
-                        " figure {" +
-                        "   text-align: center;" +
-                        "   margin: auto;" +
-                        "}" +
-                        "figure.image img {" +
-                        "   width: 100% !important;" +
-                        "   height: auto !important;" +
-                        "}" +
-                        "figcaption {" +
-                        "   font-size: 10px;" +
-                        "}" +
-                        "a {" +
-                        " margin-top:5px;" +
-                        "}" +
-                        "</style>\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "<h1>" + s + "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a></h1>"
-                        + "</body>\n" +
-                        "</html>";
-        return html;
-    }
+//    /**
+//     * init HTML question
+//     */
+//    private String _getQuestionDisplay(String s) {
+//        String html =
+//                "<!DOCTYPE html>\n" +
+//                        "<html>\n" +
+//                        "<head>\n" +
+//                        "<style>\n" +
+//                        " figure {" +
+//                        "   text-align: center;" +
+//                        "   margin: auto;" +
+//                        "}" +
+//                        "figure.image img {" +
+//                        "   width: 100% !important;" +
+//                        "   height: auto !important;" +
+//                        "}" +
+//                        "figcaption {" +
+//                        "   font-size: 10px;" +
+//                        "}" +
+//                        "a {" +
+//                        " margin-top:5px;" +
+//                        "}" +
+//                        "</style>\n" +
+//                        "</head>\n" +
+//                        "<body>\n" +
+//                        "<h1 >" + s + "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a></h1>"
+//                        + "</body>\n" +
+//                        "</html>";
+//        return html;
+//    }
 
     /*
     *Java Scrip Object Question
@@ -843,12 +867,22 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     }
 
     /*
-    *Java Scrip Object Answers
-    * */
-    public class JsObjectAnswers {
+   *Java Scrip Object explain
+   * */
+    public class JsObjectExplain {
         @JavascriptInterface
         public String toString() {
-            return "answers";
+            return "explain";
+        }
+
+    }
+    /*
+  *Java Scrip Object example
+  * */
+    public class JsObjectExample {
+        @JavascriptInterface
+        public String toString() {
+            return "example";
         }
 
     }
