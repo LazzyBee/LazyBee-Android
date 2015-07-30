@@ -82,6 +82,7 @@ public class FragmentCourse extends Fragment {
         //dataBaseHelper._insertOrUpdateToSystemTable("MAX_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
 
         int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
+        Log.i(TAG, "checkTodayExit: " + checkTodayExit);
         if (checkTodayExit > -1) {
             //
             if (checkTodayExit > 0) {
@@ -96,18 +97,23 @@ public class FragmentCourse extends Fragment {
                 Log.i(TAG, "Learn more");
             }
 
-        } else {
-            Log.i(TAG, "Learn more ");
+        } else if (checkTodayExit == -1) {
+            Log.i(TAG, "New");
+            btnStudy.setText("Study");
+            btnStudy.setTag(true);
+            btnCustomStudy.setTag(false);
+            Log.i(TAG, "Study");
+
         }
 
         btnStudy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
+                Log.i(TAG, "btnStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
                 if (btnStudy.getTag() != null) {
                     Intent intent = new Intent(getActivity(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
+                    //intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
                     getActivity().startActivityForResult(intent, 1);
                 }
             }
@@ -116,7 +122,7 @@ public class FragmentCourse extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
                 if (btnCustomStudy.getTag() != null) {
                     Intent intent = new Intent(getActivity(), StudyActivity.class);
                     intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
