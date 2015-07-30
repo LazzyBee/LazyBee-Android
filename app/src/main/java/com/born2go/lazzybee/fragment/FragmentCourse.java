@@ -80,34 +80,17 @@ public class FragmentCourse extends Fragment {
 
         //Update MAX_LEARN_PER_DAY
         //dataBaseHelper._insertOrUpdateToSystemTable("MAX_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
+        _checkListTodayExit();
 
-        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
-        if (checkTodayExit > -1) {
-            //
-            if (checkTodayExit > 0) {
-                btnStudy.setText("Study");
-                btnStudy.setTag(false);
-                btnCustomStudy.setTag(false);
-                Log.i(TAG, "Study");
-            } else if (checkTodayExit == 0) {
-                btnCustomStudy.setTag(true);
-                btnStudy.setTag(null);
-                btnStudy.setText("Complete Learn");
-                Log.i(TAG, "Learn more");
-            }
-
-        } else {
-            Log.i(TAG, "Learn more ");
-        }
 
         btnStudy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
+                _checkListTodayExit();
+                Log.i(TAG, "btnStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
                 if (btnStudy.getTag() != null) {
                     Intent intent = new Intent(getActivity(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
+                    //intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
                     getActivity().startActivityForResult(intent, 1);
                 }
             }
@@ -116,7 +99,8 @@ public class FragmentCourse extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                _checkListTodayExit();
                 if (btnCustomStudy.getTag() != null) {
                     Intent intent = new Intent(getActivity(), StudyActivity.class);
                     intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
@@ -129,10 +113,38 @@ public class FragmentCourse extends Fragment {
         return view;
     }
 
+    private void _checkListTodayExit() {
+        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
+        Log.i(TAG, "checkTodayExit: " + checkTodayExit);
+        if (checkTodayExit > -1) {
+            //
+            if (checkTodayExit > 0) {
+                btnStudy.setText("Study");
+                btnStudy.setTag(false);
+                btnCustomStudy.setTag(false);
+                Log.i(TAG, "Study");
+            } else if (checkTodayExit == 0) {
+                btnCustomStudy.setTag(true);
+                btnStudy.setTag(false);
+                btnStudy.setText("Complete Learn");
+                Log.i(TAG, "Learn more");
+            }
+
+        } else if (checkTodayExit == -1) {
+            Log.i(TAG, "New");
+            btnStudy.setText("Study");
+            btnStudy.setTag(true);
+            btnCustomStudy.setTag(false);
+            Log.i(TAG, "Study");
+
+        }
+    }
+
     private void _intInterfaceView(View view) {
         btnStudy = (Button) view.findViewById(R.id.btnStudy);
         btnCustomStudy = (Button) view.findViewById(R.id.btnCustomStudy);
     }
+
 
     /**
      * Init db sqlite

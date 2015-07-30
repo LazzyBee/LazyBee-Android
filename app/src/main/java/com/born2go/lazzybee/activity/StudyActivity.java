@@ -69,6 +69,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     String encoding = "utf-8";
     String ASSETS = "file:///android_asset/";
 
+    boolean complete_new_learn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +100,17 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         //  todayList = dataBaseHelper._getRandomCard(newCount);
         todayList = dataBaseHelper._getRandomCard(LazzyBeeShare.MAX_LEARN_PER_DAY, learn_more);
 
+        int dueCount = dueList.size();
+        int againCount = againList.size();
+        int todayCount = todayList.size();
+
+        Log.i(TAG, "againCount:" + againCount);
+        Log.i(TAG, "dueCount:" + dueCount);
+        Log.i(TAG, "todayCount:" + todayCount);
+
         //set data
-        if (todayList.size() > 0) {
+//        if (againCount > 0 || dueCount > 0 || todayCount > 0) {
+        if (todayCount > 0) {
             _setDataforWebView();
 
             final int list_card_again_in_today_size = againList.size();
@@ -112,51 +123,20 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             lbCountNew.setTag(list_card_new_size);
 
 
+            lbCountDue.setText("" + dueList.size());
+            lbCountDue.setTag(dueList.size());
         } else {
-            Log.i(TAG, "List Card Empty");
+            Log.i(TAG, "_completeLean");
             _completeLean();
         }
-        lbCountDue.setText("" + dueList.size());
-        lbCountDue.setTag(dueList.size());
+
 
         //Add AdView
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        //int fragment study
-//        fragmentStudy = new FragmentStudy();
-//        Bundle bundle = new Bundle();
-//        bundle.putBoolean(LazzyBeeShare.LEARN_MORE, learn_more);
-//
-//        fragmentStudy.setArguments(bundle);
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentStudy, fragmentStudy).commit();
-
-
         Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + learn_more);
-//        Bundle bundle=new Bundle();
-//        bundle.putBoolean(LazzyBeeShare.LEARN_MORE, learn_more);
-//        fragmentStudy.setArguments(bundle);
-
-
     }
 
     private void _completeLean() {
@@ -250,18 +230,9 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
      * Define JavaScrip to Speek Text.
      */
     private void _setDataforWebView() {
-
-        //final List<Card> todayList = this.todayList;
-
-
         //Todo: Set  JavaScripEnabled for webview
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
-
-
-        //list_card_new_size vocabulary list
-        final int list_card_new_size = todayList.size();
-
 
         try {
             //Todo: Load first card
@@ -439,7 +410,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
             }
             if (currentQueue == Card.QUEUE_REV2) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_REV2");
+                Log.i(TAG, "_answerAgainCard:Card.QUEUE_REV2");
                 _nextNewCard();
             }
         } catch (Exception e) {
@@ -661,17 +632,40 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 e.printStackTrace();
                 _completeLean();
             }
+        } else if (againList.size() > 0) {
+            Log.i(TAG, "_nextNewCard:Next card is Again card");
+            //complete_new_learn = true;
+            _nextAgainCard();
+            //_completeLean();
+
+        } else if (dueList.size() > 0) {
+            Log.i(TAG, "_nextNewCard:Next card is Due card");
+            _nextDueCard();
+            //_completeLean();
         } else {
-            _completeLean();
+            if (todayList.size() == 0) {
+                Log.i(TAG, "_nextNewCard:_completeLean");
+                _completeLean();
+            } else {
+                Log.i(TAG, "_nextNewCard:Next card is New card");
+                _nextNewCard();
+            }
         }
     }
+
+    boolean flag_due = true;
 
     private void _nextDueCard() {
         Log.i(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
         if (dueList.size() > 0) {//Check dueList.size()>0
+            if (flag_due) {
+                position_due = 0;
+            } else {
+                position_due++;
+            }
             Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
 
-            position_due = (dueList.size() - 1);
+            // position_due = (dueList.size() - 1);
             currentCard = dueList.get(position_due);
 
             lbCountDue.setBackgroundResource(R.color.teal_200);
@@ -685,12 +679,19 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             Log.i(TAG, "_nextDueCard:Next card is again card");
             _nextAgainCard();
         } else {
-            Log.i(TAG, "_nextDueCard:Next card is new card");
-            _nextNewCard();
+            if (todayList.size() == 0) {
+                Log.i(TAG, "_nextDueCard:_completeLean");
+                _completeLean();
+            } else {
+                Log.i(TAG, "_nextDueCard:Next card is new card");
+                _nextNewCard();
+            }
         }
 
 
     }
+
+    boolean flag_one = true;
 
     private void _nextAgainCard() {
         Log.i(TAG, "_nextAgainCard:Current Card:" + currentCard.toString());
@@ -699,54 +700,76 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         if (againList.size() > 0) {//Check againList.size()>0
 
             try {
-                currentCard = againList.get(position_again);
-                //get current time and du card
-                int current_time = (int) (new Date().getTime() / 1000);
-                int due = (int) currentCard.getDue();
-                Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
-                if (current_time - due >= 600) {
-                    Log.i(TAG, "_nextAgainCard:Next card is again card 1");
-
-                    lbCountDue.setBackgroundResource(R.color.white);
-                    lbCountAgain.setBackgroundResource(R.color.teal_200);
-                    lbCountNew.setBackgroundResource(R.color.white);
-
-                    //TODO:Display next card
-                    _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
-
+                if (flag_one) {
+                    position_again = 0;
                 } else {
-                    Log.i(TAG, "_nextAgainCard:Next card is new card 1");
-                    _nextNewCard();
+                    position_again++;
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                position_again++;
                 if (position_again < (againList.size() - 1)) {
-
                     currentCard = againList.get(position_again);
 
                     //get current time and du card
                     int current_time = (int) (new Date().getTime() / 1000);
                     int due = (int) currentCard.getDue();
 
-                    if (current_time - due >= 600) {
-                        Log.i(TAG, "_nextAgainCard:Next card is again card 2");
+                    Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
+                    if (current_time - due >= 600 || todayList.size() == 0) {
+
+                        Log.i(TAG, "_nextAgainCard:Next card is again card 1");
 
                         lbCountDue.setBackgroundResource(R.color.white);
                         lbCountAgain.setBackgroundResource(R.color.teal_200);
                         lbCountNew.setBackgroundResource(R.color.white);
 
+                        flag_one = false;
                         //TODO:Display next card
                         _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+
+
                     } else {
-                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+                        Log.i(TAG, "_nextAgainCard:Next card is new card 1");
                         _nextNewCard();
                     }
                 } else {
-                    Log.i(TAG, "_nextAgainCard:Next card is new card 3");
-                    _nextNewCard();
+                    if (todayList.size() > 0) {
+                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+                        _nextNewCard();
+                    } else {
+                        _completeLean();
+                    }
                 }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i(TAG, "_nextAgainCard:AAAAA");
+//                position_again++;
+//                if (position_again < (againList.size() - 1)) {
+//
+//                    currentCard = againList.get(position_again);
+//
+//                    //get current time and du card
+//                    int current_time = (int) (new Date().getTime() / 1000);
+//                    int due = (int) currentCard.getDue();
+//
+//                    if (current_time - due >= 600 || todayList.size() == 0) {
+//                        Log.i(TAG, "_nextAgainCard:Next card is again card 2");
+//
+//                        lbCountDue.setBackgroundResource(R.color.white);
+//                        lbCountAgain.setBackgroundResource(R.color.teal_200);
+//                        lbCountNew.setBackgroundResource(R.color.white);
+//
+//                        //TODO:Display next card
+//                        _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
+//                    } else {
+//                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+//                        _nextNewCard();
+//                    }
+//                } else {
+//                    Log.i(TAG, "_nextAgainCard:Next card is new card 3");
+//                    _nextNewCard();
+//                }
             }
 
 
@@ -759,6 +782,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
 
     }
+
     /**
      * Load string Html
      */
@@ -775,6 +799,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, questionDisplay, mime, encoding, null);
 
     }
+
     /**
      * init HTML question
      */
@@ -806,6 +831,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                         "</html>";
         return html;
     }
+
     /*
     *Java Scrip Object Question
     * */
@@ -826,6 +852,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
 
     }
+
     /**
      * Speak text theo version andorid
      */
