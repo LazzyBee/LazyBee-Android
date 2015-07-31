@@ -23,7 +23,152 @@
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/lbNameCourse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:background="#ffffffff"
+                                android:text="10000 EngLish Word "
+                                android:textAlignment="center"
+                                android:textSize="35dp"
+                                android:textColor="#ff000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:textAlignment="center"
+                                android:text="Medium Text"
+                                android:id="@+id/lbComplete"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="20dp"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/lbSuportCompletedCard"
+                            android:layout_gravity="center_horizontal"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/lbTotalCountCardLearnToDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Medium Text"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/lbCountCardLeanedToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Medium Text"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/lbDueToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Medium Text"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:visibility="gone" />
+
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/mCardViewStudy"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="10dp"
+                    android:nestedScrollingEnabled="false">
+
+
+                    <Button
+                        android:id="@+id/btnStudy"
+                        android:layout_width="fill_parent"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:background="@color/teal_500"
+
+                        android:text="Study"
+                        android:textColor="#ffffffff" />
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+
+                    <Button
+                        android:id="@+id/btnReview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:onClick="_onbtnReviewOnClick"
+                        android:text="@string/review"
+                        android:textColor="@color/teal_500" />
+
+
+                    <Button
+                        android:id="@+id/btnCustomStudy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:onClick="_btnCustomStudyOnClick"
+                        android:text="@string/learn_more"
+                        android:textColor="@color/teal_500" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
 
         <!-- android:layout_gravity="start" tells DrawerLayout to treat
              this as a sliding drawer on the left side for left-to-right
