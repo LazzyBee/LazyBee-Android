@@ -9,6 +9,7 @@ import android.util.Log;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -672,13 +673,22 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
         String select_list_card_by_queue = "";
+        int limit = 20;
         if (queue == Card.QUEUE_LNR1)
             //Query select_list_card_by_queue
             select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
         else if (queue == Card.QUEUE_REV2) {
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+
+            int countToday = _checkListTodayExit(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY);
+
+            if (countToday == -1)
+                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+            else if (countToday > -1)
+                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - countToday;
+
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
         } else {
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " LIMIT " + limit;
         }
 
 
