@@ -94,11 +94,11 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2);
 
         //get new random card list to day
-        //TODO: only take new cards if total learn today not exceed MAX_LEARN_PER_DAY
+        //TODO: only take new cards if total learn today not exceed MAX_NEW_LEARN_PER_DAY
         //int newCount = 10 - (againList.size() + dueList.size);
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
-        todayList = dataBaseHelper._getRandomCard(LazzyBeeShare.MAX_LEARN_PER_DAY, learn_more);
+        todayList = dataBaseHelper._getRandomCard(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY, learn_more);
 
         int dueCount = dueList.size();
         int againCount = againList.size();
