@@ -24,11 +24,13 @@ public class LazzyBeeShare {
     public static final String LEARN_MORE = "LEARN_MORE";
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
+    public static final int TOTTAL_LEAN_PER_DAY = 20;
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
-    public static final int MAX_LEARN_PER_DAY = 10;
+    public static final int MAX_NEW_LEARN_PER_DAY = 10;
+    public static final int MAX_LEARN_MORE_PER_DAY = 5;
 
 
     /**
@@ -125,14 +127,14 @@ public class LazzyBeeShare {
                     "<p style=\"text-align: center;\">" + imageURL + "</p>\n" +
                     "<div style=\"width:100%\">\n" +
                     "    <div style=\"float:left;width:90%\">" +
+                    "<p><strong>Meaning:</strong></br><em style=\"color:blue\">" + meaning + "</em></p>\n" +
                     "<p><strong>Explain:</strong></br>" + explain + "</p>\n" +
-                    "<p><strong>Meaning:</strong></br>" + meaning + "</p>\n" +
                     "<p><strong>Example:</strong></br>" + example + "</p>\n" +
                     "</div>\n" +
                     "    <div style=\"float:right;;width:10%\">\n " +
-                    "<p></br>" + explainTagA + "</p>\n" +
                     "<p></br></p>\n" +
-                    "<p></br>" + exampleTagA + "</p>\n" +
+                    "<p><strong></strong></br>" + explainTagA + "</p>\n" +
+                    "<p><strong></strong></br>" + exampleTagA + "</p>\n" +
                     "    </div>\n" +
                     "</div>\n" +
                     "</html>\n";
@@ -227,7 +229,7 @@ public class LazzyBeeShare {
 //    }
 //
 //    public static int getMaxLearnPerDay(String maxlearn) {
-//        int value = MAX_LEARN_PER_DAY;
+//        int value = MAX_NEW_LEARN_PER_DAY;
 //
 //        try {
 //            JSONObject jsonObject = new JSONObject(maxlearn);
