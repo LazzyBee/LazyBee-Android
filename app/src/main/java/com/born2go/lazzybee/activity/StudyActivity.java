@@ -109,8 +109,11 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         Log.i(TAG, "todayCount:" + todayCount);
 
         //set data
-//        if (againCount > 0 || dueCount > 0 || todayCount > 0) {
-        if (todayCount > 0) {
+        boolean check_learn = againCount > 0 || dueCount > 0 || todayCount > 0;
+
+        Log.i(TAG, "check_learn:" + (check_learn));
+        if (check_learn) {
+//        if (todayCount > 0) {
             _setDataforWebView();
 
             final int list_card_again_in_today_size = againList.size();
@@ -362,7 +365,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
         int currentQueue = currentCard.getQueue();//Get current Queue
 
-        _checkContainsAndRemove(againList);
+        //_checkContainsAndRemove(againList);
 
         //TODO:Reset count list again,new,due
         if (currentQueue == Card.QUEUE_NEW_CRAM0) {
@@ -373,7 +376,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
 //        if (currentQueue == Card.QUEUE_LNR1) {
 ////            reset new card again
-//            againList.remove(currentCard);
+
 //            int countAgain = againList.size();
 //            lbCountAgain.setText("" + countAgain);
 //
@@ -386,7 +389,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
         }
 
-
+        againList.remove(currentCard);
         //TODO:Set queue,due using cardShed
         cardSched.answerCard(currentCard, Card.EASE_AGAIN);
         currentCard.setDue(curren_time + 60);
