@@ -143,13 +143,14 @@ public class MainActivity extends ActionBarActivity
         }
         dataBaseHelper = new LearnApiImplements(this);
     }
-
+    boolean first=true;
     private void _checkListTodayExit() {
         int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
         Log.i(TAG, "checkTodayExit: " + checkTodayExit);
         if (checkTodayExit > -1) {
-            Log.i(TAG, "_checkListTodayExit:today>0");
+            Log.i(TAG, "_checkListTodayExit:checkTodayExit == 1111");
             if (checkTodayExit > 0) {
+                Log.i(TAG, "_checkListTodayExit:today>0");
                 lbComplete.setText(LazzyBeeShare.EMPTY);
                 lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
                 btnStudy.setText("Study");
@@ -158,6 +159,7 @@ public class MainActivity extends ActionBarActivity
                 Log.i(TAG, "Study");
                 mCardViewStudy.setVisibility(View.VISIBLE);
             } else if (checkTodayExit == 0) {
+                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 0");
                 lbComplete.setText(getString(R.string.congratulations));
                 lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
                 btnCustomStudy.setTag(true);
@@ -165,19 +167,19 @@ public class MainActivity extends ActionBarActivity
                 btnStudy.setText("Complete Learn");
                 Log.i(TAG, "Learn more");
                 mCardViewStudy.setVisibility(View.GONE);
+            }else {
+                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 432424");
             }
 
         } else if (checkTodayExit == -1) {
-
             Log.i(TAG, "_checkListTodayExit:today==-1");
-            lbComplete.setText(getString(R.string.congratulations));
-            lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
-
+            lbComplete.setText(LazzyBeeShare.EMPTY);
+            lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
             btnStudy.setText("Study");
             btnStudy.setTag(true);
             btnCustomStudy.setTag(false);
             Log.i(TAG, "Study");
-            mCardViewStudy.setVisibility(View.GONE);
+            mCardViewStudy.setVisibility(View.VISIBLE);
 
         }
     }
