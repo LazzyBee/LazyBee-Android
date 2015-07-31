@@ -4,11 +4,13 @@ package com.born2go.lazzybee.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.StudyActivity;
@@ -32,6 +34,10 @@ public class FragmentCourse extends Fragment {
     private String mParam1;
     private String mParam2;
     private LearnApiImplements dataBaseHelper;
+
+    CardView mCardViewStudy;
+
+    TextView lbNameCourse;
 
     Button btnStudy, btnCustomStudy;
 
@@ -123,11 +129,13 @@ public class FragmentCourse extends Fragment {
                 btnStudy.setTag(false);
                 btnCustomStudy.setTag(false);
                 Log.i(TAG, "Study");
+                mCardViewStudy.setVisibility(View.VISIBLE);
             } else if (checkTodayExit == 0) {
                 btnCustomStudy.setTag(true);
                 btnStudy.setTag(false);
                 btnStudy.setText("Complete Learn");
                 Log.i(TAG, "Learn more");
+                mCardViewStudy.setVisibility(View.GONE);
             }
 
         } else if (checkTodayExit == -1) {
@@ -136,13 +144,16 @@ public class FragmentCourse extends Fragment {
             btnStudy.setTag(true);
             btnCustomStudy.setTag(false);
             Log.i(TAG, "Study");
+            mCardViewStudy.setVisibility(View.VISIBLE);
 
         }
     }
 
     private void _intInterfaceView(View view) {
+        mCardViewStudy = (CardView) view.findViewById(R.id.mCardViewStudy);
         btnStudy = (Button) view.findViewById(R.id.btnStudy);
         btnCustomStudy = (Button) view.findViewById(R.id.btnCustomStudy);
+        lbNameCourse= (TextView) view.findViewById(R.id.lbNameCourse);
     }
 
 
