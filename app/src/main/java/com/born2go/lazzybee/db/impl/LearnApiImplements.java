@@ -187,7 +187,12 @@ public class LearnApiImplements implements LearnApi {
             datas = _getListCardFromStringArray(value);
 
         } else {
-            //select random limit 5 row
+
+            //limit learn more =5 row
+            if (learnmore == true)
+                number = 5;
+
+            //select random limit number row
             String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = 0 ORDER BY RANDOM() LIMIT " + number;
 
 //            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
