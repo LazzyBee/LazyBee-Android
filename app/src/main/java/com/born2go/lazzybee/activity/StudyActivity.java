@@ -66,7 +66,6 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     int position_due = 0;
 
 
-
     boolean complete_new_learn = false;
 
     @Override
@@ -201,11 +200,39 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_detelte) {
+            _DoneCard();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _DoneCard() {
+        int currentQueue=currentCard.getQueue();
+        if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+            //reset new card count
+            todayList.remove(currentCard);
+            int countNew = todayList.size();
+            lbCountNew.setText("" + countNew);
+            _nextAgainCard();
+        }
+        if (currentQueue == Card.QUEUE_LNR1) {
+            //reset new card again
+            againList.remove(currentCard);
+            int countAgain = againList.size();
+            lbCountAgain.setText("" + countAgain);
+            _nextNewCard();
+        }
+        if (currentQueue == Card.QUEUE_REV2) {
+            //reset new card due
+            dueList.remove(currentCard);
+            int countDue = dueList.size();
+            lbCountDue.setText("" + countDue);
+            _nextNewCard();
+        }
+        currentCard.setQueue(Card.QUEUE_DONE_2);
+        dataBaseHelper._updateCard(currentCard);
     }
 
 
@@ -797,7 +824,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         //
         //  Log.i(TAG, "HTML FROM:" + questionDisplay.toString());
         //Set Data
-        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
     }
 
@@ -832,7 +859,6 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 //                        "</html>";
 //        return html;
 //    }
-
 
 
     /**
