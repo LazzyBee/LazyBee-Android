@@ -64,4 +64,11 @@ public class WordEstimateTest{
     public void testintArrayToJSONArray()throws Exception {
         System.out.println(WordEstimate.intArrayToJSONArray(testEstimate.wordTotal));
     }
+
+    @Test
+    public void _sampleNumberWordEachLevel() throws Exception {
+        int set[] = testEstimate._sampleNumberWordEachLevel();
+        Assert.assertEquals(100, set[0] + set[1] + set[2] + set[3] + set[4] + set[5] + set[6] + set[7],
+                DELTA);
+    }
 }

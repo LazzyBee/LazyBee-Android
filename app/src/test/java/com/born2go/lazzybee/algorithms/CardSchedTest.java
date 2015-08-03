@@ -32,7 +32,7 @@ public class CardSchedTest extends CardSched{
     public void test__daysLate(){
         Card card_late_10days = new Card();
 
-        card_late_10days.setDue(Utils.intNow() - 10* CardSched.SECONDS_PERDAY);
+        card_late_10days.setDue(Utils.intNow() - 10 * CardSched.SECONDS_PERDAY);
         assertEquals(this._daysLate(card_late_10days), 0);
 
         card_late_10days.setQueue(Card.QUEUE_REV2);

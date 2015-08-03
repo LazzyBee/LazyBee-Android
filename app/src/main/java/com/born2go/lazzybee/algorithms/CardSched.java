@@ -19,7 +19,8 @@ public class CardSched {
     public final static int EASE_GOOD = 2;
     public final static int EASE_EASY = 3;
 
-    private static final int SECONDS_PERDAY = 86400;
+    protected static final int SECONDS_PERDAY = 86400;
+
     private static final int[] FACTOR_ADDITION_VALUES = { 0, -150, 0, 150 };
     private static final double BONUS_EASY = 1.4;
     private static final int MIN_FACTOR = 1300;
