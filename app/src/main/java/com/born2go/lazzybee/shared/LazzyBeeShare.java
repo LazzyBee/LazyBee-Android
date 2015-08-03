@@ -2,6 +2,7 @@ package com.born2go.lazzybee.shared;
 
 import android.text.Html;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
 
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
@@ -25,6 +26,7 @@ public class LazzyBeeShare {
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
     public static final int TOTTAL_LEAN_PER_DAY = 20;
+    public static final String CARDID = "cardId";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
@@ -210,7 +212,98 @@ public class LazzyBeeShare {
         return value;
     }
 
-//    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
+    /*
+    * Conver package ,pacakage,...
+    * to list String
+    *
+    * */
+    public static List<String> getListPackageFormString(String aPackage) {
+        List<String> packages = new ArrayList<String>();
+
+        //split package
+        String[] splitPackage = aPackage.split(",");
+
+        for (int i = 1; i < splitPackage.length; i++) {
+            String pack = splitPackage[i];
+            System.out.println("-Package:" + pack);
+            packages.add(pack);
+        }
+
+        return packages;
+    }
+
+    public static String getAnswerHTMLwithPackage(Card card,String packages) {
+        String html = null;
+        try {
+            JSONObject answerObj = new JSONObject(card.getAnswers());
+            String pronoun = answerObj.getString("pronoun");
+            JSONObject packagesObj = answerObj.getJSONObject("packages");
+
+            JSONObject commonObj = packagesObj.getJSONObject(packages);
+
+            String meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
+            String explain = Html.fromHtml(commonObj.getString("explain")).toString();
+            String example = Html.fromHtml(commonObj.getString("example")).toString();
+
+
+            String explainTagA = EMPTY;
+            String exampleTagA = EMPTY;
+
+            Log.i(TAG, "meaning" + meaning);
+            Log.i(TAG, "explain" + explain);
+            Log.i(TAG, "example" + example);
+
+//            if (!meaning.isEmpty())
+//                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_play_black.png'/></a>";
+//            else
+//                meaning = "";
+
+            if (!explain.isEmpty())
+                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_play_black.png'/></a>";
+
+            if (!example.isEmpty())
+                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_play_black.png'/></a>";
+
+            String imageURL = EMPTY;
+
+            html = "<html>\n" +
+                    "<head>\n" +
+                    "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                    "name=\"viewport\">\n" +
+                    "</head>\n" +
+                    "<div style='width:100%'>\n" +
+                    "<div style='float:left;width:90%;text-align: center;'>\n" +
+                    "<strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
+                    "</div>\n" +
+                    "<div style='float:left;width:10%'>\n" +
+                    "<p><a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a><p>\n" +
+                    "</div>\n" +
+                    "</div>\n" +
+                    "<div div style='width:90%'>\n" +
+                    "<p style=\"text-align: center;\">" + pronoun + "</p>\n" +
+                    "</div>\n" +
+                    "<p style=\"text-align: center;\">" + imageURL + "</p>\n" +
+                    "<div style=\"width:100%\">\n" +
+                    "    <div style=\"float:left;width:90%\">" +
+                    "<p><strong>Meaning:</strong></br><em style=\"color:blue\">" + meaning + "</em></p>\n" +
+                    "<p><strong>Explain:</strong></br>" + explain + "</p>\n" +
+                    "<p><strong>Example:</strong></br>" + example + "</p>\n" +
+                    "</div>\n" +
+                    "    <div style=\"float:right;;width:10%\">\n " +
+                    "<p></br></p>\n" +
+                    "<p><strong></strong></br>" + explainTagA + "</p>\n" +
+                    "<p><strong></strong></br>" + exampleTagA + "</p>\n" +
+                    "    </div>\n" +
+                    "</div>\n" +
+                    "</html>\n";
+            Log.v(TAG, "html:" + html);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return html;
+    }
+
+    //    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
 //        String value = "";
 //        Date date = new Date();
 //
@@ -241,5 +334,36 @@ public class LazzyBeeShare {
 //
 //        return value;
 //    }
+ /*
+       /*
+    *Java Scrip Object Question
+    * */
+    public static class JsObjectQuestion {
+        @JavascriptInterface
+        public String toString() {
+            return "question";
+        }
+    }
 
+    /*
+   *Java Scrip Object explain
+   * */
+    public static class JsObjectExplain {
+        @JavascriptInterface
+        public String toString() {
+            return "explain";
+        }
+
+    }
+
+    /*
+  *Java Scrip Object example
+  * */
+    public static class JsObjectExample {
+        @JavascriptInterface
+        public String toString() {
+            return "example";
+        }
+
+    }
 }
