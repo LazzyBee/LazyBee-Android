@@ -112,9 +112,11 @@ public class MainActivity extends ActionBarActivity
     private void _getCountCard() {
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
+        int learnCount = dataBaseHelper._getListCardLearn().size();
         if (dueToday != null)
             lbDueToday.setText(dueToday);
         lbTotalsCount.setText("" + allCount);
+        lbTotalNewCount.setText("" + (allCount - learnCount));
 
     }
 
@@ -169,41 +171,53 @@ public class MainActivity extends ActionBarActivity
     private void _checkListTodayExit() {
         int checkTodayExit = dataBaseHelper._checkListTodayExit();
         Log.i(TAG, "checkTodayExit: " + checkTodayExit);
-        if (checkTodayExit > -1) {
-            Log.i(TAG, "_checkListTodayExit:checkTodayExit == 1111");
-            if (checkTodayExit > 0) {
-                Log.i(TAG, "_checkListTodayExit:today>0");
+
+        if (checkTodayExit == -2) {
+            Log.i(TAG, "_checkListTodayExit:Fist Innitial");
+            lbComplete.setText(LazzyBeeShare.EMPTY);
+            btnStudy.setText("Study");
+            btnStudy.setTag(false);
+            btnCustomStudy.setTag(false);
+            mCardViewStudy.setVisibility(View.VISIBLE);
+        } else {
+            if (checkTodayExit > -1) {
+                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 1111");
+                if (checkTodayExit > 0) {
+                    Log.i(TAG, "_checkListTodayExit:today>0");
+                    lbComplete.setText(LazzyBeeShare.EMPTY);
+                    // lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
+                    btnStudy.setText("Study");
+                    btnStudy.setTag(false);
+                    btnCustomStudy.setTag(false);
+                    Log.i(TAG, "Study");
+                    mCardViewStudy.setVisibility(View.VISIBLE);
+                } else if (checkTodayExit == 0) {
+                    Log.i(TAG, "_checkListTodayExit:checkTodayExit == 0");
+                    lbComplete.setText(getString(R.string.congratulations));
+                    // lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
+                    btnCustomStudy.setTag(true);
+                    btnStudy.setTag(false);
+                    btnStudy.setText("Complete Learn");
+                    Log.i(TAG, "Learn more");
+                    mCardViewStudy.setVisibility(View.GONE);
+                } else {
+                    Log.i(TAG, "_checkListTodayExit:checkTodayExit == 432424");
+                }
+
+            } else if (checkTodayExit == -1) {
+                Log.i(TAG, "_checkListTodayExit:today==-1");
                 lbComplete.setText(LazzyBeeShare.EMPTY);
-                // lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
+                //lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
                 btnStudy.setText("Study");
-                btnStudy.setTag(false);
+                btnStudy.setTag(true);
                 btnCustomStudy.setTag(false);
                 Log.i(TAG, "Study");
                 mCardViewStudy.setVisibility(View.VISIBLE);
-            } else if (checkTodayExit == 0) {
-                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 0");
-                lbComplete.setText(getString(R.string.congratulations));
-                // lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
-                btnCustomStudy.setTag(true);
-                btnStudy.setTag(false);
-                btnStudy.setText("Complete Learn");
-                Log.i(TAG, "Learn more");
-                mCardViewStudy.setVisibility(View.GONE);
-            } else {
-                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 432424");
+
             }
-
-        } else if (checkTodayExit == -1) {
-            Log.i(TAG, "_checkListTodayExit:today==-1");
-            lbComplete.setText(LazzyBeeShare.EMPTY);
-            //lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
-            btnStudy.setText("Study");
-            btnStudy.setTag(true);
-            btnCustomStudy.setTag(false);
-            Log.i(TAG, "Study");
-            mCardViewStudy.setVisibility(View.VISIBLE);
-
         }
+
+
     }
 
     /**
