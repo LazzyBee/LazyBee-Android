@@ -57,7 +57,12 @@ public class MainActivity extends ActionBarActivity
 
     TextView lbNameCourse;
     TextView lbComplete;
-    TextView lbSuportCompletedCard;
+//    TextView lbSuportCompletedCard;
+
+    TextView lbDueToday;
+    TextView lbTotalNewCount;
+    TextView lbTotalsCount;
+
 
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
@@ -71,6 +76,7 @@ public class MainActivity extends ActionBarActivity
         _initSQlIte();
         _checkLogin();
         _intInterfaceView();
+        _getCountCard();
         _checkListTodayExit();
 
         btnStudy.setOnClickListener(new View.OnClickListener() {
@@ -103,13 +109,27 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    private void _getCountCard() {
+        String dueToday = dataBaseHelper._getStringDueToday();
+        int allCount = dataBaseHelper._getAllListCard().size();
+        if (dueToday != null)
+            lbDueToday.setText(dueToday);
+        lbTotalsCount.setText("" + allCount);
+
+    }
+
     private void _intInterfaceView() {
         mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
         btnStudy = (Button) findViewById(R.id.btnStudy);
         btnCustomStudy = (Button) findViewById(R.id.btnCustomStudy);
+
         lbNameCourse = (TextView) findViewById(R.id.lbNameCourse);
         lbComplete = (TextView) findViewById(R.id.lbComplete);
-        lbSuportCompletedCard = (TextView) findViewById(R.id.lbSuportCompletedCard);
+
+        lbDueToday = (TextView) findViewById(R.id.lbDueToday);
+        lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount);
+        lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount);
+
     }
 
     private void _initToolBar() {
@@ -143,16 +163,18 @@ public class MainActivity extends ActionBarActivity
         }
         dataBaseHelper = new LearnApiImplements(this);
     }
-    boolean first=true;
+
+    boolean first = true;
+
     private void _checkListTodayExit() {
-        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY);
+        int checkTodayExit = dataBaseHelper._checkListTodayExit();
         Log.i(TAG, "checkTodayExit: " + checkTodayExit);
         if (checkTodayExit > -1) {
             Log.i(TAG, "_checkListTodayExit:checkTodayExit == 1111");
             if (checkTodayExit > 0) {
                 Log.i(TAG, "_checkListTodayExit:today>0");
                 lbComplete.setText(LazzyBeeShare.EMPTY);
-                lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
+                // lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
                 btnStudy.setText("Study");
                 btnStudy.setTag(false);
                 btnCustomStudy.setTag(false);
@@ -161,20 +183,20 @@ public class MainActivity extends ActionBarActivity
             } else if (checkTodayExit == 0) {
                 Log.i(TAG, "_checkListTodayExit:checkTodayExit == 0");
                 lbComplete.setText(getString(R.string.congratulations));
-                lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
+                // lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
                 btnCustomStudy.setTag(true);
                 btnStudy.setTag(false);
                 btnStudy.setText("Complete Learn");
                 Log.i(TAG, "Learn more");
                 mCardViewStudy.setVisibility(View.GONE);
-            }else {
+            } else {
                 Log.i(TAG, "_checkListTodayExit:checkTodayExit == 432424");
             }
 
         } else if (checkTodayExit == -1) {
             Log.i(TAG, "_checkListTodayExit:today==-1");
             lbComplete.setText(LazzyBeeShare.EMPTY);
-            lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
+            //lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
             btnStudy.setText("Study");
             btnStudy.setTag(true);
             btnCustomStudy.setTag(false);
