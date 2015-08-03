@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.born2go.lazzybee.algorithms.WordEstimate;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
@@ -926,5 +927,16 @@ public class LearnApiImplements implements LearnApi {
 
     }
 
-
+    @Override
+    public List<Card> _get100Card() {
+        List<Card> cards = new ArrayList<Card>();
+        WordEstimate wordEstimate = new WordEstimate();
+        int number[] = wordEstimate.getNumberWordEachLevel(0d);
+        for (int i = 1; i < number.length; i++) {
+            String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + number[i];
+            cards.addAll(_getListCardQueryString(select_list_card_by_queue));
+        }
+        Log.i(TAG, "Card size:" + cards.size());
+        return cards;
+    }
 }
