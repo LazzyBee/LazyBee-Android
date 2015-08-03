@@ -11,7 +11,8 @@ import org.junit.After;
 import org.junit.Test;
 
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.algorithms.CardSched;
+
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 /**
  * Created by Hue on 7/22/2015.
@@ -30,17 +31,22 @@ public class LearnApiImplementsTest {
 
     @Test
     public void test_updateCardQueueAndCardDue() throws Exception {
-        long time = new Date().getTime();
-        System.out.println("Time long value is :" + time);
-        System.out.println("Time int value (before) is :" + ((int) time) / 1000);
-        System.out.println("Time int value (after) is :" + (int) (time / 1000));
-        System.out.println("Time int value (after) + 600 is :" + (int) (time / 1000 + 600));
+//        long time = new Date().getTime();
+//        System.out.println("Time long value is :" + time);
+//        System.out.println("Time int value (before) is :" + ((int) time) / 1000);
+//        System.out.println("Time int value (after) is :" + (int) (time / 1000));
+//        System.out.println("Time int value (after) + 600 is :" + (int) (time / 1000 + 600));
+//
+//        Card card = new Card();
+//
+//        CardSched cardSched = new CardSched();
+//        for (String ivl : cardSched.nextIvlStrLst(card))
+//            System.out.println("Ivl:" + ivl);
 
-        Card card = new Card();
-
-        CardSched cardSched = new CardSched();
-        for (String ivl : cardSched.nextIvlStrLst(card))
-            System.out.println("Ivl:" + ivl);
+    }
+    @Test
+    public void test_getListPackageFormString() throws Exception {
+        LazzyBeeShare.getListPackageFormString(",common,it,basic,");
 
     }
 }
