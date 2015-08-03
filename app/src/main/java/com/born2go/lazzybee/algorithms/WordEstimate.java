@@ -127,4 +127,28 @@ public class WordEstimate {
         return voca;
     }
 
+    /**
+     * We get number of words correspond to each level
+     * Base on the voca point of user, we will return suitable
+     * words of levels for them
+     * @param voca estimate vocabulary of user
+     * @return int[MAX_LEVEL + 1]. Count from 1 (skip index 0).
+     * If voca =0, we provide default data set
+     */
+    public int[] getNumberWordEachLevel(double voca){
+        return _sampleNumberWordEachLevel();
+    }
+
+    protected int[] _sampleNumberWordEachLevel(){
+        int number[] = new int[MAX_LEVEL + 1];
+        number[0] = 0;
+        number[1] = 10;
+        number[2] = 15;
+        number[3] = 40;
+        number[4] = 25;
+        number[5] = 10;
+        number[6] = 0;
+        number[7] = 0;
+        return number;
+    }
 }
