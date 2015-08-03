@@ -40,6 +40,7 @@
     <string name="learn_more">Learn more</string>
     <string name="congratulations">Congratulations!</string>
     <string name="suport_complete_card">Touch LEARN MORE</string>
+    <string name="action_delete_card">Delete card</string>
 
 
 </resources>
