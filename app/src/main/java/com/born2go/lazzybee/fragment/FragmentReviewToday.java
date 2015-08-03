@@ -1,10 +1,12 @@
 package com.born2go.lazzybee.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,11 @@ public class FragmentReviewToday extends Fragment {
         // Required empty public constructor
     }
 
+    public interface FragmentReviewTodayListener {
+        void gotoCardDetails(String cardId);
+    }
+
+    FragmentReviewTodayListener fragmentReviewTodayListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +52,7 @@ public class FragmentReviewToday extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewReviewTodayList.getContext(), 1);
 
         //get review List Card today
-        List<Card> vocabularies = dataBaseHelper._getReviewListCard();
+        final List<Card> vocabularies = dataBaseHelper._getReviewListCard();
 
         //Init Adapter
         RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(vocabularies);
@@ -54,7 +61,11 @@ public class FragmentReviewToday extends Fragment {
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(), mRecyclerViewReviewTodayList, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                if (fragmentReviewTodayListener != null) {
+                    String cardId = String.valueOf(vocabularies.get(position).getId());
+                    Log.i(TAG, "CardId=" + cardId);
+                    fragmentReviewTodayListener.gotoCardDetails(cardId);
+                }
             }
         });
 
@@ -65,5 +76,9 @@ public class FragmentReviewToday extends Fragment {
         return view;
     }
 
-
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        fragmentReviewTodayListener = (FragmentReviewTodayListener) activity;
+    }
 }

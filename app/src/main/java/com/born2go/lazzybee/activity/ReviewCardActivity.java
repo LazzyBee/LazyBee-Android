@@ -1,13 +1,16 @@
 package com.born2go.lazzybee.activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.fragment.FragmentReviewToday;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
-public class ReviewCardActivity extends ActionBarActivity {
+public class ReviewCardActivity extends ActionBarActivity implements FragmentReviewToday.FragmentReviewTodayListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +38,12 @@ public class ReviewCardActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void gotoCardDetails(String cardId) {
+        Intent intent = new Intent(this, CardDetailsActivity.class);
+        intent.putExtra(LazzyBeeShare.CARDID,cardId);
+        startActivity(intent);
     }
 }
