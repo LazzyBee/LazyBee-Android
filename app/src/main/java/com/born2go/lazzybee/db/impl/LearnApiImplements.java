@@ -180,7 +180,7 @@ public class LearnApiImplements implements LearnApi {
 
         //Check today list card
         int checkListToday = _checkListTodayExit();
-        if (checkListToday != -1 && !learnmore) {
+        if (checkListToday > -1 && !learnmore) {
 
             //TODO: get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
@@ -273,7 +273,8 @@ public class LearnApiImplements implements LearnApi {
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
             //TODO: NO List Queue
-            return -1;
+            Log.i(TAG, "_checkListTodayExit:First Initial:Return=-2");
+            return -2;
         } else {
             //TODO Yes,Compareto Date
             try {
@@ -298,11 +299,11 @@ public class LearnApiImplements implements LearnApi {
 
                 if (compare > 0 && compare < 84600) {
 
-                    Log.i(TAG, "INDAY:");
+                    Log.i(TAG, "_checkListTodayExit:Inday Return=" + countListId);
                     return countListId;
 
                 } else {
-                    Log.i(TAG, "OUTDAY");
+                    Log.i(TAG, "_checkListTodayExit:Outday Return=" + -1);
                     return -1;
                 }
 
@@ -355,6 +356,7 @@ public class LearnApiImplements implements LearnApi {
 //                }
 
             } catch (JSONException e) {
+                Log.i(TAG, "_checkListTodayExit:Error Return=" + -1);
                 e.printStackTrace();
                 return -1;
             }
@@ -867,14 +869,26 @@ public class LearnApiImplements implements LearnApi {
         String duetoday = LazzyBeeShare.EMPTY;
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
-        int dueCount = 0;
-
-        if (todayCount == -1) {
-            dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-            todayCount = 0;
+        int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
+        if (todayCount == -2) {
+            dueCount = 0;
+            againCount = 0;
+            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
         } else {
-            dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+            if (todayCount == 0) {
+                //Complete leanrn today
+                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
+                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+                todayCount = 0;
+            } else if (todayCount == -1) {
+                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
+                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+            } else {
+                Log.i(TAG, "Today:" + todayCount);
+            }
         }
+
         duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;
     }
@@ -884,4 +898,28 @@ public class LearnApiImplements implements LearnApi {
         List<Card> cardList = _getListCardQueryString(query);
         return cardList;
     }
+
+    public List<Card> _getListCardLearn() {
+        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue > 1";
+        List<Card> cardList = _getListCardQueryString(query);
+        return cardList;
+    }
+
+    public int _checkCompleteLearned() {
+        int again = _getListCardByQueue(Card.QUEUE_LNR1).size();
+        int due = _getListCardByQueue(Card.QUEUE_REV2).size();
+        int today = _checkListTodayExit();
+
+        Log.i(TAG, today + ":" + again + ":" + due);
+
+        if (today > 0 || again > 0 || due > 0 || today == -1 || today == -2) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+
+    }
+
+
 }
