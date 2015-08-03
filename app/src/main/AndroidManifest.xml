@@ -52,11 +52,19 @@
             android:label="@string/title_activity_add_course" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.MainActivity"
+
+                />
         </activity>
         <activity
             android:name=".activity.CardDetailsActivity"
-            android:label="@string/title_activity_card_details" >
+            android:label="@string/title_activity_card_details"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.ReviewCardActivity"
+
+                />
         </activity>
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
