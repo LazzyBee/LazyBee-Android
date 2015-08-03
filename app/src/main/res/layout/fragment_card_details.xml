@@ -1,13 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.born2go.lazzybee.fragment.FragmentCardDetails">
 
-    <!-- TODO: Update blank fragment layout -->
+    <com.born2go.lazzybee.view.SlidingTabLayout
+    android:id="@+id/sliding_tabs"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
 
-    <WebView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/mWebViewCardDetails"
-        android:layout_gravity="left|top" />
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
+</LinearLayout>

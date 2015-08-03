@@ -65,9 +65,6 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     int position_again = 0;
     int position_due = 0;
 
-    String mime = "text/html";
-    String encoding = "utf-8";
-    String ASSETS = "file:///android_asset/";
 
     boolean complete_new_learn = false;
 
@@ -94,11 +91,11 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2);
 
         //get new random card list to day
-        //TODO: only take new cards if total learn today not exceed MAX_LEARN_PER_DAY
+        //TODO: only take new cards if total learn today not exceed MAX_NEW_LEARN_PER_DAY
         //int newCount = 10 - (againList.size() + dueList.size);
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
-        todayList = dataBaseHelper._getRandomCard(LazzyBeeShare.MAX_LEARN_PER_DAY, learn_more);
+        todayList = dataBaseHelper._getRandomCard(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY, learn_more);
 
         int dueCount = dueList.size();
         int againCount = againList.size();
@@ -203,11 +200,39 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_detelte) {
+            _DoneCard();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _DoneCard() {
+        int currentQueue=currentCard.getQueue();
+        if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+            //reset new card count
+            todayList.remove(currentCard);
+            int countNew = todayList.size();
+            lbCountNew.setText("" + countNew);
+            _nextAgainCard();
+        }
+        if (currentQueue == Card.QUEUE_LNR1) {
+            //reset new card again
+            againList.remove(currentCard);
+            int countAgain = againList.size();
+            lbCountAgain.setText("" + countAgain);
+            _nextNewCard();
+        }
+        if (currentQueue == Card.QUEUE_REV2) {
+            //reset new card due
+            dueList.remove(currentCard);
+            int countDue = dueList.size();
+            lbCountDue.setText("" + countDue);
+            _nextNewCard();
+        }
+        currentCard.setQueue(Card.QUEUE_DONE_2);
+        dataBaseHelper._updateCard(currentCard);
     }
 
 
@@ -268,7 +293,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             e.printStackTrace();
         }
 
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
         _addJavascriptInterfaceQuestionAndAnswer();
 
@@ -566,7 +591,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
     private void _addJavascriptInterfaceQuestionAndAnswer() {
         //Todo: addJavascriptInterface play question
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectQuestion() {
+        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
             @JavascriptInterface
             public void playQuestion() {
                 //get text to Speak
@@ -581,7 +606,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExplain() {
+        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
             @JavascriptInterface
             public void speechExplain() {
                 //get answer json
@@ -592,7 +617,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 _speakText(toSpeech);
             }
         }, "explain");
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExample() {
+        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
             @JavascriptInterface
             public void speechExample() {
                 //get answer json
@@ -799,7 +824,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         //
         //  Log.i(TAG, "HTML FROM:" + questionDisplay.toString());
         //Set Data
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, questionDisplay, mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
     }
 
@@ -835,37 +860,6 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 //        return html;
 //    }
 
-    /*
-    *Java Scrip Object Question
-    * */
-    public class JsObjectQuestion {
-        @JavascriptInterface
-        public String toString() {
-            return "question";
-        }
-    }
-
-    /*
-   *Java Scrip Object explain
-   * */
-    public class JsObjectExplain {
-        @JavascriptInterface
-        public String toString() {
-            return "explain";
-        }
-
-    }
-
-    /*
-  *Java Scrip Object example
-  * */
-    public class JsObjectExample {
-        @JavascriptInterface
-        public String toString() {
-            return "example";
-        }
-
-    }
 
     /**
      * Speak text theo version andorid

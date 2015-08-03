@@ -10,16 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,63 +44,63 @@ public class FragmentCardDetails extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_card_details, container, false);
 
-        //init webview
-        WebView mWebViewCardDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
-
-        //init Db
-        LearnApiImplements cardApi = new LearnApiImplements(getActivity());
-
-        //Get Card by ID
-        final Card card = cardApi._getCardByID(cardId);
-
-        //get html
-        String htmlView = LazzyBeeShare.getAnswerHTML(card);
-
-        //Set Data
-        mWebViewCardDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, htmlView, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-
-        //init text to Speak
-        tts = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    tts.setLanguage(Locale.UK);
-                }
-            }
-        });
-
-        //Speak text
-        mWebViewCardDetails.addJavascriptInterface(new JsObjectQuestion() {
-            @JavascriptInterface
-            public void playQuestion() {
-                //get text to Speak
-                String toSpeak = card.getQuestion();
-
-                //Toast Text Speak
-                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
-
-                //Speak text
-                speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, "question");
-
-        mWebViewCardDetails.addJavascriptInterface(new JsObjectAnswers() {
-            @JavascriptInterface
-            public void playAnswers() {
-                //get text to Speak
-                String toSpeak = card.getQuestion();
-
-                //Toast Text Speak
-                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
-
-                //Speak text
-                speakText(toSpeak);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, "answers");
+//        //init webview
+//        WebView mWebViewCardDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
+//
+//        //init Db
+//        LearnApiImplements cardApi = new LearnApiImplements(getActivity());
+//
+//        //Get Card by ID
+//        final Card card = cardApi._getCardByID(cardId);
+//
+//        //get html
+//        String htmlView = LazzyBeeShare.getAnswerHTML(card);
+//
+//        //Set Data
+//        mWebViewCardDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, htmlView, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+//
+//        //init text to Speak
+//        tts = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
+//            @Override
+//            public void onInit(int status) {
+//                if (status != TextToSpeech.ERROR) {
+//                    tts.setLanguage(Locale.UK);
+//                }
+//            }
+//        });
+//
+//        //Speak text
+//        mWebViewCardDetails.addJavascriptInterface(new JsObjectQuestion() {
+//            @JavascriptInterface
+//            public void playQuestion() {
+//                //get text to Speak
+//                String toSpeak = card.getQuestion();
+//
+//                //Toast Text Speak
+//                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+//
+//                //Speak text
+//                speakText(toSpeak);
+//
+//                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        }, "question");
+//
+//        mWebViewCardDetails.addJavascriptInterface(new JsObjectAnswers() {
+//            @JavascriptInterface
+//            public void playAnswers() {
+//                //get text to Speak
+//                String toSpeak = card.getQuestion();
+//
+//                //Toast Text Speak
+//                Toast.makeText(getActivity().getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+//
+//                //Speak text
+//                speakText(toSpeak);
+//
+//                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        }, "answers");
 
 
         return view;

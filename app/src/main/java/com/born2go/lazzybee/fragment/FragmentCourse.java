@@ -84,8 +84,8 @@ public class FragmentCourse extends Fragment {
         _initDatabase();
 
 
-        //Update MAX_LEARN_PER_DAY
-        //dataBaseHelper._insertOrUpdateToSystemTable("MAX_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
+        //Update MAX_NEW_LEARN_PER_DAY
+        //dataBaseHelper._insertOrUpdateToSystemTable("MAX_NEW_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
         _checkListTodayExit();
 
 
@@ -120,7 +120,7 @@ public class FragmentCourse extends Fragment {
     }
 
     private void _checkListTodayExit() {
-        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
+        int checkTodayExit = dataBaseHelper._checkListTodayExit();
         Log.i(TAG, "checkTodayExit: " + checkTodayExit);
         if (checkTodayExit > -1) {
             //

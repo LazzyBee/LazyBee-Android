@@ -9,6 +9,7 @@ import android.util.Log;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -178,15 +179,20 @@ public class LearnApiImplements implements LearnApi {
         List<Card> datas = new ArrayList<Card>();
 
         //Check today list card
-        int checkListToday = _checkListTodayExit(number);
-        if (checkListToday != -1 && !learnmore) {
+        int checkListToday = _checkListTodayExit();
+        if (checkListToday > -1 && !learnmore) {
 
             //TODO: get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
             datas = _getListCardFromStringArray(value);
 
         } else {
-            //select random limit 5 row
+
+            //limit learn more =5 row
+            if (learnmore == true)
+                number = 5;
+
+            //select random limit number row
             String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = 0 ORDER BY RANDOM() LIMIT " + number;
 
 //            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
@@ -267,12 +273,13 @@ public class LearnApiImplements implements LearnApi {
         return jsonValuestr;
     }
 
-    public int _checkListTodayExit(int number) {
+    public int _checkListTodayExit() {
         //TODO:get value queue List
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
             //TODO: NO List Queue
-            return -1;
+            Log.i(TAG, "_checkListTodayExit:First Initial:Return=-2");
+            return -2;
         } else {
             //TODO Yes,Compareto Date
             try {
@@ -297,11 +304,11 @@ public class LearnApiImplements implements LearnApi {
 
                 if (compare > 0 && compare < 84600) {
 
-                    Log.i(TAG, "INDAY:");
+                    Log.i(TAG, "_checkListTodayExit:Inday Return=" + countListId);
                     return countListId;
 
                 } else {
-                    Log.i(TAG, "OUTDAY");
+                    Log.i(TAG, "_checkListTodayExit:Outday Return=" + -1);
                     return -1;
                 }
 
@@ -354,6 +361,7 @@ public class LearnApiImplements implements LearnApi {
 //                }
 
             } catch (JSONException e) {
+                Log.i(TAG, "_checkListTodayExit:Error Return=" + -1);
                 e.printStackTrace();
                 return -1;
             }
@@ -672,13 +680,22 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
         String select_list_card_by_queue = "";
+        int limit = 20;
         if (queue == Card.QUEUE_LNR1)
             //Query select_list_card_by_queue
             select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
         else if (queue == Card.QUEUE_REV2) {
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+
+            int countToday = _checkListTodayExit();
+
+            if (countToday == -1)
+                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+            else if (countToday > -1)
+                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - countToday;
+
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
         } else {
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " LIMIT " + limit;
         }
 
 
@@ -851,5 +868,63 @@ public class LearnApiImplements implements LearnApi {
 
         return update_result;
     }
+
+
+    public String _getStringDueToday() {
+        String duetoday = LazzyBeeShare.EMPTY;
+        int todayCount = _checkListTodayExit();
+        int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
+        int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
+        if (todayCount == -2) {
+            dueCount = 0;
+            againCount = 0;
+            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+        } else {
+            if (todayCount == 0) {
+                //Complete leanrn today
+                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
+                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+                todayCount = 0;
+            } else if (todayCount == -1) {
+                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
+                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+            } else {
+                Log.i(TAG, "Today:" + todayCount);
+            }
+        }
+
+        duetoday = todayCount + " " + againCount + " " + dueCount;
+        return duetoday;
+    }
+
+    public List<Card> _getAllListCard() {
+        String query = "SELECT  * FROM " + TABLE_VOCABULARY;
+        List<Card> cardList = _getListCardQueryString(query);
+        return cardList;
+    }
+
+    public List<Card> _getListCardLearn() {
+        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue > 1";
+        List<Card> cardList = _getListCardQueryString(query);
+        return cardList;
+    }
+
+    public int _checkCompleteLearned() {
+        int again = _getListCardByQueue(Card.QUEUE_LNR1).size();
+        int due = _getListCardByQueue(Card.QUEUE_REV2).size();
+        int today = _checkListTodayExit();
+
+        Log.i(TAG, today + ":" + again + ":" + due);
+
+        if (today > 0 || again > 0 || due > 0 || today == -1 || today == -2) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+
+    }
+
 
 }

@@ -72,43 +72,100 @@
                                 android:text="Medium Text"
                                 android:id="@+id/lbComplete"
                                 android:layout_gravity="center_horizontal"
-                                android:textSize="20dp"/>
+                                android:textSize="20dp"
+                                android:visibility="visible" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/lbSuportCompletedCard"
-                            android:layout_gravity="center_horizontal"
-                            android:visibility="gone" />
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:id="@+id/pDueToday">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_gravity="center_horizontal"
+                                android:visibility="visible"
+                                android:text="Due today:           "
+                                android:textAlignment="center" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:id="@+id/lbDueToday"
+                                android:layout_gravity="center_horizontal"
+                                android:visibility="visible"
+                                android:text="10 10 10" />
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/lbTotalCountCardLearnToDay"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:visibility="gone" />
 
-                        <TextView
-                            android:id="@+id/lbCountCardLeanedToday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:visibility="gone" />
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textAlignment="center"
+                            android:gravity="center|center_vertical"
+                            android:id="@+id/pTotalNewCard">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_gravity="center_horizontal"
+                                android:visibility="visible"
+                                android:text="Total new learn:           "
+                                android:textAlignment="center"
+                                ></TextView>
 
-                        <TextView
-                            android:id="@+id/lbDueToday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:visibility="gone" />
+                            <TextView
+                                android:id="@+id/lbTotalNewCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="340"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/pTotalCards">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_gravity="center_horizontal"
+                                android:visibility="visible"
+                                android:text="Total cards:                  "
+                                android:textAlignment="center"
+                                ></TextView>
+                            <TextView
+                                android:id="@+id/lbTotalsCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="550"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/lbDueToday"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="center_horizontal"-->
+                            <!--android:text="Medium Text"-->
+                            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+                            <!--android:visibility="visible" />-->
 
 
                     </LinearLayout>
@@ -133,7 +190,8 @@
                         android:background="@color/teal_500"
 
                         android:text="Study"
-                        android:textColor="#ffffffff" />
+                        android:textColor="#ffffffff"
+                        android:onClick="_onBtnStudyOnClick" />
                 </android.support.v7.widget.CardView>
 
                 <LinearLayout
