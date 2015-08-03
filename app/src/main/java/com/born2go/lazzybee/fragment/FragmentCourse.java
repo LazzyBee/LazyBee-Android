@@ -120,7 +120,7 @@ public class FragmentCourse extends Fragment {
     }
 
     private void _checkListTodayExit() {
-        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY);
+        int checkTodayExit = dataBaseHelper._checkListTodayExit();
         Log.i(TAG, "checkTodayExit: " + checkTodayExit);
         if (checkTodayExit > -1) {
             //
