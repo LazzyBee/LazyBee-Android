@@ -179,7 +179,7 @@ public class LearnApiImplements implements LearnApi {
         List<Card> datas = new ArrayList<Card>();
 
         //Check today list card
-        int checkListToday = _checkListTodayExit(number);
+        int checkListToday = _checkListTodayExit();
         if (checkListToday != -1 && !learnmore) {
 
             //TODO: get data from sqlite
@@ -268,7 +268,7 @@ public class LearnApiImplements implements LearnApi {
         return jsonValuestr;
     }
 
-    public int _checkListTodayExit(int number) {
+    public int _checkListTodayExit() {
         //TODO:get value queue List
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
@@ -679,7 +679,7 @@ public class LearnApiImplements implements LearnApi {
             select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
         else if (queue == Card.QUEUE_REV2) {
 
-            int countToday = _checkListTodayExit(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY);
+            int countToday = _checkListTodayExit();
 
             if (countToday == -1)
                 limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
@@ -862,4 +862,26 @@ public class LearnApiImplements implements LearnApi {
         return update_result;
     }
 
+
+    public String _getStringDueToday() {
+        String duetoday = LazzyBeeShare.EMPTY;
+        int todayCount = _checkListTodayExit();
+        int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
+        int dueCount = 0;
+
+        if (todayCount == -1) {
+            dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+            todayCount = 0;
+        } else {
+            dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+        }
+        duetoday = todayCount + " " + againCount + " " + dueCount;
+        return duetoday;
+    }
+
+    public List<Card> _getAllListCard() {
+        String query = "SELECT  * FROM " + TABLE_VOCABULARY;
+        List<Card> cardList = _getListCardQueryString(query);
+        return cardList;
+    }
 }
