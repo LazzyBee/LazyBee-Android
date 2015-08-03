@@ -109,8 +109,11 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         Log.i(TAG, "todayCount:" + todayCount);
 
         //set data
-//        if (againCount > 0 || dueCount > 0 || todayCount > 0) {
-        if (todayCount > 0) {
+        boolean check_learn = againCount > 0 || dueCount > 0 || todayCount > 0;
+
+        Log.i(TAG, "check_learn:" + (check_learn));
+        if (check_learn) {
+//        if (todayCount > 0) {
             _setDataforWebView();
 
             final int list_card_again_in_today_size = againList.size();
@@ -362,7 +365,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
         int currentQueue = currentCard.getQueue();//Get current Queue
 
-        _checkContainsAndRemove(againList);
+        //_checkContainsAndRemove(againList);
 
         //TODO:Reset count list again,new,due
         if (currentQueue == Card.QUEUE_NEW_CRAM0) {
@@ -373,7 +376,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
 //        if (currentQueue == Card.QUEUE_LNR1) {
 ////            reset new card again
-//            againList.remove(currentCard);
+
 //            int countAgain = againList.size();
 //            lbCountAgain.setText("" + countAgain);
 //
@@ -386,7 +389,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
         }
 
-
+        againList.remove(currentCard);
         //TODO:Set queue,due using cardShed
         cardSched.answerCard(currentCard, Card.EASE_AGAIN);
         currentCard.setDue(curren_time + 60);
@@ -583,7 +586,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             public void speechExplain() {
                 //get answer json
                 String answer = currentCard.getAnswers();
-                String toSpeech=LazzyBeeShare._getValueFromKey(answer,"explain");
+                String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
 
                 //Speak text
                 _speakText(toSpeech);
@@ -594,10 +597,11 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             public void speechExample() {
                 //get answer json
                 String answer = currentCard.getAnswers();
-                String toSpeech=LazzyBeeShare._getValueFromKey(answer,"example");
+                String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
 
                 //Speak text
-                _speakText(toSpeech);            }
+                _speakText(toSpeech);
+            }
         }, "example");
 
 //        //Todo: addJavascriptInterface play answer
@@ -616,7 +620,6 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 //                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 //            }
 //        }, "answers");
-
 
 
     }
@@ -730,7 +733,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                     position_again++;
                 }
 
-                if (position_again < (againList.size() - 1)) {
+                if (position_again < (againList.size())) {
                     currentCard = againList.get(position_again);
 
                     //get current time and du card
@@ -756,47 +759,23 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                         _nextNewCard();
                     }
                 } else {
-                    if (todayList.size() > 0) {
-                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
+                    if (againList.size() > 0) {
+                        Log.i(TAG, "_nextAgainCard:again >0");
+                        flag_one = true;
+                        _nextAgainCard();
+                    } else if (todayList.size() > 0) {
+                        Log.i(TAG, "_nextAgainCard:Next card is new card 3");
                         _nextNewCard();
                     } else {
-                        _completeLean();
+                        Log.i(TAG, "_nextAgainCard:_completeLean 3:" + againList.size());
+                        //_completeLean();
                     }
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.i(TAG, "_nextAgainCard:AAAAA");
-//                position_again++;
-//                if (position_again < (againList.size() - 1)) {
-//
-//                    currentCard = againList.get(position_again);
-//
-//                    //get current time and du card
-//                    int current_time = (int) (new Date().getTime() / 1000);
-//                    int due = (int) currentCard.getDue();
-//
-//                    if (current_time - due >= 600 || todayList.size() == 0) {
-//                        Log.i(TAG, "_nextAgainCard:Next card is again card 2");
-//
-//                        lbCountDue.setBackgroundResource(R.color.white);
-//                        lbCountAgain.setBackgroundResource(R.color.teal_200);
-//                        lbCountNew.setBackgroundResource(R.color.white);
-//
-//                        //TODO:Display next card
-//                        _loadWebView(_getQuestionDisplay(currentCard.getQuestion()));
-//                    } else {
-//                        Log.i(TAG, "_nextAgainCard:Next card is new card 2");
-//                        _nextNewCard();
-//                    }
-//                } else {
-//                    Log.i(TAG, "_nextAgainCard:Next card is new card 3");
-//                    _nextNewCard();
-//                }
+                Log.i(TAG, "_nextAgainCard: _completeLean();");
+                _completeLean();
             }
-
-
         } else if (dueList.size() > 0) {//Check dueList.size()>0
             Log.i(TAG, "_nextAgainCard:Next card is due card");
             _nextDueCard();
@@ -876,6 +855,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
 
     }
+
     /*
   *Java Scrip Object example
   * */

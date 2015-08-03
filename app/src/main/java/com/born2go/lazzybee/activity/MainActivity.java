@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,14 +18,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.DataBaseHelper;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.IOException;
 
@@ -48,6 +53,15 @@ public class MainActivity extends ActionBarActivity
     SearchView mSearchView;
     DrawerLayout drawerLayout;
 
+    CardView mCardViewStudy;
+
+    TextView lbNameCourse;
+    TextView lbComplete;
+    TextView lbSuportCompletedCard;
+
+    Button btnStudy, btnCustomStudy;
+    private LearnApiImplements dataBaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -56,7 +70,46 @@ public class MainActivity extends ActionBarActivity
         _initToolBar();
         _initSQlIte();
         _checkLogin();
+        _intInterfaceView();
+        _checkListTodayExit();
 
+        btnStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _checkListTodayExit();
+                Log.i(TAG, "btnStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
+                if (btnStudy.getTag() != null) {
+                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                    //intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnStudy.getTag());
+                    startActivityForResult(intent, 1);
+
+                }
+            }
+        });
+        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                _checkListTodayExit();
+                if (btnCustomStudy.getTag() != null) {
+                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    startActivityForResult(intent, 1);
+
+                }
+            }
+        });
+
+    }
+
+    private void _intInterfaceView() {
+        mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
+        btnStudy = (Button) findViewById(R.id.btnStudy);
+        btnCustomStudy = (Button) findViewById(R.id.btnCustomStudy);
+        lbNameCourse = (TextView) findViewById(R.id.lbNameCourse);
+        lbComplete = (TextView) findViewById(R.id.lbComplete);
+        lbSuportCompletedCard = (TextView) findViewById(R.id.lbSuportCompletedCard);
     }
 
     private void _initToolBar() {
@@ -88,6 +141,47 @@ public class MainActivity extends ActionBarActivity
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
 
         }
+        dataBaseHelper = new LearnApiImplements(this);
+    }
+    boolean first=true;
+    private void _checkListTodayExit() {
+        int checkTodayExit = dataBaseHelper._checkListTodayExit(LazzyBeeShare.MAX_LEARN_PER_DAY);
+        Log.i(TAG, "checkTodayExit: " + checkTodayExit);
+        if (checkTodayExit > -1) {
+            Log.i(TAG, "_checkListTodayExit:checkTodayExit == 1111");
+            if (checkTodayExit > 0) {
+                Log.i(TAG, "_checkListTodayExit:today>0");
+                lbComplete.setText(LazzyBeeShare.EMPTY);
+                lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
+                btnStudy.setText("Study");
+                btnStudy.setTag(false);
+                btnCustomStudy.setTag(false);
+                Log.i(TAG, "Study");
+                mCardViewStudy.setVisibility(View.VISIBLE);
+            } else if (checkTodayExit == 0) {
+                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 0");
+                lbComplete.setText(getString(R.string.congratulations));
+                lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
+                btnCustomStudy.setTag(true);
+                btnStudy.setTag(false);
+                btnStudy.setText("Complete Learn");
+                Log.i(TAG, "Learn more");
+                mCardViewStudy.setVisibility(View.GONE);
+            }else {
+                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 432424");
+            }
+
+        } else if (checkTodayExit == -1) {
+            Log.i(TAG, "_checkListTodayExit:today==-1");
+            lbComplete.setText(LazzyBeeShare.EMPTY);
+            lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
+            btnStudy.setText("Study");
+            btnStudy.setTag(true);
+            btnCustomStudy.setTag(false);
+            Log.i(TAG, "Study");
+            mCardViewStudy.setVisibility(View.VISIBLE);
+
+        }
     }
 
     /**
@@ -114,10 +208,10 @@ public class MainActivity extends ActionBarActivity
             _gotoAddCourse();
         } else {
             // update the main content by replacing fragments
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            String courseId = "";
-            _gotoCourseDetails(courseId);
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            String courseId = "";
+//            _gotoCourseDetails(courseId);
         }
 
 
@@ -467,5 +561,11 @@ public class MainActivity extends ActionBarActivity
             System.exit(0);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        _checkListTodayExit();
     }
 }

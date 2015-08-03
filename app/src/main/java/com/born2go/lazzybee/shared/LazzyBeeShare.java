@@ -23,7 +23,7 @@ public class LazzyBeeShare {
     public static final int COURSE_ID_TEST = 100;
     public static final String LEARN_MORE = "LEARN_MORE";
     private static final String TAG = "LazzyBeeShare";
-    private static final String EMPTY = "";
+    public static final String EMPTY = "";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
