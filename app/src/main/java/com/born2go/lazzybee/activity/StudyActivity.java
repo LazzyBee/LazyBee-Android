@@ -65,9 +65,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     int position_again = 0;
     int position_due = 0;
 
-    String mime = "text/html";
-    String encoding = "utf-8";
-    String ASSETS = "file:///android_asset/";
+
 
     boolean complete_new_learn = false;
 
@@ -268,7 +266,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             e.printStackTrace();
         }
 
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
         _addJavascriptInterfaceQuestionAndAnswer();
 
@@ -566,7 +564,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
     private void _addJavascriptInterfaceQuestionAndAnswer() {
         //Todo: addJavascriptInterface play question
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectQuestion() {
+        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
             @JavascriptInterface
             public void playQuestion() {
                 //get text to Speak
@@ -581,7 +579,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         }, "question");
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExplain() {
+        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
             @JavascriptInterface
             public void speechExplain() {
                 //get answer json
@@ -592,7 +590,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 _speakText(toSpeech);
             }
         }, "explain");
-        mWebViewLeadDetails.addJavascriptInterface(new JsObjectExample() {
+        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
             @JavascriptInterface
             public void speechExample() {
                 //get answer json
@@ -799,7 +797,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         //
         //  Log.i(TAG, "HTML FROM:" + questionDisplay.toString());
         //Set Data
-        mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, questionDisplay, mime, encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
     }
 
@@ -835,37 +833,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 //        return html;
 //    }
 
-    /*
-    *Java Scrip Object Question
-    * */
-    public class JsObjectQuestion {
-        @JavascriptInterface
-        public String toString() {
-            return "question";
-        }
-    }
 
-    /*
-   *Java Scrip Object explain
-   * */
-    public class JsObjectExplain {
-        @JavascriptInterface
-        public String toString() {
-            return "explain";
-        }
-
-    }
-
-    /*
-  *Java Scrip Object example
-  * */
-    public class JsObjectExample {
-        @JavascriptInterface
-        public String toString() {
-            return "example";
-        }
-
-    }
 
     /**
      * Speak text theo version andorid
