@@ -142,4 +142,7 @@ public interface LearnApi {
      */
     int _updateCard(Card card);
 
+
+    List<Card> _get100Card();
+
 }
