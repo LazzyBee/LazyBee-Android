@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LazzyBee</string>
+    <string name="EASE_AGAIN">Làm lại</string>
+    <string name="EASE_EASY">Dễ</string>
+    <string name="EASE_GOOD">Tốt</string>
+    <string name="EASE_HARD">Khó</string>
+    <string name="action_delete_card">Xóa thẻ</string>
+    <string name="action_logout">Đăng xuất</string>
+    <string name="action_search">Tìm kiếm</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="congratulations">Hoàn thành</string>
+    <string name="custom_study">Thiết lập học</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hint_search">Tìm kiếm</string>
+    <string name="learn_more">Học thêm</string>
+    <string name="not_found">Không tìm thấy</string>
+    <string name="result">Kết quả</string>
+    <string name="review">Đã học</string>
+    <string name="title_activity_add_course">Thêm khóa học</string>
+    <string name="title_activity_card_details">Chi tiết thẻ</string>
+    <string name="title_activity_review_card">THẻ xem lại</string>
+    <string name="title_activity_search">Tìm kiếm</string>
+    <string name="title_activity_study">Học</string>
+    <string name="action_profile">Hồ sơ</string>
+    <string name="add_course">Thêm khóa học</string>
+    <string name="show_answer">Hiện đáp án</string>
+    <string name="study">Học</string>
+    <string name="due_today">Hạn hôm nay:</string>
+    <string name="total_new_learn">Tổng sô thẻ đã học:</string>
+    <string name="total_cards">Tổng sô thẻ:</string>
+    <string name="example">Ví dụ:</string>
+    <string name="explain">Giải nghĩa(Tiếng anh):</string>
+    <string name="meaning">Nghĩa(Tiếng việt):</string>
+</resources>
