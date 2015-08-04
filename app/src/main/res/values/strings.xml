@@ -33,10 +33,10 @@
     <string name="title_activity_card_details">CardDetailsActivity</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
-    <string name="EASE_AGAIN">AGAIN</string>
-    <string name="EASE_HARD">HARD</string>
-    <string name="EASE_GOOD">GOOD</string>
-    <string name="EASE_EASY">EASY</string>
+    <string name="EASE_AGAIN">Again</string>
+    <string name="EASE_HARD">Hard</string>
+    <string name="EASE_GOOD">Good</string>
+    <string name="EASE_EASY">Easy</string>
     <string name="learn_more">Learn more</string>
     <string name="congratulations">Congratulations!</string>
     <string name="suport_complete_card">Touch LEARN MORE</string>
