@@ -624,8 +624,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _getListCardByQueue(int queue) {
-//
-//        if (queue <= 600l) {
+        List<Card> cardListByQueue = null;
 
         //get current time
         long long_curent_time = new Date().getTime();
@@ -634,53 +633,37 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
         String select_list_card_by_queue = "";
-        int limit = 20;
-        if (queue == Card.QUEUE_LNR1)
+
+        if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
             select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
-        else if (queue == Card.QUEUE_REV2) {
 
-            int countToday = _checkListTodayExit();
+            cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
 
-            if (countToday == -1)
-                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-            else if (countToday > -1)
-                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - countToday;
+        } else if (queue == Card.QUEUE_REV2) {
+            int limit = 0;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
 
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
-        } else {
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " LIMIT " + limit;
+            int dueCount = _getListCardQueryString(select_list_card_by_queue).size();
+            int todayCount = _checkListTodayExit();
+
+            //todayCount=-2 init ->limit=0
+            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+
+            if (todayCount == -2)
+                cardListByQueue = new ArrayList<Card>();
+            else if (todayCount == 0 || todayCount == -1 || todayCount > 0) {
+                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
+                    limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+                else {
+                    limit = dueCount;
+                }
+                select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
+                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
+            }
         }
 
-
-        //Get card list by status
-        List<Card> cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
         return cardListByQueue;
-//        } else {
-//            //select query
-//            String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue > 600";
-//
-//            //
-//            Date now_date = new Date(queue);
-//
-//            //Get card list by status
-//            List<Card> cardListAll = _getListCardQueryString(selectQuery);
-//
-//
-//            List<Card> cardListDueToday = new ArrayList<Card>();
-//            //TODO: Check queue date
-//            for (Card card : cardListAll) {
-//                //TODO:CompateTo date_due vs now date
-//                Date card_due_date = new Date(card.getQueue());
-//                if (_compreaToDate(card_due_date, now_date)) {
-//                    cardListDueToday.add(card);
-//                }
-//
-//            }
-//            return cardListDueToday;
-//        }
-
-
     }
 
 
@@ -829,24 +812,24 @@ public class LearnApiImplements implements LearnApi {
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
         int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
-        if (todayCount == -2) {
-            dueCount = 0;
-            againCount = 0;
-            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-        } else {
-            if (todayCount == 0) {
-                //Complete leanrn today
-                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
-                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-                todayCount = 0;
-            } else if (todayCount == -1) {
-                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
-                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
-            } else {
-                Log.i(TAG, "Today:" + todayCount);
-            }
-        }
+//        if (todayCount == -2) {
+//            dueCount = 0;
+//            againCount = 0;
+//            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+//        } else {
+//            if (todayCount == 0) {
+//                //Complete leanrn today
+//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
+//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+//                todayCount = 0;
+//            } else if (todayCount == -1) {
+//                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
+//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+//            } else {
+//                Log.i(TAG, "Today:" + todayCount);
+//            }
+//        }
 
         duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;
@@ -886,23 +869,27 @@ public class LearnApiImplements implements LearnApi {
         WordEstimate wordEstimate = new WordEstimate();
         int number[] = wordEstimate.getNumberWordEachLevel(0d);
 
+        int target = 0;
         for (int i = 1; i < number.length; i++) {
-            int limit = number[i];
-            //SELECT  * FROM vovabulary where queue = 0 AND level = " + i + " LIMIT " + number[i]
-            String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + limit;
+            target += number[i];
+            if (target > 0) {
+                String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
+                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + target;
 
-            List<Card> cardListbylevel = _getListCardQueryString(select_list_card_by_queue);
+                List<Card> cardListbylevel = _getListCardQueryString(select_list_card_by_queue);
 
-            int count = cardListbylevel.size();
-            // if count < number[i] else limit=(number[i]-count)+number[i+1]
-            if (count < number[i]) {
+                int count = cardListbylevel.size();
+                Log.i(TAG, "_get100Card: Level " + i + ": config = " + number[i] +
+                        ", target = " + target +
+                        ", real_count = " + count);
 
-                limit = (number[i] - count) + number[i + 1];
+                cards.addAll(cardListbylevel);
+
+                if (count < target) {
+                    target = target - count;
+                }
+                else target = 0;
             }
-            Log.i(TAG, "_get100Card: LIMIT=" + limit);
-
-
-            cards.addAll(cardListbylevel);
         }
 
         Log.i(TAG, "_get100Card: Card size=" + cards.size());
