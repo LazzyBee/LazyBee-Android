@@ -306,7 +306,7 @@ public class LearnApiImplements implements LearnApi {
                 if (today_parse.compareTo(str_date_now) == 0) {
 
                     Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now");
-                    
+
                     return countListId;
                 } else {
 
@@ -887,12 +887,25 @@ public class LearnApiImplements implements LearnApi {
         int number[] = wordEstimate.getNumberWordEachLevel(0d);
 
         for (int i = 1; i < number.length; i++) {
+            int limit = number[i];
             //SELECT  * FROM vovabulary where queue = 0 AND level = " + i + " LIMIT " + number[i]
-            String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + number[i];
-            cards.addAll(_getListCardQueryString(select_list_card_by_queue));
+            String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + limit;
+
+            List<Card> cardListbylevel = _getListCardQueryString(select_list_card_by_queue);
+
+            int count = cardListbylevel.size();
+            // if count < number[i] else limit=(number[i]-count)+number[i+1]
+            if (count < number[i]) {
+
+                limit = (number[i] - count) + number[i + 1];
+            }
+            Log.i(TAG, "_get100Card: LIMIT=" + limit);
+
+
+            cards.addAll(cardListbylevel);
         }
 
-        Log.i(TAG, "Card size:" + cards.size());
+        Log.i(TAG, "_get100Card: Card size=" + cards.size());
         return cards;
     }
 }
