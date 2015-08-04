@@ -146,7 +146,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _getReviewListCard() {
-        return _getListCard();
+        return _getListCardLearned();
     }
 
     /**
