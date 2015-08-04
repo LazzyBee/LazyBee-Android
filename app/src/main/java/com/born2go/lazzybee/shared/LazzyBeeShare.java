@@ -35,6 +35,8 @@ public class LazzyBeeShare {
     public static final int MAX_LEARN_MORE_PER_DAY = 5;
 
 
+    public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
+
     /**
      * Init data demo List Course
      */
@@ -98,15 +100,15 @@ public class LazzyBeeShare {
             Log.i(TAG, "example" + example);
 
 //            if (!meaning.isEmpty())
-//                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_play_black.png'/></a>";
+//                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_speaker_red.png'/></a>";
 //            else
 //                meaning = "";
 
             if (!explain.isEmpty())
-                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_play_black.png'/></a>";
+                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
 
             if (!example.isEmpty())
-                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_play_black.png'/></a>";
+                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
 
             String imageURL = EMPTY;
 
@@ -120,7 +122,7 @@ public class LazzyBeeShare {
                     "<strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
                     "</div>\n" +
                     "<div style='float:left;width:10%'>\n" +
-                    "<p><a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a><p>\n" +
+                    "<p><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a><p>\n" +
                     "</div>\n" +
                     "</div>\n" +
                     "<div div style='width:90%'>\n" +
@@ -178,7 +180,7 @@ public class LazzyBeeShare {
                         "<strong style='font-size:25pt;'>" + s + "</strong>\n" +
                         "</div>\n" +
                         "<div style='float:left;width:10%'>\n" +
-                        "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/><p>\n" +
+                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
                         "</div>\n" +
                         "</div>\n"
                         + "</body>\n" +
@@ -259,10 +261,10 @@ public class LazzyBeeShare {
 //                meaning = "";
 
             if (!explain.isEmpty())
-                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_play_black.png'/></a>";
+                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
 
             if (!example.isEmpty())
-                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_play_black.png'/></a>";
+                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
 
             String imageURL = EMPTY;
 
@@ -276,7 +278,7 @@ public class LazzyBeeShare {
                     "<strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
                     "</div>\n" +
                     "<div style='float:left;width:10%'>\n" +
-                    "<p><a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a><p>\n" +
+                    "<p><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a><p>\n" +
                     "</div>\n" +
                     "</div>\n" +
                     "<div div style='width:90%'>\n" +

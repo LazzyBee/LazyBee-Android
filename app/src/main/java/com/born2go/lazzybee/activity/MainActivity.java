@@ -85,6 +85,8 @@ public class MainActivity extends ActionBarActivity
         // _checkListTodayExit();
         _checkCompleteLearn();
 
+        dataBaseHelper._get100Card();
+
         btnCustomStudy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +97,6 @@ public class MainActivity extends ActionBarActivity
                     Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
                     intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
                     startActivityForResult(intent, 1);
-
                 }
             }
         });
@@ -132,7 +133,7 @@ public class MainActivity extends ActionBarActivity
     private void _getCountCard() {
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
-        int learnCount = dataBaseHelper._getListCardLearn().size();
+        int learnCount = dataBaseHelper._getListCardLearned().size();
         if (dueToday != null)
             lbDueToday.setText(dueToday);
         lbTotalsCount.setText("" + allCount);

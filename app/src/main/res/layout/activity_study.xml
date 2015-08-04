@@ -47,7 +47,8 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="0"
                 android:id="@+id/lbCountAgainInday"
-                android:layout_marginLeft="16dp" />
+                android:layout_marginLeft="16dp"
+                android:textColor="#9f9f9f" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,48 +82,63 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="3dp">
 
             <Button
                 android:id="@+id/btnShowAnswer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Show Answer" />
+                android:text="Show Answer"
+                android:background="@color/material_deep_teal_500"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/mLayoutButton"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingBottom="5dp">
 
                 <Button
                     android:id="@+id/btnAgain0"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="0.3"
-                    android:text="@string/EASE_AGAIN" />
+                    android:text="@string/EASE_AGAIN"
+                    android:paddingRight="5dp"
+                    android:background="@color/teal_500"
+                    android:layout_marginRight="5dp" />
 
                 <Button
                     android:id="@+id/btnHard1"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="0.3"
-                    android:text="@string/EASE_HARD" />
+                    android:text="@string/EASE_HARD"
+                    android:background="@color/material_deep_teal_500"
+                    android:paddingRight="5dp"
+                    android:layout_marginRight="5dp" />
 
                 <Button
                     android:id="@+id/btnGood2"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="0.3"
-                    android:text="@string/EASE_GOOD" />
+                    android:text="@string/EASE_GOOD"
+                    android:background="@color/material_deep_teal_500"
+                    android:layout_marginRight="5dp" />
 
                 <Button
                     android:id="@+id/btnEasy3"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="0.3"
-                    android:text="@string/EASE_EASY" />
+                    android:text="@string/EASE_EASY"
+                    android:background="@color/material_deep_teal_500" />
 
 
             </LinearLayout>

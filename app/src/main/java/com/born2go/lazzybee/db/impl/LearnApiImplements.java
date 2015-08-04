@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Hue on 7/8/2015.
@@ -50,6 +51,8 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_REV_COUNT = "rev_count";
     private static final String KEY_LAT_IVL = "last_ivl";
     private static final String KEY_FACTOR = "e_factor";
+    private static final String KEY_COUNT_JSON = "count";
+    private static final String KEY_CARD_JSON = "card";
 
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -61,6 +64,8 @@ public class LearnApiImplements implements LearnApi {
 
     Context context;
     DataBaseHelper dataBaseHelper;
+
+    private Random randomGenerator;
 
     public LearnApiImplements(Context context) {
         this.context = context;
@@ -146,7 +151,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _getReviewListCard() {
-        return _getListCard();
+        return _getListCardLearned();
     }
 
     /**
@@ -188,54 +193,107 @@ public class LearnApiImplements implements LearnApi {
             datas = _getListCardFromStringArray(value);
 
         } else {
-
             //limit learn more =5 row
             if (learnmore == true)
                 number = 5;
 
-            //select random limit number row
-            String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = 0 ORDER BY RANDOM() LIMIT " + number;
+            int countNewCard = _get100Card();
+            if (countNewCard > 0) {
+                String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
 
-//            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
-            //query for cursor
-            Cursor cursor = db.rawQuery(selectRandomAndLimitQuery, null);
-            if (cursor.moveToFirst()) {
-                if (cursor.getCount() > 0)
-                    do {
-                        //get data from sqlite
-                        Card card = new Card();
-                        card.setId(cursor.getInt(CARD_INDEX_ID));
+                List<Card> cards = _getListCardFromStringArray(value);
+                Log.i(TAG, "_getRandomCard: cards toArray:" + cards.toString());
+                randomGenerator = new Random();
 
-                        card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
-                        card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
-                        card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
-                        card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+                for (int i = 0; i < number; i++) {
+                    int index = randomGenerator.nextInt(cards.size());
+                    datas.add(cards.get(index));
+                    cards.remove(cards.get(index));
+                }
+                Log.i(TAG, "_getRandomCard: cards toArray after remove:" + cards.toString());
+                //remove
+                //cards.removeAll(datas);
+                _insertOrUpdatePreFetchNewCardList(cards);
+                _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas, null));
+            } else {
 
-                        card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
-
-                        card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
-                        card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
-                        card.setDue(cursor.getLong(CARD_INDEX_DUE));
-
-                        card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
-                        card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
-                        card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
-                        card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
-
-                        Log.i(TAG, card.toString());
-                        System.out.print(card.toString());
-
-                        datas.add(card);
-                        _updateStatusCard("" + card.getId(), STATUS_CARD_LEARN_TODAY);
-
-                    } while (cursor.moveToNext());
             }
-            //TODO: ADD QUEUE LIST TO SYSTEM
-            _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas, null));
+
+
+//
+//            //select random limit number row
+//            String selectRandomAndLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = 0 ORDER BY RANDOM() LIMIT " + number;
+//
+////            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+//            //query for cursor
+//            Cursor cursor = db.rawQuery(selectRandomAndLimitQuery, null);
+//            if (cursor.moveToFirst()) {
+//                if (cursor.getCount() > 0)
+//                    do {
+//                        //get data from sqlite
+//                        Card card = new Card();
+//                        card.setId(cursor.getInt(CARD_INDEX_ID));
+//
+//                        card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
+//                        card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
+//                        card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+//                        card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+//
+//                        card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+//
+//                        card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+//                        card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+//                        card.setDue(cursor.getLong(CARD_INDEX_DUE));
+//
+//                        card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+//                        card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+//                        card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+//                        card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+//
+//                        Log.i(TAG, card.toString());
+//                        System.out.print(card.toString());
+//
+//                        datas.add(card);
+//                        _updateStatusCard("" + card.getId(), STATUS_CARD_LEARN_TODAY);
+//
+//                    } while (cursor.moveToNext());
+//            }
+//            //TODO: ADD QUEUE LIST TO SYSTEM
+//
         }
 
 
         return datas;
+    }
+
+    private void _insertOrUpdatePreFetchNewCardList(List<Card> cards) {
+        try {
+
+            int count = cards.size();
+            List<String> cardIds = _converlistCardToListCardId(cards);
+            JSONObject objNewCard = new JSONObject();
+            JSONArray arrCard = new JSONArray(cardIds);
+
+            objNewCard.put(KEY_COUNT_JSON, count);
+            objNewCard.put(KEY_CARD_JSON, arrCard);
+
+            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: Count:" + count);
+            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: cards:" + cards.toString());
+            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: arrCard:" + arrCard.toString());
+
+            _insertOrUpdateToSystemTable(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST, objNewCard.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<String> _converlistCardToListCardId(List<Card> cards) {
+        List<String> cardIds = new ArrayList<String>();
+        for (int i = 0; i < cards.size(); i++) {
+            String id = String.valueOf(cards.get(i).getId());
+            cardIds.add(id);
+        }
+        return cardIds;
     }
 
     private String _listCardTodayToArrayListCardId(List<Card> datas, List<String> _listCardId) {
@@ -262,7 +320,7 @@ public class LearnApiImplements implements LearnApi {
 
             //todo: put properties of @param valueJoson
             valueJoson.put("date", now_date_long);
-            valueJoson.put("card", cardIDArray);
+            valueJoson.put(KEY_CARD_JSON, cardIDArray);
 
             jsonValuestr = valueJoson.toString();
 
@@ -284,12 +342,12 @@ public class LearnApiImplements implements LearnApi {
         } else {
             //TODO Yes,Compareto Date
             try {
-                //Pass string value to object
+                //TODO:Pass string value to object
                 JSONObject valueObj = new JSONObject(value);
 
                 //TODO:get date create list today
                 long _longQueueDate = (valueObj.getLong("date"));//get Long date
-                JSONArray listIdArray = valueObj.getJSONArray("card");//get List card ID
+                JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);//get List card ID
                 Log.i(TAG, "-Long date:" + _longQueueDate);
 
                 Date _date = new Date(_longQueueDate);
@@ -297,70 +355,23 @@ public class LearnApiImplements implements LearnApi {
                 Date _nowDate = new Date();
 
                 int countListId = listIdArray.length();
-                int _intNewDate = (int) (_nowDate.getTime() / 1000);
-                int _intQueueDate = (int) (_longQueueDate / 1000);
-                int compare = _intNewDate - _intQueueDate;
 
-                Log.i(TAG, _intNewDate + "-" + _intQueueDate + "=" + compare);
+                //TODO: format date to string
+                String today_parse = outputFormat.format(_date);
+                String str_date_now = outputFormat.format(_nowDate);
 
-                if (compare > 0 && compare < 84600) {
+                //TODO: compareTo date learn vs now date
+                if (today_parse.compareTo(str_date_now) == 0) {
 
-                    Log.i(TAG, "_checkListTodayExit:Inday Return=" + countListId);
+                    Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now");
+
                     return countListId;
-
                 } else {
-                    Log.i(TAG, "_checkListTodayExit:Outday Return=" + -1);
+
+                    Log.i(TAG, "_checkListTodayExit:today_parse is not equal to date_now");
+
                     return -1;
                 }
-
-//                //TODO:Compare Date
-//                try {
-//                    //TODO: parse date
-////                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
-////                    Date date_now = inputFormat.parse(_nowDate.toString());
-//
-//                    //TODO: format date to string
-//                    String str_date_create_list_card_today_parse = outputFormat.format(_date);
-//                    String str_date_now = outputFormat.format(_nowDate);
-//
-//                    //TODO: compareTo date learn vs now date
-//                    if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
-//                        //TODO: Equal then return true
-//                        Log.i(TAG, "date_create_list_card_today_parse is equal to date_now");
-//
-//                        return true;
-//                    } else {
-//                        //TODO: Check yesterday  learn
-//                        if (listIdArray != null) {
-//                            int count_list_id = listIdArray.length();//Get lenght list card id json aray
-//                            if (count_list_id == number) {
-//                                //TODO: NO Learn,Update status =NO_LEARN
-//                                int lengh = listIdArray.length();//get lenght
-//
-//                                for (int i = 0; i < lengh; i++) {
-//                                    try {
-//                                        String cardId = listIdArray.getString(i);//get CardId by index
-//
-//                                        _updateStatusCard(cardId, Card.QUEUE_NEW_CRAM0);//Update status by cardid
-//
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//
-//                            }
-//
-//                        }
-//
-//                        Log.i(TAG, "date_create_list_card_today_parse is not equal to date_now");
-//
-//                        return false;
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-
             } catch (JSONException e) {
                 Log.i(TAG, "_checkListTodayExit:Error Return=" + -1);
                 e.printStackTrace();
@@ -478,7 +489,7 @@ public class LearnApiImplements implements LearnApi {
         try {
             JSONArray jsonArray = new JSONArray(listCardId);
             valueObj.put("date", date.getTime());
-            valueObj.put("card", jsonArray);
+            valueObj.put(KEY_CARD_JSON, jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -543,8 +554,6 @@ public class LearnApiImplements implements LearnApi {
     @Override
     public int _insertOrUpdateToSystemTable(String key, String value) {
         Log.i(TAG, "value:" + value);
-
-
         //TODO check value by key
         String valuebyKey = _getValueFromSystemByKey(key);
         if (_getValueFromSystemByKey(key) == null) {
@@ -574,8 +583,8 @@ public class LearnApiImplements implements LearnApi {
                 int update_results = db_update.update(TABLE_SYSTEM, values, KEY_SYSTEM + " = ?",
                         new String[]{String.valueOf(key)});
                 Log.i(TAG, "update_results:" + update_results);
-                String valuebyKeyafterUpdate = _getValueFromSystemByKey(key);
-                Log.i(TAG, "valuebyKeyafterUpdate:" + valuebyKeyafterUpdate);
+                String valueUpdate = _getValueFromSystemByKey(key);
+                Log.i(TAG, "Key:" + key + " ,value:" + valueUpdate);
                 return update_results;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -617,7 +626,7 @@ public class LearnApiImplements implements LearnApi {
         try {
             //Pass string value to object
             JSONObject valueObj = new JSONObject(value);
-            JSONArray listIdArray = valueObj.getJSONArray("card");//get List card ID
+            JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);//get List card ID
 
             for (int i = 0; i < listIdArray.length(); i++) {
                 String cardId = listIdArray.getString(i);
@@ -639,7 +648,7 @@ public class LearnApiImplements implements LearnApi {
         try {
             //Pass string value to object
             JSONObject queueObj = new JSONObject(value);
-            JSONArray listIdArray = queueObj.getJSONArray("card");//get List card ID
+            JSONArray listIdArray = queueObj.getJSONArray(KEY_CARD_JSON);//get List card ID
 
             for (int i = 0; i < listIdArray.length(); i++) {
 
@@ -671,8 +680,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _getListCardByQueue(int queue) {
-//
-//        if (queue <= 600l) {
+        List<Card> cardListByQueue = null;
 
         //get current time
         long long_curent_time = new Date().getTime();
@@ -681,53 +689,37 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
 
         String select_list_card_by_queue = "";
-        int limit = 20;
-        if (queue == Card.QUEUE_LNR1)
+
+        if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
             select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
-        else if (queue == Card.QUEUE_REV2) {
 
-            int countToday = _checkListTodayExit();
+            cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
 
-            if (countToday == -1)
-                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-            else if (countToday > -1)
-                limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - countToday;
+        } else if (queue == Card.QUEUE_REV2) {
+            int limit = 0;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
 
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
-        } else {
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " LIMIT " + limit;
+            int dueCount = _getListCardQueryString(select_list_card_by_queue).size();
+            int todayCount = _checkListTodayExit();
+
+            //todayCount=-2 init ->limit=0
+            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+
+            if (todayCount == -2)
+                cardListByQueue = new ArrayList<Card>();
+            else if (todayCount == 0 || todayCount == -1 || todayCount > 0) {
+                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
+                    limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+                else {
+                    limit = dueCount;
+                }
+                select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
+                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
+            }
         }
 
-
-        //Get card list by status
-        List<Card> cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
         return cardListByQueue;
-//        } else {
-//            //select query
-//            String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue > 600";
-//
-//            //
-//            Date now_date = new Date(queue);
-//
-//            //Get card list by status
-//            List<Card> cardListAll = _getListCardQueryString(selectQuery);
-//
-//
-//            List<Card> cardListDueToday = new ArrayList<Card>();
-//            //TODO: Check queue date
-//            for (Card card : cardListAll) {
-//                //TODO:CompateTo date_due vs now date
-//                Date card_due_date = new Date(card.getQueue());
-//                if (_compreaToDate(card_due_date, now_date)) {
-//                    cardListDueToday.add(card);
-//                }
-//
-//            }
-//            return cardListDueToday;
-//        }
-
-
     }
 
 
@@ -876,24 +868,24 @@ public class LearnApiImplements implements LearnApi {
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
         int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
-        if (todayCount == -2) {
-            dueCount = 0;
-            againCount = 0;
-            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-        } else {
-            if (todayCount == 0) {
-                //Complete leanrn today
-                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
-                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-                todayCount = 0;
-            } else if (todayCount == -1) {
-                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
-                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
-            } else {
-                Log.i(TAG, "Today:" + todayCount);
-            }
-        }
+//        if (todayCount == -2) {
+//            dueCount = 0;
+//            againCount = 0;
+//            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+//        } else {
+//            if (todayCount == 0) {
+//                //Complete leanrn today
+//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
+//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+//                todayCount = 0;
+//            } else if (todayCount == -1) {
+//                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
+//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+//            } else {
+//                Log.i(TAG, "Today:" + todayCount);
+//            }
+//        }
 
         duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;
@@ -905,8 +897,8 @@ public class LearnApiImplements implements LearnApi {
         return cardList;
     }
 
-    public List<Card> _getListCardLearn() {
-        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue > 1";
+    public List<Card> _getListCardLearned() {
+        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue >= 1";
         List<Card> cardList = _getListCardQueryString(query);
         return cardList;
     }
@@ -928,15 +920,94 @@ public class LearnApiImplements implements LearnApi {
     }
 
     @Override
-    public List<Card> _get100Card() {
-        List<Card> cards = new ArrayList<Card>();
+    public int _get100Card() {
+        String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+        if (value != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(value);
+                int count = jsonObject.getInt(KEY_COUNT_JSON);
+
+                if (count < LazzyBeeShare.MAX_NEW_LEARN_PER_DAY) {
+                    return _initPreFetchNewCardList();
+                } else {
+                    Log.i(TAG, "_get100Card:" + count);
+                    return count;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return _initPreFetchNewCardList();
+            }
+
+        } else {
+            return _initPreFetchNewCardList();
+        }
+    }
+
+    private int _initPreFetchNewCardList() {
+        List<String> cardIds = new ArrayList<String>();
         WordEstimate wordEstimate = new WordEstimate();
         int number[] = wordEstimate.getNumberWordEachLevel(0d);
+
+        int target = 0;
         for (int i = 1; i < number.length; i++) {
-            String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + number[i];
-            cards.addAll(_getListCardQueryString(select_list_card_by_queue));
+            target += number[i];
+            if (target > 0) {
+                String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + target;
+
+                List<String> cardIdListbylevel = _getCardIDListQueryString(select_list_card_by_queue);
+
+                int count = cardIdListbylevel.size();
+                Log.i(TAG, "_initPreFetchNewCardList: Level " + i + ": config = " + number[i] +
+                        ", target = " + target +
+                        ", real_count = " + count);
+
+                cardIds.addAll(cardIdListbylevel);
+
+                if (count < target) {
+                    target = target - count;
+                } else target = 0;
+            }
         }
-        Log.i(TAG, "Card size:" + cards.size());
-        return cards;
+        int count = cardIds.size();
+
+        Log.i(TAG, "_initPreFetchNewCardList: Card size=" + count);
+
+        if (count < LazzyBeeShare.MAX_NEW_LEARN_PER_DAY) {
+            return -1;
+        } else {
+            try {
+                String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
+                JSONObject newcardlist = new JSONObject();
+                JSONArray jsonArray = new JSONArray(cardIds);
+                newcardlist.put(KEY_COUNT_JSON, count);
+                newcardlist.put(KEY_CARD_JSON, jsonArray);
+
+                _insertOrUpdateToSystemTable(key, newcardlist.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return count;
+        }
+    }
+
+    private List<String> _getCardIDListQueryString(String query) {
+        List<String> cardIds = new ArrayList<String>();
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    String cardId = cursor.getString(0);
+
+
+                    cardIds.add(cardId);
+
+                } while (cursor.moveToNext());
+        }
+        Log.i(TAG, "Query String: " + query + " --Result card count:" + cardIds.size());
+        return cardIds;
     }
 }
