@@ -50,6 +50,8 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_REV_COUNT = "rev_count";
     private static final String KEY_LAT_IVL = "last_ivl";
     private static final String KEY_FACTOR = "e_factor";
+    private static final String KEY_COUNT_JSON = "count";
+    private static final String KEY_CARDS_JSON = "cards";
 
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -864,8 +866,32 @@ public class LearnApiImplements implements LearnApi {
     }
 
     @Override
-    public List<Card> _get100Card() {
-        List<Card> cards = new ArrayList<Card>();
+    public int _get100Card() {
+        String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+        if (value != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(value);
+                int count = jsonObject.getInt(KEY_COUNT_JSON);
+
+                if (count < LazzyBeeShare.MAX_NEW_LEARN_PER_DAY) {
+                    return _insertorUpdatePreFetchNewCardList();
+                } else {
+                    Log.i(TAG,"_get100Card:"+count);
+                    return count;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return _insertorUpdatePreFetchNewCardList();
+            }
+
+        } else {
+            return _insertorUpdatePreFetchNewCardList();
+        }
+    }
+
+    private int _insertorUpdatePreFetchNewCardList() {
+        List<String> cardIds = new ArrayList<String>();
         WordEstimate wordEstimate = new WordEstimate();
         int number[] = wordEstimate.getNumberWordEachLevel(0d);
 
@@ -873,26 +899,61 @@ public class LearnApiImplements implements LearnApi {
         for (int i = 1; i < number.length; i++) {
             target += number[i];
             if (target > 0) {
-                String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
+                String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
                         " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + target;
 
-                List<Card> cardListbylevel = _getListCardQueryString(select_list_card_by_queue);
+                List<String> cardIdListbylevel = _getCardIDListQueryString(select_list_card_by_queue);
 
-                int count = cardListbylevel.size();
-                Log.i(TAG, "_get100Card: Level " + i + ": config = " + number[i] +
+                int count = cardIdListbylevel.size();
+                Log.i(TAG, "_insertorUpdatePreFetchNewCardList: Level " + i + ": config = " + number[i] +
                         ", target = " + target +
                         ", real_count = " + count);
 
-                cards.addAll(cardListbylevel);
+                cardIds.addAll(cardIdListbylevel);
 
                 if (count < target) {
                     target = target - count;
-                }
-                else target = 0;
+                } else target = 0;
             }
         }
+        int count = cardIds.size();
 
-        Log.i(TAG, "_get100Card: Card size=" + cards.size());
-        return cards;
+        Log.i(TAG, "_insertorUpdatePreFetchNewCardList: Card size=" + count);
+
+        if (count < LazzyBeeShare.MAX_NEW_LEARN_PER_DAY) {
+            return -1;
+        } else {
+            try {
+                String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
+                JSONObject newcardlist = new JSONObject();
+                JSONArray jsonArray = new JSONArray(cardIds);
+                newcardlist.put(KEY_COUNT_JSON, count);
+                newcardlist.put(KEY_CARDS_JSON, jsonArray);
+
+                _insertOrUpdateToSystemTable(key, newcardlist.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return count;
+        }
+    }
+
+    private List<String> _getCardIDListQueryString(String query) {
+        List<String> cardIds = new ArrayList<String>();
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    String cardId = cursor.getString(0);
+
+
+                    cardIds.add(cardId);
+
+                } while (cursor.moveToNext());
+        }
+        Log.i(TAG, "Query String: " + query + " --Result card count:" + cardIds.size());
+        return cardIds;
     }
 }
