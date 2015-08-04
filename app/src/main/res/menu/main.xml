@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_search"
         android:title="@string/action_search"
-        app:showAsAction="withText|ifRoom" android:icon="@drawable/ic_search_black" />
+        app:showAsAction="withText|ifRoom" android:icon="@drawable/ic_search_white" />
     <item
         android:id="@+id/action_profile"
         android:orderInCategory="100"
