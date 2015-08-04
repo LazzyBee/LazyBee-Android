@@ -35,6 +35,8 @@ public class LazzyBeeShare {
     public static final int MAX_LEARN_MORE_PER_DAY = 5;
 
 
+    public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
+
     /**
      * Init data demo List Course
      */
