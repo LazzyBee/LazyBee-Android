@@ -284,7 +284,7 @@ public class LearnApiImplements implements LearnApi {
         } else {
             //TODO Yes,Compareto Date
             try {
-                //Pass string value to object
+                //TODO:Pass string value to object
                 JSONObject valueObj = new JSONObject(value);
 
                 //TODO:get date create list today
@@ -297,70 +297,23 @@ public class LearnApiImplements implements LearnApi {
                 Date _nowDate = new Date();
 
                 int countListId = listIdArray.length();
-                int _intNewDate = (int) (_nowDate.getTime() / 1000);
-                int _intQueueDate = (int) (_longQueueDate / 1000);
-                int compare = _intNewDate - _intQueueDate;
 
-                Log.i(TAG, _intNewDate + "-" + _intQueueDate + "=" + compare);
+                //TODO: format date to string
+                String today_parse = outputFormat.format(_date);
+                String str_date_now = outputFormat.format(_nowDate);
 
-                if (compare > 0 && compare < 84600) {
+                //TODO: compareTo date learn vs now date
+                if (today_parse.compareTo(str_date_now) == 0) {
 
-                    Log.i(TAG, "_checkListTodayExit:Inday Return=" + countListId);
+                    Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now");
+                    
                     return countListId;
-
                 } else {
-                    Log.i(TAG, "_checkListTodayExit:Outday Return=" + -1);
+
+                    Log.i(TAG, "_checkListTodayExit:today_parse is not equal to date_now");
+
                     return -1;
                 }
-
-//                //TODO:Compare Date
-//                try {
-//                    //TODO: parse date
-////                    Date date_create_list_card_today_parse = inputFormat.parse(_date.toString());
-////                    Date date_now = inputFormat.parse(_nowDate.toString());
-//
-//                    //TODO: format date to string
-//                    String str_date_create_list_card_today_parse = outputFormat.format(_date);
-//                    String str_date_now = outputFormat.format(_nowDate);
-//
-//                    //TODO: compareTo date learn vs now date
-//                    if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
-//                        //TODO: Equal then return true
-//                        Log.i(TAG, "date_create_list_card_today_parse is equal to date_now");
-//
-//                        return true;
-//                    } else {
-//                        //TODO: Check yesterday  learn
-//                        if (listIdArray != null) {
-//                            int count_list_id = listIdArray.length();//Get lenght list card id json aray
-//                            if (count_list_id == number) {
-//                                //TODO: NO Learn,Update status =NO_LEARN
-//                                int lengh = listIdArray.length();//get lenght
-//
-//                                for (int i = 0; i < lengh; i++) {
-//                                    try {
-//                                        String cardId = listIdArray.getString(i);//get CardId by index
-//
-//                                        _updateStatusCard(cardId, Card.QUEUE_NEW_CRAM0);//Update status by cardid
-//
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//
-//                            }
-//
-//                        }
-//
-//                        Log.i(TAG, "date_create_list_card_today_parse is not equal to date_now");
-//
-//                        return false;
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-
             } catch (JSONException e) {
                 Log.i(TAG, "_checkListTodayExit:Error Return=" + -1);
                 e.printStackTrace();
@@ -932,10 +885,13 @@ public class LearnApiImplements implements LearnApi {
         List<Card> cards = new ArrayList<Card>();
         WordEstimate wordEstimate = new WordEstimate();
         int number[] = wordEstimate.getNumberWordEachLevel(0d);
+
         for (int i = 1; i < number.length; i++) {
+            //SELECT  * FROM vovabulary where queue = 0 AND level = " + i + " LIMIT " + number[i]
             String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + number[i];
             cards.addAll(_getListCardQueryString(select_list_card_by_queue));
         }
+
         Log.i(TAG, "Card size:" + cards.size());
         return cards;
     }
