@@ -33,4 +33,8 @@
     <string name="example">Ví dụ:</string>
     <string name="explain">Giải nghĩa</string>
     <string name="meaning">Nghĩa(Tiếng việt):</string>
+    <string name="dialog_title_learn_more">Tùy chọn học tiếp</string>
+    <string name="cancel">Hủy bỏ</string>
+    <string name="ok">Đồng ý</string>
+    <string name="dialog_message_learn_more">Bạn có muốn học tiếp không?</string>
 </resources>

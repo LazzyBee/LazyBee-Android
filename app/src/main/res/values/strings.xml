@@ -47,6 +47,10 @@
     <string name="example">Example</string>
     <string name="explain">Explain</string>
     <string name="meaning">Meaning</string>
+    <string name="dialog_message_learn_more">Learn more</string>
+    <string name="dialog_title_learn_more">Lean more</string>
+    <string name="ok" >Ok</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>
