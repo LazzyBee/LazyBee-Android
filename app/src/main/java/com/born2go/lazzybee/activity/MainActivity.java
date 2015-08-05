@@ -1,6 +1,8 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,6 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -73,13 +77,13 @@ public class MainActivity extends ActionBarActivity
 
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
-
+    private Context context=this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        String languageToLoad  = "vi"; // your language
+        String languageToLoad = "vi"; // your language
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -102,14 +106,36 @@ public class MainActivity extends ActionBarActivity
         btnCustomStudy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Instantiate an AlertDialog.Builder with its constructor
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
-                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
-                _checkCompleteLearn();
-                if (btnCustomStudy.getTag() != null) {
-                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
-                    startActivityForResult(intent, 1);
-                }
+                // Chain together various setter methods to set the dialog characteristics
+                builder.setMessage(R.string.dialog_message_learn_more)
+                        .setTitle(R.string.dialog_title_learn_more);
+
+                // Add the buttons
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                        _checkCompleteLearn();
+                        if (btnCustomStudy.getTag() != null) {
+                            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                            intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                            startActivityForResult(intent, 1);
+                        }
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.cancel();
+                    }
+                });
+                // Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+
+             dialog.show();
             }
         });
 
