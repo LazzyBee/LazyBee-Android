@@ -233,6 +233,9 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
         currentCard.setQueue(Card.QUEUE_DONE_2);
         dataBaseHelper._updateCard(currentCard);
+
+        btnShowAnswer.setVisibility(View.VISIBLE);
+        mLayoutButton.setVisibility(View.GONE);
     }
 
 
