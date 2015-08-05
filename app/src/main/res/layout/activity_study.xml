@@ -89,7 +89,7 @@
                 android:id="@+id/btnShowAnswer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Show Answer"
+                android:text="@string/show_answer"
                 android:background="@color/material_deep_teal_500"
                 android:visibility="visible" />
 
