@@ -162,12 +162,12 @@ public class Card {
     @Override
     public String toString() {
         return "Card{" +
-                "id=" + id +
-                ", question='" + question + '\'' +
+                "\nid=" + id +
+                "\n, question='" + question + '\'' +
                 ", status=" + status +
-                ", queue=" + queue +
+                "\n, queue=" + queue +
                 ", _package='" + _package + '\'' +
-                ", level=" + level +
+                "\n, level=" + level +
                 ", due=" + due +
                 '}';
     }
