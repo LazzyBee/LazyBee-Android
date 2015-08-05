@@ -156,7 +156,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.UK);
+                    textToSpeech.setLanguage(Locale.US);
                 }
             }
         });
@@ -201,41 +201,194 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_detelte) {
-            _DoneCard();
+            _doneCard();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void _DoneCard() {
-        int currentQueue=currentCard.getQueue();
+    boolean done_card = false;
+
+    private void _doneCard() {
+        btnShowAnswer.setVisibility(View.VISIBLE);
+        mLayoutButton.setVisibility(View.GONE);
+        done_card = true;
+        int currentQueue = currentCard.getQueue();
+        Log.i(TAG, "_doneCard currentQueue:" + currentQueue);
         if (currentQueue == Card.QUEUE_NEW_CRAM0) {
             //reset new card count
             todayList.remove(currentCard);
             int countNew = todayList.size();
             lbCountNew.setText("" + countNew);
-            _nextAgainCard();
-        }
-        if (currentQueue == Card.QUEUE_LNR1) {
+//            _nextAgainCard();
+        } else if (currentQueue == Card.QUEUE_LNR1) {
             //reset new card again
             againList.remove(currentCard);
             int countAgain = againList.size();
             lbCountAgain.setText("" + countAgain);
-            _nextNewCard();
-        }
-        if (currentQueue == Card.QUEUE_REV2) {
+//            _nextDueCard();
+
+        } else if (currentQueue == Card.QUEUE_REV2) {
             //reset new card due
             dueList.remove(currentCard);
             int countDue = dueList.size();
             lbCountDue.setText("" + countDue);
             _nextNewCard();
+        } else {
+            todayList.remove(currentCard);
+            againList.remove(currentCard);
+            dueList.remove(currentCard);
+//            _nextNewCard();
         }
+
         currentCard.setQueue(Card.QUEUE_DONE_2);
         dataBaseHelper._updateCard(currentCard);
+        _nextAfterDoneCard(currentQueue);
 
-        btnShowAnswer.setVisibility(View.VISIBLE);
-        mLayoutButton.setVisibility(View.GONE);
+    }
+
+    private void _nextAfterDoneCard(int currentQueue) {
+        Log.i(TAG, "_nextAfterDoneCard currentQueue:" + currentQueue);
+        if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+            Log.i(TAG, "_nextAfterDoneCard: next card is Again Card");
+            if (againList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 1");
+                if (againList.size() == 1) {
+                    currentCard = againList.get(0);
+                } else if (againList.size() > 0) {
+                    currentCard = againList.get(position_again + 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+            } else if (dueList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 2");
+                if (dueList.size() == 1)
+                    currentCard = dueList.get(0);
+                else if (dueList.size() > 0)
+                    currentCard = dueList.get(position_due + 1);
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+
+            } else if (todayList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 3");
+                if (todayList.size() == 1) {
+                    currentCard = todayList.get(0);
+                } else if (todayList.size() > 0) {
+                    currentCard = todayList.get(position - 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+
+            } else {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 4");
+                _completeLean();
+            }
+        } else if (currentQueue == Card.QUEUE_LNR1) {
+            Log.i(TAG, "_nextAfterDoneCard: next card is Due Card");
+            if (dueList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 1");
+                if (dueList.size() == 1)
+                    currentCard = dueList.get(0);
+                else if (dueList.size() > 0)
+                    currentCard = dueList.get(position_due + 1);
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+
+            } else if (todayList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 2");
+                if (todayList.size() == 1) {
+                    currentCard = todayList.get(0);
+                } else if (todayList.size() > 0) {
+                    currentCard = todayList.get(position - 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+
+            } else if (againList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 3");
+                if (againList.size() == 1) {
+                    currentCard = againList.get(0);
+                } else if (againList.size() > 0) {
+                    currentCard = againList.get(position_again + 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+            } else {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 4");
+                _completeLean();
+            }
+        } else if (currentQueue == Card.QUEUE_REV2) {
+            Log.i(TAG, "_nextAfterDoneCard: next card is New Card");
+            if (todayList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is New Card 1");
+                if (todayList.size() == 1) {
+                    currentCard = todayList.get(0);
+                } else if (todayList.size() > 0) {
+                    currentCard = todayList.get(position - 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+
+            } else if (againList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is New Card 2");
+                if (againList.size() == 1) {
+                    currentCard = againList.get(0);
+                } else if (againList.size() > 0) {
+                    currentCard = againList.get(position_again + 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+            } else if (dueList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: next card is New Card 3");
+
+                if (dueList.size() == 1)
+                    currentCard = dueList.get(0);
+                else if (dueList.size() > 0)
+                    currentCard = dueList.get(position_due + 1);
+
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+
+            } else {
+                Log.i(TAG, "_nextAfterDoneCard: next card is Again New 4");
+                _completeLean();
+            }
+
+        } else {
+            if (againList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard:1");
+                if (againList.size() == 1) {
+                    currentCard = againList.get(0);
+                } else if (againList.size() > 0) {
+                    currentCard = againList.get(position_again + 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+            } else if (dueList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: 2");
+                if (dueList.size() == 1)
+                    currentCard = dueList.get(0);
+                else if (dueList.size() > 0)
+                    currentCard = dueList.get(position_due + 1);
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+
+            } else if (todayList.size() > 0) {
+                Log.i(TAG, "_nextAfterDoneCard: 3");
+                if (todayList.size() == 1) {
+                    currentCard = todayList.get(0);
+                } else if (todayList.size() > 0) {
+                    currentCard = todayList.get(position - 1);
+                }
+                //TODO:Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+
+            } else {
+                Log.i(TAG, "_nextAfterDoneCard: 4");
+                _completeLean();
+            }
+        }
     }
 
 
@@ -317,7 +470,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                     // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
 
                     //Load Answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(card,getString(R.string.meaning),getString(R.string.explain),getString(R.string.example)));
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(card, getString(R.string.meaning), getString(R.string.explain), getString(R.string.example)), 10);
 
 //                    //set current card
 //                    currentCard[0] = card;
@@ -392,16 +545,16 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         mLayoutButton.setVisibility(View.GONE);
 
         int currentQueue = currentCard.getQueue();//Get current Queue
-
+        Log.i(TAG, "_answerAgainCard:Currrent Card Queue:" + currentQueue);
         //_checkContainsAndRemove(againList);
-
-        //TODO:Reset count list again,new,due
-        if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-            //reset new card count
-            todayList.remove(currentCard);
-            int countNew = todayList.size();
-            lbCountNew.setText("" + countNew);
-        }
+        if (currentQueue >= Card.QUEUE_NEW_CRAM0) {
+            //TODO:Reset count list again,new,due
+            if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+                //reset new card count
+                todayList.remove(currentCard);
+                int countNew = todayList.size();
+                lbCountNew.setText("" + countNew);
+            }
 //        if (currentQueue == Card.QUEUE_LNR1) {
 ////            reset new card again
 
@@ -409,44 +562,48 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 //            lbCountAgain.setText("" + countAgain);
 //
 //        }
-        if (currentQueue == Card.QUEUE_REV2) {
-            //reset new card due
-            dueList.remove(currentCard);
-            int countDue = dueList.size();
-            lbCountDue.setText("" + countDue);
-
-        }
-
-        againList.remove(currentCard);
-        //TODO:Set queue,due using cardShed
-        cardSched.answerCard(currentCard, Card.EASE_AGAIN);
-        currentCard.setDue(curren_time + 60);
-        againList.add(currentCard);
-
-        int countAgain = againList.size();
-        lbCountAgain.setText("" + countAgain);
-
-        //TODO:update card
-        dataBaseHelper._updateCard(currentCard);
-
-        try {
-            if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
-                _nextAgainCard();
-
-            }
-            if (currentQueue == Card.QUEUE_LNR1) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
-                _nextDueCard();
-
-            }
             if (currentQueue == Card.QUEUE_REV2) {
-                Log.i(TAG, "_answerAgainCard:Card.QUEUE_REV2");
-                _nextNewCard();
+                //reset new card due
+                dueList.remove(currentCard);
+                int countDue = dueList.size();
+                lbCountDue.setText("" + countDue);
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            _completeLean();
+
+            againList.remove(currentCard);
+            //TODO:Set queue,due using cardShed
+            cardSched.answerCard(currentCard, Card.EASE_AGAIN);
+            currentCard.setDue(curren_time + 60);
+            againList.add(currentCard);
+
+            int countAgain = againList.size();
+            lbCountAgain.setText("" + countAgain);
+
+            //TODO:update card
+            dataBaseHelper._updateCard(currentCard);
+
+            try {
+                if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+                    Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
+                    _nextAgainCard();
+
+                }
+                if (currentQueue == Card.QUEUE_LNR1) {
+                    Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
+                    _nextDueCard();
+
+                }
+                if (currentQueue == Card.QUEUE_REV2) {
+                    Log.i(TAG, "_answerAgainCard:Card.QUEUE_REV2");
+                    _nextNewCard();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                _completeLean();
+            }
+        } else {
+            Log.i(TAG, "_answerAgainCard:Queue<Card.QUEUE_NEW_CRAM0");
+            _nextAgainCard();
         }
 
 
@@ -530,65 +687,66 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         int currentQueue = currentCard.getQueue();//Get current Queue
 
         Log.i(TAG, "_answerDueCard:Currrent Card Queue:" + currentQueue);
+        if (currentQueue >= Card.QUEUE_NEW_CRAM0) {
+            //Check Contains and Remove
+            // _checkContainsAndRemove(dueList);
+            _checkContainsAndRemove(cardListAddDueToDay);
 
-        //Check Contains and Remove
-        // _checkContainsAndRemove(dueList);
-        _checkContainsAndRemove(cardListAddDueToDay);
-
-        //TODO:Reset count list again,new,due
-        if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-            //reset new card count
-            todayList.remove(currentCard);
-            int countNew = todayList.size();
-            Log.i(TAG, "_answerDueCard:Curren new count:" + countNew);
-            lbCountNew.setText("" + countNew);
-        }
-        if (currentQueue == Card.QUEUE_LNR1) {
-            //reset new card again
-            int countAgain = againList.size() - 1;
-            lbCountAgain.setText("" + countAgain);
-            againList.remove(currentCard);
-        }
-        if (currentQueue == Card.QUEUE_REV2) {
-            //reset new card due
-            int countDue = dueList.size() - 1;
-            lbCountDue.setText("" + countDue);
-            dueList.remove(currentCard);
-
-        }
-
-
-        //TODO:Set queue,due using cardShed
-        cardSched.answerCard(currentCard, easy);
-        // dueList.add(currentCard);
-        cardListAddDueToDay.add(currentCard);
-
-        //TODO:update card
-        dataBaseHelper._updateCard(currentCard);
-
-        //Todo:get next card by currentQueue
-        try {
-//            if (position <= todayList.size()) {
+            //TODO:Reset count list again,new,due
             if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
-                _nextAgainCard();
-
+                //reset new card count
+                todayList.remove(currentCard);
+                int countNew = todayList.size();
+                Log.i(TAG, "_answerDueCard:Curren new count:" + countNew);
+                lbCountNew.setText("" + countNew);
             }
             if (currentQueue == Card.QUEUE_LNR1) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
-                _nextDueCard();
-
+                //reset new card again
+                int countAgain = againList.size() - 1;
+                lbCountAgain.setText("" + countAgain);
+                againList.remove(currentCard);
             }
             if (currentQueue == Card.QUEUE_REV2) {
-                Log.i(TAG, "_answerDueCard:Card.QUEUE_REV2");
-                _nextNewCard();
-            }
-//            } else {
-//                _completeLean();
-//            }
+                //reset new card due
+                int countDue = dueList.size() - 1;
+                lbCountDue.setText("" + countDue);
+                dueList.remove(currentCard);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            }
+
+
+            //TODO:Set queue,due using cardShed
+            cardSched.answerCard(currentCard, easy);
+            // dueList.add(currentCard);
+            cardListAddDueToDay.add(currentCard);
+
+            //TODO:update card
+            dataBaseHelper._updateCard(currentCard);
+
+            //Todo:get next card by currentQueue
+            try {
+//            if (position <= todayList.size()) {
+                if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+                    Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
+                    _nextAgainCard();
+
+                }
+                if (currentQueue == Card.QUEUE_LNR1) {
+                    Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
+                    _nextDueCard();
+
+                }
+                if (currentQueue == Card.QUEUE_REV2) {
+                    Log.i(TAG, "_answerDueCard:Card.QUEUE_REV2");
+                    _nextNewCard();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            Log.i(TAG, "_answerDueCard:Queue<Card.QUEUE_NEW_CRAM0");
+            _nextAgainCard();
         }
     }
 
@@ -669,6 +827,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         Log.i(TAG, "Curent new card:" + currentCard.toString());
         if (todayList.size() > 0) {
             position = todayList.size() - 1;
+//            if (done_card)
+//                position--;
             try {
                 //get next card again
                 Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
@@ -681,7 +841,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
 
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -717,6 +877,10 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 position_due = 0;
             } else {
                 position_due++;
+//                if (done_card) {
+//                    position_due++;
+//                    done_card = false;
+//                }
             }
             Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
 
@@ -728,7 +892,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             lbCountNew.setBackgroundResource(R.color.white);
 
             //TODO:Display next card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
         } else if (againList.size() > 0) {//Check againList.size()>0
             Log.i(TAG, "_nextDueCard:Next card is again card");
@@ -759,7 +923,12 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                     position_again = 0;
                 } else {
                     position_again++;
+//                    if (done_card) {
+//                        position_again++;
+//                        done_card = false;
+//                    }
                 }
+
 
                 if (position_again < (againList.size())) {
                     currentCard = againList.get(position_again);
@@ -779,7 +948,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
                         flag_one = false;
                         //TODO:Display next card
-                        _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()));
+                        _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
 
 
                     } else {
@@ -817,7 +986,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     /**
      * Load string Html
      */
-    private void _loadWebView(String questionDisplay) {
+    private void _loadWebView(String questionDisplay, int queue) {
         //Clear View
         if (Build.VERSION.SDK_INT < 18) {
             mWebViewLeadDetails.clearView();
@@ -826,6 +995,25 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         }
         //
         //  Log.i(TAG, "HTML FROM:" + questionDisplay.toString());
+
+        if (queue == Card.QUEUE_NEW_CRAM0) {
+            //set BackBackground color
+            lbCountDue.setBackgroundResource(R.color.white);
+            lbCountAgain.setBackgroundResource(R.color.white);
+            lbCountNew.setBackgroundResource(R.color.teal_200);
+        } else if (queue == Card.QUEUE_LNR1) {
+            //set BackBackground color
+            lbCountDue.setBackgroundResource(R.color.white);
+            lbCountAgain.setBackgroundResource(R.color.teal_200);
+            lbCountNew.setBackgroundResource(R.color.white);
+        } else if (queue == Card.QUEUE_REV2) {
+            //set BackBackground color
+            lbCountDue.setBackgroundResource(R.color.teal_200);
+            lbCountAgain.setBackgroundResource(R.color.white);
+            lbCountNew.setBackgroundResource(R.color.white);
+        } else if (queue == 10) {
+        }
+
         //Set Data
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
