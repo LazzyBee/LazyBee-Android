@@ -314,7 +314,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                     // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
 
                     //Load Answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(card));
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(card,getString(R.string.meaning),getString(R.string.explain),getString(R.string.example)));
 
 //                    //set current card
 //                    currentCard[0] = card;
