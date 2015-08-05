@@ -55,7 +55,7 @@ public class LazzyBeeShare {
     /**
      * init HTML answer
      */
-    public static String getAnswerHTML(Card card) {
+    public static String getAnswerHTML(Card card, String _meaning, String _explain, String _example) {
 //        String html =
 //                "<!DOCTYPE html>\n" +
 //                        "<html>\n" +
@@ -111,7 +111,6 @@ public class LazzyBeeShare {
                 exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
 
             String imageURL = EMPTY;
-
             html = "<html>\n" +
                     "<head>\n" +
                     "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
@@ -131,9 +130,9 @@ public class LazzyBeeShare {
                     "<p style=\"text-align: center;\">" + imageURL + "</p>\n" +
                     "<div style=\"width:100%\">\n" +
                     "    <div style=\"float:left;width:90%\">" +
-                    "<p><strong>Meaning:</strong></br><em style=\"color:blue\">" + meaning + "</em></p>\n" +
-                    "<p><strong>Explain:</strong></br>" + explain + "</p>\n" +
-                    "<p><strong>Example:</strong></br>" + example + "</p>\n" +
+                    "<p><strong>" + _meaning + "</strong></br><em style=\"color:blue\">" + meaning + "</em></p>\n" +
+                    "<p><strong>" + _explain + "</strong></br>" + explain + "</p>\n" +
+                    "<p><strong>" + _example + "</strong></br>" + example + "</p>\n" +
                     "</div>\n" +
                     "    <div style=\"float:right;;width:10%\">\n " +
                     "<p></br></p>\n" +
@@ -234,7 +233,7 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Card card,String packages) {
+    public static String getAnswerHTMLwithPackage(Card card, String packages) {
         String html = null;
         try {
             JSONObject answerObj = new JSONObject(card.getAnswers());
