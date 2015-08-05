@@ -819,6 +819,8 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _updateCard(Card card) {
+
+        Log.i(TAG, "_updateCard: Card=" + card.toString());
         String cardId = String.valueOf(card.getId());
 
         //TODO: Update staus card by id
@@ -842,7 +844,7 @@ public class LearnApiImplements implements LearnApi {
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{cardId});
-        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        Log.i(TAG, "_updateCard: Update Result Code:" + update_result);
 
         //TODO:Update queue_list system table
         String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
