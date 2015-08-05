@@ -83,37 +83,7 @@ public class WordEstimateTest{
         int[] arr = {321, 450, 589, 612, 750, 861, 1024, 1350, 1649, 1999, 2410, 2845, 3210, 3568, 3974, 6543, 9876 };
         for (int i : arr)
             System.out.println("Your estimated level for voca " + i + " is " +
-                Arrays.toString(testEstimate._getEstimateLevel(i)) +
-                "; " + Arrays.toString(testEstimate.getNumberWordEachLevel(i)));
-/*        System.out.println("Your estimated level for voca 450 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(450)));
-        System.out.println("Your estimated level for voca 589 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(589)));
-        System.out.println("Your estimated level for voca 612 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(612)));
-        System.out.println("Your estimated level for voca 750 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(750)));
-        System.out.println("Your estimated level for voca 861 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(861)));
-        System.out.println("Your estimated level for voca 1024 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(1024)));
-        System.out.println("Your estimated level for voca 1350 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(1350)));
-        System.out.println("Your estimated level for voca 1649 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(1649)));
-        System.out.println("Your estimated level for voca 1999 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(1999)));
-        System.out.println("Your estimated level for voca 2410 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(2410)));
-        System.out.println("Your estimated level for voca 2845 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(2845)));
-        System.out.println("Your estimated level for voca 3210 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(3210)));
-        System.out.println("Your estimated level for voca 3568 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(3568)));
-        System.out.println("Your estimated level for voca 3974 is " +
-                Arrays.toString(testEstimate._getEstimateLevel(3974)));
-
-*/
+                Arrays.toString(testEstimate._getEstimateLevel(i)) + "; " +
+                Arrays.toString(testEstimate.getNumberWordEachLevel(i)));
     }
 }
