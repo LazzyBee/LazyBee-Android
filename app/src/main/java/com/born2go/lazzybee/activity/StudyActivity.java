@@ -257,7 +257,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (againList.size() == 1) {
                     currentCard = againList.get(0);
                 } else if (againList.size() > 0) {
-                    currentCard = againList.get(position_again + 1);
+                    position_again = againList.size();
+                    currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
@@ -266,7 +267,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
                 else if (dueList.size() > 0)
-                    currentCard = dueList.get(position_due + 1);
+                    position_due = dueList.size();
+                currentCard = dueList.get(position_due - 1);
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
@@ -275,6 +277,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (todayList.size() == 1) {
                     currentCard = todayList.get(0);
                 } else if (todayList.size() > 0) {
+                    position = todayList.size();
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
@@ -291,7 +294,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
                 else if (dueList.size() > 0)
-                    currentCard = dueList.get(position_due + 1);
+                    position_due = dueList.size();
+                currentCard = dueList.get(position_due - 1);
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
@@ -300,6 +304,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (todayList.size() == 1) {
                     currentCard = todayList.get(0);
                 } else if (todayList.size() > 0) {
+                    position = todayList.size();
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
@@ -310,7 +315,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (againList.size() == 1) {
                     currentCard = againList.get(0);
                 } else if (againList.size() > 0) {
-                    currentCard = againList.get(position_again + 1);
+                    position_again = againList.size();
+                    currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
@@ -325,6 +331,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (todayList.size() == 1) {
                     currentCard = todayList.get(0);
                 } else if (todayList.size() > 0) {
+                    position = todayList.size();
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
@@ -335,7 +342,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (againList.size() == 1) {
                     currentCard = againList.get(0);
                 } else if (againList.size() > 0) {
-                    currentCard = againList.get(position_again + 1);
+                    position_again = againList.size();
+                    currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
@@ -345,7 +353,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
                 else if (dueList.size() > 0)
-                    currentCard = dueList.get(position_due + 1);
+                    position_due = dueList.size();
+                currentCard = dueList.get(position_due - 1);
 
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
@@ -361,7 +370,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (againList.size() == 1) {
                     currentCard = againList.get(0);
                 } else if (againList.size() > 0) {
-                    currentCard = againList.get(position_again + 1);
+                    position_again = againList.size();
+                    currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
@@ -370,7 +380,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
                 else if (dueList.size() > 0)
-                    currentCard = dueList.get(position_due + 1);
+                    position_due = dueList.size();
+                currentCard = dueList.get(position_due - 1);
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
@@ -379,6 +390,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 if (todayList.size() == 1) {
                     currentCard = todayList.get(0);
                 } else if (todayList.size() > 0) {
+                    position = todayList.size();
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
