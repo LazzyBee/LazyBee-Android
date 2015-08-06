@@ -26,7 +26,14 @@ public class LazzyBeeShare {
     public static final String EMPTY = "";
     public static final int TOTTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
+
     private static final boolean DEBUG = true;
+
+    public static final String CARD_MEANING = "meaning";
+    public static final String CARD_PRONOUN = "pronoun";
+    public static final String CARD_EXPLAIN = "explain";
+    public static final String CARD_EXAMPLE = "example";
+
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
