@@ -161,7 +161,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" +
+        return "\nCard{" +
                 "\nid=" + id +
                 "\n, question='" + question + '\'' +
                 ", status=" + status +
@@ -176,7 +176,7 @@ public class Card {
      * Get Card by id & update increase one revew_user
      */
     public void increaseRevCount() {
-        rev_count ++;
+        rev_count++;
     }
 
     public int getFactor() {
