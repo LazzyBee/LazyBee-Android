@@ -1,8 +1,10 @@
 package com.born2go.lazzybee.shared;
 
+import android.content.Context;
 import android.text.Html;
 import android.webkit.JavascriptInterface;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
 
@@ -62,7 +64,7 @@ public class LazzyBeeShare {
     /**
      * init HTML answer
      */
-    public static String getAnswerHTML(Card card, String _meaning, String _explain, String _example) {
+    public static String getAnswerHTML(Context context,Card card) {
 //        String html = null;
 //        try {
 //            JSONObject answerObj = new JSONObject(card.getAnswers());
@@ -163,7 +165,7 @@ public class LazzyBeeShare {
 //            System.out.print("Error 2:" + e.getMessage());
 //        }
 //        return html;
-        return getAnswerHTMLwithPackage(card, "common", _explain, _example, false);
+        return getAnswerHTMLwithPackage(context,card, "common", false);
     }
 
     /**
@@ -251,7 +253,7 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Card card, String packages, String _explain, String _example, boolean onload) {
+    public static String getAnswerHTMLwithPackage(Context context,Card card, String packages, boolean onload) {
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -262,6 +264,8 @@ public class LazzyBeeShare {
         String exampleTagA = EMPTY;
         String imageURL = EMPTY;
         String debug = "</body></html>\n";
+        String _example=context.getResources().getString(R.string.example);
+        Object _explain=context.getResources().getString(R.string.explain);;
         //Log.i(TAG, "getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers());
         System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
         try {

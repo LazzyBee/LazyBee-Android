@@ -38,6 +38,8 @@ import java.util.Locale;
 public class StudyActivity extends ActionBarActivity implements FragmentStudy.FragmentStudyListener {
 
     private static final String TAG = "StudyActivity";
+    private Context context;
+
     FragmentStudy fragmentStudy;
     boolean learn_more;
 
@@ -75,7 +77,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
-
+        context = this;
         _initView();
 
         //db
@@ -491,7 +493,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                     // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
 
                     //Load Answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(card, getString(R.string.meaning), getString(R.string.explain), getString(R.string.example)), 10);
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(context,card), 10);
 
 //                    //set current card
 //                    currentCard[0] = card;

@@ -45,13 +45,14 @@ public class CardDetailsActivity extends ActionBarActivity {
      */
     private ViewPager mViewPager;
 
-
+    private Context context;
     TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_details);
+        this.context = this;
         String cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
         LearnApiImplements learnApiImplements = new LearnApiImplements(getApplicationContext());
 
@@ -119,11 +120,12 @@ public class CardDetailsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     WebView mWebViewLeadDetails;
+
     class PackageCardPageAdapter extends PagerAdapter {
         Card card;
         List<String> packages;
-
 
 
         public PackageCardPageAdapter(Card card) {
@@ -190,13 +192,12 @@ public class CardDetailsActivity extends ActionBarActivity {
             mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
 
 
-
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
 
             _addJavascriptInterfaceQuestionAndAnswer();
 
-            String answer = LazzyBeeShare.getAnswerHTMLwithPackage(card, packages.get(position), getString(R.string.explain), getString(R.string.example),true);
+            String answer = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packages.get(position), true);
 
             Log.i(TAG, answer);
 
@@ -262,10 +263,6 @@ public class CardDetailsActivity extends ActionBarActivity {
     }
 
 
-
-
-
-
     @SuppressWarnings("deprecation")
     private void _textToSpeechUnder20(String text) {
         HashMap<String, String> map = new HashMap<String, String>();
@@ -293,7 +290,7 @@ public class CardDetailsActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-       // super.onBackPressed();
+        // super.onBackPressed();
         return;
 //        if (mWebViewLeadDetails.canGoBack()) {
 //
