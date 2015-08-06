@@ -870,24 +870,24 @@ public class LearnApiImplements implements LearnApi {
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
         int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
-//        if (todayCount == -2) {
-//            dueCount = 0;
-//            againCount = 0;
-//            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-//        } else {
-//            if (todayCount == 0) {
-//                //Complete leanrn today
+        if (todayCount == -2) {
+            dueCount = 0;
+            againCount = 0;
+            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+        } else {
+            if (todayCount == 0) {
+                //Complete leanrn today
 //                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
 //                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-//                todayCount = 0;
-//            } else if (todayCount == -1) {
-//                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+                todayCount = 0;
+            } else if (todayCount == -1) {
+                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
 //                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
 //                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
-//            } else {
-//                Log.i(TAG, "Today:" + todayCount);
-//            }
-//        }
+            } else {
+                Log.i(TAG, "Today:" + todayCount);
+            }
+        }
 
         duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;
