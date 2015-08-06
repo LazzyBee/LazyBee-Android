@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
 
     @Override
     public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_vocabulary_review_list, parent, false); //Inflating the layout
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
         RecyclerViewSearchResultListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewSearchResultListAdapterViewHolder(view);
         return recyclerViewReviewTodayListAdapterViewHolder;
     }
@@ -39,9 +40,10 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         String cardId = String.valueOf(card.getId());
         lbQuestion.setTag(cardId);
         TextView lbAnswer = (TextView) view.findViewById(R.id.lbAnswer);
+        String pronoun= LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
 
         lbQuestion.setText(card.getQuestion());
-        lbAnswer.setText(card.getAnswers());
+        lbAnswer.setText(pronoun);
 
     }
 
