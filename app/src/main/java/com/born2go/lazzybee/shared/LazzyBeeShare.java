@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.shared;
 
 import android.text.Html;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.born2go.lazzybee.db.Card;
@@ -57,106 +56,107 @@ public class LazzyBeeShare {
      * init HTML answer
      */
     public static String getAnswerHTML(Card card, String _meaning, String _explain, String _example) {
-        String html = null;
-        try {
-            JSONObject answerObj = new JSONObject(card.getAnswers());
-            String pronoun = answerObj.getString("pronoun");
-            JSONObject packagesObj = answerObj.getJSONObject("packages");
-
-            String meaning = EMPTY;
-            String explain = EMPTY;
-            String example = EMPTY;
-
-
-            try {
-                JSONObject commonObj = packagesObj.getJSONObject("common");
-                if (commonObj != null) {
-
-                    meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
-                    explain = Html.fromHtml(commonObj.getString("explain")).toString();
-                    example = Html.fromHtml(commonObj.getString("example")).toString();
-//                    meaning = commonObj.getString("meaning");
-//                    explain = commonObj.getString("explain");
-//                    example = commonObj.getString("example");
-//                    Log.i(TAG, "meaning" + meaning);
-//                    Log.i(TAG, "explain" + explain);
-//                    Log.i(TAG, "example" + example);
-                }
-            } catch (JSONException e) {
-//                e.printStackTrace();
-                System.out.print("Error 1:" + e.getMessage());
-            }
-
-
-            String explainTagA = EMPTY;
-            String exampleTagA = EMPTY;
-
-
-//            if (!meaning.isEmpty())
-//                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_speaker_red.png'/></a>";
-//            else
-//                meaning = "";
-
-            if (!explain.isEmpty())
-                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
-
-            if (!example.isEmpty())
-                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
-
-            String imageURL = EMPTY;
-            html = "<html>\n" +
-                    "<head>\n" +
-                    "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
-                    "name=\"viewport\">\n" +
-                    "</head>\n" +
-                    "<body >\n" +
-                    "   <div style='width:100%'>\n" +
-                    "       <div style='float:left;width:90%;text-align: center;'>\n" +
-                    "           <strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
-                    "       </div>\n" +
-                    "       <div style='float:left;width:10%'>\n" +
-                    "           <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a>\n" +
-                    "       </div>\n" +
-                    "       <div style='width:90%'>\n" +
-                    "           <center><font>" + pronoun + "</font></center>\n" +
-                    "           <p style='text-align: center'><em style='color:blue;'>" + meaning + "</em></p>\n" +
-                    "       </div>\n" +
-                    "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
-                    "       <div style=\"width:100%\">\n" +
-                    "           <div style=\"float:left;width:90%\">" +
-                    "               <p><strong>" + _explain + "</strong></br>" + explain + "</p>\n" +
-                    "               <p><strong>" + _example + "</strong></br>" + example + "</p>\n" +
-                    "           </div>\n" +
-                    "           <div style=\"float:right;;width:10%\">\n " +
-                    "               <p><strong></strong></br>" + explainTagA + "</p>\n" +
-                    "               <p><strong></strong></br>" + exampleTagA + "</p>\n" +
-                    "           </div>\n" +
-                    "       </div>\n" +
-                    "   </div>\n";
-
-            // Log.v(TAG, "html:" + html);
-            String debug = "</body></html>\n";
-            if (DEBUG) {
-                debug = "       </div>\n" +
-                        "           <div id='debug'>\n " +
-                        "              Debug infor:</br>\n" +
-                        "              -------------------------------------</br>\n" +
-                        "              Level:" + card.getLevel() + "</br>\n" +
-                        "              lat_ivl:" + card.getLast_ivl() + "</br>\n" +
-                        "              Factor:" + card.getFactor() + "</br>\n" +
-                        "              Rev_count:" + card.getRev_count() + "</br>\n" +
-                        "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
-                        "              -------------------------------------</br>\n" +
-                        "           </div>\n" +
-                        "   </body>" +
-                        "</html>\n";
-            }
-            html += debug;
-        } catch (JSONException e) {
-            // e.printStackTrace();
-            System.out.print("Error 2:" + e.getMessage());
-        }
-        return html;
+//        String html = null;
+//        try {
+//            JSONObject answerObj = new JSONObject(card.getAnswers());
+//            String pronoun = answerObj.getString("pronoun");
+//            JSONObject packagesObj = answerObj.getJSONObject("packages");
+//
+//            String meaning = EMPTY;
+//            String explain = EMPTY;
+//            String example = EMPTY;
+//
+//
+//            try {
+//                JSONObject commonObj = packagesObj.getJSONObject("common");
+//                if (commonObj != null) {
+//
+//                    meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
+//                    explain = Html.fromHtml(commonObj.getString("explain")).toString();
+//                    example = Html.fromHtml(commonObj.getString("example")).toString();
+////                    meaning = commonObj.getString("meaning");
+////                    explain = commonObj.getString("explain");
+////                    example = commonObj.getString("example");
+////                    Log.i(TAG, "meaning" + meaning);
+////                    Log.i(TAG, "explain" + explain);
+////                    Log.i(TAG, "example" + example);
+//                }
+//            } catch (JSONException e) {
+////                e.printStackTrace();
+//                System.out.print("Error 1:" + e.getMessage());
+//            }
+//
+//
+//            String explainTagA = EMPTY;
+//            String exampleTagA = EMPTY;
+//
+//
+////            if (!meaning.isEmpty())
+////                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_speaker_red.png'/></a>";
+////            else
+////                meaning = "";
+//
+//            if (!explain.isEmpty())
+//                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
+//
+//            if (!example.isEmpty())
+//                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
+//
+//            String imageURL = EMPTY;
+//            html = "<html>\n" +
+//                    "<head>\n" +
+//                    "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+//                    "name=\"viewport\">\n" +
+//                    "</head>\n" +
+//                    "<body >\n" +
+//                    "   <div style='width:100%'>\n" +
+//                    "       <div style='float:left;width:90%;text-align: center;'>\n" +
+//                    "           <strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
+//                    "       </div>\n" +
+//                    "       <div style='float:left;width:10%'>\n" +
+//                    "           <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a>\n" +
+//                    "       </div>\n" +
+//                    "       <div style='width:90%'>\n" +
+//                    "           <center><font>" + pronoun + "</font></center>\n" +
+//                    "           <p style='text-align: center'><em style='color:blue;'>" + meaning + "</em></p>\n" +
+//                    "       </div>\n" +
+//                    "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
+//                    "       <div style=\"width:100%\">\n" +
+//                    "           <div style=\"float:left;width:90%\">" +
+//                    "               <p><strong>" + _explain + "</strong></br>" + explain + "</p>\n" +
+//                    "               <p><strong>" + _example + "</strong></br>" + example + "</p>\n" +
+//                    "           </div>\n" +
+//                    "           <div style=\"float:right;;width:10%\">\n " +
+//                    "               <p><strong></strong></br>" + explainTagA + "</p>\n" +
+//                    "               <p><strong></strong></br>" + exampleTagA + "</p>\n" +
+//                    "           </div>\n" +
+//                    "       </div>\n" +
+//                    "   </div>\n";
+//
+//            // Log.v(TAG, "html:" + html);
+//            String debug = "</body></html>\n";
+//            if (DEBUG) {
+//                debug = "       </div>\n" +
+//                        "           <div id='debug'>\n " +
+//                        "              Debug infor:</br>\n" +
+//                        "              -------------------------------------</br>\n" +
+//                        "              Level:" + card.getLevel() + "</br>\n" +
+//                        "              lat_ivl:" + card.getLast_ivl() + "</br>\n" +
+//                        "              Factor:" + card.getFactor() + "</br>\n" +
+//                        "              Rev_count:" + card.getRev_count() + "</br>\n" +
+//                        "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
+//                        "              -------------------------------------</br>\n" +
+//                        "           </div>\n" +
+//                        "   </body>" +
+//                        "</html>\n";
+//            }
+//            html += debug;
+//        } catch (JSONException e) {
+//            // e.printStackTrace();
+//            System.out.print("Error 2:" + e.getMessage());
+//        }
+//        return html;
+        return  getAnswerHTMLwithPackage(card,"common",_explain,_example,false);
     }
 
     /**
@@ -244,75 +244,98 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Card card, String packages) {
+    public static String getAnswerHTMLwithPackage(Card card, String packages, String _explain, String _example,boolean onload) {
         String html = null;
+        String meaning = EMPTY;
+        String explain = EMPTY;
+        String example = EMPTY;
+        String pronoun = EMPTY;
+        String explainTagA = EMPTY;
+        String exampleTagA = EMPTY;
+        String imageURL = EMPTY;
+        String debug = "</body></html>\n";
+        //Log.i(TAG, "getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers());
+        System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
         try {
             JSONObject answerObj = new JSONObject(card.getAnswers());
-            String pronoun = answerObj.getString("pronoun");
+            pronoun = answerObj.getString("pronoun");
             JSONObject packagesObj = answerObj.getJSONObject("packages");
+            System.out.print("\npackagesObj.length():" + packagesObj.length());
+            if (packagesObj.length()>0) {
+                System.out.print("\n Ok");
+                JSONObject commonObj = packagesObj.getJSONObject(packages);
+                meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
+                explain = Html.fromHtml(commonObj.getString("explain")).toString();
+                example = Html.fromHtml(commonObj.getString("example")).toString();
+            }
+            else {
+                _example=EMPTY;
+                _explain=EMPTY;
+                System.out.print("\n not Ok");
+            }
 
-            JSONObject commonObj = packagesObj.getJSONObject(packages);
-
-            String meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
-            String explain = Html.fromHtml(commonObj.getString("explain")).toString();
-            String example = Html.fromHtml(commonObj.getString("example")).toString();
-
-
-            String explainTagA = EMPTY;
-            String exampleTagA = EMPTY;
-
-            Log.i(TAG, "meaning" + meaning);
-            Log.i(TAG, "explain" + explain);
-            Log.i(TAG, "example" + example);
-
-//            if (!meaning.isEmpty())
-//                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_play_black.png'/></a>";
-//            else
-//                meaning = "";
-
-            if (!explain.isEmpty())
-                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
-
-            if (!example.isEmpty())
-                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
-
-            String imageURL = EMPTY;
-
-            html = "<html>\n" +
-                    "<head>\n" +
-                    "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
-                    "name=\"viewport\">\n" +
-                    "</head>\n" +
-                    "<div style='width:100%'>\n" +
-                    "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
-                    "</div>\n" +
-                    "<div style='float:left;width:10%'>\n" +
-                    "<p><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a><p>\n" +
-                    "</div>\n" +
-                    "</div>\n" +
-                    "<div div style='width:90%'>\n" +
-                    "<p style=\"text-align: center;\">" + pronoun + "</p>\n" +
-                    "</div>\n" +
-                    "<p style=\"text-align: center;\">" + imageURL + "</p>\n" +
-                    "<div style=\"width:100%\">\n" +
-                    "    <div style=\"float:left;width:90%\">" +
-                    "<p><strong>Meaning:</strong></br><em style=\"color:blue\">" + meaning + "</em></p>\n" +
-                    "<p><strong>Explain:</strong></br>" + explain + "</p>\n" +
-                    "<p><strong>Example:</strong></br>" + example + "</p>\n" +
-                    "</div>\n" +
-                    "    <div style=\"float:right;;width:10%\">\n " +
-                    "<p></br></p>\n" +
-                    "<p><strong></strong></br>" + explainTagA + "</p>\n" +
-                    "<p><strong></strong></br>" + exampleTagA + "</p>\n" +
-                    "    </div>\n" +
-                    "</div>\n" +
-                    "</html>\n";
-            Log.v(TAG, "html:" + html);
-        } catch (JSONException e) {
+        } catch (Exception e) {
+            System.out.print("Error 2:" + e.getMessage() + "\n");
             e.printStackTrace();
+            return e.getMessage();
         }
+
+        if (!explain.isEmpty()) {
+            explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
+        }
+        if (!example.isEmpty()) {
+            exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
+        }
+        html = "\n<html>\n" +
+                "<head>\n" +
+                "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                "name=\"viewport\">\n" +
+                "</head>\n" +
+                "<body "+((onload==true)?"onload='question.playQuestion()'":"")+">\n" +
+                "   <div style='width:100%'>\n" +
+                "       <div style='float:left;width:90%;text-align: center;'>\n" +
+                "           <strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
+                "       </div>\n" +
+                "       <div style='float:left;width:10%'>\n" +
+                "           <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a>\n" +
+                "       </div>\n" +
+                "       <div style='width:90%'>\n" +
+                "           <center><font>" + pronoun + "</font></center>\n" +
+                "           <p style='text-align: center'><em style='color:blue;'>" + meaning + "</em></p>\n" +
+                "       </div>\n" +
+                "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
+                "       <div style=\"width:100%\">\n" +
+                "           <div style=\"float:left;width:90%\">" +
+                "               <p><strong>"+_explain+"</strong></br>" + explain + "</p>\n" +
+                "               <p><strong>"+_example+"</strong></br>" + example + "</p>\n" +
+                "           </div>\n" +
+                "           <div style=\"float:right;;width:10%\">\n " +
+                "               <p><strong></strong></br>" + explainTagA + "</p>\n" +
+                "               <p><strong></strong></br>" + exampleTagA + "</p>\n" +
+                "           </div>\n" +
+                "       </div>\n" +
+                "   </div>\n";
+
+        if (DEBUG) {
+            debug = "           <div id='debug'>\n " +
+                    "              Debug infor:</br>\n" +
+                    "              -------------------------------------</br>\n" +
+                    "              Level:" + card.getLevel() + "</br>\n" +
+                    "              lat_ivl:" + card.getLast_ivl() + "</br>\n" +
+                    "              Factor:" + card.getFactor() + "</br>\n" +
+                    "              Rev_count:" + card.getRev_count() + "</br>\n" +
+                    "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
+                    "              -------------------------------------</br>\n" +
+                    "           </div>\n" +
+                    "   </body>" +
+                    "</html>\n";
+        }
+        html += debug;
+        //Log.i(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
+        //  Log.i(TAG, "Error:" + e.getMessage());
         return html;
+
     }
 
     //    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
