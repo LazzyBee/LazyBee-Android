@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">LazzyBee</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_example">Example action</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="action_example" translatable="false">Example action</string>
 
     <string name="action_settings">Settings</string>
 
@@ -26,12 +24,12 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_seating">SeatingActivity</string>
+    <string name="title_activity_seating" translatable="false">SeatingActivity</string>
     <string name="title_activity_review_card">ReviewCardActivity</string>
     <string name="title_activity_add_course">AddCourseActivity</string>
     <string name="hint_search">Search</string>
     <string name="title_activity_card_details">CardDetailsActivity</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="EASE_AGAIN">Again</string>
     <string name="EASE_HARD">Hard</string>
@@ -39,8 +37,20 @@
     <string name="EASE_EASY">Easy</string>
     <string name="learn_more">Learn more</string>
     <string name="congratulations">Congratulations!</string>
-    <string name="suport_complete_card">Touch LEARN MORE</string>
+    <string name="suport_complete_card" translatable="false">Touch LEARN MORE</string>
     <string name="action_delete_card">Delete card</string>
+    <string name="show_answer">Show Answer</string>
+    <string name="study">Study</string>
+    <string name="due_today">Due today:</string>
+    <string name="total_new_learn">Total new learn:</string>
+    <string name="total_cards">Total cards:</string>
+    <string name="example">Example</string>
+    <string name="explain">Explain</string>
+    <string name="meaning">Meaning</string>
+    <string name="dialog_message_learn_more">Learn more</string>
+    <string name="dialog_title_learn_more">Lean more</string>
+    <string name="ok" >Ok</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

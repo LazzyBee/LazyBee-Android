@@ -1,7 +1,10 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +38,7 @@ import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.IOException;
+import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity
@@ -71,11 +77,22 @@ public class MainActivity extends ActionBarActivity
 
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        String languageToLoad = "vi"; // your language
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+
+
         setContentView(R.layout.activity_main);
         _initToolBar();
         _initSQlIte();
@@ -90,14 +107,36 @@ public class MainActivity extends ActionBarActivity
         btnCustomStudy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Instantiate an AlertDialog.Builder with its constructor
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
-                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
-                _checkCompleteLearn();
-                if (btnCustomStudy.getTag() != null) {
-                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
-                    startActivityForResult(intent, 1);
-                }
+                // Chain together various setter methods to set the dialog characteristics
+                builder.setMessage(R.string.dialog_message_learn_more)
+                        .setTitle(R.string.dialog_title_learn_more);
+
+                // Add the buttons
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                        _checkCompleteLearn();
+                        if (btnCustomStudy.getTag() != null) {
+                            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                            intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                            startActivityForResult(intent, 1);
+                        }
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.cancel();
+                    }
+                });
+                // Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
             }
         });
 
@@ -348,10 +387,10 @@ public class MainActivity extends ActionBarActivity
                 mTitle = FragmentCourse.TAG;
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+//                mTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+//                mTitle = getString(R.string.title_section3);
                 break;
         }
     }
@@ -495,27 +534,7 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-//    /**
-//     * Goto Card Details with card id
-//     *
-//     * @param cardId
-//     */
-//    @Override
-//    public void _gotoCardDetail(String cardId) {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentCardDetails
-//        FragmentCardDetails fragmentCardDetails = new FragmentCardDetails();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set QUERY_TEXT
-//        bundle.putString(FragmentCardDetails.CARD_ID, cardId);
-//        //setArguments for fragmentCardDetails
-//        fragmentCardDetails.setArguments(bundle);
-//        //replace from container to fragmentCardDetails
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentCardDetails)
-//                .addToBackStack(FragmentCardDetails.TAG).commit();
-//    }
+
 
 
     /**

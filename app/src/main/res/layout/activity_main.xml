@@ -89,7 +89,7 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:layout_gravity="center_horizontal"
                                 android:visibility="visible"
-                                android:text="Due today:           "
+                                android:text="@string/due_today"
                                 android:textAlignment="center" />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -115,7 +115,7 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:layout_gravity="center_horizontal"
                                 android:visibility="visible"
-                                android:text="Total new learn:           "
+                                android:text="@string/total_new_learn"
                                 android:textAlignment="center"
                                 ></TextView>
 
@@ -143,7 +143,7 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:layout_gravity="center_horizontal"
                                 android:visibility="visible"
-                                android:text="Total cards:                  "
+                                android:text="@string/total_cards"
                                 android:textAlignment="center"
                                 ></TextView>
                             <TextView
@@ -189,7 +189,7 @@
                         android:layout_gravity="center"
                         android:background="@color/teal_500"
 
-                        android:text="Study"
+                        android:text="@string/study"
                         android:textColor="#ffffffff"
                         android:onClick="_onBtnStudyOnClick" />
                 </android.support.v7.widget.CardView>

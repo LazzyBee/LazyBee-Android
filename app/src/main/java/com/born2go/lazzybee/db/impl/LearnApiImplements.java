@@ -819,6 +819,8 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _updateCard(Card card) {
+
+        Log.i(TAG, "_updateCard: Card=" + card.toString());
         String cardId = String.valueOf(card.getId());
 
         //TODO: Update staus card by id
@@ -842,7 +844,7 @@ public class LearnApiImplements implements LearnApi {
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{cardId});
-        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+        Log.i(TAG, "_updateCard: Update Result Code:" + update_result);
 
         //TODO:Update queue_list system table
         String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
@@ -868,24 +870,24 @@ public class LearnApiImplements implements LearnApi {
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
         int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
-//        if (todayCount == -2) {
-//            dueCount = 0;
-//            againCount = 0;
-//            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-//        } else {
-//            if (todayCount == 0) {
-//                //Complete leanrn today
+        if (todayCount == -2) {
+            dueCount = 0;
+            againCount = 0;
+            todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+        } else {
+            if (todayCount == 0) {
+                //Complete leanrn today
 //                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
 //                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
-//                todayCount = 0;
-//            } else if (todayCount == -1) {
-//                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+                todayCount = 0;
+            } else if (todayCount == -1) {
+                todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
 //                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
 //                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
-//            } else {
-//                Log.i(TAG, "Today:" + todayCount);
-//            }
-//        }
+            } else {
+                Log.i(TAG, "Today:" + todayCount);
+            }
+        }
 
         duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;

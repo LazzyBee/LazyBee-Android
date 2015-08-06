@@ -70,10 +70,10 @@ public class CardDetailsActivity extends ActionBarActivity {
             card = new Card();
             card.setQuestion("Hello");
         }
-        textToSpeech.speak(card.getQuestion(),TextToSpeech.QUEUE_ADD,null);
-
-
-        _speakText(card.getQuestion());
+//        textToSpeech.speak(card.getQuestion(), TextToSpeech.QUEUE_ADD, null);
+//
+//
+//        _speakText(card.getQuestion());
         PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(card);
 
         mViewPager.setAdapter(packageCardPageAdapter);
@@ -110,19 +110,22 @@ public class CardDetailsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    WebView mWebViewLeadDetails;
     class PackageCardPageAdapter extends PagerAdapter {
         Card card;
         List<String> packages;
-        WebView mWebViewLeadDetails;
+
 
 
         public PackageCardPageAdapter(Card card) {
             this.card = card;
             if (card.getPackage() != null) {
                 this.packages = LazzyBeeShare.getListPackageFormString(card.getPackage());
+                if (packages.size() == 0) {
+                    this.packages = Arrays.asList("Common");
+                }
             } else
-                this.packages = Arrays.asList("Common", "it");
+                this.packages = Arrays.asList("Common");
 
         }
 
@@ -178,12 +181,17 @@ public class CardDetailsActivity extends ActionBarActivity {
             mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
 
 
+
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
 
             _addJavascriptInterfaceQuestionAndAnswer();
 
-            mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare.getAnswerHTMLwithPackage(card, packages.get(position)), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+            String answer = LazzyBeeShare.getAnswerHTMLwithPackage(card, packages.get(position), getString(R.string.explain), getString(R.string.example),true);
+
+            Log.i(TAG, answer);
+
+            mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, answer, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
 
             // Return the View
@@ -244,6 +252,11 @@ public class CardDetailsActivity extends ActionBarActivity {
         }
     }
 
+
+
+
+
+
     @SuppressWarnings("deprecation")
     private void _textToSpeechUnder20(String text) {
         HashMap<String, String> map = new HashMap<String, String>();
@@ -269,4 +282,14 @@ public class CardDetailsActivity extends ActionBarActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+        return;
+//        if (mWebViewLeadDetails.canGoBack()) {
+//
+//        } else {
+//            super.onBackPressed();
+//        }
+    }
 }

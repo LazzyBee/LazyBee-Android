@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +21,7 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.fragment.FragmentSearch;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
 
@@ -105,9 +107,7 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
                 String cardID = String.valueOf(lbQuestion.getTag());
-                //  Toast.makeText(this, "Card:" + cardID, Toast.LENGTH_SHORT).show();
-//                if (mListener != null)
-//                    mListener._gotoCardDetail(cardID);
+               _gotoCardDetail(cardID);
 
             }
         });
@@ -149,6 +149,8 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
      */
     @Override
     public void _gotoCardDetail(String cardId) {
-
+        Intent intent = new Intent(this, CardDetailsActivity.class);
+        intent.putExtra(LazzyBeeShare.CARDID, cardId);
+        startActivity(intent);
     }
 }

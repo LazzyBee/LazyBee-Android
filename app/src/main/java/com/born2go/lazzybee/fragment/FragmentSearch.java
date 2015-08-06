@@ -69,7 +69,7 @@ public class FragmentSearch extends Fragment {
         TextView lbResultCount = (TextView) view.findViewById(R.id.lbResultCount);
 
         //search data form DB
-        List<Card> cardList = dataBaseHelper._searchCard(query);
+        final List<Card> cardList = dataBaseHelper._searchCard(query);
         int result_count = cardList.size();
         Log.i(TAG, "Search result_count:" + result_count);
 
@@ -84,19 +84,20 @@ public class FragmentSearch extends Fragment {
         //Init Adapter
         RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
 
-        //Init Touch Listener
-        RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(), mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
+         //Init Touch Listener
+        RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(),
+                mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-                //Cast tag lbQuestion to CardId
-                String cardID = String.valueOf(lbQuestion.getTag());
-                Toast.makeText(getActivity(), "Card:" + cardID, Toast.LENGTH_SHORT).show();
-                if (mListener != null)
+                if (mListener != null) {
+                    String cardID = String.valueOf(cardList.get(position).getId());
+                    Toast.makeText(getActivity(), "Card:" + cardID, Toast.LENGTH_SHORT).show();
                     mListener._gotoCardDetail(cardID);
-
+                } else
+                    Log.i(TAG, "NUll");
             }
         });
+
 
         //Set data and add Touch Listener
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
