@@ -75,9 +75,10 @@
             android:label="@string/title_activity_card_details">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ReviewCardActivity"
-
-                />
+                android:value=".activity.ReviewCardActivity" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".activity.SearchActivity" />
         </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
