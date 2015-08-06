@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/teal_500</item>
         <item name="colorPrimaryDark">@color/teal_200</item>
-        <!--<item name="android:height">@dimen/bar_height</item>-->
-        <!--<item name="colorAccent">@color/blue_700</item>-->
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:actionBarStyle">@style/ActionBarTheme</item>
-        <!--<item name="android:windowBackground">@color/grey_300</item>
-        <item name="android:actionMenuTextColor">@android:color/black</item>
-        <item name="actionMenuTextColor">@android:color/black</item>-->
-
-
+        <item name="android:windowBackground">@color/grey_300</item>
     </style>
 
-    <style name="ActionBarTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="ActionBarTheme" parent="Base.Theme.AppCompat.Light">
 
     </style>
 
@@ -23,4 +15,12 @@
         <item name="android:windowNoTitle">true</item>
 
     </style>
+
+    <style name="PopupMenu" parent="android:Theme.Holo.Light">
+        <item name="android:popupBackground">@android:color/holo_green_light</item>
+    </style>
+
+    <style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown"></style>
+
+
 </resources>
