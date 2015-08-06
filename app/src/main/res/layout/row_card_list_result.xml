@@ -31,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/lbAnswer"
                 android:layout_below="@+id/lbQuestion"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColor="#757575" />
 
         </RelativeLayout>
 
