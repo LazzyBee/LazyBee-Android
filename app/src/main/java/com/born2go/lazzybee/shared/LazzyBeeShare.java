@@ -26,7 +26,14 @@ public class LazzyBeeShare {
     public static final String EMPTY = "";
     public static final int TOTTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
+
     private static final boolean DEBUG = true;
+
+    public static final String CARD_MEANING = "meaning";
+    public static final String CARD_PRONOUN = "pronoun";
+    public static final String CARD_EXPLAIN = "explain";
+    public static final String CARD_EXAMPLE = "example";
+
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
     public static String encoding = "utf-8";
@@ -156,7 +163,7 @@ public class LazzyBeeShare {
 //            System.out.print("Error 2:" + e.getMessage());
 //        }
 //        return html;
-        return  getAnswerHTMLwithPackage(card,"common",_explain,_example,false);
+        return getAnswerHTMLwithPackage(card, "common", _explain, _example, false);
     }
 
     /**
@@ -244,11 +251,12 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Card card, String packages, String _explain, String _example,boolean onload) {
+    public static String getAnswerHTMLwithPackage(Card card, String packages, String _explain, String _example, boolean onload) {
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
         String example = EMPTY;
+
         String pronoun = EMPTY;
         String explainTagA = EMPTY;
         String exampleTagA = EMPTY;
@@ -261,16 +269,15 @@ public class LazzyBeeShare {
             pronoun = answerObj.getString("pronoun");
             JSONObject packagesObj = answerObj.getJSONObject("packages");
             System.out.print("\npackagesObj.length():" + packagesObj.length());
-            if (packagesObj.length()>0) {
+            if (packagesObj.length() > 0) {
                 System.out.print("\n Ok");
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
-                meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
-                explain = Html.fromHtml(commonObj.getString("explain")).toString();
-                example = Html.fromHtml(commonObj.getString("example")).toString();
-            }
-            else {
-                _example=EMPTY;
-                _explain=EMPTY;
+                meaning = commonObj.getString("meaning");
+                explain = commonObj.getString("explain");
+                example = commonObj.getString("example");
+            } else {
+                _example = EMPTY;
+                _explain = EMPTY;
                 System.out.print("\n not Ok");
             }
 
@@ -281,39 +288,52 @@ public class LazzyBeeShare {
         }
 
         if (!explain.isEmpty()) {
-            explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
+            explainTagA = "<p style='margin-top:2px'><a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a></p>";
         }
         if (!example.isEmpty()) {
-            exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
+            exampleTagA = "<p style='margin-top:2px'><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
         }
         html = "\n<html>\n" +
                 "<head>\n" +
                 "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
                 "name=\"viewport\">\n" +
                 "</head>\n" +
-                "<body "+((onload==true)?"onload='question.playQuestion()'":"")+">\n" +
+                "<body " + ((onload == true) ? "onload='question.playQuestion()'" : "") + ">\n" +
                 "   <div style='width:100%'>\n" +
+
                 "       <div style='float:left;width:90%;text-align: center;'>\n" +
-                "           <strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
+                "           <strong style='font-size:35pt;'>" + card.getQuestion() + "</strong>\n" +
                 "       </div>\n" +
+
                 "       <div style='float:left;width:10%'>\n" +
                 "           <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a>\n" +
                 "       </div>\n" +
+
                 "       <div style='width:90%'>\n" +
-                "           <center><font>" + pronoun + "</font></center>\n" +
-                "           <p style='text-align: center'><em style='color:blue;'>" + meaning + "</em></p>\n" +
+                "           <center><font size='4'>" + pronoun + "</font></center>\n" +
+                "           <center><font size='5' color='blue'><em>" + meaning + "</em></font></center>\n" +
                 "       </div>\n" +
+
                 "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
+
                 "       <div style=\"width:100%\">\n" +
                 "           <div style=\"float:left;width:90%\">" +
-                "               <p><strong>"+_explain+"</strong></br>" + explain + "</p>\n" +
-                "               <p><strong>"+_example+"</strong></br>" + example + "</p>\n" +
+                "              <strong>" + _explain + "</strong>" + explain + "\n" +
                 "           </div>\n" +
-                "           <div style=\"float:right;;width:10%\">\n " +
-                "               <p><strong></strong></br>" + explainTagA + "</p>\n" +
-                "               <p><strong></strong></br>" + exampleTagA + "</p>\n" +
+                "           <div style=\"float:right;width:10%;margin-top:25px\">\n " +
+                "               " + explainTagA + "\n" +
                 "           </div>\n" +
                 "       </div>\n" +
+
+                "       <div style=\"width:100%\">\n" +
+                "           <div style=\"float:left;width:90%\">" +
+                "              <strong>" + _example + "</strong>" + example + "\n" +
+                "           </div>\n" +
+                "           <div style=\"float:right;width:10%;margin-top:25px\">\n " +
+                "               " + exampleTagA + "\n" +
+                "           </div>\n" +
+                "       </div>\n" +
+
                 "   </div>\n";
 
         if (DEBUG) {

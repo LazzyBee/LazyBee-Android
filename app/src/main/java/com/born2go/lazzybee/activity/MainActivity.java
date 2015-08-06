@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -409,12 +411,17 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            //init mSearchView
-//            mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//            mSearchView.setOnQueryTextListener(this);
-//            mSearchView.setQueryHint(getString(R.string.action_search));
+            MenuInflater inflater = getMenuInflater();
+            // Inflate menu to add items to action bar if it is present.
+            inflater.inflate(R.menu.main, menu);
+            // Associate searchable configuration with the SearchView
+            SearchManager searchManager =
+                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView =
+                    (SearchView) menu.findItem(R.id.menu_search).getActionView();
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(getComponentName()));
+
             _restoreActionBar();
             return true;
         }
@@ -443,14 +450,14 @@ public class MainActivity extends ActionBarActivity
                 //Log out Application
                 Toast.makeText(this, getString(R.string.action_logout), Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.action_search:
+            //case R.id.action_search:
                 //Search
-                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
-                _setUpSearchActionBar();
-                _gotoSeach("a");
+//                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
+//                _setUpSearchActionBar();
+//                _gotoSeach("a");
                 //
 //                mSearchView.setIconified(false);
-                break;
+                //break;
         }
 
 

@@ -17,7 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="android.support.v7.widget.RecyclerView"
-        android:id="@+id/mRecyclerViewSearchResults" />
+        android:id="@+id/mRecyclerViewSearchResults"
+        android:visibility="visible" />
 
 
 </LinearLayout>

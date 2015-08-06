@@ -1,18 +1,18 @@
 package com.born2go.lazzybee.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
@@ -28,78 +28,25 @@ import java.util.List;
 public class SearchActivity extends ActionBarActivity implements FragmentSearch.FragmentSearchListener {
 
     private static final String TAG = "SearchActivity";
+    TextView txtSearch;
+    RecyclerView mRecyclerViewSearchResults;
+    TextView lbResultCount;
+    LearnApiImplements dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        //create LayoutInflater
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        //infater custom action bar
-        View mActionBarSearchActivityCustom = inflater.inflate(R.layout.actionbar_seach_activity, null);
-
-        //int txtSearch
-        final TextView txtSearch = (TextView) mActionBarSearchActivityCustom.findViewById(R.id.txtSearch);
-
-        //init fragmentTransaction
-        final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        //init FragmentSearch
-        final FragmentSearch fragmentSearch = new FragmentSearch();
-        txtSearch.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-
-
-        //set and show custom action bar search
-        getSupportActionBar().setCustomView(mActionBarSearchActivityCustom);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         //init DB SQLIte
-        final LearnApiImplements dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
+        dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
 
         //Init RecyclerView and Layout Manager
-        final RecyclerView mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
+        mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
-        final TextView lbResultCount = (TextView) findViewById(R.id.lbResultCount);
-
-
-        //
-
-        txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    //Get queue text value form txtSearch
-                    String query_text = txtSearch.getText().toString();
-                    Log.i(SearchActivity.TAG, "Queue text:" + query_text);
-                    //search data form DB
-                    List<Card> cardList = dataBaseHelper._searchCard(query_text);
-                    int result_count = cardList.size();
-                    Log.i(TAG, "Search result_count:" + result_count);
-
-                    //set count
-                    lbResultCount.setText(result_count + " " + getString(R.string.result));
-
-                    //Check result_count==0 search in server
-                    if (result_count == 0) {
-                        //Search in server
-                    }
-
-                    //Init Adapter
-                    RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
-                    mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
-
-                    return true;
-                }
-                return false;
-            }
-        });
-
-
+        lbResultCount = (TextView) findViewById(R.id.lbResultCount);
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(this, mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
@@ -107,10 +54,11 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
                 String cardID = String.valueOf(lbQuestion.getTag());
-               _gotoCardDetail(cardID);
+                _gotoCardDetail(cardID);
 
             }
         });
+        handleIntent(getIntent());
 
         //Set data and add Touch Listener
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
@@ -123,7 +71,17 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        MenuInflater inflater = getMenuInflater();
+        // Inflate menu to add items to action bar if it is present.
+        inflater.inflate(R.menu.menu_search, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -152,5 +110,35 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
         Intent intent = new Intent(this, CardDetailsActivity.class);
         intent.putExtra(LazzyBeeShare.CARDID, cardId);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search
+            //txtSearch.setText(query);
+            Log.i(TAG, "query:" + query);
+            List<Card> cardList = dataBaseHelper._searchCard(query);
+            int result_count = cardList.size();
+            Log.i(TAG, "Search result_count:" + result_count);
+
+            //set count
+            lbResultCount.setText(result_count + " " + getString(R.string.result));
+
+            //Check result_count==0 search in server
+            if (result_count == 0) {
+                //Search in server
+            }
+
+            //Init Adapter
+            RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
+            mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
+        }
     }
 }
