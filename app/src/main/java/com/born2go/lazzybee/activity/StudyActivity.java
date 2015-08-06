@@ -1,10 +1,13 @@
 package com.born2go.lazzybee.activity;
 
 import android.annotation.TargetApi;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -189,6 +192,12 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_study, menu);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
