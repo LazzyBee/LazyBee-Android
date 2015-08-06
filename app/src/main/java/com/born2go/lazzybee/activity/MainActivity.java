@@ -77,7 +77,8 @@ public class MainActivity extends ActionBarActivity
 
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
-    private Context context=this;
+    private Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -135,7 +136,7 @@ public class MainActivity extends ActionBarActivity
                 // Get the AlertDialog from create()
                 AlertDialog dialog = builder.create();
 
-             dialog.show();
+                dialog.show();
             }
         });
 
@@ -533,27 +534,7 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-//    /**
-//     * Goto Card Details with card id
-//     *
-//     * @param cardId
-//     */
-//    @Override
-//    public void _gotoCardDetail(String cardId) {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentCardDetails
-//        FragmentCardDetails fragmentCardDetails = new FragmentCardDetails();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set QUERY_TEXT
-//        bundle.putString(FragmentCardDetails.CARD_ID, cardId);
-//        //setArguments for fragmentCardDetails
-//        fragmentCardDetails.setArguments(bundle);
-//        //replace from container to fragmentCardDetails
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentCardDetails)
-//                .addToBackStack(FragmentCardDetails.TAG).commit();
-//    }
+
 
 
     /**
