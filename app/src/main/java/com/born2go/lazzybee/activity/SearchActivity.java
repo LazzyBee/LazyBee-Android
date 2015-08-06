@@ -14,24 +14,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewSearchResultListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
-import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
 
-public class SearchActivity extends ActionBarActivity implements FragmentSearch.FragmentSearchListener {
+public class SearchActivity extends ActionBarActivity {
 
     private static final String TAG = "SearchActivity";
     TextView txtSearch;
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
+    SearchView search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
 
         //init DB SQLIte
         dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
+
+        search = (SearchView) findViewById(R.id.search);
 
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
@@ -80,8 +83,38 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                // TODO Auto-generated method stub
+
+                Toast.makeText(getBaseContext(), String.valueOf(hasFocus),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //***setOnQueryTextListener***
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+
+                Toast.makeText(getBaseContext(), query,
+                        Toast.LENGTH_SHORT).show();
+                _search(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
+
+                //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         return true;
     }
 
@@ -105,8 +138,7 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
      *
      * @param cardId
      */
-    @Override
-    public void _gotoCardDetail(String cardId) {
+    private void _gotoCardDetail(String cardId) {
         Intent intent = new Intent(this, CardDetailsActivity.class);
         intent.putExtra(LazzyBeeShare.CARDID, cardId);
         startActivity(intent);
@@ -121,24 +153,27 @@ public class SearchActivity extends ActionBarActivity implements FragmentSearch.
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            //use the query to search
-            //txtSearch.setText(query);
-            Log.i(TAG, "query:" + query);
-            List<Card> cardList = dataBaseHelper._searchCard(query);
-            int result_count = cardList.size();
-            Log.i(TAG, "Search result_count:" + result_count);
-
-            //set count
-            lbResultCount.setText(result_count + " " + getString(R.string.result));
-
-            //Check result_count==0 search in server
-            if (result_count == 0) {
-                //Search in server
-            }
-
-            //Init Adapter
-            RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
-            mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
+            _search(query);
         }
+    }
+
+    private void _search(String query) {
+        //use the query to search
+        Log.i(TAG, "query:" + query);
+        List<Card> cardList = dataBaseHelper._searchCard(query);
+        int result_count = cardList.size();
+        Log.i(TAG, "Search result_count:" + result_count);
+
+        //set count
+        lbResultCount.setText(result_count + " " + getString(R.string.result));
+
+        //Check result_count==0 search in server
+        if (result_count == 0) {
+            //Search in server
+        }
+
+        //Init Adapter
+        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
+        mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
 }
