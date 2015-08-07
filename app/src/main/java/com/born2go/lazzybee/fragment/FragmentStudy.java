@@ -345,7 +345,7 @@ public class FragmentStudy extends Fragment {
                     // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
 
                     //Load Answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(card, getString(R.string.meaning), getString(R.string.explain), getString(R.string.example)));
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(getActivity(),card));
 
 //                    //set current card
 //                    currentCard[0] = card;

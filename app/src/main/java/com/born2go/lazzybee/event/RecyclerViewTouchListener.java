@@ -58,6 +58,13 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
         Log.d(TAG, "onTouchEvent" + e);
     }
 
+
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
     public static interface OnItemClickListener {
         public void onItemClick(View view, int position);
     }

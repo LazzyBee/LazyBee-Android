@@ -1012,4 +1012,17 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "Query String: " + query + " --Result card count:" + cardIds.size());
         return cardIds;
     }
+
+    public void _addCardIdToQueueList(String cardId) {
+        if (_checkListTodayExit() < 0) {
+            _getRandomCard(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY, false);
+        }
+        String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
+        List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
+        //Add cardId
+        cardIDs.add(cardId);
+        //Update queue list
+        _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
+
+    }
 }

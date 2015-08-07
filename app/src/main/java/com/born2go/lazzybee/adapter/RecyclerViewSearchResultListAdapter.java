@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,10 @@ import java.util.List;
  */
 public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<RecyclerViewSearchResultListAdapter.RecyclerViewSearchResultListAdapterViewHolder> {
     private List<Card> vocabularies;
+    private Context context;
 
-    public RecyclerViewSearchResultListAdapter(List<Card> vocabularies) {
+    public RecyclerViewSearchResultListAdapter(Context context, List<Card> vocabularies) {
+        this.context = context;
         this.vocabularies = vocabularies;
     }
 
@@ -36,14 +39,23 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         //
         View view = holder.view;
         TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-        //Set data
-        String cardId = String.valueOf(card.getId());
-        lbQuestion.setTag(cardId);
         TextView lbAnswer = (TextView) view.findViewById(R.id.lbAnswer);
-        String pronoun= LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+        TextView level = (TextView) view.findViewById(R.id.level);
+        TextView learned = (TextView) view.findViewById(R.id.learned);
+
+        String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
 
         lbQuestion.setText(card.getQuestion());
+        lbQuestion.setTag(""+card.getId());
         lbAnswer.setText(pronoun);
+        level.setText("" + card.getLevel());
+        if (card.getQueue() >= Card.QUEUE_LNR1) {
+            learned.setText(context.getResources().getString(R.string.learned));
+        } else if (card.getQueue() == Card.QUEUE_DONE_2) {
+            learned.setText(context.getResources().getString(R.string.done_card));
+        } else if (card.getQueue() == Card.QUEUE_NEW_CRAM0) {
+            learned.setText(context.getResources().getString(R.string.new_card));
+        }
 
     }
 

@@ -38,6 +38,8 @@ import java.util.Locale;
 public class StudyActivity extends ActionBarActivity implements FragmentStudy.FragmentStudyListener {
 
     private static final String TAG = "StudyActivity";
+    private Context context;
+
     FragmentStudy fragmentStudy;
     boolean learn_more;
 
@@ -75,7 +77,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
-
+        context = this;
         _initView();
 
         //db
@@ -210,6 +212,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_detelte) {
+            Log.i(TAG, "_doneCard question:" + currentCard.getQuestion());
             _doneCard();
             return true;
         }
@@ -220,8 +223,11 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     boolean done_card = false;
 
     private void _doneCard() {
-        btnShowAnswer.setVisibility(View.VISIBLE);
-        mLayoutButton.setVisibility(View.GONE);
+        if (btnShowAnswer.getVisibility() == View.GONE) {
+            btnShowAnswer.setVisibility(View.VISIBLE);
+            mLayoutButton.setVisibility(View.GONE);
+        }
+
         done_card = true;
         int currentQueue = currentCard.getQueue();
         Log.i(TAG, "_doneCard currentQueue:" + currentQueue);
@@ -230,31 +236,29 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
             todayList.remove(currentCard);
             int countNew = todayList.size();
             lbCountNew.setText("" + countNew);
-//            _nextAgainCard();
         } else if (currentQueue == Card.QUEUE_LNR1) {
             //reset new card again
             againList.remove(currentCard);
             int countAgain = againList.size();
             lbCountAgain.setText("" + countAgain);
-//            _nextDueCard();
 
         } else if (currentQueue == Card.QUEUE_REV2) {
             //reset new card due
             dueList.remove(currentCard);
             int countDue = dueList.size();
             lbCountDue.setText("" + countDue);
-            _nextNewCard();
         } else {
             todayList.remove(currentCard);
             againList.remove(currentCard);
             dueList.remove(currentCard);
-//            _nextNewCard();
         }
-
+        Log.i(TAG, "_doneCard question:" + currentCard.getQuestion() + ",currentQueue:" + currentCard.getQueue());
         currentCard.setQueue(Card.QUEUE_DONE_2);
-        dataBaseHelper._updateCard(currentCard);
-        _nextAfterDoneCard(currentQueue);
 
+        dataBaseHelper._updateCard(currentCard);
+        currentCard.setQueue(currentQueue);
+        Log.i(TAG, "_doneCard After Update question:" + currentCard.getQuestion() + ",currentQueue:" + currentCard.getQueue());
+        _nextAfterDoneCard(currentQueue);
     }
 
     private void _nextAfterDoneCard(int currentQueue) {
@@ -275,9 +279,10 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 2");
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
-                else if (dueList.size() > 0)
+                else if (dueList.size() > 0) {
                     position_due = dueList.size();
-                currentCard = dueList.get(position_due - 1);
+                    currentCard = dueList.get(position_due - 1);
+                }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
@@ -302,9 +307,10 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 1");
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
-                else if (dueList.size() > 0)
+                else if (dueList.size() > 0) {
                     position_due = dueList.size();
-                currentCard = dueList.get(position_due - 1);
+                    currentCard = dueList.get(position_due - 1);
+                }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
@@ -334,7 +340,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 _completeLean();
             }
         } else if (currentQueue == Card.QUEUE_REV2) {
-            Log.i(TAG, "_nextAfterDoneCard: next card is New Card");
+            Log.i(TAG, "_nextAfterDoneCard: next card is New Card:current queue:" + currentQueue);
             if (todayList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is New Card 1");
                 if (todayList.size() == 1) {
@@ -343,6 +349,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                     position = todayList.size();
                     currentCard = todayList.get(position - 1);
                 }
+                Log.i(TAG, "_nextAfterDoneCard: next card is New Card:current queue load:" + currentQueue);
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
@@ -361,9 +368,10 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
-                else if (dueList.size() > 0)
+                else if (dueList.size() > 0) {
                     position_due = dueList.size();
-                currentCard = dueList.get(position_due - 1);
+                    currentCard = dueList.get(position_due - 1);
+                }
 
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
@@ -388,9 +396,10 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 Log.i(TAG, "_nextAfterDoneCard: 2");
                 if (dueList.size() == 1)
                     currentCard = dueList.get(0);
-                else if (dueList.size() > 0)
+                else if (dueList.size() > 0) {
                     position_due = dueList.size();
-                currentCard = dueList.get(position_due - 1);
+                    currentCard = dueList.get(position_due - 1);
+                }
                 //TODO:Display next card
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
 
@@ -410,6 +419,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 _completeLean();
             }
         }
+        Log.i(TAG, "_nextAfterDoneCard  Affter next currentQueue:" + currentQueue);
     }
 
 
@@ -483,15 +493,18 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 //hide btnShowAnswer and show mLayoutButton
                 btnShowAnswer.setVisibility(View.GONE);
                 mLayoutButton.setVisibility(View.VISIBLE);
+
                 try {
                     //get card
                     Card card = currentCard;
+                    Card card1 = dataBaseHelper._getCardByID("" + card.getId());
+                    Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + card1.getQueue());
                     //Show answer question
                     //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
                     // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
 
                     //Load Answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(card, getString(R.string.meaning), getString(R.string.explain), getString(R.string.example)), 10);
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
 
 //                    //set current card
 //                    currentCard[0] = card;
@@ -566,7 +579,8 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
         mLayoutButton.setVisibility(View.GONE);
 
         int currentQueue = currentCard.getQueue();//Get current Queue
-        Log.i(TAG, "_answerAgainCard:Currrent Card Queue:" + currentQueue);
+        Log.i(TAG, "_answerAgainCard:Currrent Card Queue:"
+                + currentQueue + ",question:" + currentCard.getQuestion());
         //_checkContainsAndRemove(againList);
         if (currentQueue >= Card.QUEUE_NEW_CRAM0) {
             //TODO:Reset count list again,new,due
@@ -605,12 +619,12 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
 
             try {
                 if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-                    Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
+                    Log.i(TAG, "_answerAgainCard:Card.QUEUE_NEW_CRAM0");
                     _nextAgainCard();
 
                 }
                 if (currentQueue == Card.QUEUE_LNR1) {
-                    Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
+                    Log.i(TAG, "_answerAgainCard:Card.QUEUE_LNR1");
                     _nextDueCard();
 
                 }
@@ -623,8 +637,9 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 _completeLean();
             }
         } else {
-            Log.i(TAG, "_answerAgainCard:Queue<Card.QUEUE_NEW_CRAM0");
-            _nextAgainCard();
+            Log.i(TAG, "_answerAgainCard:Queue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
+            //_nextNewCard();
+            // _nextAfterDoneCard(currentQueue);
         }
 
 
@@ -848,38 +863,30 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     private void _nextNewCard() {
         Log.i(TAG, "Curent new card:" + currentCard.toString());
         if (todayList.size() > 0) {
+
             position = todayList.size() - 1;
-            try {
-                //get next card again
-                Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
-                currentCard = todayList.get(position);
+//            try {
+            //get next card again
+            Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
+            currentCard = todayList.get(position);
 
-                //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+            //TODO:Display next card
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
-            } catch (Exception e) {
-                Log.i(TAG, "_nextNewCard:Error:" + e.getMessage());
-                e.printStackTrace();
-                _completeLean();
-            }
+//            } catch (Exception e) {
+//                Log.i(TAG, "_nextNewCard:Error:" + e.getMessage());
+//                e.printStackTrace();
+//                _completeLean();
+//            }
         } else if (againList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Again card");
-            //complete_new_learn = true;
             _nextAgainCard();
-            //_completeLean();
-
         } else if (dueList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Due card");
             _nextDueCard();
-            //_completeLean();
-        } else {
-            if (todayList.size() == 0) {
-                Log.i(TAG, "_nextNewCard:_completeLean");
-                _completeLean();
-            } else {
-                Log.i(TAG, "_nextNewCard:Next card is New card");
-                _nextNewCard();
-            }
+        } else if (todayList.size() == 0) {
+            Log.i(TAG, "_nextNewCard:_completeLean");
+            _completeLean();
         }
     }
 
@@ -888,37 +895,36 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     private void _nextDueCard() {
         Log.i(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
 
-        try {
-            if (dueList.size() > 0) {//Check dueList.size()>0
-                if (flag_due) {
-                    position_due = 0;
-                } else {
-                    position_due++;
-                }
-                Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
-
-                // position_due = (dueList.size() - 1);
-                currentCard = dueList.get(position_due);
-
-                lbCountDue.setBackgroundResource(R.color.teal_200);
-                lbCountAgain.setBackgroundResource(R.color.white);
-                lbCountNew.setBackgroundResource(R.color.white);
-
-                //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
-
-            } else if (againList.size() > 0) {//Check againList.size()>0
-                Log.i(TAG, "_nextDueCard:Next card is again card");
-                _nextAgainCard();
+        if (dueList.size() > 0) {//Check dueList.size()>0
+            if (flag_due) {
+                position_due = 0;
             } else {
-                if (todayList.size() == 0) {
-                    Log.i(TAG, "_nextDueCard:_completeLean");
-                    _completeLean();
-                } else {
-                    Log.i(TAG, "_nextDueCard:Next card is new card");
-                    _nextNewCard();
-                }
+                position_due++;
             }
+            Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
+
+            // position_due = (dueList.size() - 1);
+            currentCard = dueList.get(position_due);
+
+            lbCountDue.setBackgroundResource(R.color.teal_200);
+            lbCountAgain.setBackgroundResource(R.color.white);
+            lbCountNew.setBackgroundResource(R.color.white);
+
+            //TODO:Display next card
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+
+        } else if (todayList.size() > 0) {
+            Log.i(TAG, "_nextDueCard:Next card is new card");
+            _nextNewCard();
+        } else if (againList.size() > 0) {//Check againList.size()>0
+            Log.i(TAG, "_nextDueCard:Next card is again card");
+            _nextAgainCard();
+        } else if (todayList.size() == 0) {
+            Log.i(TAG, "_nextDueCard:_completeLean");
+            _completeLean();
+        }
+        try {
+
         } catch (Exception e) {
             Log.i(TAG, "_nextDueCard:Erorr:" + e.getMessage());
             _completeLean();
@@ -930,7 +936,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
     boolean flag_one = true;
 
     private void _nextAgainCard() {
-        Log.i(TAG, "_nextAgainCard:Current Card:" + currentCard.toString());
+        //Log.i(TAG, "_nextAgainCard:Current Card:" + currentCard.toString());
         if (againList.size() > 0) {//Check againList.size()>0
             try {
                 if (flag_one) {
@@ -953,7 +959,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                         _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
 
                     } else {
-                        Log.i(TAG, "_nextAgainCard:Next card is new card 1");
+                        Log.i(TAG, "_nextAgainCard:Next card is due card 1");
                         _nextDueCard();
                     }
                 } else {
@@ -966,7 +972,7 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                         _nextNewCard();
                     } else {
                         Log.i(TAG, "_nextAgainCard:_completeLean 3:" + againList.size());
-                        //_completeLean();
+                        _completeLean();
                     }
                 }
             } catch (Exception e) {

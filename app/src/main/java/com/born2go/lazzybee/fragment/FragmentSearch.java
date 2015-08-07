@@ -2,6 +2,7 @@ package com.born2go.lazzybee.fragment;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -80,11 +81,11 @@ public class FragmentSearch extends Fragment {
         if (result_count == 0) {
             //Search in server
         }
-
+        Context context = getActivity();
         //Init Adapter
-        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
+        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
 
-         //Init Touch Listener
+        //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(),
                 mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
