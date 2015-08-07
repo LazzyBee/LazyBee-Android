@@ -3,12 +3,15 @@ package com.born2go.lazzybee.activity;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -48,13 +51,18 @@ public class CardDetailsActivity extends ActionBarActivity {
     private Context context;
     TextToSpeech textToSpeech;
 
+    Card card;
+    String cardId;
+
+    LearnApiImplements learnApiImplements;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_details);
         this.context = this;
-        String cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
-        LearnApiImplements learnApiImplements = new LearnApiImplements(getApplicationContext());
+        cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
+        learnApiImplements = new LearnApiImplements(getApplicationContext());
 
         _initTextToSpeech();
 
@@ -69,7 +77,7 @@ public class CardDetailsActivity extends ActionBarActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         //mViewPager.setAdapter(new SamplePagerAdapter());
         Log.i(TAG, "CardId=" + cardId);
-        Card card = learnApiImplements._getCardByID(cardId);
+        card = learnApiImplements._getCardByID(cardId);
         if (card == null) {
             card = new Card();
             card.setQuestion("Hello");
@@ -114,11 +122,40 @@ public class CardDetailsActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add_to_learn) {
+            addCardToLearn();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addCardToLearn() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_message_add_to_learn)
+                .setTitle(R.string.dialog_title_add_to_learn);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // TODO:Update Queue_list in system table
+                learnApiImplements._addCardIdToQueueList(cardId);
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     WebView mWebViewLeadDetails;

@@ -54,6 +54,9 @@
     <string name="learned">Learned</string>
     <string name="done_card">Done</string>
     <string name="new_card">New</string>
+    <string name="action_add_to_learn">Add to learn</string>
+    <string name="dialog_message_add_to_learn">Add to learn</string>
+    <string name="dialog_title_add_to_learn">add to learn</string>
 
 
 </resources>
