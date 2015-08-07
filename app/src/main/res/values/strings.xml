@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LazzyBee</string>
+    <string name="app_name" translatable="false">LazzyBee</string>
 
 
 
@@ -11,7 +11,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="add_course">Add Course</string>
     <string name="action_profile">Profile</string>
     <string name="action_logout">Logout</string>
@@ -22,7 +22,7 @@
     <string name="result">Result</string>
     <string name="title_activity_study">StudyActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_seating" translatable="false">SeatingActivity</string>
     <string name="title_activity_review_card">ReviewCardActivity</string>
@@ -51,6 +51,9 @@
     <string name="dialog_title_learn_more">Lean more</string>
     <string name="ok" >Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="learned">Learned</string>
+    <string name="done_card">Done</string>
+    <string name="new_card">New</string>
 
 
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LazzyBee</string>
     <string name="EASE_AGAIN">Học lại</string>
     <string name="EASE_EASY">Dễ</string>
     <string name="EASE_GOOD">Tốt</string>
@@ -11,8 +10,6 @@
     <string name="action_settings">Cài đặt</string>
     <string name="congratulations">Chúc mừng bạn đã hoàn thành!</string>
     <string name="custom_study">Tùy chọn</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_world">Hello world!</string>
     <string name="hint_search">Tìm kiếm</string>
     <string name="learn_more">Học thêm</string>
     <string name="not_found">Không tìm thấy</string>
@@ -28,8 +25,8 @@
     <string name="show_answer">Hiện đáp án</string>
     <string name="study">Học</string>
     <string name="due_today">Mục tiêu hôm nay:</string>
-    <string name="total_new_learn">Tổng sô thẻ đã học:</string>
-    <string name="total_cards">Tổng sô thẻ:</string>
+    <string name="total_new_learn">Tổng số thẻ đã học:</string>
+    <string name="total_cards">Tổng số thẻ:</string>
     <string name="example">Ví dụ:</string>
     <string name="explain">Giải nghĩa</string>
     <string name="meaning">Nghĩa(Tiếng việt):</string>
@@ -37,4 +34,7 @@
     <string name="cancel">Hủy bỏ</string>
     <string name="ok">Đồng ý</string>
     <string name="dialog_message_learn_more">Bạn có muốn học tiếp không?</string>
+    <string name="learned">Learned</string>
+    <string name="done_card">Đã xóa</string>
+    <string name="new_card">Mới</string>
 </resources>
