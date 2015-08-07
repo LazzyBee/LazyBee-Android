@@ -288,7 +288,7 @@ public class LazzyBeeShare {
         } catch (Exception e) {
             System.out.print("Error 2:" + e.getMessage() + "\n");
             e.printStackTrace();
-            return e.getMessage();
+            //return e.getMessage();
         }
 
         if (!explain.isEmpty()) {
