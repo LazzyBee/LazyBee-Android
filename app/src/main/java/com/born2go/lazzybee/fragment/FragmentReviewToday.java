@@ -2,6 +2,7 @@ package com.born2go.lazzybee.fragment;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,7 +28,7 @@ public class FragmentReviewToday extends Fragment {
 
     public static final String TAG = "FragmentReviewToday";
     public static final String COURSE_ID = "courseId";
-
+    private Context context;
     public FragmentReviewToday() {
         // Required empty public constructor
     }
@@ -44,6 +45,9 @@ public class FragmentReviewToday extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_review_today, container, false);
 
+        //
+        context=getActivity();
+
         //init DB SQLIte
         LearnApiImplements dataBaseHelper = new LearnApiImplements(getActivity().getApplicationContext());
 
@@ -55,7 +59,7 @@ public class FragmentReviewToday extends Fragment {
         final List<Card> vocabularies = dataBaseHelper._getReviewListCard();
 
         //Init Adapter
-        RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(vocabularies);
+        RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(context,vocabularies);
 
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(), mRecyclerViewReviewTodayList, new RecyclerViewTouchListener.OnItemClickListener() {

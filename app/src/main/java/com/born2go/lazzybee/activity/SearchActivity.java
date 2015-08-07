@@ -33,12 +33,13 @@ public class SearchActivity extends ActionBarActivity {
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
     SearchView search;
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        context=this;
         //init DB SQLIte
         dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
 
@@ -173,7 +174,7 @@ public class SearchActivity extends ActionBarActivity {
         }
 
         //Init Adapter
-        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(cardList);
+        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context,cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
 }
