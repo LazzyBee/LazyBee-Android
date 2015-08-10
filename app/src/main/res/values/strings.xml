@@ -61,6 +61,8 @@
     <string name="language">Language</string>
     <string name="add_to" />
     <string name="queue">queue</string>
+    <string name="dialog_message_done_card">Done card</string>
+    <string name="dialog_title_done_card">Done card</string>
 
 
 </resources>

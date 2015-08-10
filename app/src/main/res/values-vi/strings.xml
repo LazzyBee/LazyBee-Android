@@ -34,14 +34,16 @@
     <string name="cancel">Hủy bỏ</string>
     <string name="ok">Đồng ý</string>
     <string name="dialog_message_learn_more">Bạn có muốn học tiếp không?</string>
-    <string name="learned">Learned</string>
+    <string name="learned">Đã học</string>
     <string name="done_card">Đã xóa</string>
     <string name="new_card">Mới</string>
     <string name="action_add_to_learn">Add to learn</string>
-    <string name="dialog_message_add_to_learn">Add to learn</string>
-    <string name="dialog_title_add_to_learn">add to learn</string>
+    <string name="dialog_message_add_to_learn">Thêm vào khóa học</string>
     <string name="notificaion">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
     <string name="add_to" >Thêm vào</string>
     <string name="queue"/>
+    <string name="dialog_message_done_card">Bạn có muốn xóa từ này?</string>
+    <string name="dialog_title_done_card">Xóa từ</string>
+    <string name="dialog_title_add_to_learn">Bạn có muốn thêm từ vào khóa học?</string>
 </resources>
