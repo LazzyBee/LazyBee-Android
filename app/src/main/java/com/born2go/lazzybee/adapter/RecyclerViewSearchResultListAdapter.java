@@ -46,7 +46,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
 
         lbQuestion.setText(card.getQuestion());
-        lbQuestion.setTag(""+card.getId());
+        lbQuestion.setTag(card);
         lbAnswer.setText(pronoun);
         level.setText("" + card.getLevel());
         if (card.getQueue() >= Card.QUEUE_LNR1) {

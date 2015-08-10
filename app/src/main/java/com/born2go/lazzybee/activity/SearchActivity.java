@@ -2,9 +2,12 @@ package com.born2go.lazzybee.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -62,14 +65,20 @@ public class SearchActivity extends ActionBarActivity {
             public void onItemClick(View view, int position) {
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
-                String cardID = String.valueOf(lbQuestion.getTag());
+                Card card = (Card) lbQuestion.getTag();
+                String cardID = "" + card.getId();
                 _gotoCardDetail(cardID);
 
             }
 
             @Override
-            public void onItemLongPress(View childView, int position) {
-                Log.i(TAG,"Long Press");
+            public void onItemLongPress(View view, int position) {
+                Log.i(TAG, "Long Press");
+                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
+                //Cast tag lbQuestion to CardId
+                Card card = (Card) lbQuestion.getTag();
+                String cardID = "" + card.getId();
+                _optionList(card);
             }
         });
         _search(query);
@@ -196,6 +205,35 @@ public class SearchActivity extends ActionBarActivity {
         //Init Adapter
         RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
+    }
+
+    private void _optionList(final Card card) {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_delete_card)};
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                // Do something with the selection
+                String action = LazzyBeeShare.EMPTY;
+                if (items[item] == getString(R.string.action_add_to_learn)) {
+                    dataBaseHelper._addCardIdToQueueList("" + card.getId());
+                    action = getString(R.string.add_to) + " " + card.getQuestion() + " " + getString(R.string.queue);
+                } else if (items[item] == getString(R.string.action_delete_card)) {
+                    card.setQueue(Card.QUEUE_DONE_2);
+                    dataBaseHelper._updateCard(card);
+                    action = getString(R.string.done_card);
+                }
+                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
+                _search(query);
+                dialog.cancel();
+            }
+        });
+
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
 
