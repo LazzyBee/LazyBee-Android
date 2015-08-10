@@ -61,6 +61,11 @@ public class SearchActivity extends ActionBarActivity {
                 _gotoCardDetail(cardID);
 
             }
+
+            @Override
+            public void onItemLongPress(View childView, int position) {
+                Log.i(TAG,"Long Press");
+            }
         });
         handleIntent(getIntent());
 

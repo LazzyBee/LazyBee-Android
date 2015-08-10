@@ -140,6 +140,11 @@ public class NavigationDrawerFragment extends Fragment {
                     selectItem(0);
                 }
             }
+
+            @Override
+            public void onItemLongPress(View childView, int position) {
+
+            }
         });
         mRecyclerViewDrawerList.addOnItemTouchListener(recyclerViewTouchListener);
 

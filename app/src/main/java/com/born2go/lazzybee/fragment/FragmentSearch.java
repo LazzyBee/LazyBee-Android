@@ -97,6 +97,11 @@ public class FragmentSearch extends Fragment {
                 } else
                     Log.i(TAG, "NUll");
             }
+
+            @Override
+            public void onItemLongPress(View childView, int position) {
+
+            }
         });
 
 

@@ -54,6 +54,11 @@ public class FragmentListCourse extends Fragment {
             public void onItemClick(View view, int position) {
                 Toast.makeText(getActivity(), "show comfinm add course", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onItemLongPress(View childView, int position) {
+
+            }
         });
 
         //set up mRecyclerViewListCourse+
