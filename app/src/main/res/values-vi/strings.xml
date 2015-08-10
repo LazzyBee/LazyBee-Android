@@ -42,4 +42,6 @@
     <string name="dialog_title_add_to_learn">add to learn</string>
     <string name="notificaion">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
+    <string name="add_to" >Thêm vào</string>
+    <string name="queue"/>
 </resources>
