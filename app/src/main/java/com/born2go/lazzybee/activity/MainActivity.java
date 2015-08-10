@@ -105,41 +105,7 @@ public class MainActivity extends ActionBarActivity
 
         dataBaseHelper._get100Card();
 
-        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
-                // Chain together various setter methods to set the dialog characteristics
-                builder.setMessage(R.string.dialog_message_learn_more)
-                        .setTitle(R.string.dialog_title_learn_more);
-
-                // Add the buttons
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                        Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
-                        _checkCompleteLearn();
-                        if (btnCustomStudy.getTag() != null) {
-                            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                            intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
-                            startActivityForResult(intent, 1);
-                        }
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dialog.cancel();
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
-            }
-        });
 
     }
 
@@ -613,9 +579,42 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void _btnCustomStudyOnClick(View view) {
+    public void _onbtnCustomStudyOnClick(View view) {
+        _learnMore();
 
+    }
 
+    private void _learnMore() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_message_learn_more)
+                .setTitle(R.string.dialog_title_learn_more);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                _checkCompleteLearn();
+                if (btnCustomStudy.getTag() != null) {
+                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    startActivityForResult(intent, 1);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     public void _onbtnReviewOnClick(View view) {
