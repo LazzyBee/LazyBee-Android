@@ -28,20 +28,25 @@ import java.util.List;
 public class SearchActivity extends ActionBarActivity {
 
     private static final String TAG = "SearchActivity";
+    public static final String QUERY_TEXT = "query";
     TextView txtSearch;
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
     SearchView search;
     private Context context;
+    String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        context=this;
+        context = this;
         //init DB SQLIte
         dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
+
+        query = getIntent().getStringExtra(QUERY_TEXT);
 
         search = (SearchView) findViewById(R.id.search);
 
@@ -67,6 +72,7 @@ public class SearchActivity extends ActionBarActivity {
                 Log.i(TAG,"Long Press");
             }
         });
+        _search(query);
         handleIntent(getIntent());
 
         //Set data and add Touch Listener
@@ -74,6 +80,8 @@ public class SearchActivity extends ActionBarActivity {
 
         mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
 
+        //Show Home as Up
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -135,6 +143,12 @@ public class SearchActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == android.R.id.home) {
+            finish();
+            onBackPressed();
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -147,7 +161,8 @@ public class SearchActivity extends ActionBarActivity {
     private void _gotoCardDetail(String cardId) {
         Intent intent = new Intent(this, CardDetailsActivity.class);
         intent.putExtra(LazzyBeeShare.CARDID, cardId);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivityForResult(intent, RESULT_OK);
     }
 
     @Override
@@ -179,7 +194,9 @@ public class SearchActivity extends ActionBarActivity {
         }
 
         //Init Adapter
-        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context,cardList);
+        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
+
+
 }

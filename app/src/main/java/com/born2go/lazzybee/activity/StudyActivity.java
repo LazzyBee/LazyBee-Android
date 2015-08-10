@@ -3,6 +3,7 @@ package com.born2go.lazzybee.activity;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -19,6 +20,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.algorithms.CardSched;
@@ -198,9 +200,37 @@ public class StudyActivity extends ActionBarActivity implements FragmentStudy.Fr
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setSearchableInfo(
+//                searchManager.getSearchableInfo(getComponentName()));
+        //***setOnQueryTextListener***
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getBaseContext(), query,
+                        Toast.LENGTH_SHORT).show();
+                _search(query);
+                return false;
+            }
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
+
+                //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         return true;
+    }
+
+    private void _search(String query) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(SearchActivity.QUERY_TEXT, query);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivityForResult(intent, 2);
     }
 
     @Override
