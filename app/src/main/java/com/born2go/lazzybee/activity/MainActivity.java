@@ -35,7 +35,6 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
-import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -419,9 +418,29 @@ public class MainActivity extends ActionBarActivity
                     (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             SearchView searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
-            searchView.setSearchableInfo(
-                    searchManager.getSearchableInfo(getComponentName()));
+//            searchView.setSearchableInfo(
+//                    searchManager.getSearchableInfo(getComponentName()));
 
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // TODO Auto-generated method stub
+
+                    Toast.makeText(getBaseContext(), query,
+                            Toast.LENGTH_SHORT).show();
+                    _gotoSeach(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // TODO Auto-generated method stub
+
+                    //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
             _restoreActionBar();
             return true;
         }
@@ -536,7 +555,8 @@ public class MainActivity extends ActionBarActivity
 //                .replace(R.id.container, fragmentSearch)
 //                .addToBackStack(FragmentSearch.TAG).commit();
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(FragmentSearch.QUERY_TEXT, "a");
+        intent.putExtra(SearchActivity.QUERY_TEXT, query);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivityForResult(intent, 2);
     }
 
