@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">LazzyBee</string>
 
 
-
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
@@ -49,7 +48,7 @@
     <string name="meaning">Meaning</string>
     <string name="dialog_message_learn_more">Learn more</string>
     <string name="dialog_title_learn_more">Lean more</string>
-    <string name="ok" >Ok</string>
+    <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="learned">Learned</string>
     <string name="done_card">Done</string>
@@ -68,6 +67,11 @@
     <string name="lang_viet">Vietnamse</string>
     <string name="dialog_message_restart_app">You restart app now</string>
     <string name="dialog_title_restart_app">Restart App</string>
+    <string name="action_login">Login</string>
+
+    <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
+    <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
+    <string name="SERVER_WIDGET_URL" translatable="false"></string>
 
 
 </resources>

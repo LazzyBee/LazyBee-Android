@@ -51,4 +51,5 @@
     <string name="lang_viet">Tiếng việt</string>
     <string name="dialog_message_restart_app">Bạn có muốn thay đồi ngôn ngữ ngay?</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>
+    <string name="action_login">Login</string>
 </resources>

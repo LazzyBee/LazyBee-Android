@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,11 @@ import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
+import com.google.identitytoolkit.GitkitClient;
+import com.google.identitytoolkit.GitkitUser;
+import com.google.identitytoolkit.IdToken;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -47,6 +53,8 @@ public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String TAG = "MainActivity";
+    private static final int REQUEST_PICK_ACCOUNT = 120;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -82,10 +90,13 @@ public class MainActivity extends ActionBarActivity
     private Context context = this;
     SharedPreferences prefs;
 
+    private GitkitClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        _checkLogin();
         //init SharedPreferences
         prefs = getPreferences(MODE_PRIVATE);
         _initSQlIte();
@@ -98,7 +109,6 @@ public class MainActivity extends ActionBarActivity
 
         setContentView(R.layout.activity_main);
         _initToolBar();
-        _checkLogin();
         _intInterfaceView();
         _getCountCard();
         // _checkListTodayExit();
@@ -202,7 +212,27 @@ public class MainActivity extends ActionBarActivity
      * Check login
      */
     private void _checkLogin() {
+        client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
+            @Override
+            public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
+                //authenticate();
+                Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
+            }
 
+            @Override
+            public void onSignInFailed() {
+                Toast.makeText(context, "Sign in failed", Toast.LENGTH_LONG).show();
+            }
+        }).build();
+
+    }
+
+    public void authenticate() {
+        Intent accountChooserIntent =
+                AccountPicker.newChooseAccountIntent(null, null,
+                        new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, "Select an account", null,
+                        null, null);
+        startActivityForResult(accountChooserIntent, REQUEST_PICK_ACCOUNT);
     }
 
     /**
@@ -441,8 +471,12 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 _gotoSetting();
                 break;
-            case R.id.action_profile:
-                _gotoProfile();
+            case R.id.action_login:
+//                if (item.getTitle() == getString(R.string.action_login))
+                _login();
+//                else {
+//                    _gotoProfile();
+//                }
                 break;
             case R.id.action_logout:
                 //Log out Application
@@ -460,6 +494,13 @@ public class MainActivity extends ActionBarActivity
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _login() {
+        //Toast.makeText(context, getString(R.string.action_login), Toast.LENGTH_SHORT).show();
+        client.startSignIn();
+
+
     }
 
     /**
@@ -696,13 +737,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "RequestCode:" + requestCode + ",resultCode:" + resultCode);
-//        if (resultCode == RESULT_OK) {
-//            _checkCompleteLearn();
-//            _getCountCard();
-//        }
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (!client.handleActivityResult(requestCode, resultCode, intent)) {
+            super.onActivityResult(requestCode, resultCode, intent);
+        }
 
     }
 
@@ -712,5 +750,12 @@ public class MainActivity extends ActionBarActivity
         Log.i(TAG, "Resume");
         _checkCompleteLearn();
         _getCountCard();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (!client.handleIntent(intent)) {
+            super.onNewIntent(intent);
+        }
     }
 }

@@ -4,9 +4,9 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_profile"
+        android:id="@+id/action_login"
         android:orderInCategory="100"
-        android:title="@string/action_profile"
+        android:title="@string/action_login"
         app:showAsAction="never"
         />
     <item
