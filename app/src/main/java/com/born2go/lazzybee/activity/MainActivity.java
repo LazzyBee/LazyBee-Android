@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,24 +80,24 @@ public class MainActivity extends ActionBarActivity
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
-        String languageToLoad = "vi"; // your language
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
+        //init SharedPreferences
+        prefs = getPreferences(MODE_PRIVATE);
+        _initSQlIte();
+        String lang = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
+
+        Log.i(TAG, "Lang:" + lang);
+
+        _changeLanguage(lang);
 
 
         setContentView(R.layout.activity_main);
         _initToolBar();
-        _initSQlIte();
         _checkLogin();
         _intInterfaceView();
         _getCountCard();
@@ -106,7 +107,19 @@ public class MainActivity extends ActionBarActivity
         dataBaseHelper._get100Card();
 
 
+    }
 
+    private void _changeLanguage(String lang) {
+        if (lang == null)
+            lang = LazzyBeeShare.LANG_EN;
+        String languageToLoad = lang; // your language
+
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
     }
 
     private void _checkCompleteLearn() {
@@ -436,13 +449,13 @@ public class MainActivity extends ActionBarActivity
                 Toast.makeText(this, getString(R.string.action_logout), Toast.LENGTH_SHORT).show();
                 break;
             //case R.id.action_search:
-                //Search
+            //Search
 //                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
 //                _setUpSearchActionBar();
 //                _gotoSeach("a");
-                //
+            //
 //                mSearchView.setIconified(false);
-                //break;
+            //break;
         }
 
 
@@ -525,9 +538,6 @@ public class MainActivity extends ActionBarActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivityForResult(intent, 2);
     }
-
-
-
 
 
     /**

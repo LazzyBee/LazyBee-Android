@@ -46,4 +46,9 @@
     <string name="dialog_message_done_card">Bạn có muốn xóa từ này?</string>
     <string name="dialog_title_done_card">Xóa từ</string>
     <string name="dialog_title_add_to_learn">Bạn có muốn thêm từ vào khóa học?</string>
+    <string name="change_language">Thay đổi ngôn ngữ</string>
+    <string name="lang_english">Tiếng anh</string>
+    <string name="lang_viet">Tiếng việt</string>
+    <string name="dialog_message_restart_app">Bạn có muốn thay đồi ngôn ngữ ngay?</string>
+    <string name="dialog_title_restart_app">Khởi động lại</string>
 </resources>

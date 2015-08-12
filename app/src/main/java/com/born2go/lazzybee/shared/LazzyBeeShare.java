@@ -35,6 +35,9 @@ public class LazzyBeeShare {
     public static final String CARD_PRONOUN = "pronoun";
     public static final String CARD_EXPLAIN = "explain";
     public static final String CARD_EXAMPLE = "example";
+    public static final String KEY_LANGUAGE = "lang";
+    public static final String LANG_EN = "en";
+    public static final String LANG_VI = "vi";
 
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
     public static String mime = "text/html";
@@ -427,4 +430,7 @@ public class LazzyBeeShare {
         }
 
     }
+
+
+
 }

@@ -63,6 +63,11 @@
     <string name="queue">queue</string>
     <string name="dialog_message_done_card">Done card</string>
     <string name="dialog_title_done_card">Done card</string>
+    <string name="change_language">Change language</string>
+    <string name="lang_english">English</string>
+    <string name="lang_viet">Vietnamse</string>
+    <string name="dialog_message_restart_app">You restart app now</string>
+    <string name="dialog_title_restart_app">Restart App</string>
 
 
 </resources>
