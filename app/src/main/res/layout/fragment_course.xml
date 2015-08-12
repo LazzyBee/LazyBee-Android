@@ -119,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:onClick="_btnCustomStudyOnClick"
+                android:onClick="_onbtnCustomStudyOnClick"
                 android:text="@string/learn_more"
                 android:textColor="@color/teal_500" />
 

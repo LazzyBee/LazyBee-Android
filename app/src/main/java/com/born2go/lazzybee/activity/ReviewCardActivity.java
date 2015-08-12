@@ -44,6 +44,7 @@ public class ReviewCardActivity extends ActionBarActivity implements FragmentRev
     public void gotoCardDetails(String cardId) {
         Intent intent = new Intent(this, CardDetailsActivity.class);
         intent.putExtra(LazzyBeeShare.CARDID,cardId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 }

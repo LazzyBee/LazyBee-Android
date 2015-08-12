@@ -28,15 +28,19 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
                 if (child != null && onItemClickListener != null) {
                     onItemClickListener.onItemClick(child, recyclerView.getChildPosition(child));
                 }
-                Log.d(TAG, "onLongPress" + e);
+
                 return true;
             }
+            @Override
+            public void onLongPress(MotionEvent e) {
+//                    View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                if (child != null && onItemClickListener != null) {
+                    onItemClickListener.onItemLongPress(child, recyclerView.getChildPosition(child));
+                }
+                Log.d(TAG, "onLongPress" + e);
 
-//                @Override
-//                public void onLongPress(MotionEvent e) {
-////                    super.onLongPress(e);
-//
-//                }
+            }
         });
 
     }
@@ -59,7 +63,6 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
     }
 
 
-
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
@@ -67,6 +70,8 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
 
     public static interface OnItemClickListener {
         public void onItemClick(View view, int position);
+
+        public void onItemLongPress(View childView, int position);
     }
 }
 

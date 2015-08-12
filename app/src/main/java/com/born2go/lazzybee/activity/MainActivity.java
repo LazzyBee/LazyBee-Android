@@ -35,7 +35,6 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
-import com.born2go.lazzybee.fragment.FragmentSearch;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -106,41 +105,7 @@ public class MainActivity extends ActionBarActivity
 
         dataBaseHelper._get100Card();
 
-        btnCustomStudy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
-                // Chain together various setter methods to set the dialog characteristics
-                builder.setMessage(R.string.dialog_message_learn_more)
-                        .setTitle(R.string.dialog_title_learn_more);
-
-                // Add the buttons
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                        Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
-                        _checkCompleteLearn();
-                        if (btnCustomStudy.getTag() != null) {
-                            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                            intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
-                            startActivityForResult(intent, 1);
-                        }
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dialog.cancel();
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
-            }
-        });
 
     }
 
@@ -419,9 +384,29 @@ public class MainActivity extends ActionBarActivity
                     (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             SearchView searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
-            searchView.setSearchableInfo(
-                    searchManager.getSearchableInfo(getComponentName()));
+//            searchView.setSearchableInfo(
+//                    searchManager.getSearchableInfo(getComponentName()));
 
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // TODO Auto-generated method stub
+
+                    Toast.makeText(getBaseContext(), query,
+                            Toast.LENGTH_SHORT).show();
+                    _gotoSeach(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // TODO Auto-generated method stub
+
+                    //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
             _restoreActionBar();
             return true;
         }
@@ -536,7 +521,8 @@ public class MainActivity extends ActionBarActivity
 //                .replace(R.id.container, fragmentSearch)
 //                .addToBackStack(FragmentSearch.TAG).commit();
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(FragmentSearch.QUERY_TEXT, "a");
+        intent.putExtra(SearchActivity.QUERY_TEXT, query);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivityForResult(intent, 2);
     }
 
@@ -593,9 +579,42 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void _btnCustomStudyOnClick(View view) {
+    public void _onbtnCustomStudyOnClick(View view) {
+        _learnMore();
 
+    }
 
+    private void _learnMore() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_message_learn_more)
+                .setTitle(R.string.dialog_title_learn_more);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+                _checkCompleteLearn();
+                if (btnCustomStudy.getTag() != null) {
+                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    startActivityForResult(intent, 1);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     public void _onbtnReviewOnClick(View view) {

@@ -71,6 +71,11 @@ public class FragmentReviewToday extends Fragment {
                     fragmentReviewTodayListener.gotoCardDetails(cardId);
                 }
             }
+
+            @Override
+            public void onItemLongPress(View childView, int position) {
+
+            }
         });
 
         //Set data and add Touch Listener

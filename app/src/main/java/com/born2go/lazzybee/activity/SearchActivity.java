@@ -2,9 +2,12 @@ package com.born2go.lazzybee.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -28,20 +31,25 @@ import java.util.List;
 public class SearchActivity extends ActionBarActivity {
 
     private static final String TAG = "SearchActivity";
+    public static final String QUERY_TEXT = "query";
     TextView txtSearch;
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
     SearchView search;
     private Context context;
+    String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        context=this;
+        context = this;
         //init DB SQLIte
         dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
+
+        query = getIntent().getStringExtra(QUERY_TEXT);
 
         search = (SearchView) findViewById(R.id.search);
 
@@ -57,11 +65,23 @@ public class SearchActivity extends ActionBarActivity {
             public void onItemClick(View view, int position) {
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
-                String cardID = String.valueOf(lbQuestion.getTag());
+                Card card = (Card) lbQuestion.getTag();
+                String cardID = "" + card.getId();
                 _gotoCardDetail(cardID);
 
             }
+
+            @Override
+            public void onItemLongPress(View view, int position) {
+                Log.i(TAG, "Long Press");
+                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
+                //Cast tag lbQuestion to CardId
+                Card card = (Card) lbQuestion.getTag();
+                String cardID = "" + card.getId();
+                _optionList(card);
+            }
         });
+        _search(query);
         handleIntent(getIntent());
 
         //Set data and add Touch Listener
@@ -69,6 +89,8 @@ public class SearchActivity extends ActionBarActivity {
 
         mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
 
+        //Show Home as Up
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -130,6 +152,12 @@ public class SearchActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == android.R.id.home) {
+            finish();
+            onBackPressed();
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -142,7 +170,8 @@ public class SearchActivity extends ActionBarActivity {
     private void _gotoCardDetail(String cardId) {
         Intent intent = new Intent(this, CardDetailsActivity.class);
         intent.putExtra(LazzyBeeShare.CARDID, cardId);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivityForResult(intent, RESULT_OK);
     }
 
     @Override
@@ -174,7 +203,38 @@ public class SearchActivity extends ActionBarActivity {
         }
 
         //Init Adapter
-        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context,cardList);
+        RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
+
+    private void _optionList(final Card card) {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_delete_card)};
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                // Do something with the selection
+                String action = LazzyBeeShare.EMPTY;
+                if (items[item] == getString(R.string.action_add_to_learn)) {
+                    dataBaseHelper._addCardIdToQueueList("" + card.getId());
+                    action = getString(R.string.add_to) + " " + card.getQuestion() + " " + getString(R.string.queue);
+                } else if (items[item] == getString(R.string.action_delete_card)) {
+                    card.setQueue(Card.QUEUE_DONE_2);
+                    dataBaseHelper._updateCard(card);
+                    action = getString(R.string.done_card);
+                }
+                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
+                _search(query);
+                dialog.cancel();
+            }
+        });
+
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+
 }
