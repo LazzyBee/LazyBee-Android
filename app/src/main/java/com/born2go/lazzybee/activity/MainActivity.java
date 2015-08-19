@@ -108,17 +108,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         _checkLogin();
-        //init SharedPreferences
-        prefs = getPreferences(MODE_PRIVATE);
         _initSQlIte();
-        String lang = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
-
-        Log.i(TAG, "Lang:" + lang);
-
-        _changeLanguage(lang);
-
-        _checkUpdate();
-
+        _initSettingApplication();
         setContentView(R.layout.activity_main);
         _initToolBar();
         _intInterfaceView();
@@ -131,7 +122,29 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-    private void _changeLanguage(String lang) {
+    private void _initSettingApplication() {
+        _changeLanguage();
+        if (_checkAutoUpdateApplication()) {
+            _checkUpdate();
+        }
+
+
+
+    }
+
+    private boolean _checkAutoUpdateApplication() {
+        String auto = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.AUTO_CHECK_UPDATE);
+        if (auto == null) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    private void _changeLanguage() {
+        String lang = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
+        Log.i(TAG, "Lang:" + lang);
         if (lang == null)
             lang = LazzyBeeShare.LANG_EN;
         String languageToLoad = lang; // your language

@@ -42,6 +42,7 @@ public class LazzyBeeShare {
     public static final java.lang.String DB_UPDATE_NAME = "update.db";
     public static final int NO_DOWNLOAD_UPDATE = 0;
     public static final int DOWNLOAD_UPDATE = 1;
+    public static final String AUTO_CHECK_UPDATE = "auto_check_update";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
 
     public static String mime = "text/html";
