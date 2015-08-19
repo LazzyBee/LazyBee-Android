@@ -1,8 +1,8 @@
 package com.born2go.lazzybee.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,7 +10,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.fragment.FragmentReviewToday;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
-public class ReviewCardActivity extends ActionBarActivity implements FragmentReviewToday.FragmentReviewTodayListener {
+public class ReviewCardActivity extends AppCompatActivity implements FragmentReviewToday.FragmentReviewTodayListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
