@@ -1,6 +1,9 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -118,19 +121,42 @@ public class MainActivity extends ActionBarActivity
         dataBaseHelper._get100Card();
 
 
+
+
+    }
+
+    private void _setUpNotification() {
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+        Notification mNotification = new Notification.Builder(this)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Here's an awesome update for you!")
+                .setSmallIcon(R.drawable.ic_action_back)
+                .setContentIntent(pIntent)
+                .addAction(R.drawable.ic_drawer, "View", pIntent)
+                .addAction(0, "Remind", pIntent)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, mNotification);
     }
 
     private void _initSettingApplication() {
         _changeLanguage();
-        if (_checkAutoUpdateApplication()) {
+        if (_checkSetting(LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING)) {
             _checkUpdate();
+        }
+        if (_checkSetting(LazzyBeeShare.NOTIFICTION_SETTING)) {
+            _setUpNotification();
         }
 
 
     }
 
-    private boolean _checkAutoUpdateApplication() {
-        String auto = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING);
+    private boolean _checkSetting(String key) {
+        String auto = dataBaseHelper._getValueFromSystemByKey(key);
         if (auto == null) {
             return false;
         } else if (auto.equals(LazzyBeeShare.ON)) {

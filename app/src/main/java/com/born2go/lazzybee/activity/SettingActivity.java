@@ -209,7 +209,17 @@ public class SettingActivity extends ActionBarActivity {
 
         dialog.show();
     }
-
+    public void onCardViewNotificationClick(View view){
+        String value;
+        if (!mSwitchNotification.isChecked()) {
+            mSwitchNotification.setChecked(true);
+            value = LazzyBeeShare.ON;
+        } else {
+            mSwitchNotification.setChecked(false);
+            value = LazzyBeeShare.OFF;
+        }
+        dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.NOTIFICTION_SETTING, value);
+    }
     public void onCardViewAutoCheckUpdateClick(View view) {
         String value;
         if (!mSwitchAutoCheckUpdate.isChecked()) {
