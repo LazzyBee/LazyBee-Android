@@ -85,7 +85,6 @@ public class MainActivity extends ActionBarActivity
 
     TextView lbNameCourse;
     TextView lbComplete;
-//    TextView lbSuportCompletedCard;
 
     TextView lbDueToday;
     TextView lbTotalNewCount;
@@ -114,7 +113,6 @@ public class MainActivity extends ActionBarActivity
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
-        // _checkListTodayExit();
         _checkCompleteLearn();
 
         dataBaseHelper._get100Card();
