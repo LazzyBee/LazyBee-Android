@@ -37,7 +37,7 @@
     <string name="learned">Đã học</string>
     <string name="done_card">Đã xóa</string>
     <string name="new_card">Mới</string>
-    <string name="action_add_to_learn">Add to learn</string>
+    <string name="action_add_to_learn">Thêm vào khóa học</string>
     <string name="dialog_message_add_to_learn">Thêm vào khóa học</string>
     <string name="notificaion">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
@@ -51,5 +51,10 @@
     <string name="lang_viet">Tiếng việt</string>
     <string name="dialog_message_restart_app">Bạn có muốn thay đồi ngôn ngữ ngay?</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>
-    <string name="action_login">Login</string>
+    <string name="action_login">Đăng nhập</string>
+    <string name="action_check_update_database">Kiểm tra cập nhật</string>
+    <string name="dialog_update">Cập nhật</string>
+    <string name="dialog_title_update">Cập nhật cơ sở dữ liệu</string>
+    <string name="btn_update">Cập nhật</string>
+    <string name="updated">Đã cập nhật</string>
 </resources>

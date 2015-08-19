@@ -72,6 +72,12 @@
     <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
     <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
     <string name="SERVER_WIDGET_URL" translatable="false"></string>
+    <string name="action_check_update_database">Check Update</string>
+    <string name="dialog_update">Update</string>
+    <string name="dialog_title_update">Update</string>
+    <string name="btn_update">Update</string>
+    <string name="updated">Updated</string>
+    <string name="dowload_file_success" translatable="false">A new file is downloaded successfully</string>
 
 
 </resources>
