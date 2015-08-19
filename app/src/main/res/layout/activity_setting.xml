@@ -17,7 +17,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="1px">
+        android:layout_marginBottom="1px"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,6 +44,70 @@
                 android:layout_alignParentEnd="false"
                 android:layout_alignBaseline="@+id/textView"
                 android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="1px">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/auto_check_update"
+                android:id="@+id/textView1"
+                android:textColor="@color/grey_600" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Switch"
+                android:layout_alignParentEnd="false"
+                android:layout_alignBaseline="@+id/textView1"
+                android:layout_alignParentRight="true"
+                android:id="@+id/mSwitchAutoCheckUpdate" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="1px">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/debug_infor"
+                android:id="@+id/textView2"
+                android:textColor="@color/grey_600" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Switch"
+
+                android:layout_alignParentEnd="false"
+                android:layout_alignBaseline="@+id/textView2"
+                android:layout_alignParentRight="true"
+                android:id="@+id/mSwitchDebugInformation" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
     <android.support.v7.widget.CardView

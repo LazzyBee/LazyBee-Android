@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class LazzyBeeShare {
     public static final int TOTTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
 
-    private static final boolean DEBUG = true;
+    private static boolean DEBUG = true;
 
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
@@ -42,7 +43,11 @@ public class LazzyBeeShare {
     public static final java.lang.String DB_UPDATE_NAME = "update.db";
     public static final int NO_DOWNLOAD_UPDATE = 0;
     public static final int DOWNLOAD_UPDATE = 1;
-    public static final String AUTO_CHECK_UPDATE = "auto_check_update";
+    public static final String AUTO_CHECK_UPDATE_SETTING = "auto_check_update";
+    public static final String DEBUG_INFOR_SETTING = "debug_infor";
+    public static final String ON = "on";
+    public static final String OFF = "off";
+    public static final String NOTIFICTION_SETTING = "notification";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
 
     public static String mime = "text/html";
@@ -266,7 +271,6 @@ public class LazzyBeeShare {
     }
 
 
-
     /*
     * Conver package ,pacakage,...
     * to list String
@@ -288,6 +292,8 @@ public class LazzyBeeShare {
     }
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean onload) {
+        getDebugSetting(context);
+
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -396,6 +402,18 @@ public class LazzyBeeShare {
         //  Log.i(TAG, "Error:" + e.getMessage());
         return html;
 
+    }
+
+    private static void getDebugSetting(Context context) {
+        LearnApiImplements learnApiImplements = new LearnApiImplements(context);
+        String value = learnApiImplements._getValueFromSystemByKey(DEBUG_INFOR_SETTING);
+        if (value == null)
+            DEBUG = false;
+        else if (value.equals(ON)) {
+            DEBUG = true;
+        } else if (value.equals(OFF)) {
+            DEBUG = false;
+        }
     }
 
     //    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {

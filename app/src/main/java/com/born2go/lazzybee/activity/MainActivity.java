@@ -129,17 +129,19 @@ public class MainActivity extends ActionBarActivity
         }
 
 
-
     }
 
     private boolean _checkAutoUpdateApplication() {
-        String auto = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.AUTO_CHECK_UPDATE);
+        String auto = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING);
         if (auto == null) {
             return false;
-        } else {
+        } else if (auto.equals(LazzyBeeShare.ON)) {
             return true;
+        } else if (auto.equals(LazzyBeeShare.OFF)) {
+            return false;
+        } else {
+            return false;
         }
-
     }
 
     private void _changeLanguage() {

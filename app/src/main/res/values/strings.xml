@@ -78,6 +78,8 @@
     <string name="btn_update">Update</string>
     <string name="updated">Updated</string>
     <string name="dowload_file_success" translatable="false">A new file is downloaded successfully</string>
+    <string name="auto_check_update">Auto check update</string>
+    <string name="debug_infor">Debug Information</string>
 
 
 </resources>
