@@ -36,6 +36,9 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_STATUS = "status";
     private static final String KEY_G_ID = "gid";
     private static final String KEY_RELATED = "related";
+    private static final String KEY_LEVEL = "level";
+    private static final String KEY_PACKAGES = "package";
+
     private static final String KEY_TAGS = "tags";
     //Table name
     private static final String TABLE_VOCABULARY = "vocabulary";
@@ -1023,6 +1026,28 @@ public class LearnApiImplements implements LearnApi {
         cardIDs.add(cardId);
         //Update queue list
         _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
+
+    }
+
+    @Override
+    public void _insertOrUpdateCard(Card card) {
+        Log.i(TAG, "q: " + card.getQuestion());
+        String cardId = String.valueOf(card.getId());
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_QUESTION, card.getQuestion());
+        values.put(KEY_ANSWERS, card.getAnswers());
+        values.put(KEY_LEVEL, card.getLevel());
+        values.put(KEY_PACKAGES, card.getPackage());
+
+
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{cardId});
+        // Log.i(TAG, "update_result: " + update_result);
 
     }
 }
