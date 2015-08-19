@@ -149,6 +149,8 @@ public class CardSched {
             * We don't re-count 'due', because app will put it back to learnt queue
             * */
             card.setQueue(Card.QUEUE_LNR1);
+            //Reset last-interval to reduce next review
+            card.setLast_ivl(0);
         }
         else {
             card.setQueue(Card.QUEUE_REV2);
