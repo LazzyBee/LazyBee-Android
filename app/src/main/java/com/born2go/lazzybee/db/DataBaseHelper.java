@@ -5,6 +5,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -26,9 +27,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATA = "data";
     private static final String PACKAGE = "com.born2go.lazzybee";
     private static final String DATABASE = "databases";
-    private static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
+    public static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
 
-    private static String DB_NAME = "english.db";
+    public static String DB_NAME = "english.db";
+    public static String DB_UPDATE_NAME = "update.db";
 
     private SQLiteDatabase myDataBase;
 
@@ -58,8 +60,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         this.myContext = context;
     }
 
-    public static DataBaseHelper getGlobalDB(){
-        if (globalDB==null){//Init DB here
+    public static DataBaseHelper getGlobalDB() {
+        if (globalDB == null) {//Init DB here
             //TODO: Work out
         }
         return globalDB;
@@ -69,12 +71,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * Creates a empty database on the system and rewrites it with your own database.
      */
     public void _createDataBase() throws IOException {
-
-        boolean dbExist = checkDataBase();
+        String myPath = DB_PATH + DB_NAME;
+        boolean dbExist = checkDataBase(myPath);
 
         if (dbExist) {
             //do nothing - database already exist
-            Log.e(TAG, "database already exist");
+            Log.i(TAG, "database already exist");
         } else {
 
             //By calling this method and empty database will be created into the default system path
@@ -84,7 +86,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
             try {
 
-                copyDataBase();
+                copyDataBase(0);
 
             } catch (IOException e) {
                 Log.e(TAG, "Error copying database:" + e.getMessage());
@@ -100,13 +102,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      * @return true if it exists, false if it doesn't
      */
-    private boolean checkDataBase() {
+    public boolean checkDataBase(String myPath) {
 
         SQLiteDatabase checkDB = null;
 
         try {
-            String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            // String myPath = DB_PATH + DB_NAME;
+            checkDB = openDataBase(myPath);
         } catch (SQLiteException e) {
             //database does't exist yet.
             Log.e(TAG, "database does't exist yet:" + e.getMessage());
@@ -114,6 +116,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (checkDB != null) {
             checkDB.close();
         }
+
+
         return checkDB != null ? true : false;
     }
 
@@ -122,19 +126,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * system folder, from where it can be accessed and handled.
      * This is done by transfering bytestream.
      */
-    private void copyDataBase() throws IOException {
+    public void copyDataBase(int type) throws IOException {
 
         //Open your local db as the input stream
         //InputStream myInput = myContext.getAssets().open("/" + SDCARD + "/" + DOWNLOAD + "/" + DB_NAME);
-//        File sdCard_dir = Environment.getExternalStorageDirectory();
-//        File dlDir = new File(sdCard_dir.getAbsolutePath() + "/" + DOWNLOAD);
-//        dlDir.mkdirs();
-//        File source = new File(dlDir, DB_NAME);
-//        InputStream myInput = new FileInputStream(source);
-//        Open your local db as the input stream
-        InputStream myInput = myContext.getAssets().open(DB_NAME);
 
-        // Path to the just created empty db
+//        Open your local db as the input stream
+        InputStream myInput;
+        if (type == 0) {
+            myInput = myContext.getAssets().open(DB_NAME);
+        } else {
+            File sdCard_dir = Environment.getExternalStorageDirectory();
+            File dlDir = new File(sdCard_dir.getAbsolutePath() + "/" + DOWNLOAD);
+            dlDir.mkdirs();
+            File source = new File(dlDir, DB_UPDATE_NAME);
+            myInput = new FileInputStream(source);
+        }
+
+//        // Path to the just created empty db
         String outFileName = DB_PATH + DB_NAME;
 
         //Open the empty db as the output stream
@@ -238,11 +247,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return true; // Rsultat OK
     }
 
-    public void openDataBase() throws SQLException {
-
+    public SQLiteDatabase openDataBase(String myPath) throws SQLException {
         //Open the database
-        String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
 
     }
 
@@ -365,4 +372,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        }
 //        return card;
 //    }
+    void _upgrageDatabase() {
+        SQLiteDatabase checkInDowload = null;
+        try {
+            checkInDowload = SQLiteDatabase.openDatabase("/sdcard/Download/english.db", null, SQLiteDatabase.OPEN_READONLY);
+            Log.e(TAG, "OK");
+        } catch (SQLiteException e) {
+            //database does't exist yet.
+            Log.e(TAG, "database in Download does't exist yet:" + e.getMessage());
+        }
+        if (checkInDowload != null) {
+            checkInDowload.close();
+        }
+    }
 }

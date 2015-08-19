@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,7 +35,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
+import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
@@ -45,7 +49,14 @@ import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -66,7 +77,7 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     DataBaseHelper myDbHelper;
-
+    DatabaseUpgrade databaseUpgrade;
     SearchView mSearchView;
     DrawerLayout drawerLayout;
 
@@ -106,6 +117,7 @@ public class MainActivity extends ActionBarActivity
 
         _changeLanguage(lang);
 
+        _checkUpdate();
 
         setContentView(R.layout.activity_main);
         _initToolBar();
@@ -239,18 +251,17 @@ public class MainActivity extends ActionBarActivity
      * Init Sql
      */
     private void _initSQlIte() {
-        myDbHelper = new DataBaseHelper(this);
+        myDbHelper = new DataBaseHelper(context);
+        databaseUpgrade = new DatabaseUpgrade(context);
         try {
-
             myDbHelper._createDataBase();
-
         } catch (IOException ioe) {
             //throw new Error("Unable to create database");
             //ioe.printStackTrace();
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
 
         }
-        dataBaseHelper = new LearnApiImplements(this);
+        dataBaseHelper = new LearnApiImplements(context);
     }
 
     boolean first = true;
@@ -482,6 +493,11 @@ public class MainActivity extends ActionBarActivity
                 //Log out Application
                 Toast.makeText(this, getString(R.string.action_logout), Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.action_check_update_database:
+                //Check update app
+                _checkUpdate();
+
+                break;
             //case R.id.action_search:
             //Search
 //                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
@@ -494,6 +510,115 @@ public class MainActivity extends ActionBarActivity
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _checkUpdate() {
+        //Check vesion form server
+        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        int update_local_version = databaseUpgrade._getVersionDB();
+        int _clientVesion;
+        if (db_v == null) {
+            _clientVesion = 0;
+        } else {
+            _clientVesion = Integer.valueOf(db_v);
+        }
+
+        if (_clientVesion == 0) {
+            if (update_local_version == -1) {
+                Log.i(TAG, "_checkUpdate():update_local_version == -1");
+                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+            }
+        } else {
+            if (update_local_version > _clientVesion) {
+                Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
+                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+            } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
+                Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
+                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+            } else {
+                Log.i(TAG, "_checkUpdate():" + R.string.updated);
+                Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+
+    }
+
+    private void _showComfirmUpdateDatabase(final int type) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_update)
+                .setTitle(R.string.dialog_title_update);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked Update button
+                //1.Download file from server
+                //2.Open database
+                //3.Upgade to my database
+                //4.Remove file update
+                if (type == LazzyBeeShare.DOWNLOAD_UPDATE) {
+                    _downloadFile();
+                } else {
+                    _updateDB(type);
+                }
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
+
+    private void _updateDB(int type) {
+        try {
+
+            databaseUpgrade.copyDataBase(type);
+            List<Card> cards = databaseUpgrade._getAllCard();
+            for (Card card : cards) {
+                dataBaseHelper._insertOrUpdateCard(card);
+            }
+            dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(databaseUpgrade._getVersionDB()));
+            databaseUpgrade.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Update DB Error:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void _downloadFile() {
+
+
+        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
+        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+    }
+
+    private boolean _compareToVersion(int clientVesion) {
+        if (clientVesion == 0) {
+            return true;
+        } else {
+            int update_local_version = databaseUpgrade._getVersionDB();
+            if (update_local_version > clientVesion)
+                return true;
+            else if (LazzyBeeShare.VERSION_SERVER > clientVesion)
+                return true;
+            else
+                return false;
+        }
+
     }
 
     private void _login() {
@@ -632,7 +757,6 @@ public class MainActivity extends ActionBarActivity
 
     public void _onbtnCustomStudyOnClick(View view) {
         _learnMore();
-
     }
 
     private void _learnMore() {
@@ -756,6 +880,48 @@ public class MainActivity extends ActionBarActivity
     protected void onNewIntent(Intent intent) {
         if (!client.handleIntent(intent)) {
             super.onNewIntent(intent);
+        }
+    }
+
+    class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
+        Context context;
+
+        public DownloadFileUpdateDatabaseTask(Context context) {
+            this.context = context;
+
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+
+                URL u = new URL(params[0]);
+
+                File sdCard_dir = Environment.getExternalStorageDirectory();
+                File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
+                //dlDir.mkdirs();
+                InputStream is = u.openStream();
+
+                DataInputStream dis = new DataInputStream(is);
+
+                byte[] buffer = new byte[1024];
+                int length;
+
+                FileOutputStream fos = new FileOutputStream(file);
+                while ((length = dis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+                fos.close();
+                Log.e("Download file update:", "Complete");
+                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+            } catch (MalformedURLException mue) {
+                Log.e("SYNC getUpdate", "malformed url error", mue);
+            } catch (IOException ioe) {
+                Log.e("SYNC getUpdate", "io error", ioe);
+            } catch (SecurityException se) {
+                Log.e("SYNC getUpdate", "security error", se);
+            }
+            return null;
         }
     }
 }

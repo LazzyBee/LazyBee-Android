@@ -38,16 +38,44 @@ public class LazzyBeeShare {
     public static final String KEY_LANGUAGE = "lang";
     public static final String LANG_EN = "en";
     public static final String LANG_VI = "vi";
-
+    public static final String DB_VERSION = "db_v";
+    public static final java.lang.String DB_UPDATE_NAME = "update.db";
+    public static final int NO_DOWNLOAD_UPDATE = 0;
+    public static final int DOWNLOAD_UPDATE = 1;
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
+
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
     public static final int MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_LEARN_MORE_PER_DAY = 5;
+    public static final String DOWNLOAD = "Download";
+    public static int CARD_INDEX_ID = 0;
 
-
+    public static int CARD_INDEX_QUESTION = 1;
+    public static int CARD_INDEX_ANSWER = 2;
+    public static int CARD_INDEX_CATRGORIES = 3;
+    public static int CARD_INDEX_SUBCAT = 4;
+    public static int CARD_INDEX_TAGS = 5;
+    public static int CARD_INDEX_RELATED = 6;
+    public static int CARD_INDEX_GID = 7;
+    public static int CARD_INDEX_STATUS = 8;
+    public static int CARD_INDEX_QUEUE = 9;
+    public static int CARD_INDEX_PACKAGE = 10;
+    public static int CARD_INDEX_LEVEL = 11;
+    public static int CARD_INDEX_DUE = 12;
+    public static int CARD_INDEX_REV_COUNT = 13;
+    public static int CARD_INDEX_USER_NOTE = 14;
+    public static int CARD_INDEX_LAST_IVL = 15;
+    public static int CARD_INDEX_E_FACTOR = 16;
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
+
+
+    public static int VERSION_SERVER = 1;
+
+    //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFR0hIU3FCU0xuU28
+    //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E
+    public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E";
 
     /**
      * Init data demo List Course
@@ -210,8 +238,8 @@ public class LazzyBeeShare {
         return html;
     }
 
-
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
 
     public static boolean compareDate(Date date1, Date date2) {
         return fmt.format(date1).equals(fmt.format(date2));
@@ -235,6 +263,8 @@ public class LazzyBeeShare {
 
         return value;
     }
+
+
 
     /*
     * Conver package ,pacakage,...
@@ -271,7 +301,7 @@ public class LazzyBeeShare {
         Object _explain = context.getResources().getString(R.string.explain);
 
         //Log.i(TAG, "getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers());
-       // System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
+        // System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
         try {
             JSONObject answerObj = new JSONObject(card.getAnswers());
             pronoun = answerObj.getString("pronoun");
@@ -430,7 +460,6 @@ public class LazzyBeeShare {
         }
 
     }
-
 
 
 }
