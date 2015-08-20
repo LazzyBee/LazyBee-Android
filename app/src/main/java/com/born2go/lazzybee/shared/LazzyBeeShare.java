@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,25 +27,65 @@ public class LazzyBeeShare {
     public static final String LEARN_MORE = "LEARN_MORE";
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
-    public static final int TOTTAL_LEAN_PER_DAY = 20;
+    public static final int TOTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
+    public static final String SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
+    public static final String SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
+    public static final String SETTING_TOTAL_CARD_LEARN_PRE_DAY = "total_card_learn_pre_day";
 
-    private static final boolean DEBUG = true;
+    private static boolean DEBUG = true;
 
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
     public static final String CARD_EXPLAIN = "explain";
     public static final String CARD_EXAMPLE = "example";
-
+    public static final String KEY_LANGUAGE = "lang";
+    public static final String LANG_EN = "en";
+    public static final String LANG_VI = "vi";
+    public static final String DB_VERSION = "db_v";
+    public static final java.lang.String DB_UPDATE_NAME = "update.db";
+    public static final int NO_DOWNLOAD_UPDATE = 0;
+    public static final int DOWNLOAD_UPDATE = 1;
+    public static final String AUTO_CHECK_UPDATE_SETTING = "auto_check_update";
+    public static final String DEBUG_INFOR_SETTING = "debug_infor";
+    public static final String ON = "on";
+    public static final String OFF = "off";
+    public static final String NOTIFICTION_SETTING = "notification";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
+
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
     public static final int MAX_NEW_LEARN_PER_DAY = 10;
+    public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
     public static final int MAX_LEARN_MORE_PER_DAY = 5;
+    public static final String DOWNLOAD = "Download";
+    public static int CARD_INDEX_ID = 0;
 
-
+    public static int CARD_INDEX_QUESTION = 1;
+    public static int CARD_INDEX_ANSWER = 2;
+    public static int CARD_INDEX_CATRGORIES = 3;
+    public static int CARD_INDEX_SUBCAT = 4;
+    public static int CARD_INDEX_TAGS = 5;
+    public static int CARD_INDEX_RELATED = 6;
+    public static int CARD_INDEX_GID = 7;
+    public static int CARD_INDEX_STATUS = 8;
+    public static int CARD_INDEX_QUEUE = 9;
+    public static int CARD_INDEX_PACKAGE = 10;
+    public static int CARD_INDEX_LEVEL = 11;
+    public static int CARD_INDEX_DUE = 12;
+    public static int CARD_INDEX_REV_COUNT = 13;
+    public static int CARD_INDEX_USER_NOTE = 14;
+    public static int CARD_INDEX_LAST_IVL = 15;
+    public static int CARD_INDEX_E_FACTOR = 16;
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
+
+
+    public static int VERSION_SERVER = 1;
+
+    //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFR0hIU3FCU0xuU28
+    //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E
+    public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E";
 
     /**
      * Init data demo List Course
@@ -207,8 +248,8 @@ public class LazzyBeeShare {
         return html;
     }
 
-
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
 
     public static boolean compareDate(Date date1, Date date2) {
         return fmt.format(date1).equals(fmt.format(date2));
@@ -233,6 +274,7 @@ public class LazzyBeeShare {
         return value;
     }
 
+
     /*
     * Conver package ,pacakage,...
     * to list String
@@ -254,6 +296,8 @@ public class LazzyBeeShare {
     }
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean onload) {
+        getDebugSetting(context);
+
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -268,7 +312,7 @@ public class LazzyBeeShare {
         Object _explain = context.getResources().getString(R.string.explain);
 
         //Log.i(TAG, "getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers());
-       // System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
+        // System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
         try {
             JSONObject answerObj = new JSONObject(card.getAnswers());
             pronoun = answerObj.getString("pronoun");
@@ -364,6 +408,18 @@ public class LazzyBeeShare {
 
     }
 
+    private static void getDebugSetting(Context context) {
+        LearnApiImplements learnApiImplements = new LearnApiImplements(context);
+        String value = learnApiImplements._getValueFromSystemByKey(DEBUG_INFOR_SETTING);
+        if (value == null)
+            DEBUG = false;
+        else if (value.equals(ON)) {
+            DEBUG = true;
+        } else if (value.equals(OFF)) {
+            DEBUG = false;
+        }
+    }
+
     //    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
 //        String value = "";
 //        Date date = new Date();
@@ -427,4 +483,6 @@ public class LazzyBeeShare {
         }
 
     }
+
+
 }

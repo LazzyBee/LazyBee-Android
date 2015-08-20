@@ -4,15 +4,20 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_profile"
+        android:id="@+id/action_login"
         android:orderInCategory="100"
-        android:title="@string/action_profile"
+        android:title="@string/action_login"
         app:showAsAction="never"
         />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_check_update_database"
+        android:orderInCategory="100"
+        android:title="@string/action_check_update_database"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_logout"

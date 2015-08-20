@@ -145,4 +145,7 @@ public interface LearnApi {
 
     int _get100Card();
 
+
+    void _insertOrUpdateCard(Card card);
+
 }

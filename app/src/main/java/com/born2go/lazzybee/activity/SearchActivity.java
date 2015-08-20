@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +28,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
 
-public class SearchActivity extends ActionBarActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query";
@@ -210,26 +210,81 @@ public class SearchActivity extends ActionBarActivity {
     private void _optionList(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-
+        builder.setTitle(card.getQuestion());
         final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_delete_card)};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
                 String action = LazzyBeeShare.EMPTY;
                 if (items[item] == getString(R.string.action_add_to_learn)) {
-                    dataBaseHelper._addCardIdToQueueList("" + card.getId());
-                    action = getString(R.string.add_to) + " " + card.getQuestion() + " " + getString(R.string.queue);
+                    _addCardToQueue(card);
                 } else if (items[item] == getString(R.string.action_delete_card)) {
-                    card.setQueue(Card.QUEUE_DONE_2);
-                    dataBaseHelper._updateCard(card);
-                    action = getString(R.string.done_card);
+                    _doneCard(card);
                 }
-                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
                 _search(query);
                 dialog.cancel();
             }
         });
 
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void _doneCard(final Card card) {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_message_done_card)
+                .setTitle(R.string.dialog_title_done_card);
+
+        // Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // TODO:Update Queue_list in system table
+                card.setQueue(Card.QUEUE_DONE_2);
+                dataBaseHelper._updateCard(card);
+                String action = getString(R.string.done_card);
+                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void _addCardToQueue(final Card card) {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_message_add_to_learn)
+                .setTitle(R.string.dialog_title_add_to_learn);
+
+        // Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // TODO:Update Queue_list in system table
+                dataBaseHelper._addCardIdToQueueList("" + card.getId());
+                String action = getString(R.string.add_to) + " " + card.getQuestion() + " " + getString(R.string.queue);
+                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
+            }
+        });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
 

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class StudyActivity extends ActionBarActivity implements FragmentStudy.FragmentStudyListener {
+public class StudyActivity extends AppCompatActivity implements FragmentStudy.FragmentStudyListener {
 
     private static final String TAG = "StudyActivity";
     private Context context;

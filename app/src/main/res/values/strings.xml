@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">LazzyBee</string>
 
 
-
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
@@ -49,7 +48,7 @@
     <string name="meaning">Meaning</string>
     <string name="dialog_message_learn_more">Learn more</string>
     <string name="dialog_title_learn_more">Lean more</string>
-    <string name="ok" >Ok</string>
+    <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="learned">Learned</string>
     <string name="done_card">Done</string>
@@ -61,6 +60,33 @@
     <string name="language">Language</string>
     <string name="add_to" />
     <string name="queue">queue</string>
+    <string name="dialog_message_done_card">Done card</string>
+    <string name="dialog_title_done_card">Done card</string>
+    <string name="change_language">Change language</string>
+    <string name="lang_english">English</string>
+    <string name="lang_viet">Vietnamse</string>
+    <string name="dialog_message_restart_app">You restart app now</string>
+    <string name="dialog_title_restart_app">Restart App</string>
+    <string name="action_login">Login</string>
 
+    <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
+    <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
+    <string name="SERVER_WIDGET_URL" translatable="false">https://lazeebee-977.appspot.com/oauth2callback</string>
+    <string name="action_check_update_database">Check Update</string>
+    <string name="dialog_update">Update</string>
+    <string name="dialog_title_update">Update</string>
+    <string name="btn_update">Update</string>
+    <string name="updated">Updated</string>
+    <string name="dowload_file_success" translatable="false">A new file is downloaded successfully</string>
+    <string name="auto_check_update">Auto check update</string>
+    <string name="debug_infor">Debug Information</string>
+    <string name="fb_app_id">1615269568686595</string>
+    <string name="setting_learn">Learn</string>
+    <string name="setting_today_new_card_limit">Today\'s new card limit</string>
+    <string name="setting_today_review_card_limit">Today\'s review card limit</string>
+    <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
+    <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
+    <string name="total_learn_per_day">Total learn per day</string>
+    <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
 
 </resources>

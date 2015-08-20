@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
@@ -22,7 +22,7 @@ import com.born2go.lazzybee.fragment.SlidingTabsBasicFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 
-public class CardDetailsActivity extends ActionBarActivity {
+public class CardDetailsActivity extends AppCompatActivity {
 
 
     private static final String TAG = "CardDetailsActivity";

@@ -1,19 +1,26 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
@@ -31,21 +38,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
+import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
+import com.google.identitytoolkit.GitkitClient;
+import com.google.identitytoolkit.GitkitUser;
+import com.google.identitytoolkit.IdToken;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String TAG = "MainActivity";
+    private static final int REQUEST_PICK_ACCOUNT = 120;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -57,7 +80,7 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     DataBaseHelper myDbHelper;
-
+    DatabaseUpgrade databaseUpgrade;
     SearchView mSearchView;
     DrawerLayout drawerLayout;
 
@@ -65,7 +88,6 @@ public class MainActivity extends ActionBarActivity
 
     TextView lbNameCourse;
     TextView lbComplete;
-//    TextView lbSuportCompletedCard;
 
     TextView lbDueToday;
     TextView lbTotalNewCount;
@@ -79,34 +101,86 @@ public class MainActivity extends ActionBarActivity
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
+    SharedPreferences prefs;
+
+    private GitkitClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
-        String languageToLoad = "vi"; // your language
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        _checkLogin();
+        _initSQlIte();
+        _initSettingApplication();
         setContentView(R.layout.activity_main);
         _initToolBar();
-        _initSQlIte();
-        _checkLogin();
         _intInterfaceView();
         _getCountCard();
-        // _checkListTodayExit();
         _checkCompleteLearn();
 
         dataBaseHelper._get100Card();
 
 
 
+
+    }
+
+    private void _setUpNotification() {
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+        Notification mNotification = new Notification.Builder(this)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Here's an awesome update for you!")
+                .setSmallIcon(R.drawable.ic_action_back)
+                .setContentIntent(pIntent)
+                .addAction(R.drawable.ic_drawer, "View", pIntent)
+                .addAction(0, "Remind", pIntent)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, mNotification);
+    }
+
+    private void _initSettingApplication() {
+        _changeLanguage();
+        if (_checkSetting(LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING)) {
+            _checkUpdate();
+        }
+        if (_checkSetting(LazzyBeeShare.NOTIFICTION_SETTING)) {
+            _setUpNotification();
+        }
+
+
+    }
+
+    private boolean _checkSetting(String key) {
+        String auto = dataBaseHelper._getValueFromSystemByKey(key);
+        if (auto == null) {
+            return false;
+        } else if (auto.equals(LazzyBeeShare.ON)) {
+            return true;
+        } else if (auto.equals(LazzyBeeShare.OFF)) {
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private void _changeLanguage() {
+        String lang = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
+        Log.i(TAG, "Lang:" + lang);
+        if (lang == null)
+            lang = LazzyBeeShare.LANG_EN;
+        String languageToLoad = lang; // your language
+
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
     }
 
     private void _checkCompleteLearn() {
@@ -189,25 +263,44 @@ public class MainActivity extends ActionBarActivity
      * Check login
      */
     private void _checkLogin() {
+        client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
+            @Override
+            public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
+                //authenticate();
+                Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
+            }
 
+            @Override
+            public void onSignInFailed() {
+                Toast.makeText(context, "Sign in failed", Toast.LENGTH_LONG).show();
+            }
+        }).build();
+
+    }
+
+    public void authenticate() {
+        Intent accountChooserIntent =
+                AccountPicker.newChooseAccountIntent(null, null,
+                        new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, "Select an account", null,
+                        null, null);
+        startActivityForResult(accountChooserIntent, REQUEST_PICK_ACCOUNT);
     }
 
     /**
      * Init Sql
      */
     private void _initSQlIte() {
-        myDbHelper = new DataBaseHelper(this);
+        myDbHelper = new DataBaseHelper(context);
+        databaseUpgrade = new DatabaseUpgrade(context);
         try {
-
             myDbHelper._createDataBase();
-
         } catch (IOException ioe) {
             //throw new Error("Unable to create database");
             //ioe.printStackTrace();
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
 
         }
-        dataBaseHelper = new LearnApiImplements(this);
+        dataBaseHelper = new LearnApiImplements(context);
     }
 
     boolean first = true;
@@ -428,25 +521,150 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 _gotoSetting();
                 break;
-            case R.id.action_profile:
-                _gotoProfile();
+            case R.id.action_login:
+//                if (item.getTitle() == getString(R.string.action_login))
+                _login();
+//                else {
+//                    _gotoProfile();
+//                }
                 break;
             case R.id.action_logout:
                 //Log out Application
                 Toast.makeText(this, getString(R.string.action_logout), Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.action_check_update_database:
+                //Check update app
+                _checkUpdate();
+
+                break;
             //case R.id.action_search:
-                //Search
+            //Search
 //                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
 //                _setUpSearchActionBar();
 //                _gotoSeach("a");
-                //
+            //
 //                mSearchView.setIconified(false);
-                //break;
+            //break;
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _checkUpdate() {
+        //Check vesion form server
+        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        int update_local_version = databaseUpgrade._getVersionDB();
+        int _clientVesion;
+        if (db_v == null) {
+            _clientVesion = 0;
+        } else {
+            _clientVesion = Integer.valueOf(db_v);
+        }
+
+        if (_clientVesion == 0) {
+            if (update_local_version == -1) {
+                Log.i(TAG, "_checkUpdate():update_local_version == -1");
+                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+            }
+        } else {
+            if (update_local_version > _clientVesion) {
+                Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
+                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+            } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
+                Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
+                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+            } else {
+                Log.i(TAG, "_checkUpdate():" + R.string.updated);
+                Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+
+    }
+
+    private void _showComfirmUpdateDatabase(final int type) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_update)
+                .setTitle(R.string.dialog_title_update);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked Update button
+                //1.Download file from server
+                //2.Open database
+                //3.Upgade to my database
+                //4.Remove file update
+                if (type == LazzyBeeShare.DOWNLOAD_UPDATE) {
+                    _downloadFile();
+                } else {
+                    _updateDB(type);
+                }
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
+
+    private void _updateDB(int type) {
+        try {
+
+            databaseUpgrade.copyDataBase(type);
+            List<Card> cards = databaseUpgrade._getAllCard();
+            for (Card card : cards) {
+                dataBaseHelper._insertOrUpdateCard(card);
+            }
+            dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(databaseUpgrade._getVersionDB()));
+            databaseUpgrade.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Update DB Error:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void _downloadFile() {
+
+
+        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
+        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+    }
+
+    private boolean _compareToVersion(int clientVesion) {
+        if (clientVesion == 0) {
+            return true;
+        } else {
+            int update_local_version = databaseUpgrade._getVersionDB();
+            if (update_local_version > clientVesion)
+                return true;
+            else if (LazzyBeeShare.VERSION_SERVER > clientVesion)
+                return true;
+            else
+                return false;
+        }
+
+    }
+
+    private void _login() {
+        //Toast.makeText(context, getString(R.string.action_login), Toast.LENGTH_SHORT).show();
+        client.startSignIn();
+
+
     }
 
     /**
@@ -527,9 +745,6 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-
-
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -581,7 +796,6 @@ public class MainActivity extends ActionBarActivity
 
     public void _onbtnCustomStudyOnClick(View view) {
         _learnMore();
-
     }
 
     private void _learnMore() {
@@ -686,13 +900,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "RequestCode:" + requestCode + ",resultCode:" + resultCode);
-//        if (resultCode == RESULT_OK) {
-//            _checkCompleteLearn();
-//            _getCountCard();
-//        }
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (!client.handleActivityResult(requestCode, resultCode, intent)) {
+            super.onActivityResult(requestCode, resultCode, intent);
+        }
 
     }
 
@@ -702,5 +913,54 @@ public class MainActivity extends ActionBarActivity
         Log.i(TAG, "Resume");
         _checkCompleteLearn();
         _getCountCard();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (!client.handleIntent(intent)) {
+            super.onNewIntent(intent);
+        }
+    }
+
+    class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
+        Context context;
+
+        public DownloadFileUpdateDatabaseTask(Context context) {
+            this.context = context;
+
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+
+                URL u = new URL(params[0]);
+
+                File sdCard_dir = Environment.getExternalStorageDirectory();
+                File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
+                //dlDir.mkdirs();
+                InputStream is = u.openStream();
+
+                DataInputStream dis = new DataInputStream(is);
+
+                byte[] buffer = new byte[1024];
+                int length;
+
+                FileOutputStream fos = new FileOutputStream(file);
+                while ((length = dis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+                fos.close();
+                Log.e("Download file update:", "Complete");
+                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+            } catch (MalformedURLException mue) {
+                Log.e("SYNC getUpdate", "malformed url error", mue);
+            } catch (IOException ioe) {
+                Log.e("SYNC getUpdate", "io error", ioe);
+            } catch (SecurityException se) {
+                Log.e("SYNC getUpdate", "security error", se);
+            }
+            return null;
+        }
     }
 }

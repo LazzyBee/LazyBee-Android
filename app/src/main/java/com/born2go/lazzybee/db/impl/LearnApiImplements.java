@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -36,6 +37,9 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_STATUS = "status";
     private static final String KEY_G_ID = "gid";
     private static final String KEY_RELATED = "related";
+    private static final String KEY_LEVEL = "level";
+    private static final String KEY_PACKAGES = "package";
+
     private static final String KEY_TAGS = "tags";
     //Table name
     private static final String TABLE_VOCABULARY = "vocabulary";
@@ -685,9 +689,10 @@ public class LearnApiImplements implements LearnApi {
         //get current time
         long long_curent_time = new Date().getTime();
 
-        int curent_time = (int) (long_curent_time / 1000);
+        int curent_time = (int) (long_curent_time/1000);
+        int endofday=getEndOfDayInSecond();
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
-
+        Log.i(TAG, "StartOfDayInMillis:" + getStartOfDayInMillis() + ":" + getEndOfDayInSecond());
         String select_list_card_by_queue = "";
 
         if (queue == Card.QUEUE_LNR1) {
@@ -698,24 +703,30 @@ public class LearnApiImplements implements LearnApi {
 
         } else if (queue == Card.QUEUE_REV2) {
             int limit = 0;
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
-
-            int dueCount = _getListCardQueryString(select_list_card_by_queue).size();
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due <= " + (getEndOfDayInSecond());
+//            List<Card> dueCard2=_getListCardQueryString(select_list_card_by_queue);
+//            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY
+//                    + " where queue = " + queue
+//                    + " AND strftime('%d-%m-%Y', due, 'unixepoch') <= strftime('%d-%m-%Y', "
+//                    + curent_time + ", 'unixepoch')";
+            List<Card> dueCard = _getListCardQueryString(select_list_card_by_queue);
             int todayCount = _checkListTodayExit();
-
             //todayCount=-2 init ->limit=0
-            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
 
-            if (todayCount == -2)
+            if (todayCount == -2) {
                 cardListByQueue = new ArrayList<Card>();
-            else if (todayCount == 0 || todayCount == -1 || todayCount > 0) {
-                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
-                    limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
-                else {
+            } else if (todayCount == 0 || todayCount == -1 || todayCount > 0) {
+                int dueCount = dueCard.size();
+                int total_learn = dueCount + todayCount;
+                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount) {
+                    limit = LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
+                } else {
                     limit = dueCount;
                 }
-                select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
-                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
+                //select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
+//                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
+                cardListByQueue=dueCard.subList(0,limit);
             }
         }
 
@@ -864,7 +875,6 @@ public class LearnApiImplements implements LearnApi {
         return update_result;
     }
 
-
     public String _getStringDueToday() {
         String duetoday = LazzyBeeShare.EMPTY;
         int todayCount = _checkListTodayExit();
@@ -877,19 +887,19 @@ public class LearnApiImplements implements LearnApi {
         } else {
             if (todayCount == 0) {
                 //Complete leanrn today
-//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
-//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+//                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY)
+//                    dueCount = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
                 todayCount = 0;
             } else if (todayCount == -1) {
                 todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
-//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+//                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount)
+//                    dueCount = LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
             } else {
                 Log.i(TAG, "Today:" + todayCount);
             }
         }
-
-        duetoday = todayCount + " " + againCount + " " + dueCount;
+        if (todayCount > 0 || againCount > 0 || dueCount > 0)
+            duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;
     }
 
@@ -1024,5 +1034,41 @@ public class LearnApiImplements implements LearnApi {
         //Update queue list
         _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
 
+    }
+
+    @Override
+    public void _insertOrUpdateCard(Card card) {
+        Log.i(TAG, "q: " + card.getQuestion());
+        String cardId = String.valueOf(card.getId());
+        //TODO: Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_QUESTION, card.getQuestion());
+        values.put(KEY_ANSWERS, card.getAnswers());
+        values.put(KEY_LEVEL, card.getLevel());
+        values.put(KEY_PACKAGES, card.getPackage());
+
+
+        //
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{cardId});
+        // Log.i(TAG, "update_result: " + update_result);
+
+    }
+    public long getStartOfDayInMillis() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    public int getEndOfDayInSecond() {
+        //Add one day's time to the beginning of the day.
+        //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
+        return (int) ((getStartOfDayInMillis()/1000) + (24 * 60 * 60));
     }
 }
