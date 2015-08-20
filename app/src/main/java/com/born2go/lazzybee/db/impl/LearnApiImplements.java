@@ -710,13 +710,13 @@ public class LearnApiImplements implements LearnApi {
             int todayCount = _checkListTodayExit();
 
             //todayCount=-2 init ->limit=0
-            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
 
             if (todayCount == -2)
                 cardListByQueue = new ArrayList<Card>();
             else if (todayCount == 0 || todayCount == -1 || todayCount > 0) {
-                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
-                    limit = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount)
+                    limit = LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
                 else {
                     limit = dueCount;
                 }
@@ -869,8 +869,6 @@ public class LearnApiImplements implements LearnApi {
 
         return update_result;
     }
-
-
     public String _getStringDueToday() {
         String duetoday = LazzyBeeShare.EMPTY;
         int todayCount = _checkListTodayExit();
@@ -883,13 +881,13 @@ public class LearnApiImplements implements LearnApi {
         } else {
             if (todayCount == 0) {
                 //Complete leanrn today
-//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY)
-//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY;
+//                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY)
+//                    dueCount = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
                 todayCount = 0;
             } else if (todayCount == -1) {
                 todayCount = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-//                if (dueCount > LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount)
-//                    dueCount = LazzyBeeShare.TOTTAL_LEAN_PER_DAY - todayCount;
+//                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount)
+//                    dueCount = LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
             } else {
                 Log.i(TAG, "Today:" + todayCount);
             }

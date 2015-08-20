@@ -81,5 +81,12 @@
     <string name="auto_check_update">Auto check update</string>
     <string name="debug_infor">Debug Information</string>
     <string name="fb_app_id">1615269568686595</string>
+    <string name="setting_learn">Learn</string>
+    <string name="setting_today_new_card_limit">Today\'s new card limit</string>
+    <string name="setting_today_review_card_limit">Today\'s review card limit</string>
+    <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
+    <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
+    <string name="total_learn_per_day">Total learn per day</string>
+    <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
 
 </resources>

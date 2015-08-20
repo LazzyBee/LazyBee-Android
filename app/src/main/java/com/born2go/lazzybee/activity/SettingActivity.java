@@ -15,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -66,7 +68,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void initSqlIte() {
         dataBaseHelper = new LearnApiImplements(context);
-        databaseUpgrade=new DatabaseUpgrade(context);
+        databaseUpgrade = new DatabaseUpgrade(context);
     }
 
     private void initSetting() {
@@ -209,7 +211,8 @@ public class SettingActivity extends AppCompatActivity {
 
         dialog.show();
     }
-    public void onCardViewNotificationClick(View view){
+
+    public void onCardViewNotificationClick(View view) {
         String value;
         if (!mSwitchNotification.isChecked()) {
             mSwitchNotification.setChecked(true);
@@ -220,6 +223,7 @@ public class SettingActivity extends AppCompatActivity {
         }
         dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.NOTIFICTION_SETTING, value);
     }
+
     public void onCardViewAutoCheckUpdateClick(View view) {
         String value;
         if (!mSwitchAutoCheckUpdate.isChecked()) {
@@ -246,6 +250,88 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onCardViewCheckUpdateClick(View view) {
         _checkUpdate();
+    }
+
+    public void onCardViewTodayNewCardLimitClick(View view) {
+        String limit = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT);
+        int value;
+        if (limit == null) {
+            value = LazzyBeeShare.MAX_LEARN_MORE_PER_DAY;
+        } else {
+            value = Integer.valueOf(limit);
+        }
+        _showDialogConfirmSetLimitCard(value, LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT);
+
+    }
+
+
+    public void onCardViewTodayReviewCardLimitClick(View view) {
+        String limit = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT);
+        int value;
+        if (limit == null) {
+            value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
+        } else {
+            value = Integer.valueOf(limit);
+        }
+        _showDialogConfirmSetLimitCard(value, LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT);
+    }
+
+    public void onCardViewTotalCardLearnPreDayClick(View view) {
+        String limit = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY);
+        int value;
+        if (limit == null) {
+            value = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
+        } else {
+            value = Integer.valueOf(limit);
+        }
+        _showDialogConfirmSetLimitCard(value, LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY);
+    }
+
+    private void _showDialogConfirmSetLimitCard(int value, String todayNewCardLimit) {
+        // Instantiate an AlertDialog.Builder with its constructor
+        String title = LazzyBeeShare.EMPTY;
+        String message = LazzyBeeShare.EMPTY;
+        View viewDialog = View.inflate(context, R.layout.dialog_limit_card, null);
+        TextView lbSettingLimitName = (TextView) viewDialog.findViewById(R.id.lbSettingLimitName);
+        EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
+
+        if (todayNewCardLimit == LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT) {
+            message = getString(R.string.dialog_message_setting_today_new_card_limit_by);
+        } else if (todayNewCardLimit == LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT) {
+            message = getString(R.string.dialog_message_setting_today_review_card_limit_by);
+        }else if (todayNewCardLimit == LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
+            message = getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
+        }
+
+        lbSettingLimitName.setText(message);
+        txtLimit.setText(String.valueOf(value));
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        // builder.setMessage(R.string.dialog_message_setting_today_new_card_limit_by);
+        builder.setView(viewDialog);
+
+        // Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private int initViewDialog(int value, String todayNewCardLimit) {
+        return 0;
     }
 
     private void _showDialogConfirmRestartApp() {

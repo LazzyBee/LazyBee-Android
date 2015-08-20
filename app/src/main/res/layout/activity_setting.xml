@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.born2go.lazzybee.activity.SettingActivity"
-    >
+    tools:context="com.born2go.lazzybee.activity.SettingActivity">
 
     <!--<fragment-->
     <!--android:layout_width="fill_parent"-->
@@ -13,192 +12,294 @@
     <!--android:id="@+id/fragment2"-->
     <!--android:layout_alignParentTop="true"-->
     <!--android:layout_alignParentStart="true" />-->
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/setting_learn"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/teal_200" />
+    <!--CardViewTodayNewLimit-->
     <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewTodayNewCardLimit"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="1px"
-        android:visibility="visible"
-        android:id="@+id/mCardViewNotification"
-        android:layout_marginTop="3dp"
-        android:onClick="onCardViewNotificationClick">
+        android:onClick="onCardViewTodayNewCardLimitClick">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:paddingRight="16dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/notificaion"
-                android:id="@+id/textView"
-                android:textColor="@color/grey_600"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
 
-            <Switch
+                android:gravity="center_horizontal"
+                android:text="@string/setting_today_new_card_limit"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <!--mCardViewTodayReviewLimit-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewTodayReviewCardLimit"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="0.5dp"
+        android:onClick="onCardViewTodayReviewCardLimitClick">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Switch"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+
+                android:gravity="center_horizontal"
+                android:text="@string/setting_today_review_card_limit"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <!--mCardViewTotalCardLearnPreDay-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewTotalCardLearnPreDay"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="0.5dp"
+        android:onClick="onCardViewTotalCardLearnPreDayClick">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+
+                android:gravity="center_horizontal"
+                android:text="@string/total_learn_per_day"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <!--CardViewNotification-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewNotification"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="1px"
+        android:layout_marginTop="5dp"
+        android:onClick="onCardViewNotificationClick"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/notificaion"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
+
+            <Switch
                 android:id="@+id/mSwitchNotification"
-                android:layout_alignParentEnd="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/textView"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="true"
+                android:text="New Switch" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/btn_update"
-        android:id="@+id/textView3"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:text="@string/btn_update"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/teal_200" />
 
     <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewCheckUpdate"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
-        android:id="@+id/mCardViewCheckUpdate"
         android:onClick="onCardViewCheckUpdateClick">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:paddingRight="16dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/action_check_update_database"
-
-                android:textColor="@color/grey_600"
-                android:gravity="center_horizontal"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+
+                android:gravity="center_horizontal"
+                android:text="@string/action_check_update_database"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="0.1dp"/>
+        android:layout_height="0.1dp"
+        android:orientation="vertical" />
+
+    <!--mCardViewAutoCheckUpdate-->
     <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewAutoCheckUpdate"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
         android:layout_marginBottom="1px"
-        android:id="@+id/mCardViewAutoCheckUpdate"
         android:onClick="onCardViewAutoCheckUpdateClick">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:paddingRight="16dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="8dp">
 
             <TextView
+                android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/auto_check_update"
-                android:id="@+id/textView1"
-                android:textColor="@color/grey_600"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:text="@string/auto_check_update"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
 
             <Switch
+                android:id="@+id/mSwitchAutoCheckUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Switch"
-                android:layout_alignParentEnd="false"
                 android:layout_alignBaseline="@+id/textView1"
+                android:layout_alignParentEnd="false"
                 android:layout_alignParentRight="true"
-                android:id="@+id/mSwitchAutoCheckUpdate" />
+                android:text="New Switch" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="5dp"></LinearLayout>
+        android:layout_height="5dp"
+        android:orientation="vertical"></LinearLayout>
 
+    <!--mCardViewDebugInformation-->
     <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewDebugInformation"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
         android:layout_marginBottom="1px"
-        android:id="@+id/mCardViewDebugInformation"
         android:onClick="onCardViewDebugInformationClick">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:paddingRight="16dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="8dp">
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/debug_infor"
-                android:id="@+id/textView2"
-                android:textColor="@color/grey_600"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:text="@string/debug_infor"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
 
             <Switch
+                android:id="@+id/mSwitchDebugInformation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Switch"
 
-                android:layout_alignParentEnd="false"
                 android:layout_alignBaseline="@+id/textView2"
+                android:layout_alignParentEnd="false"
                 android:layout_alignParentRight="true"
-                android:id="@+id/mSwitchDebugInformation" />
+                android:text="New Switch" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="5dp"/>
+        android:layout_height="5dp"
+        android:orientation="vertical" />
+    <!--mCardViewLanguage-->
     <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewLanguage"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
-        android:id="@+id/mCardViewLanguage"
         android:onClick="onCardViewLanguageClick">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:paddingRight="16dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/language"
-
-                android:textColor="@color/grey_600"
-                android:gravity="center_horizontal"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+
+                android:gravity="center_horizontal"
+                android:text="@string/language"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/grey_600" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
