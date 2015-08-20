@@ -122,8 +122,6 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper._get100Card();
 
 
-
-
     }
 
     private void _setUpNotification() {
@@ -233,7 +231,7 @@ public class MainActivity extends AppCompatActivity
         pTotalCards = (LinearLayout) findViewById(R.id.pTotalCards);
         pTotalNewCard = (LinearLayout) findViewById(R.id.pTotalNewCard);
         pDueToday = (LinearLayout) findViewById(R.id.pDueToday);
-        mDue= (RelativeLayout) findViewById(R.id.mDue);
+        mDue = (RelativeLayout) findViewById(R.id.mDue);
 
         lbDueToday = (TextView) findViewById(R.id.lbDueToday2);
         lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount2);
@@ -798,7 +796,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onbtnCustomStudyOnClick(View view) {
-        _learnMore();
+        int today = dataBaseHelper._checkListTodayExit();
+        if (today <= 0)
+            _learnMore();
+        else {
+            Toast.makeText(context,R.string.message_you_not_complete,Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void _learnMore() {
