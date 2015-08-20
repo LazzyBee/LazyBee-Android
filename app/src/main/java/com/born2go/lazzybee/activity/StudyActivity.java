@@ -1050,7 +1050,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             lbCountNew.setBackgroundResource(R.color.white);
         } else if (queue == 10) {
         }
-
         //Set Data
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
