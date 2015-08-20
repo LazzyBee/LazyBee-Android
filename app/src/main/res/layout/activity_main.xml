@@ -82,7 +82,8 @@
                             android:layout_height="match_parent"
                             android:textAlignment="center"
                             android:gravity="center"
-                            android:id="@+id/pDueToday">
+                            android:id="@+id/pDueToday"
+                            android:visibility="gone">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -91,7 +92,8 @@
                                 android:visibility="visible"
                                 android:text="@string/due_today"
                                 android:textAlignment="center"
-                                android:textColor="#000000" />
+                                android:textColor="#000000"
+                                android:layout_marginRight="20dp" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -110,7 +112,8 @@
                             android:layout_height="match_parent"
                             android:textAlignment="center"
                             android:gravity="center|center_vertical"
-                            android:id="@+id/pTotalNewCard">
+                            android:id="@+id/pTotalNewCard"
+                            android:visibility="gone">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -119,7 +122,8 @@
                                 android:visibility="visible"
                                 android:text="@string/total_new_learn"
                                 android:textAlignment="center"
-                                android:textColor="#000000"></TextView>
+                                android:textColor="#000000"
+                                android:layout_marginRight="20dp"></TextView>
 
                             <TextView
                                 android:id="@+id/lbTotalNewCount"
@@ -139,7 +143,8 @@
                             android:textAlignment="center"
                             android:gravity="center"
                             android:layout_marginBottom="5dp"
-                            android:id="@+id/pTotalCards">
+                            android:id="@+id/pTotalCards"
+                            android:visibility="gone">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -148,7 +153,8 @@
                                 android:visibility="visible"
                                 android:text="@string/total_cards"
                                 android:textAlignment="center"
-                                android:textColor="#000000"></TextView>
+                                android:textColor="#000000"
+                                android:layout_marginRight="50dp"></TextView>
                             <TextView
                                 android:id="@+id/lbTotalsCount"
                                 android:layout_width="wrap_content"
@@ -160,6 +166,77 @@
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:padding="5dp"
+                            android:id="@+id/mDue">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="@string/due_today"
+                                android:id="@+id/textView4"
+                                android:textColor="#1127ff"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignStart="@+id/textView5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="@string/total_new_learn"
+                                android:id="@+id/textView5"
+                                android:textColor="#1127ff"
+                                android:layout_below="@+id/textView4"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginLeft="55dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="@string/total_cards"
+                                android:id="@+id/textView6"
+                                android:textColor="#1127ff"
+                                android:layout_below="@+id/textView5"
+                                android:layout_alignStart="@+id/textView5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="00 00 00"
+                                android:id="@+id/lbDueToday2"
+                                android:textColor="#1127ff"
+                                android:layout_above="@+id/textView5"
+                                android:layout_toEndOf="@+id/textView5"
+                                android:layout_marginStart="55dp"
+                                android:layout_marginRight="50dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="400"
+                                android:id="@+id/lbTotalsCount2"
+                                android:textColor="#1127ff"
+                                android:layout_below="@+id/lbTotalNewCount2"
+                                android:layout_alignEnd="@+id/lbDueToday2" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="300"
+                                android:id="@+id/lbTotalNewCount2"
+                                android:textColor="#1127ff"
+                                android:layout_below="@+id/lbDueToday2"
+                                android:layout_alignStart="@+id/lbTotalsCount2" />
+
+                        </RelativeLayout>
 
 
                         <!--<TextView-->

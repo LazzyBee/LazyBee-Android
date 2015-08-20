@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     LinearLayout pTotalCards;
     LinearLayout pTotalNewCard;
     LinearLayout pDueToday;
-
+    RelativeLayout mDue;
 
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
@@ -232,23 +233,25 @@ public class MainActivity extends AppCompatActivity
         pTotalCards = (LinearLayout) findViewById(R.id.pTotalCards);
         pTotalNewCard = (LinearLayout) findViewById(R.id.pTotalNewCard);
         pDueToday = (LinearLayout) findViewById(R.id.pDueToday);
+        mDue= (RelativeLayout) findViewById(R.id.mDue);
 
-
-        lbDueToday = (TextView) findViewById(R.id.lbDueToday);
-        lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount);
-        lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount);
+        lbDueToday = (TextView) findViewById(R.id.lbDueToday2);
+        lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount2);
+        lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount2);
 
     }
 
     private void _visibilityCount(boolean visibility) {
         if (visibility) {
-            pTotalCards.setVisibility(View.VISIBLE);
-            pTotalNewCard.setVisibility(View.VISIBLE);
-            pDueToday.setVisibility(View.VISIBLE);
+            mDue.setVisibility(View.VISIBLE);
+//            pTotalCards.setVisibility(View.VISIBLE);
+//            pTotalNewCard.setVisibility(View.VISIBLE);
+//            pDueToday.setVisibility(View.VISIBLE);
         } else {
-            pTotalCards.setVisibility(View.GONE);
-            pTotalNewCard.setVisibility(View.GONE);
-            pDueToday.setVisibility(View.GONE);
+            mDue.setVisibility(View.GONE);
+//            pTotalCards.setVisibility(View.GONE);
+//            pTotalNewCard.setVisibility(View.GONE);
+//            pDueToday.setVisibility(View.GONE);
         }
     }
 
