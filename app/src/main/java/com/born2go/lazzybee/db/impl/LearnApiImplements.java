@@ -701,7 +701,10 @@ public class LearnApiImplements implements LearnApi {
 
         } else if (queue == Card.QUEUE_REV2) {
             int limit = 0;
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY
+                    + " where queue = " + queue
+                    + " AND strftime('%d-%m-%Y', due, 'unixepoch') <= strftime('%d-%m-%Y', "
+                    + curent_time + ", 'unixepoch')";
 
             int dueCount = _getListCardQueryString(select_list_card_by_queue).size();
             int todayCount = _checkListTodayExit();
@@ -891,8 +894,8 @@ public class LearnApiImplements implements LearnApi {
                 Log.i(TAG, "Today:" + todayCount);
             }
         }
-
-        duetoday = todayCount + " " + againCount + " " + dueCount;
+        if (todayCount > 0 || againCount > 0 || dueCount > 0)
+            duetoday = todayCount + " " + againCount + " " + dueCount;
         return duetoday;
     }
 
