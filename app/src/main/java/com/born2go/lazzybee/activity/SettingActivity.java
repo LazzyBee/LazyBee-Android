@@ -287,19 +287,19 @@ public class SettingActivity extends AppCompatActivity {
         _showDialogConfirmSetLimitCard(value, LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY);
     }
 
-    private void _showDialogConfirmSetLimitCard(int value, String todayNewCardLimit) {
+    private void _showDialogConfirmSetLimitCard(int value, final String todayNewCardLimit) {
         // Instantiate an AlertDialog.Builder with its constructor
         String title = LazzyBeeShare.EMPTY;
         String message = LazzyBeeShare.EMPTY;
         View viewDialog = View.inflate(context, R.layout.dialog_limit_card, null);
         TextView lbSettingLimitName = (TextView) viewDialog.findViewById(R.id.lbSettingLimitName);
-        EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
+        final EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
 
         if (todayNewCardLimit == LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT) {
             message = getString(R.string.dialog_message_setting_today_new_card_limit_by);
         } else if (todayNewCardLimit == LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT) {
             message = getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        }else if (todayNewCardLimit == LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
+        } else if (todayNewCardLimit == LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
             message = getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
         }
 
@@ -319,9 +319,12 @@ public class SettingActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+        final String finalMessage = message;
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                String limit = txtLimit.getText().toString();
+                Log.i(TAG, finalMessage +limit);
+                dataBaseHelper._insertOrUpdateToSystemTable(todayNewCardLimit,limit);
             }
         });
         // Get the AlertDialog from create()

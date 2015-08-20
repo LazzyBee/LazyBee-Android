@@ -19,5 +19,6 @@
         android:id="@+id/txtLimit"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp"
+        android:inputType="number" />
 </RelativeLayout>
