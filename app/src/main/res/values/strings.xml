@@ -71,7 +71,7 @@
 
     <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
     <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
-    <string name="SERVER_WIDGET_URL" translatable="false"></string>
+    <string name="SERVER_WIDGET_URL" translatable="false">https://lazeebee-977.appspot.com/oauth2callback</string>
     <string name="action_check_update_database">Check Update</string>
     <string name="dialog_update">Update</string>
     <string name="dialog_title_update">Update</string>
@@ -80,6 +80,6 @@
     <string name="dowload_file_success" translatable="false">A new file is downloaded successfully</string>
     <string name="auto_check_update">Auto check update</string>
     <string name="debug_infor">Debug Information</string>
-
+    <string name="fb_app_id">1615269568686595</string>
 
 </resources>
