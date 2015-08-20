@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity
         if (complete == 1) {
             //No complete
             lbComplete.setText(LazzyBeeShare.EMPTY);
-            btnStudy.setText("Study");
             btnStudy.setTag(false);
             btnCustomStudy.setTag(false);
             mCardViewStudy.setVisibility(View.VISIBLE);
