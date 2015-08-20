@@ -165,11 +165,11 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _searchCard(String query) {
-
-
         //select like query
-        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
-
+        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'"
+                + " ORDER BY (CASE WHEN " +
+                " question = '" + query + "' THEN 1 WHEN " +
+                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
         //Todo:Seach card
         List<Card> datas = _getListCardQueryString(likeQuery);
 
@@ -788,6 +788,7 @@ public class LearnApiImplements implements LearnApi {
      *
      * */
     private List<Card> _getListCardQueryString(String query) {
+        Log.i(TAG, "Query String: " + query);
         List<Card> datas = new ArrayList<Card>();
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
