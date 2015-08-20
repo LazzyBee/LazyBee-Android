@@ -39,15 +39,19 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
         //
         View view = holder.view;
         TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-        TextView lbAnswer = (TextView) view.findViewById(R.id.lbAnswer);
+        TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
         TextView level = (TextView) view.findViewById(R.id.level);
         TextView learned = (TextView) view.findViewById(R.id.learned);
+        TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
 
-        String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+        String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+        String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
 
         lbQuestion.setText(card.getQuestion());
-        lbAnswer.setText(pronoun);
-        level.setText(""+card.getLevel());
+        lbMeaning.setText(meaning);
+        lbPronoun.setText(pronoun);
+        level.setText(String.valueOf(card.getLevel()));
+
         if (card.getQueue() >= Card.QUEUE_LNR1) {
             learned.setText(context.getResources().getString(R.string.learned));
         } else if (card.getQueue() == Card.QUEUE_DONE_2) {

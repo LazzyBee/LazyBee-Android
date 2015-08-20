@@ -215,36 +215,36 @@ public class LazzyBeeShare {
     public static String _getQuestionDisplay(String question) {
         String html =
                 "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "<head>\n" +
-                "<style>\n" +
-                " figure {" +
-                "   text-align: center;" +
-                "   margin: auto;" +
-                "}" +
-                "figure.image img {" +
-                "   width: 100% !important;" +
-                "   height: auto !important;" +
-                "}" +
-                "figcaption {" +
-                "   font-size: 10px;" +
-                "}" +
-                "a {" +
-                " margin-top:5px;" +
-                "}" +
-                "</style>\n" +
-                "</head>\n" +
-                "<body onload='question.playQuestion()'>\n" +
-                "<div style='width:100%'>\n" +
-                "<div style='float:left;width:90%;text-align: center;'>\n" +
-                "<strong style='font-size:25pt;'>" + question + "</strong>\n" +
-                "</div>\n" +
-                "<div style='float:left;width:10%'>\n" +
-                "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
-                "</div>\n" +
-                "</div>\n"
-                + "</body>\n" +
-                "</html>";
+                        "<html>\n" +
+                        "<head>\n" +
+                        "<style>\n" +
+                        " figure {" +
+                        "   text-align: center;" +
+                        "   margin: auto;" +
+                        "}" +
+                        "figure.image img {" +
+                        "   width: 100% !important;" +
+                        "   height: auto !important;" +
+                        "}" +
+                        "figcaption {" +
+                        "   font-size: 10px;" +
+                        "}" +
+                        "a {" +
+                        " margin-top:5px;" +
+                        "}" +
+                        "</style>\n" +
+                        "</head>\n" +
+                        "<body onload='question.playQuestion()'>\n" +
+                        "<div style='width:100%'>\n" +
+                        "<div style='float:left;width:90%;text-align: center;'>\n" +
+                        "<strong style='font-size:25pt;'>" + question + "</strong>\n" +
+                        "</div>\n" +
+                        "<div style='float:left;width:10%'>\n" +
+                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
+                        "</div>\n" +
+                        "</div>\n"
+                        + "</body>\n" +
+                        "</html>";
         return html;
     }
 
@@ -264,7 +264,12 @@ public class LazzyBeeShare {
             JSONObject commonObj = packagesObj.getJSONObject("common");//Get json by package name
 
             //get value by key
-            value = Html.fromHtml(commonObj.getString(key)).toString();
+            if (key.equals(CARD_PRONOUN))
+                value = answerObj.getString(key).toString();
+            else {
+                value = Html.fromHtml(commonObj.getString(key)).toString();
+
+            }
 
 
         } catch (JSONException e) {
