@@ -32,6 +32,18 @@ public class LazzyBeeShare {
     public static final String SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
     public static final String SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
     public static final String SETTING_TOTAL_CARD_LEARN_PRE_DAY = "total_card_learn_pre_day";
+    public static final String DRAWER_USER = "user";
+    public static final String DRAWER_TITLE_COURSE = "title_course";
+    public static final String DRAWER_SETTING = "settings";
+    public static final String DRAWER_ABOUT = "about";
+    public static final String DRAWER_LINES = "lines";
+    public static final String DRAWER_ADD_COURSE = "add_course";
+
+    public static final int DRAWER_ADD_COURSE_INDEX = 0;
+    public static final int DRAWER_SETTINGS_INDEX = 1;
+    public static final int DRAWER_ABOUT_INDEX = 2;
+    public static final int DRAWER_USER_INDEX = 3;
+    public static final int DRAWER_COURSE_INDEX = 4;
 
     private static boolean DEBUG = true;
 

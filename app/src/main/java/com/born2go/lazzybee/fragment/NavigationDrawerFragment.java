@@ -21,19 +21,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewDrawerListAdapter;
 import com.born2go.lazzybee.db.Course;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,12 +62,14 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
+    private Context context;
 
     public NavigationDrawerFragment() {
     }
@@ -90,7 +89,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+       // selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -105,40 +104,43 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView = (ListView) view.findViewById(R.id.mDrawerListView);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        //init List Cource
-        List<String> strings = Arrays.asList("English Word");
+        this.context = getActivity();
         //init List Object
-        List<Object> objects = new ArrayList<Object>();
+        final List<Object> objects = new ArrayList<Object>();
+        objects.add(LazzyBeeShare.DRAWER_USER);
+        objects.add(LazzyBeeShare.DRAWER_TITLE_COURSE);
         objects.add(new Course("English Word"));
         objects.add(new Course("Math"));
-        objects.add(1);
+        objects.add(LazzyBeeShare.DRAWER_ADD_COURSE);
+        objects.add(LazzyBeeShare.DRAWER_LINES);
+        objects.add(LazzyBeeShare.DRAWER_SETTING);
+        objects.add(LazzyBeeShare.DRAWER_ABOUT);
         final int obj_size = objects.size();
+
         //init mRecyclerViewDrawerList
         RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
         //init GridLayoutManager
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
         //init Adapter
-        RecyclerViewDrawerListAdapter recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(objects);
+        RecyclerViewDrawerListAdapter recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
         mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
         mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(), mRecyclerViewDrawerList, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //Cuoi thi la add
-                if (position + 1 == obj_size) {
-                    Toast.makeText(getActivity(), "ADD", Toast.LENGTH_SHORT).show();
-                    selectItem(1);
-                } else {//Dau thi la course
-                    Toast.makeText(getActivity(), "Course", Toast.LENGTH_SHORT).show();
-                    selectItem(0);
+                Object o = objects.get(position);
+                if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
+                    selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
+                } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
+                    selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
+                } else if (o.equals(LazzyBeeShare.DRAWER_ABOUT)) {
+                    selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
+                } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
+                    selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
+                }else if(o instanceof Course){
+                    selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
                 }
+
             }
 
             @Override
@@ -148,20 +150,6 @@ public class NavigationDrawerFragment extends Fragment {
         });
         mRecyclerViewDrawerList.addOnItemTouchListener(recyclerViewTouchListener);
 
-        //init Drawer Adapter
-        DrawerListAdapter drawerListAdapter = new DrawerListAdapter(getActivity().getApplicationContext(), R.layout.row_coures, strings);
-
-        mDrawerListView.setAdapter(drawerListAdapter);
-//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-//                getActionBar().getThemedContext(),
-//                android.R.layout.simple_list_item_activated_1,
-//                android.R.id.text1,
-//                new String[]{
-//                        getString(R.string.title_section1),
-//                        getString(R.string.title_section2),
-//                        getString(R.string.title_section3),
-//                }));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return view;
     }
 
@@ -253,9 +241,6 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }

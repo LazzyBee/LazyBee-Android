@@ -68,4 +68,6 @@
     <string name="dialog_message_setting_today_new_card_limit_by">Thay đổi sô thẻ mới</string>
     <string name="message_you_not_complete">Bạn chưa học xong!Bấm học</string>
     <string name="message_total_card_review">Tổng số thẻ đã học:</string>
+    <string name="my_course">My Course</string>
+    <string name="action_about">About</string>
 </resources>

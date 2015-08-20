@@ -377,34 +377,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        if (position == 1) {
-            _gotoAddCourse();
-        } else {
-            // update the main content by replacing fragments
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            String courseId = "";
-//            _gotoCourseDetails(courseId);
+        switch (position) {
+            case LazzyBeeShare.DRAWER_ABOUT_INDEX:
+                Toast.makeText(context, "Dang xay dung", Toast.LENGTH_SHORT).show();
+                break;
+            case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
+                _gotoAddCourse();
+                break;
+            case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
+                _gotoSetting();
+                break;
+            case LazzyBeeShare.DRAWER_USER_INDEX:
+                Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
+                break;
+            case LazzyBeeShare.DRAWER_COURSE_INDEX:
+                break;
+            default:
+                break;
+
+
         }
-
-
-//        switch (position) {
-//            case 0:
-//                String courseId = "";
-//                _gotoCourseDetails(courseId);
-//                break;
-//            case 1:
-//                //Goto List Course
-//                FragmentListCourse fragmentListCourse = new FragmentListCourse();
-//                //replace from container to fragmentCourse
-//                fragmentTransaction.replace(R.id.container, fragmentListCourse)
-//                        .addToBackStack(FragmentListCourse.TAG).commit();
-//                break;
-//            default:
-////                courseId = "";
-////                _gotoCourseDetails(courseId);
-//        }
-
 
     }
 
@@ -799,7 +791,7 @@ public class MainActivity extends AppCompatActivity
         if (today <= 0)
             _learnMore();
         else {
-            Toast.makeText(context,R.string.message_you_not_complete,Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
         }
     }
 
