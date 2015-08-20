@@ -89,5 +89,6 @@
     <string name="total_learn_per_day">Total learn per day</string>
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
     <string name="message_you_not_complete">You not complete!Touch Learn.</string>
+    <string name="message_total_card_review">Total card review:</string>
 
 </resources>

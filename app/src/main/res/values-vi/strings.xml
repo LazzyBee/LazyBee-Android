@@ -59,7 +59,7 @@
     <string name="updated">Đã cập nhật</string>
     <string name="auto_check_update">Tự động kiểm tra cập nhật</string>
     <string name="debug_infor">Thông tin sửa lỗi</string>
-    <string name="setting_learn">Learn</string>
+    <string name="setting_learn">Thiết lập học</string>
     <string name="setting_today_new_card_limit">Giới hạn học thẻ mới hôm nay</string>
     <string name="setting_today_review_card_limit">Giới hạn thẻ xem lại hôm nay</string>
     <string name="dialog_message_setting_today_review_card_limit_by">Thay đổi số thẻ xem lại</string>
@@ -67,4 +67,5 @@
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Tổng số thẻ muốn học trong một ngày</string>
     <string name="dialog_message_setting_today_new_card_limit_by">Thay đổi sô thẻ mới</string>
     <string name="message_you_not_complete">Bạn chưa học xong!Bấm học</string>
+    <string name="message_total_card_review">Tổng số thẻ đã học:</string>
 </resources>
