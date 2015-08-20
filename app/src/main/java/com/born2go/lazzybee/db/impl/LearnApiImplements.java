@@ -557,7 +557,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _insertOrUpdateToSystemTable(String key, String value) {
-        Log.i(TAG, "value:" + value);
+        Log.i(TAG, "key:" + key + ",value:" + value);
         //TODO check value by key
         String valuebyKey = _getValueFromSystemByKey(key);
         if (_getValueFromSystemByKey(key) == null) {
@@ -689,8 +689,8 @@ public class LearnApiImplements implements LearnApi {
         //get current time
         long long_curent_time = new Date().getTime();
 
-        int curent_time = (int) (long_curent_time/1000);
-        int endofday=getEndOfDayInSecond();
+        int curent_time = (int) (long_curent_time / 1000);
+        int endofday = getEndOfDayInSecond();
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
         Log.i(TAG, "StartOfDayInMillis:" + getStartOfDayInMillis() + ":" + getEndOfDayInSecond());
         String select_list_card_by_queue = "";
@@ -726,7 +726,7 @@ public class LearnApiImplements implements LearnApi {
                 }
                 //select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
 //                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
-                cardListByQueue=dueCard.subList(0,limit);
+                cardListByQueue = dueCard.subList(0, limit);
             }
         }
 
@@ -1057,6 +1057,7 @@ public class LearnApiImplements implements LearnApi {
         // Log.i(TAG, "update_result: " + update_result);
 
     }
+
     public long getStartOfDayInMillis() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -1069,6 +1070,6 @@ public class LearnApiImplements implements LearnApi {
     public int getEndOfDayInSecond() {
         //Add one day's time to the beginning of the day.
         //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
-        return (int) ((getStartOfDayInMillis()/1000) + (24 * 60 * 60));
+        return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
     }
 }
