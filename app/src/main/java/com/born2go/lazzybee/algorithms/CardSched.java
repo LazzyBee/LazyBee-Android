@@ -85,7 +85,7 @@ public class CardSched {
         long delay = _daysLate(card);
         int interval = 0;
 
-        double fct = 2.5; /* Default factor  -- card.getFactor() / 1000.0;*/
+        double fct = card.getFactor() / 1000.0;
 
         int ivl_hard = _constrainedIvl((int)((card.getLast_ivl() + delay/4) * 1.2), card.getLast_ivl());
         int ivl_good = _constrainedIvl((int)((card.getLast_ivl() + delay/2) * fct), ivl_hard);
