@@ -59,7 +59,7 @@
     <string name="notificaion">Notificaion</string>
     <string name="language">Language</string>
     <string name="add_to" />
-    <string name="queue">queue</string>
+    <string name="queue" translatable="false">queue</string>
     <string name="dialog_message_done_card">Done card</string>
     <string name="dialog_title_done_card">Done card</string>
     <string name="change_language">Change language</string>
@@ -71,7 +71,8 @@
 
     <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
     <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
-    <string name="SERVER_WIDGET_URL" translatable="false">https://lazeebee-977.appspot.com/oauth2callback</string>
+    <string name="SERVER_WIDGET_URL" translatable="false">http://www.lazzybee.com/oauth2callback</string>
+
     <string name="action_check_update_database">Check Update</string>
     <string name="dialog_update">Update</string>
     <string name="dialog_title_update">Update</string>
@@ -81,16 +82,23 @@
     <string name="auto_check_update">Auto check update</string>
     <string name="debug_infor">Debug Information</string>
     <string name="fb_app_id" translatable="false">1615269568686595</string>
-    <string name="setting_learn">Learn</string>
+    <string name="setting_learn_title">Learn</string>
     <string name="setting_today_new_card_limit">Today\'s new card limit</string>
     <string name="setting_today_review_card_limit">Today\'s review card limit</string>
     <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
     <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
-    <string name="total_learn_per_day">Total learn per day</string>
+    <string name="setting_total_learn_per_day">Total learn per day</string>
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
     <string name="message_you_not_complete">You not complete!Touch Learn.</string>
     <string name="message_total_card_review">Total card review:</string>
     <string name="my_course">My Course</string>
     <string name="action_about">About</string>
+    <string name="setting_update_title">Update</string>
+    <string name="setting_notification">Notification</string>
+    <string name="setting_check_update">Check update</string>
+    <string name="setting_auto_check_update">Auto check update</string>
+    <string name="setting_debug_info">Debug Infor</string>
+    <string name="setting_language">Language</string>
+    <string name="setting_lines" translatable="false">LINE</string>
 
 </resources>
