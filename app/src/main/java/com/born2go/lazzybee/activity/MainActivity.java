@@ -707,6 +707,7 @@ public class MainActivity extends AppCompatActivity
 
         //init inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //Start Intent
         this.startActivity(intent);
     }
