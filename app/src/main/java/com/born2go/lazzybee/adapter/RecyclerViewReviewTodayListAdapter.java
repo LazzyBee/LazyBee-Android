@@ -59,6 +59,7 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
         } else if (card.getQueue() == Card.QUEUE_NEW_CRAM0) {
             learned.setText(context.getResources().getString(R.string.new_card));
         }
+        learned.setVisibility(View.GONE);
 
     }
 

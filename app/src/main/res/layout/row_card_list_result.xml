@@ -42,9 +42,8 @@
                 android:id="@+id/level"
                 android:textColor="#ffffff"
                 android:background="@color/blue_500"
-                android:layout_alignBaseline="@+id/lbQuestion"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="60dp" />
+                android:layout_above="@+id/lbAnswer"
+                android:layout_alignParentEnd="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,9 +54,9 @@
                 android:textColor="#ffffff"
 
                 android:background="@color/teal_500"
-                android:layout_alignBaseline="@+id/lbQuestion"
-                android:layout_alignParentRight="true"
-                android:layout_toLeftOf="@+id/level" />
+                android:layout_alignTop="@+id/level"
+                android:layout_toStartOf="@+id/level"
+                android:layout_marginRight="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
