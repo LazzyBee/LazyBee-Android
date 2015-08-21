@@ -557,11 +557,10 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _insertOrUpdateToSystemTable(String key, String value) {
-        Log.i(TAG, "key:" + key + ",value:" + value);
         //TODO check value by key
         String valuebyKey = _getValueFromSystemByKey(key);
         if (_getValueFromSystemByKey(key) == null) {
-            Log.i(TAG, "Insert list card");
+            Log.i(TAG, "Insert Key:" + key + ",value:" + value);
             //Todo: No,Then insert
             ContentValues values = new ContentValues();
 
@@ -576,8 +575,6 @@ public class LearnApiImplements implements LearnApi {
             db_insert.close();
             return (int) long_insert_results;
         } else {
-            Log.i(TAG, "Update list card today:" + valuebyKey);
-            //Todo: Yes,update for key
             ContentValues values = new ContentValues();
             //TODO put value
             values.put(KEY_SYSTEM_VALUE, value);
@@ -588,7 +585,7 @@ public class LearnApiImplements implements LearnApi {
                         new String[]{String.valueOf(key)});
                 Log.i(TAG, "update_results:" + update_results);
                 String valueUpdate = _getValueFromSystemByKey(key);
-                Log.i(TAG, "Key:" + key + " ,value:" + valueUpdate);
+                Log.i(TAG, "Update Key:" + key + " ,value:" + valueUpdate);
                 return update_results;
             } catch (Exception e) {
                 e.printStackTrace();
