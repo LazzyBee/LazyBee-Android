@@ -383,8 +383,9 @@ public class LazzyBeeShare {
                 "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
 
                 "       <div style=\"width:100%\">\n" +
+                "              <strong>" + _explain + "</strong>" +
                 "           <div style=\"float:left;width:90%\">" +
-                "              <strong>" + _explain + "</strong>" + explain + "\n" +
+                "               " + explain + "\n" +
                 "           </div>\n" +
                 "           <div style=\"float:right;width:10%;margin-top:25px\">\n " +
                 "               " + explainTagA + "\n" +
@@ -392,8 +393,9 @@ public class LazzyBeeShare {
                 "       </div>\n" +
 
                 "       <div style=\"width:100%\">\n" +
+                "              <strong>" + _example + "</strong>" +
                 "           <div style=\"float:left;width:90%\">" +
-                "              <strong>" + _example + "</strong>" + example + "\n" +
+                "               " + example + "\n" +
                 "           </div>\n" +
                 "           <div style=\"float:right;width:10%;margin-top:25px\">\n " +
                 "               " + exampleTagA + "\n" +
