@@ -76,4 +76,6 @@
     <string name="setting_auto_check_update">Tự động kiểm tra cập nhật</string>
     <string name="setting_debug_info">Thông tin lỗi</string>
     <string name="setting_language">Ngôn ngữ</string>
+    <string name="setting_limit_card_number">%d Thẻ</string>
+    <string name="settings_today_limit_review_description" />
 </resources>

@@ -100,5 +100,9 @@
     <string name="setting_debug_info">Debug Infor</string>
     <string name="setting_language">Language</string>
     <string name="setting_lines" translatable="false">LINE</string>
+    <string name="setting_limit_card_number" >%d Card</string>
+
+
+
 
 </resources>

@@ -48,6 +48,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     int TYPE_SETTING_NAME = 1;
     int TYPE_SETTING_SWITCH = 2;
     int TYPE_LINE = -1;
+    int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
 
     public RecyclerViewSettingListAdapter(Context context, List<String> settings) {
         this.context = context;
@@ -67,6 +68,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
         } else if (viewType == TYPE_LINE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_lines, parent, false); //Inflating the layout
+        } else if (viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_today_limit_review, parent, false); //Inflating the layout
         }
         RecyclerViewSettingListAdapterViewHolder recyclerViewSettingListAdapterViewHolder = new RecyclerViewSettingListAdapterViewHolder(view, viewType);
         return recyclerViewSettingListAdapterViewHolder;
@@ -80,58 +83,78 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         TextView lbSettingName = (TextView) view.findViewById(R.id.lbSettingName);
         String setting = settings.get(position);
         final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
+        TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
+
         if (holder.viewType == TYPE_TITLE) {
             lbSettingName.setText(settings.get(position));
             mSwitch.setVisibility(View.GONE);
+            lbLimit.setVisibility(View.GONE);
             lbSettingName.setTextSize(15f);
             lbSettingName.setTextColor(context.getResources().getColor(R.color.teal_200));
         } else if (holder.viewType == TYPE_SETTING_NAME) {
             lbSettingName.setText(settings.get(position));
             mSwitch.setVisibility(View.GONE);
             if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
-                getSettingLimitOrUpdate(mCardView, LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT);
+                String limit = learnApiImplements._getValueFromSystemByKey(setting);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT,limit);
 
-            } else if (setting.equals(context.getString(R.string.setting_today_review_card_limit))) {
-                getSettingLimitOrUpdate(mCardView, LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT);
-
-            } else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
-                getSettingLimitOrUpdate(mCardView, LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY);
+            }else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
+                String limit = learnApiImplements._getValueFromSystemByKey(setting);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY,limit);
 
             } else if (setting.equals(context.getString(R.string.setting_check_update))) {
+                lbLimit.setVisibility(View.GONE);
                 _checkUpdate(mCardView);
             } else if (setting.equals(context.getString(R.string.setting_language))) {
+                lbLimit.setVisibility(View.GONE);
                 changeLanguage(mCardView);
             }
         } else if (holder.viewType == TYPE_SETTING_SWITCH) {
+            lbLimit.setVisibility(View.GONE);
             lbSettingName.setText(settings.get(position));
             if (setting.equals(context.getString(R.string.setting_auto_check_update))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING);
+                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.SETTING_AUTO_CHECK_UPDATE);
             } else if (setting.equals(context.getString(R.string.setting_debug_info))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.DEBUG_INFOR_SETTING);
+                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.SETTING_DEBUG_INFOR);
             } else if (setting.equals(context.getString(R.string.setting_notification))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.NOTIFICTION_SETTING);
+                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.SETTING_NOTIFICTION);
             }
+        }else  if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION){
+            String limit = learnApiImplements._getValueFromSystemByKey(setting);
+            lbSettingName.setText(setting);
+            TextView lbDescription= (TextView) view.findViewById(R.id.lbDescription);
+            getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT,limit);
+            lbDescription.setText("");
         }
     }
 
-    private void getSettingLimitOrUpdate(CardView mCardView, final String key) {
+    private void getSettingLimitOrUpdate(CardView mCardView, TextView lbLimit, final String key,String limit) {
+        // lbLimit.setVisibility(View.VISIBLE);
+        int value = 0;
+        if (limit == null) {
+            if (key.equals(LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT)) {
+                value = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+            } else if (key.equals(LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT)) {
+                value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
+            } else if (key.equals(LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY)) {
+                value = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
+            }
+
+        } else {
+            value = Integer.valueOf(limit);
+        }
+        lbLimit.setText(context.getString(R.string.setting_limit_card_number, value));
+        final int finalValue = value;
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String limit = learnApiImplements._getValueFromSystemByKey(key);
-                int value;
-                if (limit == null) {
-                    value = LazzyBeeShare.MAX_LEARN_MORE_PER_DAY;
-                } else {
-                    value = Integer.valueOf(limit);
-                }
-                _showDialogConfirmSetLimitCard(value, LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT);
+                _showDialogConfirmSetLimitCard(key, finalValue);
             }
         });
 
     }
 
-    private void _showDialogConfirmSetLimitCard(int value, final String todayNewCardLimit) {
+    private void _showDialogConfirmSetLimitCard(final String key, final int value) {
         // Instantiate an AlertDialog.Builder with its constructor
         String title = LazzyBeeShare.EMPTY;
         String message = LazzyBeeShare.EMPTY;
@@ -139,11 +162,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         TextView lbSettingLimitName = (TextView) viewDialog.findViewById(R.id.lbSettingLimitName);
         final EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
 
-        if (todayNewCardLimit == LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT) {
+        if (key == LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
-        } else if (todayNewCardLimit == LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT) {
+        } else if (key == LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        } else if (todayNewCardLimit == LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
+        } else if (key == LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
             message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
         }
 
@@ -163,12 +186,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 dialog.cancel();
             }
         });
-        final String finalMessage = message;
+
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 String limit = txtLimit.getText().toString();
-                //Log.i(TAG, finalMessage + limit);
-                learnApiImplements._insertOrUpdateToSystemTable(todayNewCardLimit, limit);
+                learnApiImplements._insertOrUpdateToSystemTable(key, limit);
             }
         });
         // Get the AlertDialog from create()
@@ -305,8 +327,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         if (setting.equals(context.getString(R.string.setting_learn_title))
                 || setting.equals(context.getString(R.string.setting_update_title)))
             return TYPE_TITLE;
-        else if (setting.equals(context.getString(R.string.setting_today_review_card_limit))
-                || setting.equals(context.getString(R.string.setting_today_new_card_limit))
+        else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
                 || setting.equals(context.getString(R.string.setting_check_update)))
@@ -315,6 +336,9 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_auto_check_update))
                 || setting.equals(context.getString(R.string.setting_debug_info)))
             return TYPE_SETTING_SWITCH;
+        else if (setting.equals(context.getString(R.string.setting_today_review_card_limit)))
+
+            return TYPE_SETTING_NAME_WITH_DESCRIPTION;
         else
             return -1;
     }
@@ -424,6 +448,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
 
     }
+
     class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
         Context context;
 
