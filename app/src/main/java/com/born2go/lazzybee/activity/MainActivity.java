@@ -8,7 +8,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -102,9 +101,8 @@ public class MainActivity extends AppCompatActivity
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
-    SharedPreferences prefs;
 
-    private GitkitClient client;
+    private GitkitClient gitkitClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,10 +142,10 @@ public class MainActivity extends AppCompatActivity
 
     private void _initSettingApplication() {
         _changeLanguage();
-        if (_checkSetting(LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING)) {
+        if (_checkSetting(LazzyBeeShare.SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
-        if (_checkSetting(LazzyBeeShare.NOTIFICTION_SETTING)) {
+        if (_checkSetting(LazzyBeeShare.SETTING_NOTIFICTION)) {
             _setUpNotification();
         }
 
@@ -263,7 +261,7 @@ public class MainActivity extends AppCompatActivity
      * Check login
      */
     private void _checkLogin() {
-        client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
+        gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
             @Override
             public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
                 //authenticate();
@@ -654,7 +652,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _login() {
         //Toast.makeText(context, getString(R.string.action_login), Toast.LENGTH_SHORT).show();
-        client.startSignIn();
+        gitkitClient.startSignIn();
 
 
     }
@@ -899,7 +897,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (!client.handleActivityResult(requestCode, resultCode, intent)) {
+        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
             super.onActivityResult(requestCode, resultCode, intent);
         }
 
@@ -915,7 +913,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (!client.handleIntent(intent)) {
+        if (!gitkitClient.handleIntent(intent)) {
             super.onNewIntent(intent);
         }
     }
