@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="settings">
+        <item>@string/setting_learn_title</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>
+        <!--<item>@string/setting_today_review_card_limit</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_notification</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_auto_check_update</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+    </string-array>
+</resources>

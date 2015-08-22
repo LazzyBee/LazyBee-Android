@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
@@ -55,9 +56,11 @@ public class FragmentReviewToday extends Fragment {
         RecyclerView mRecyclerViewReviewTodayList = (RecyclerView) view.findViewById(R.id.mRecyclerViewReviewTodayList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewReviewTodayList.getContext(), 1);
 
+        TextView lbCountReviewCard= (TextView) view.findViewById(R.id.lbCountReviewCard);
         //get review List Card today
         final List<Card> vocabularies = dataBaseHelper._getReviewListCard();
 
+        lbCountReviewCard.setText(getString(R.string.message_total_card_review)+vocabularies.size());
         //Init Adapter
         RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(context,vocabularies);
 

@@ -8,7 +8,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -34,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,14 +96,13 @@ public class MainActivity extends AppCompatActivity
     LinearLayout pTotalCards;
     LinearLayout pTotalNewCard;
     LinearLayout pDueToday;
-
+    RelativeLayout mDue;
 
     Button btnStudy, btnCustomStudy;
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
-    SharedPreferences prefs;
 
-    private GitkitClient client;
+    private GitkitClient gitkitClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +118,6 @@ public class MainActivity extends AppCompatActivity
         _checkCompleteLearn();
 
         dataBaseHelper._get100Card();
-
-
 
 
     }
@@ -145,10 +142,10 @@ public class MainActivity extends AppCompatActivity
 
     private void _initSettingApplication() {
         _changeLanguage();
-        if (_checkSetting(LazzyBeeShare.AUTO_CHECK_UPDATE_SETTING)) {
+        if (_checkSetting(LazzyBeeShare.SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
-        if (_checkSetting(LazzyBeeShare.NOTIFICTION_SETTING)) {
+        if (_checkSetting(LazzyBeeShare.SETTING_NOTIFICTION)) {
             _setUpNotification();
         }
 
@@ -188,7 +185,6 @@ public class MainActivity extends AppCompatActivity
         if (complete == 1) {
             //No complete
             lbComplete.setText(LazzyBeeShare.EMPTY);
-            btnStudy.setText("Study");
             btnStudy.setTag(false);
             btnCustomStudy.setTag(false);
             mCardViewStudy.setVisibility(View.VISIBLE);
@@ -232,23 +228,25 @@ public class MainActivity extends AppCompatActivity
         pTotalCards = (LinearLayout) findViewById(R.id.pTotalCards);
         pTotalNewCard = (LinearLayout) findViewById(R.id.pTotalNewCard);
         pDueToday = (LinearLayout) findViewById(R.id.pDueToday);
+        mDue = (RelativeLayout) findViewById(R.id.mDue);
 
-
-        lbDueToday = (TextView) findViewById(R.id.lbDueToday);
-        lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount);
-        lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount);
+        lbDueToday = (TextView) findViewById(R.id.lbDueToday2);
+        lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount2);
+        lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount2);
 
     }
 
     private void _visibilityCount(boolean visibility) {
         if (visibility) {
-            pTotalCards.setVisibility(View.VISIBLE);
-            pTotalNewCard.setVisibility(View.VISIBLE);
-            pDueToday.setVisibility(View.VISIBLE);
+            mDue.setVisibility(View.VISIBLE);
+//            pTotalCards.setVisibility(View.VISIBLE);
+//            pTotalNewCard.setVisibility(View.VISIBLE);
+//            pDueToday.setVisibility(View.VISIBLE);
         } else {
-            pTotalCards.setVisibility(View.GONE);
-            pTotalNewCard.setVisibility(View.GONE);
-            pDueToday.setVisibility(View.GONE);
+            mDue.setVisibility(View.GONE);
+//            pTotalCards.setVisibility(View.GONE);
+//            pTotalNewCard.setVisibility(View.GONE);
+//            pDueToday.setVisibility(View.GONE);
         }
     }
 
@@ -263,7 +261,7 @@ public class MainActivity extends AppCompatActivity
      * Check login
      */
     private void _checkLogin() {
-        client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
+        gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
             @Override
             public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
                 //authenticate();
@@ -377,34 +375,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        if (position == 1) {
-            _gotoAddCourse();
-        } else {
-            // update the main content by replacing fragments
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            String courseId = "";
-//            _gotoCourseDetails(courseId);
+        switch (position) {
+            case LazzyBeeShare.DRAWER_ABOUT_INDEX:
+                Toast.makeText(context, "Dang xay dung", Toast.LENGTH_SHORT).show();
+                break;
+            case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
+                _gotoAddCourse();
+                break;
+            case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
+                _gotoSetting();
+                break;
+            case LazzyBeeShare.DRAWER_USER_INDEX:
+                Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
+                break;
+            case LazzyBeeShare.DRAWER_COURSE_INDEX:
+                break;
+            default:
+                break;
+
+
         }
-
-
-//        switch (position) {
-//            case 0:
-//                String courseId = "";
-//                _gotoCourseDetails(courseId);
-//                break;
-//            case 1:
-//                //Goto List Course
-//                FragmentListCourse fragmentListCourse = new FragmentListCourse();
-//                //replace from container to fragmentCourse
-//                fragmentTransaction.replace(R.id.container, fragmentListCourse)
-//                        .addToBackStack(FragmentListCourse.TAG).commit();
-//                break;
-//            default:
-////                courseId = "";
-////                _gotoCourseDetails(courseId);
-//        }
-
 
     }
 
@@ -662,7 +652,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _login() {
         //Toast.makeText(context, getString(R.string.action_login), Toast.LENGTH_SHORT).show();
-        client.startSignIn();
+        gitkitClient.startSignIn();
 
 
     }
@@ -715,6 +705,7 @@ public class MainActivity extends AppCompatActivity
 
         //init inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //Start Intent
         this.startActivity(intent);
     }
@@ -795,7 +786,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onbtnCustomStudyOnClick(View view) {
-        _learnMore();
+        int today = dataBaseHelper._checkListTodayExit();
+        if (today <= 0)
+            _learnMore();
+        else {
+            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void _learnMore() {
@@ -901,7 +897,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (!client.handleActivityResult(requestCode, resultCode, intent)) {
+        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
             super.onActivityResult(requestCode, resultCode, intent);
         }
 
@@ -917,7 +913,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (!client.handleIntent(intent)) {
+        if (!gitkitClient.handleIntent(intent)) {
             super.onNewIntent(intent);
         }
     }

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -485,26 +486,37 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 Log.i(TAG, "Load first again card ");
                 currentCard = againList.get(position_again);
 
-                lbCountDue.setBackgroundResource(R.color.white);
-                lbCountAgain.setBackgroundResource(R.color.teal_200);
-                lbCountNew.setBackgroundResource(R.color.white);
+//                lbCountDue.setBackgroundResource(R.color.white);
+//                lbCountAgain.setBackgroundResource(R.color.teal_200);
+//                lbCountNew.setBackgroundResource(R.color.white);
+
+                lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+
+
             } else if (dueList.size() > 0) {
                 //Todo: get next Card
                 Log.i(TAG, "Load first duecard ");
                 currentCard = dueList.get(position_due);
-
-
-                lbCountDue.setBackgroundResource(R.color.teal_200);
-                lbCountAgain.setBackgroundResource(R.color.white);
-                lbCountNew.setBackgroundResource(R.color.white);
+//                lbCountDue.setBackgroundResource(R.color.teal_200);
+//                lbCountAgain.setBackgroundResource(R.color.white);
+//                lbCountNew.setBackgroundResource(R.color.white);
+                lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             } else if (todayList.size() > 0) {
 
                 Log.i(TAG, "Load first new card ");
                 currentCard = todayList.get(position);
 
-                lbCountDue.setBackgroundResource(R.color.white);
-                lbCountAgain.setBackgroundResource(R.color.white);
-                lbCountNew.setBackgroundResource(R.color.teal_200);
+//                lbCountDue.setBackgroundResource(R.color.white);
+//                lbCountAgain.setBackgroundResource(R.color.white);
+//                lbCountNew.setBackgroundResource(R.color.teal_200);
+
+                lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -936,9 +948,12 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             // position_due = (dueList.size() - 1);
             currentCard = dueList.get(position_due);
 
-            lbCountDue.setBackgroundResource(R.color.teal_200);
-            lbCountAgain.setBackgroundResource(R.color.white);
-            lbCountNew.setBackgroundResource(R.color.white);
+//            lbCountDue.setBackgroundResource(R.color.teal_200);
+//            lbCountAgain.setBackgroundResource(R.color.white);
+//            lbCountNew.setBackgroundResource(R.color.white);
+            lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
 
             //TODO:Display next card
             _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
@@ -1035,22 +1050,30 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 
         if (queue == Card.QUEUE_NEW_CRAM0) {
             //set BackBackground color
-            lbCountDue.setBackgroundResource(R.color.white);
-            lbCountAgain.setBackgroundResource(R.color.white);
-            lbCountNew.setBackgroundResource(R.color.teal_200);
+//            lbCountDue.setBackgroundResource(R.color.white);
+//            lbCountAgain.setBackgroundResource(R.color.white);
+//            lbCountNew.setBackgroundResource(R.color.teal_200);
+            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else if (queue == Card.QUEUE_LNR1) {
             //set BackBackground color
-            lbCountDue.setBackgroundResource(R.color.white);
-            lbCountAgain.setBackgroundResource(R.color.teal_200);
-            lbCountNew.setBackgroundResource(R.color.white);
+//            lbCountDue.setBackgroundResource(R.color.white);
+//            lbCountAgain.setBackgroundResource(R.color.teal_200);
+//            lbCountNew.setBackgroundResource(R.color.white);
+            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
         } else if (queue == Card.QUEUE_REV2) {
             //set BackBackground color
-            lbCountDue.setBackgroundResource(R.color.teal_200);
-            lbCountAgain.setBackgroundResource(R.color.white);
-            lbCountNew.setBackgroundResource(R.color.white);
+//            lbCountDue.setBackgroundResource(R.color.teal_200);
+//            lbCountAgain.setBackgroundResource(R.color.white);
+//            lbCountNew.setBackgroundResource(R.color.white);
+            lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
         } else if (queue == 10) {
         }
-
         //Set Data
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 

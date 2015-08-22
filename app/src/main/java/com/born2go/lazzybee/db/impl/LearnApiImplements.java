@@ -165,11 +165,11 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public List<Card> _searchCard(String query) {
-
-
         //select like query
-        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
-
+        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'"
+                + " ORDER BY (CASE WHEN " +
+                " question = '" + query + "' THEN 1 WHEN " +
+                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
         //Todo:Seach card
         List<Card> datas = _getListCardQueryString(likeQuery);
 
@@ -557,11 +557,10 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _insertOrUpdateToSystemTable(String key, String value) {
-        Log.i(TAG, "value:" + value);
         //TODO check value by key
         String valuebyKey = _getValueFromSystemByKey(key);
         if (_getValueFromSystemByKey(key) == null) {
-            Log.i(TAG, "Insert list card");
+            Log.i(TAG, "Insert Key:" + key + ",value:" + value);
             //Todo: No,Then insert
             ContentValues values = new ContentValues();
 
@@ -576,8 +575,6 @@ public class LearnApiImplements implements LearnApi {
             db_insert.close();
             return (int) long_insert_results;
         } else {
-            Log.i(TAG, "Update list card today:" + valuebyKey);
-            //Todo: Yes,update for key
             ContentValues values = new ContentValues();
             //TODO put value
             values.put(KEY_SYSTEM_VALUE, value);
@@ -588,7 +585,7 @@ public class LearnApiImplements implements LearnApi {
                         new String[]{String.valueOf(key)});
                 Log.i(TAG, "update_results:" + update_results);
                 String valueUpdate = _getValueFromSystemByKey(key);
-                Log.i(TAG, "Key:" + key + " ,value:" + valueUpdate);
+                Log.i(TAG, "Update Key:" + key + " ,value:" + valueUpdate);
                 return update_results;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -689,8 +686,8 @@ public class LearnApiImplements implements LearnApi {
         //get current time
         long long_curent_time = new Date().getTime();
 
-        int curent_time = (int) (long_curent_time/1000);
-        int endofday=getEndOfDayInSecond();
+        int curent_time = (int) (long_curent_time / 1000);
+        int endofday = getEndOfDayInSecond();
         Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
         Log.i(TAG, "StartOfDayInMillis:" + getStartOfDayInMillis() + ":" + getEndOfDayInSecond());
         String select_list_card_by_queue = "";
@@ -726,7 +723,7 @@ public class LearnApiImplements implements LearnApi {
                 }
                 //select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
 //                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
-                cardListByQueue=dueCard.subList(0,limit);
+                cardListByQueue = dueCard.subList(0, limit);
             }
         }
 
@@ -788,6 +785,7 @@ public class LearnApiImplements implements LearnApi {
      *
      * */
     private List<Card> _getListCardQueryString(String query) {
+        Log.i(TAG, "Query String: " + query);
         List<Card> datas = new ArrayList<Card>();
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
@@ -1057,6 +1055,7 @@ public class LearnApiImplements implements LearnApi {
         // Log.i(TAG, "update_result: " + update_result);
 
     }
+
     public long getStartOfDayInMillis() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -1069,6 +1068,6 @@ public class LearnApiImplements implements LearnApi {
     public int getEndOfDayInSecond() {
         //Add one day's time to the beginning of the day.
         //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
-        return (int) ((getStartOfDayInMillis()/1000) + (24 * 60 * 60));
+        return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
     }
 }

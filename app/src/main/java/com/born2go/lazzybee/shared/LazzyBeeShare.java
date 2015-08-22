@@ -29,28 +29,44 @@ public class LazzyBeeShare {
     public static final String EMPTY = "";
     public static final int TOTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
+
     public static final String SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
     public static final String SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
+    public static final String SETTING_AUTO_CHECK_UPDATE = "auto_check_update";
+    public static final String SETTING_DEBUG_INFOR = "debug_infor";
     public static final String SETTING_TOTAL_CARD_LEARN_PRE_DAY = "total_card_learn_pre_day";
+    public static final String SETTING_NOTIFICTION = "notification";
 
+    public static final String DRAWER_USER = "user";
+    public static final String DRAWER_TITLE_COURSE = "title_course";
+    public static final String DRAWER_SETTING = "settings";
+    public static final String DRAWER_ABOUT = "about";
+
+    public static final String DRAWER_LINES = "lines";
+    public static final String DRAWER_ADD_COURSE = "add_course";
+    public static final int DRAWER_ADD_COURSE_INDEX = 0;
+    public static final int DRAWER_SETTINGS_INDEX = 1;
+    public static final int DRAWER_ABOUT_INDEX = 2;
+
+    public static final int DRAWER_USER_INDEX = 3;
+
+    public static final int DRAWER_COURSE_INDEX = 4;
     private static boolean DEBUG = true;
-
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
     public static final String CARD_EXPLAIN = "explain";
     public static final String CARD_EXAMPLE = "example";
     public static final String KEY_LANGUAGE = "lang";
+
     public static final String LANG_EN = "en";
     public static final String LANG_VI = "vi";
+
     public static final String DB_VERSION = "db_v";
     public static final java.lang.String DB_UPDATE_NAME = "update.db";
     public static final int NO_DOWNLOAD_UPDATE = 0;
     public static final int DOWNLOAD_UPDATE = 1;
-    public static final String AUTO_CHECK_UPDATE_SETTING = "auto_check_update";
-    public static final String DEBUG_INFOR_SETTING = "debug_infor";
     public static final String ON = "on";
     public static final String OFF = "off";
-    public static final String NOTIFICTION_SETTING = "notification";
     public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
 
     public static String mime = "text/html";
@@ -59,9 +75,11 @@ public class LazzyBeeShare {
     public static final int MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
     public static final int MAX_LEARN_MORE_PER_DAY = 5;
-    public static final String DOWNLOAD = "Download";
-    public static int CARD_INDEX_ID = 0;
 
+    public static final String DOWNLOAD = "Download";
+
+    //
+    public static int CARD_INDEX_ID = 0;
     public static int CARD_INDEX_QUESTION = 1;
     public static int CARD_INDEX_ANSWER = 2;
     public static int CARD_INDEX_CATRGORIES = 3;
@@ -78,6 +96,7 @@ public class LazzyBeeShare {
     public static int CARD_INDEX_USER_NOTE = 14;
     public static int CARD_INDEX_LAST_IVL = 15;
     public static int CARD_INDEX_E_FACTOR = 16;
+
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
 
 
@@ -212,7 +231,7 @@ public class LazzyBeeShare {
     /**
      * init HTML question
      */
-    public static String _getQuestionDisplay(String s) {
+    public static String _getQuestionDisplay(String question) {
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
@@ -237,7 +256,7 @@ public class LazzyBeeShare {
                         "<body onload='question.playQuestion()'>\n" +
                         "<div style='width:100%'>\n" +
                         "<div style='float:left;width:90%;text-align: center;'>\n" +
-                        "<strong style='font-size:25pt;'>" + s + "</strong>\n" +
+                        "<strong style='font-size:25pt;'>" + question + "</strong>\n" +
                         "</div>\n" +
                         "<div style='float:left;width:10%'>\n" +
                         "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
@@ -264,7 +283,12 @@ public class LazzyBeeShare {
             JSONObject commonObj = packagesObj.getJSONObject("common");//Get json by package name
 
             //get value by key
-            value = Html.fromHtml(commonObj.getString(key)).toString();
+            if (key.equals(CARD_PRONOUN))
+                value = answerObj.getString(key).toString();
+            else {
+                value = Html.fromHtml(commonObj.getString(key)).toString();
+
+            }
 
 
         } catch (JSONException e) {
@@ -297,7 +321,6 @@ public class LazzyBeeShare {
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean onload) {
         getDebugSetting(context);
-
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -337,10 +360,10 @@ public class LazzyBeeShare {
         }
 
         if (!explain.isEmpty()) {
-            explainTagA = "<p style='margin-top:2px'><a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a></p>";
+            explainTagA = "<p style=''><a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a></p>";
         }
         if (!example.isEmpty()) {
-            exampleTagA = "<p style='margin-top:2px'><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
+            exampleTagA = "<p style=''><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
         }
         html = "\n<html>\n" +
                 "<head>\n" +
@@ -366,19 +389,21 @@ public class LazzyBeeShare {
                 "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
 
                 "       <div style=\"width:100%\">\n" +
+                "              <strong>" + _explain + "</strong>" +
                 "           <div style=\"float:left;width:90%\">" +
-                "              <strong>" + _explain + "</strong>" + explain + "\n" +
+                "               " + explain + "\n" +
                 "           </div>\n" +
-                "           <div style=\"float:right;width:10%;margin-top:25px\">\n " +
+                "           <div style=\"float:right;width:10%;vertical-align: middle;\">\n " +
                 "               " + explainTagA + "\n" +
                 "           </div>\n" +
                 "       </div>\n" +
 
                 "       <div style=\"width:100%\">\n" +
+                "              <strong>" + _example + "</strong>" +
                 "           <div style=\"float:left;width:90%\">" +
-                "              <strong>" + _example + "</strong>" + example + "\n" +
+                "               " + example + "\n" +
                 "           </div>\n" +
-                "           <div style=\"float:right;width:10%;margin-top:25px\">\n " +
+                "           <div style=\"float:right;width:10%;vertical-align: middle;\">\n " +
                 "               " + exampleTagA + "\n" +
                 "           </div>\n" +
                 "       </div>\n" +
@@ -401,7 +426,7 @@ public class LazzyBeeShare {
                     "</html>\n";
         }
         html += debug;
-        //Log.i(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        //Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());
         return html;
@@ -410,7 +435,7 @@ public class LazzyBeeShare {
 
     private static void getDebugSetting(Context context) {
         LearnApiImplements learnApiImplements = new LearnApiImplements(context);
-        String value = learnApiImplements._getValueFromSystemByKey(DEBUG_INFOR_SETTING);
+        String value = learnApiImplements._getValueFromSystemByKey(SETTING_DEBUG_INFOR);
         if (value == null)
             DEBUG = false;
         else if (value.equals(ON)) {
