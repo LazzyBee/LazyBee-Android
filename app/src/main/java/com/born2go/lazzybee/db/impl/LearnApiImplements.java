@@ -681,7 +681,7 @@ public class LearnApiImplements implements LearnApi {
      * @param queue
      */
     @Override
-    public List<Card> _getListCardByQueue(int queue) {
+    public List<Card> _getListCardByQueue(int queue, int limit) {
         List<Card> cardListByQueue = null;
 
         //get current time
@@ -700,32 +700,7 @@ public class LearnApiImplements implements LearnApi {
             cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
 
         } else if (queue == Card.QUEUE_REV2) {
-            int limit = 0;
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due <= " + (getEndOfDayInSecond());
-//            List<Card> dueCard2=_getListCardQueryString(select_list_card_by_queue);
-//            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY
-//                    + " where queue = " + queue
-//                    + " AND strftime('%d-%m-%Y', due, 'unixepoch') <= strftime('%d-%m-%Y', "
-//                    + curent_time + ", 'unixepoch')";
-            List<Card> dueCard = _getListCardQueryString(select_list_card_by_queue);
-            int todayCount = _checkListTodayExit();
-            //todayCount=-2 init ->limit=0
-            //todayCount=0|| todayCount=-1 || todayCount > 0 outday or continue learn ->limit=LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
-
-            if (todayCount == -2) {
-                cardListByQueue = new ArrayList<Card>();
-            } else if (todayCount == 0 || todayCount == -1 || todayCount > 0) {
-                int dueCount = dueCard.size();
-                int total_learn = dueCount + todayCount;
-                if (dueCount > LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount) {
-                    limit = LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
-                } else {
-                    limit = dueCount;
-                }
-                //select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " AND due < " + curent_time + " LIMIT " + limit;
-//                cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
-                cardListByQueue = dueCard.subList(0, limit);
-            }
+            cardListByQueue = _getListCarDue(limit);
         }
 
         return cardListByQueue;
@@ -877,8 +852,8 @@ public class LearnApiImplements implements LearnApi {
     public String _getStringDueToday() {
         String duetoday = LazzyBeeShare.EMPTY;
         int todayCount = _checkListTodayExit();
-        int againCount = _getListCardByQueue(Card.QUEUE_LNR1).size();
-        int dueCount = _getListCardByQueue(Card.QUEUE_REV2).size();
+        int againCount = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
+        int dueCount = _getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.TOTAL_LEAN_PER_DAY-todayCount).size();
         if (todayCount == -2) {
             dueCount = 0;
             againCount = 0;
@@ -898,9 +873,9 @@ public class LearnApiImplements implements LearnApi {
             }
         }
         if (todayCount > 0 || againCount > 0 || dueCount > 0)
-            duetoday =  "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>\n" +
-                        " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>\n" +
-                        " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + dueCount + "</font>";
+            duetoday = "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>\n" +
+                    " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>\n" +
+                    " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + dueCount + "</font>";
 
         Log.i(TAG, "Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
         return duetoday;
@@ -919,9 +894,9 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int _checkCompleteLearned() {
-        int again = _getListCardByQueue(Card.QUEUE_LNR1).size();
-        int due = _getListCardByQueue(Card.QUEUE_REV2).size();
         int today = _checkListTodayExit();
+        int again = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
+        int due = _getListCardByQueue(Card.QUEUE_REV2,LazzyBeeShare.TOTAL_LEAN_PER_DAY - today).size();
 
         Log.i(TAG, today + ":" + again + ":" + due);
 
@@ -1074,5 +1049,11 @@ public class LearnApiImplements implements LearnApi {
         //Add one day's time to the beginning of the day.
         //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
         return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
+    }
+
+    public List<Card> _getListCarDue(int limit) {
+        String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
+                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " LIMIT " + limit;
+        return _getListCardQueryString(select_list_card_by_queue);
     }
 }

@@ -134,13 +134,14 @@ public class FragmentStudy extends Fragment {
         _initTextToSpeech();
 
         //get card due today & agin
-        againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1);
-        dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2);
+        againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1,0);
 
-        if (getArguments() != null)
+        if (getArguments() != null) {
             leanrmore = getArguments().getBoolean(LazzyBeeShare.LEARN_MORE);
-        else
+        }
+        else {
             Log.i(TAG, "Arguments null");
+        }
 
         Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + leanrmore);
 
@@ -150,6 +151,7 @@ public class FragmentStudy extends Fragment {
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
         todayList = dataBaseHelper._getRandomCard(MAX_LEARN_PER_DAY, leanrmore);
+        dueList = new ArrayList<Card>();
 
         //int againCount = againList.size();//get card List Again size
 //        //Todo:
