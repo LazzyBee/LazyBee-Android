@@ -305,7 +305,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_LNR1);
             } else if (dueList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 2");
                 if (dueList.size() == 1)
@@ -315,7 +315,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = dueList.get(position_due - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_REV2);
 
             } else if (todayList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 3");
@@ -326,7 +326,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
             } else {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Again Card 4");
@@ -343,7 +343,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = dueList.get(position_due - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_REV2);
 
             } else if (todayList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 2");
@@ -354,7 +354,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
             } else if (againList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 3");
@@ -365,7 +365,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_LNR1);
             } else {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Due Card 4");
                 _completeLean();
@@ -382,7 +382,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 }
                 Log.i(TAG, "_nextAfterDoneCard: next card is New Card:current queue load:" + currentQueue);
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
             } else if (againList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is New Card 2");
@@ -393,7 +393,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_LNR1);
             } else if (dueList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: next card is New Card 3");
 
@@ -405,7 +405,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 }
 
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_REV2);
 
             } else {
                 Log.i(TAG, "_nextAfterDoneCard: next card is Again New 4");
@@ -422,7 +422,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = againList.get(position_again - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_LNR1);
             } else if (dueList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: 2");
                 if (dueList.size() == 1)
@@ -432,7 +432,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = dueList.get(position_due - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_REV2);
 
             } else if (todayList.size() > 0) {
                 Log.i(TAG, "_nextAfterDoneCard: 3");
@@ -443,7 +443,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                     currentCard = todayList.get(position - 1);
                 }
                 //TODO:Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
             } else {
                 Log.i(TAG, "_nextAfterDoneCard: 4");
@@ -522,7 +522,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             e.printStackTrace();
         }
 
-        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
         _addJavascriptInterfaceQuestionAndAnswer();
 
@@ -913,7 +913,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             currentCard = todayList.get(position);
 
             //TODO:Display next card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
 
 //            } catch (Exception e) {
 //                Log.i(TAG, "_nextNewCard:Error:" + e.getMessage());
@@ -956,7 +956,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
 
             //TODO:Display next card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_REV2);
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_REV2);
 
         } else if (todayList.size() > 0) {
             Log.i(TAG, "_nextDueCard:Next card is new card");
@@ -1001,7 +1001,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                         Log.i(TAG, "_nextAgainCard:Next card is again card 2");
                         flag_one = false;
                         //TODO:Display next card
-                        _loadWebView(LazzyBeeShare._getQuestionDisplay(currentCard.getQuestion()), Card.QUEUE_LNR1);
+                        _loadWebView(LazzyBeeShare._getQuestionDisplay(context,currentCard.getQuestion()), Card.QUEUE_LNR1);
 
                     } else {
                         Log.i(TAG, "_nextAgainCard:Next card is due card 1");

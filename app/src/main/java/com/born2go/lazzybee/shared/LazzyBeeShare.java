@@ -2,6 +2,7 @@ package com.born2go.lazzybee.shared;
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.born2go.lazzybee.R;
@@ -105,6 +106,8 @@ public class LazzyBeeShare {
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFR0hIU3FCU0xuU28
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E
     public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E";
+
+    static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
     /**
      * Init data demo List Course
@@ -231,12 +234,14 @@ public class LazzyBeeShare {
     /**
      * init HTML question
      */
-    public static String _getQuestionDisplay(String question) {
+    public static String _getQuestionDisplay(Context context, String question) {
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
                         "<head>\n" +
-                        "<style>\n" +
+                        "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                        "name=\"viewport\">\n" +
+                        /*"<style>\n" +
                         " figure {" +
                         "   text-align: center;" +
                         "   margin: auto;" +
@@ -251,23 +256,22 @@ public class LazzyBeeShare {
                         "a {" +
                         " margin-top:5px;" +
                         "}" +
-                        "</style>\n" +
+                        "</style>\n" +*/
                         "</head>\n" +
                         "<body onload='question.playQuestion()'>\n" +
                         "<div style='width:100%'>\n" +
                         "<div style='float:left;width:90%;text-align: center;'>\n" +
-                        "<strong style='font-size:25pt;'>" + question + "</strong>\n" +
+                        "<strong style='font-size:"+context.getResources().getDimension(R.dimen.study_question_size)+"pt'>" + question + "</strong>\n" +
                         "</div>\n" +
                         "<div style='float:left;width:10%'>\n" +
                         "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
                         "</div>\n" +
-                        "</div>\n"
-                        + "</body>\n" +
+                        "</div>\n" +
+                        "</body>\n" +
                         "</html>";
+        Log.v(TAG, html);
         return html;
     }
-
-    static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
 
     public static boolean compareDate(Date date1, Date date2) {
@@ -330,7 +334,7 @@ public class LazzyBeeShare {
         String explainTagA = EMPTY;
         String exampleTagA = EMPTY;
         String imageURL = EMPTY;
-        String debug = "</body></html>\n";
+        String debug = "</body>\n</html>\n";
         String _example = context.getResources().getString(R.string.example);
         Object _explain = context.getResources().getString(R.string.explain);
 
@@ -374,7 +378,9 @@ public class LazzyBeeShare {
                 "   <div style='width:100%'>\n" +
 
                 "       <div style='float:left;width:90%;text-align: center;'>\n" +
-                "           <strong style='font-size:35pt;'>" + card.getQuestion() + "</strong>\n" +
+                "           <strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "'>" + card.getQuestion() + "</strong><br>\n" +
+                "           <font size='3'>" + pronoun + "</font><br>\n" +
+                "           <font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
                 "       </div>\n" +
 
                 "       <div style='float:left;width:10%'>\n" +
@@ -382,15 +388,13 @@ public class LazzyBeeShare {
                 "       </div>\n" +
 
                 "       <div style='width:90%'>\n" +
-                "           <center><font size='4'>" + pronoun + "</font></center>\n" +
-                "           <center><font size='5' color='blue'><em>" + meaning + "</em></font></center>\n" +
                 "       </div>\n" +
 
                 "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
 
-                "       <div style=\"width:100%\">\n" +
-                "              <strong>" + _explain + "</strong>" +
-                "           <div style=\"float:left;width:90%\">" +
+                "       <div style=\"float:left;width:100%\">\n" +
+                "            <div style=\"float:left;width:100%\"><strong>" + _explain + "</strong></div>\n" +
+                "           <div style=\"float:left;width:90%\">\n" +
                 "               " + explain + "\n" +
                 "           </div>\n" +
                 "           <div style=\"float:right;width:10%;vertical-align: middle;\">\n " +
@@ -398,9 +402,9 @@ public class LazzyBeeShare {
                 "           </div>\n" +
                 "       </div>\n" +
 
-                "       <div style=\"width:100%\">\n" +
-                "              <strong>" + _example + "</strong>" +
-                "           <div style=\"float:left;width:90%\">" +
+                "       <div style=\"float:left;width:100%\">\n" +
+                "            <div style=\"float:left;width:100%\"><strong>" + _example + "</strong></div>\n" +
+                "           <div style=\"float:left;width:90%\">\n" +
                 "               " + example + "\n" +
                 "           </div>\n" +
                 "           <div style=\"float:right;width:10%;vertical-align: middle;\">\n " +
@@ -422,11 +426,12 @@ public class LazzyBeeShare {
                     "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
                     "              -------------------------------------</br>\n" +
                     "           </div>\n" +
-                    "   </body>" +
+                    "   </body>\n" +
                     "</html>\n";
         }
         html += debug;
-        //Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());
         return html;
