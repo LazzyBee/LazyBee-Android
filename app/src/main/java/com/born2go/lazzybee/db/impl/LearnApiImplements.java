@@ -898,11 +898,11 @@ public class LearnApiImplements implements LearnApi {
             }
         }
         if (todayCount > 0 || againCount > 0 || dueCount > 0)
-            duetoday = "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>" +
-                    " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>" +
-                    " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + todayCount + "</font>";
+            duetoday =  "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>\n" +
+                        " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>\n" +
+                        " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + dueCount + "</font>";
 
-
+        Log.i(TAG, "Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
         return duetoday;
     }
 
