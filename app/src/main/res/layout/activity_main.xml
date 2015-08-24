@@ -12,19 +12,15 @@
           android:layout_height="match_parent"
           android:orientation="vertical">-->
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar_main"
-        android:layout_width="fill_parent"
-        android:layout_height="55dp"
 
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <!--<include-->
+            <!--layout="@layout/tool_bar"/>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
