@@ -33,8 +33,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp">
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -42,10 +42,9 @@
                     android:layout_gravity="center"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
+                        android:layout_height="100dp"
                         android:paddingTop="15dp"
                         android:paddingBottom="15dp"
                         android:background="@color/teal_500">
@@ -58,7 +57,9 @@
                             android:text="10000 EngLish Word "
                             android:textAlignment="center"
                             android:textSize="30dp"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true" />
 
                         <TextView
                             android:id="@+id/lbComplete"
@@ -70,7 +71,7 @@
                             android:textAlignment="center"
                             android:textSize="20dp"
                             android:visibility="gone" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/pDueToday"
@@ -170,12 +171,13 @@
 
                     <RelativeLayout
                         android:id="@+id/mDue"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingTop="20dp"
                         android:paddingBottom="20dp"
                         android:paddingRight="5dp"
-                        android:paddingLeft="5dp">
+                        android:paddingLeft="5dp"
+                        android:layout_gravity="center_horizontal">
 
                         <TextView
                             android:id="@+id/textView4"
@@ -193,7 +195,6 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/textView4"
-                            android:layout_marginLeft="55dp"
                             android:text="@string/total_new_learn"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
@@ -213,7 +214,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_above="@+id/textView5"
-                            android:layout_marginRight="50dp"
                             android:layout_marginStart="55dp"
                             android:layout_toEndOf="@+id/textView5"
                             android:text="00 00 00"
@@ -256,27 +256,33 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
+
+
             <android.support.v7.widget.CardView
                 android:id="@+id/mCardViewStudy"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false">
-
-
                 <Button
                     android:id="@+id/btnStudy"
                     android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:background="@color/teal_500"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
 
                     android:onClick="_onBtnStudyOnClick"
                     android:text="@string/study"
-                    android:textColor="#ffffffff" />
+                    android:textColor="@color/white"
+                    android:layout_below="@+id/textView4"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/teal_500"
+                    android:paddingRight="16dp"
+
+                    />
+
             </android.support.v7.widget.CardView>
 
             <LinearLayout
@@ -289,7 +295,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="3dp"
                     android:background="@color/white">
 
@@ -310,7 +316,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp">
+                    android:layout_marginRight="10dp">
 
                     <Button
                         android:id="@+id/btnCustomStudy"

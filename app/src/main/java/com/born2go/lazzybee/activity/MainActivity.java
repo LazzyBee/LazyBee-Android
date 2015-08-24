@@ -24,6 +24,7 @@ import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity
     private Context context = this;
 
     private GitkitClient gitkitClient;
-   // Toolbar toolbar;
+    // Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity
         int allCount = dataBaseHelper._getAllListCard().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
         if (dueToday != null)
-            lbDueToday.setText(dueToday);
+            lbDueToday.setText(Html.fromHtml(dueToday));
         lbTotalsCount.setText("" + allCount);
         lbTotalNewCount.setText("" + (allCount - learnCount));
 
