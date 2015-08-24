@@ -22,10 +22,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/notificaion"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/grey_600"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:singleLine="true"
+                android:layout_toStartOf="@+id/mSwitch"
+                android:layout_marginRight="8dp" />
 
             <Switch
                 android:id="@+id/mSwitch"
