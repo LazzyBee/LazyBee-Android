@@ -101,9 +101,7 @@
     <string name="setting_language">Language</string>
     <string name="setting_lines" translatable="false">LINE</string>
     <string name="setting_limit_card_number" >%d Card</string>
-
-
-
+    <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
 
 
 </resources>

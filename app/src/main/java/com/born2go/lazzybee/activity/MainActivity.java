@@ -33,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,18 +87,15 @@ public class MainActivity extends AppCompatActivity
     CardView mCardViewStudy;
 
     TextView lbNameCourse;
-    TextView lbComplete;
 
     TextView lbDueToday;
     TextView lbTotalNewCount;
     TextView lbTotalsCount;
 
-    LinearLayout pTotalCards;
-    LinearLayout pTotalNewCard;
-    LinearLayout pDueToday;
-    RelativeLayout mDue;
 
-    Button btnStudy, btnCustomStudy;
+    RelativeLayout mDue, mCongratulations;
+
+    Button btnStudy;
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
 
@@ -188,20 +184,11 @@ public class MainActivity extends AppCompatActivity
         int complete = dataBaseHelper._checkCompleteLearned();
         if (complete == 1) {
             //No complete
-            lbComplete.setText(LazzyBeeShare.EMPTY);
-            btnStudy.setTag(false);
-            btnCustomStudy.setTag(false);
             mCardViewStudy.setVisibility(View.VISIBLE);
-
             _visibilityCount(true);
         } else {
             //Comprete
             Log.i(TAG, "_checkCompleteLearn:Complete");
-            lbComplete.setText(getString(R.string.congratulations));
-            // lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
-            btnCustomStudy.setTag(true);
-            btnStudy.setTag(false);
-            btnStudy.setText("Complete Learn");
             Log.i(TAG, "Learn more");
             mCardViewStudy.setVisibility(View.GONE);
 
@@ -223,16 +210,12 @@ public class MainActivity extends AppCompatActivity
 
     private void _intInterfaceView() {
         mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
-        btnStudy = (Button) findViewById(R.id.btnStudy);
-        btnCustomStudy = (Button) findViewById(R.id.btnCustomStudy);
 
         lbNameCourse = (TextView) findViewById(R.id.lbNameCourse);
-        lbComplete = (TextView) findViewById(R.id.lbComplete);
 
-        pTotalCards = (LinearLayout) findViewById(R.id.pTotalCards);
-        pTotalNewCard = (LinearLayout) findViewById(R.id.pTotalNewCard);
-        pDueToday = (LinearLayout) findViewById(R.id.pDueToday);
+
         mDue = (RelativeLayout) findViewById(R.id.mDue);
+        mCongratulations = (RelativeLayout) findViewById(R.id.mCongratulations);
 
         lbDueToday = (TextView) findViewById(R.id.lbDueToday2);
         lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount2);
@@ -243,11 +226,13 @@ public class MainActivity extends AppCompatActivity
     private void _visibilityCount(boolean visibility) {
         if (visibility) {
             mDue.setVisibility(View.VISIBLE);
+            mCongratulations.setVisibility(View.GONE);
 //            pTotalCards.setVisibility(View.VISIBLE);
 //            pTotalNewCard.setVisibility(View.VISIBLE);
 //            pDueToday.setVisibility(View.VISIBLE);
         } else {
             mDue.setVisibility(View.GONE);
+            mCongratulations.setVisibility(View.VISIBLE);
 //            pTotalCards.setVisibility(View.GONE);
 //            pTotalNewCard.setVisibility(View.GONE);
 //            pDueToday.setVisibility(View.GONE);
@@ -305,59 +290,6 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper = new LearnApiImplements(context);
     }
 
-    boolean first = true;
-
-    private void _checkListTodayExit() {
-        int checkTodayExit = dataBaseHelper._checkListTodayExit();
-        Log.i(TAG, "checkTodayExit: " + checkTodayExit);
-
-        if (checkTodayExit == -2) {
-            Log.i(TAG, "_checkListTodayExit:Fist Innitial");
-            lbComplete.setText(LazzyBeeShare.EMPTY);
-            btnStudy.setText("Study");
-            btnStudy.setTag(false);
-            btnCustomStudy.setTag(false);
-            mCardViewStudy.setVisibility(View.VISIBLE);
-        } else {
-            if (checkTodayExit > -1) {
-                Log.i(TAG, "_checkListTodayExit:checkTodayExit == 1111");
-                if (checkTodayExit == 0) {
-                    Log.i(TAG, "_checkListTodayExit=0,Complete Learn to day");
-                    lbComplete.setText(LazzyBeeShare.EMPTY);
-                    // lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
-                    btnStudy.setText("Study");
-                    btnStudy.setTag(false);
-                    btnCustomStudy.setTag(false);
-                    Log.i(TAG, "Study");
-                    mCardViewStudy.setVisibility(View.VISIBLE);
-                } else if (checkTodayExit == 0) {
-                    Log.i(TAG, "_checkListTodayExit:checkTodayExit == 0");
-                    lbComplete.setText(getString(R.string.congratulations));
-                    // lbSuportCompletedCard.setText(getString(R.string.suport_complete_card));
-                    btnCustomStudy.setTag(true);
-                    btnStudy.setTag(false);
-                    btnStudy.setText("Complete Learn");
-                    Log.i(TAG, "Learn more");
-                    mCardViewStudy.setVisibility(View.GONE);
-                } else {
-                    Log.i(TAG, "_checkListTodayExit:checkTodayExit == 432424");
-                }
-
-            } else if (checkTodayExit == -1) {
-                Log.i(TAG, "_checkListTodayExit:today==-1");
-                lbComplete.setText(LazzyBeeShare.EMPTY);
-                //lbSuportCompletedCard.setText(LazzyBeeShare.EMPTY);
-                btnStudy.setText("Study");
-                btnStudy.setTag(true);
-                btnCustomStudy.setTag(false);
-                Log.i(TAG, "Study");
-                mCardViewStudy.setVisibility(View.VISIBLE);
-
-            }
-        }
-
-
-    }
 
     /**
      * Init NavigationDrawerFragment
@@ -781,15 +713,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        Log.i(TAG, "btnStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnStudy.getTag());
         _checkCompleteLearn();
-        if (btnStudy.getTag() != null) {
-            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-            this.startActivityForResult(intent, RESULT_OK);
-        }
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        this.startActivityForResult(intent, RESULT_OK);
+
     }
 
-    public void _onbtnCustomStudyOnClick(View view) {
+    public void _onCustomStudyOnClick(View view) {
+        _gotoSetting();
+    }
+    public void _onLearnMoreClick(View view) {
         int today = dataBaseHelper._checkListTodayExit();
         if (today == 0)
             _learnMore();
@@ -810,13 +743,13 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                Log.i(TAG, "btnCustomStudy:" + LazzyBeeShare.LEARN_MORE + ":" + btnCustomStudy.getTag());
+
                 _checkCompleteLearn();
-                if (btnCustomStudy.getTag() != null) {
+
                     Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) btnCustomStudy.getTag());
+                    intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
                     startActivityForResult(intent, 1);
-                }
+
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

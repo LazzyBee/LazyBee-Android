@@ -41,8 +41,8 @@
     <string name="dialog_message_add_to_learn">Thêm vào khóa học</string>
     <string name="notificaion">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
-    <string name="add_to" >Thêm vào</string>
-    <string name="queue"/>
+    <string name="add_to">Thêm vào</string>
+    <string name="queue" />
     <string name="dialog_message_done_card">Bạn có muốn xóa từ này?</string>
     <string name="dialog_title_done_card">Xóa từ</string>
     <string name="dialog_title_add_to_learn">Bạn có muốn thêm từ vào khóa học?</string>
@@ -77,5 +77,5 @@
     <string name="setting_debug_info">Thông tin lỗi</string>
     <string name="setting_language">Ngôn ngữ</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
-    <string name="settings_today_limit_review_description" />
+    <string name="message_congratulations">Bấm vào <b><u>Học thêm</u></b> để học tiếp,bấm vào <b><u>Đã học</u></b> để xem lại thẻ đã học</string>
 </resources>
