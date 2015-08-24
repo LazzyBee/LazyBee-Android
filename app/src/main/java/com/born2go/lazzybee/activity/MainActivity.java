@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity
     private Context context = this;
 
     private GitkitClient gitkitClient;
+   // Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,8 @@ public class MainActivity extends AppCompatActivity
         _initSQlIte();
         _initSettingApplication();
         setContentView(R.layout.activity_main);
+//        toolbar = (Toolbar) findViewById(R.id.action_bar_main);
+//        setSupportActionBar(toolbar);
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
@@ -787,7 +790,7 @@ public class MainActivity extends AppCompatActivity
 
     public void _onbtnCustomStudyOnClick(View view) {
         int today = dataBaseHelper._checkListTodayExit();
-        if (today <= 0)
+        if (today == 0)
             _learnMore();
         else {
             Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
