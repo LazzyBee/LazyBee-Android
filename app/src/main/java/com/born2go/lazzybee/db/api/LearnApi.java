@@ -123,8 +123,9 @@ public interface LearnApi {
      * Get List Card by queue
      *
      * @param queue
+     * @param limit
      */
-    List<Card> _getListCardByQueue(int queue);
+    List<Card> _getListCardByQueue(int queue,int limit);
 
     /**
      * Update queue and due card

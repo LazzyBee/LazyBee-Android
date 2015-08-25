@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -31,12 +30,13 @@ public class LazzyBeeShare {
     public static final int TOTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
 
-    public static final String SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
-    public static final String SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
-    public static final String SETTING_AUTO_CHECK_UPDATE = "auto_check_update";
-    public static final String SETTING_DEBUG_INFOR = "debug_infor";
-    public static final String SETTING_TOTAL_CARD_LEARN_PRE_DAY = "total_card_learn_pre_day";
-    public static final String SETTING_NOTIFICTION = "notification";
+    public static final String KEY_SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
+    public static final String KEY_SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
+    public static final String KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY = "total_card_learn_pre_day";
+    public static final String KEY_SETTING_MAX_LEARN_MORE_PER_DAY = "max_learn_more_per_day";
+    public static final String KEY_SETTING_AUTO_CHECK_UPDATE = "auto_check_update";
+    public static final String KEY_SETTING_DEBUG_INFOR = "debug_infor";
+    public static final String KEY_SETTING_NOTIFICTION = "notification";
 
     public static final String DRAWER_USER = "user";
     public static final String DRAWER_TITLE_COURSE = "title_course";
@@ -68,7 +68,6 @@ public class LazzyBeeShare {
     public static final int DOWNLOAD_UPDATE = 1;
     public static final String ON = "on";
     public static final String OFF = "off";
-    public static List<String> initWord = Arrays.asList("hot", "you", "but", "now");
 
     public static String mime = "text/html";
     public static String encoding = "utf-8";
@@ -440,7 +439,7 @@ public class LazzyBeeShare {
 
     private static void getDebugSetting(Context context) {
         LearnApiImplements learnApiImplements = new LearnApiImplements(context);
-        String value = learnApiImplements._getValueFromSystemByKey(SETTING_DEBUG_INFOR);
+        String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_DEBUG_INFOR);
         if (value == null)
             DEBUG = false;
         else if (value.equals(ON)) {

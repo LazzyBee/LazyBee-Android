@@ -78,4 +78,6 @@
     <string name="setting_language">Ngôn ngữ</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
     <string name="message_congratulations">Bấm vào <b><u>Học thêm</u></b> để học tiếp,bấm vào <b><u>Đã học</u></b> để xem lại thẻ đã học</string>
+    <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
+    <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>
 </resources>

@@ -7,7 +7,8 @@
         android:layout_width="fill_parent"
         android:layout_height="56dp"
         android:visibility="visible"
-        card_view:cardElevation="@dimen/setting_card_view_elevation">
+        card_view:cardElevation="@dimen/setting_card_view_elevation"
+        card_view:cardPreventCornerOverlap="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,10 +23,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/notificaion"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/grey_600"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:singleLine="true"
+                android:layout_toStartOf="@+id/mSwitch"
+                android:layout_marginRight="8dp" />
 
             <Switch
                 android:id="@+id/mSwitch"
