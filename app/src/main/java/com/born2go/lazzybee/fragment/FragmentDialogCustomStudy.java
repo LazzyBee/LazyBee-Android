@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -41,6 +42,11 @@ public class FragmentDialogCustomStudy extends DialogFragment {
 
     }
 
+    public interface DialogCustomStudyInferface {
+        void _finishCustomStudy();
+    }
+    DialogCustomStudyInferface studyInferface;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,7 +61,7 @@ public class FragmentDialogCustomStudy extends DialogFragment {
 
         final List<String> settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study));
 
-        RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings,getDialog());
+        RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, getDialog(),studyInferface);
         mRecyclerViewCustomStudy.setLayoutManager(gridLayoutManager);
         mRecyclerViewCustomStudy.setAdapter(recyclerViewCustomStudyAdapter);
 
@@ -70,9 +76,9 @@ public class FragmentDialogCustomStudy extends DialogFragment {
                 value = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
                 value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
-            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY)) {
+            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
                 value = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
-            } else if (key.equals(LazzyBeeShare.KEY_SETTING_MAX_LEARN_MORE_PER_DAY)) {
+            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
                 value = LazzyBeeShare.MAX_LEARN_MORE_PER_DAY;
             }
 
@@ -102,9 +108,9 @@ public class FragmentDialogCustomStudy extends DialogFragment {
             message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
         } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
+        } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_MAX_LEARN_MORE_PER_DAY) {
+        } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_max_learn_more_per_day_by);
         }
 
@@ -139,5 +145,10 @@ public class FragmentDialogCustomStudy extends DialogFragment {
         dialog.show();
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        studyInferface= (DialogCustomStudyInferface) activity;
 
+    }
 }
