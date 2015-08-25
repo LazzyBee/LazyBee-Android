@@ -1,0 +1,13 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="225dp"
+    tools:context="com.born2go.lazzybee.fragment.FragmentDialogCustomStudy">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="225dp"
+        android:id="@+id/mRecyclerViewCustomStudy"
+        android:layout_gravity="left|top"
+        android:background="#ffffff" />
+</FrameLayout>

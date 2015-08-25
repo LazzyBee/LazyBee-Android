@@ -85,10 +85,12 @@
     <string name="setting_learn_title">Learn</string>
     <string name="setting_today_new_card_limit">Today\'s new card limit</string>
     <string name="setting_today_review_card_limit">Today\'s review card limit</string>
+    <string name="setting_max_learn_more_per_day">Max learn more per day</string>
     <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
     <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
     <string name="setting_total_learn_per_day">Total learn per day</string>
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
+    <string name="dialog_message_setting_max_learn_more_per_day_by">Max learn more per day by</string>
     <string name="message_you_not_complete">You not complete!Touch Learn.</string>
     <string name="message_total_card_review">Total card review:</string>
     <string name="my_course">My Course</string>
@@ -100,7 +102,7 @@
     <string name="setting_debug_info">Debug Infor</string>
     <string name="setting_language">Language</string>
     <string name="setting_lines" translatable="false">LINE</string>
-    <string name="setting_limit_card_number" >%d Card</string>
+    <string name="setting_limit_card_number">%d Card</string>
     <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
 
 

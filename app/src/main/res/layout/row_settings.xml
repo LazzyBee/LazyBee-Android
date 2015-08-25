@@ -7,7 +7,8 @@
         android:layout_width="fill_parent"
         android:layout_height="56dp"
         android:visibility="visible"
-        card_view:cardElevation="@dimen/setting_card_view_elevation">
+        card_view:cardElevation="@dimen/setting_card_view_elevation"
+        card_view:cardPreventCornerOverlap="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
