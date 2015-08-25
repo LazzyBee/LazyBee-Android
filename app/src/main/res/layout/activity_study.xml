@@ -33,7 +33,10 @@
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp">
+            android:layout_marginLeft="@dimen/cardview_study_margin_left"
+            android:layout_marginTop="@dimen/cardview_study_margin_top"
+            android:layout_marginRight="@dimen/cardview_study_margin_right"
+            android:layout_marginBottom="@dimen/cardview_study_margin_bottom">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,7 +53,7 @@
                     android:layout_marginStart="15dp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#ffff0e1a" />
+                    android:textColor="@color/card_new_color" />
 
                 <TextView
                     android:id="@+id/lbCountAgainInday"
@@ -61,7 +64,7 @@
                     android:layout_toEndOf="@+id/lbCountTotalVocabulary"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#9f9f9f" />
+                    android:textColor="@color/card_again_color" />
 
                 <TextView
                     android:id="@+id/lbAgainDue"
@@ -72,7 +75,7 @@
                     android:layout_toEndOf="@+id/lbCountAgainInday"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#ff1e1eff" />
+                    android:textColor="@color/card_due_color" />
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
@@ -80,9 +83,12 @@
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_marginLeft="@dimen/cardview_study_margin_left"
+            android:layout_marginTop="@dimen/cardview_study_margin_top"
+            android:layout_marginRight="@dimen/cardview_study_margin_right"
+            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
             android:layout_weight="1"
-            card_view:cardCornerRadius="10dp">
+            card_view:cardCornerRadius="4dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -100,7 +106,10 @@
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp">
+            android:layout_marginLeft="@dimen/cardview_study_margin_left"
+            android:layout_marginTop="@dimen/cardview_study_margin_top"
+            android:layout_marginRight="@dimen/cardview_study_margin_right"
+            android:layout_marginBottom="@dimen/cardview_study_margin_bottom">
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
@@ -118,7 +127,10 @@
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp">
+            android:layout_marginLeft="@dimen/cardview_study_margin_left"
+            android:layout_marginTop="@dimen/cardview_study_margin_top"
+            android:layout_marginRight="@dimen/cardview_study_margin_right"
+            android:layout_marginBottom="@dimen/cardview_study_margin_bottom">
 
             <LinearLayout
                 android:layout_width="match_parent"

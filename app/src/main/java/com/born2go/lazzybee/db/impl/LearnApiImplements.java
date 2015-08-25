@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.algorithms.WordEstimate;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
@@ -897,7 +898,11 @@ public class LearnApiImplements implements LearnApi {
             }
         }
         if (todayCount > 0 || againCount > 0 || dueCount > 0)
-            duetoday = todayCount + " " + againCount + " " + dueCount;
+            duetoday =  "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>\n" +
+                        " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>\n" +
+                        " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + dueCount + "</font>";
+
+        Log.i(TAG, "Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
         return duetoday;
     }
 
