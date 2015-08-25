@@ -15,6 +15,8 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
+        <item>@string/setting_about</item>
+        <item>@string/setting_information_applicaion</item>
     </string-array>
 
     <string-array name="custom_study">
@@ -24,4 +26,21 @@
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_max_learn_more_per_day</item>
     </string-array>
+
+    <string-array name="drawer_list">
+        <item>@string/drawer_user</item>
+        <item>@string/drawer_title_course</item>
+        <item>English Word</item>
+        <item>@string/drawer_add_course</item>
+        <item>@string/drawer_line</item>
+        <item>@string/drawer_setting</item>
+    </string-array>
+
+
+    <string name="drawer_user">user</string>
+    <string name="drawer_title_course">title_course</string>
+    <string name="drawer_add_course">add_course</string>
+    <string name="drawer_line">lines</string>
+    <string name="drawer_setting">settings</string>
+    <string name="setting_information_applicaion">Information application</string>
 </resources>

@@ -15,6 +15,7 @@
     <string name="action_profile">Profile</string>
     <string name="action_logout">Logout</string>
     <string name="action_search">Search</string>
+
     <string name="not_found">Not found</string>
     <string name="review">Review</string>
     <string name="custom_study">Custom Study</string>
@@ -34,6 +35,7 @@
     <string name="EASE_HARD">Hard</string>
     <string name="EASE_GOOD">Good</string>
     <string name="EASE_EASY">Easy</string>
+
     <string name="learn_more">Learn more</string>
     <string name="congratulations">Congratulations!</string>
     <string name="suport_complete_card" translatable="false">Touch LEARN MORE</string>
@@ -54,47 +56,57 @@
     <string name="done_card">Done</string>
     <string name="new_card">New</string>
     <string name="action_add_to_learn">Add to learn</string>
+
     <string name="dialog_message_add_to_learn">Add to learn</string>
-    <string name="dialog_title_add_to_learn">add to learn</string>
+    <string name="dialog_title_add_to_learn">You can add to learn</string>
+
+
     <string name="notificaion">Notificaion</string>
     <string name="language">Language</string>
     <string name="add_to" />
     <string name="queue" translatable="false">queue</string>
-    <string name="dialog_message_done_card">Done card</string>
+
+    <!--Dialog Done card-->
     <string name="dialog_title_done_card">Done card</string>
+    <string name="dialog_message_done_card">You can Done card!</string>
+
+    <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
     <string name="lang_english">English</string>
     <string name="lang_viet">Vietnamse</string>
+
+    <!--Dialog restart app-->
     <string name="dialog_message_restart_app">You restart app now</string>
     <string name="dialog_title_restart_app">Restart App</string>
+
     <string name="action_login">Login</string>
 
+    <!--Config Google,Facebook -->
     <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
     <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
     <string name="SERVER_WIDGET_URL" translatable="false">http://www.lazzybee.com/oauth2callback</string>
+    <string name="fb_app_id" translatable="false">1615269568686595</string>
 
     <string name="action_check_update_database">Check Update</string>
+
+    <!--Dialog update-->
     <string name="dialog_update">Update</string>
-    <string name="dialog_title_update">Update</string>
+    <string name="dialog_title_update">You can Update</string>
+
     <string name="btn_update">Update</string>
     <string name="updated">Updated</string>
+
     <string name="dowload_file_success" translatable="false">A new file is downloaded successfully</string>
+
     <string name="auto_check_update">Auto check update</string>
     <string name="debug_infor">Debug Information</string>
-    <string name="fb_app_id" translatable="false">1615269568686595</string>
     <string name="setting_learn_title">Learn</string>
     <string name="setting_today_new_card_limit">Today\'s new card limit</string>
     <string name="setting_today_review_card_limit">Today\'s review card limit</string>
     <string name="setting_max_learn_more_per_day">Max learn more per day</string>
-    <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
-    <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
     <string name="setting_total_learn_per_day">Total learn per day</string>
-    <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
-    <string name="dialog_message_setting_max_learn_more_per_day_by">Max learn more per day by</string>
-    <string name="message_you_not_complete">You not complete!Touch Learn.</string>
-    <string name="message_total_card_review">Total card review:</string>
-    <string name="my_course">My Course</string>
-    <string name="action_about">About</string>
+
+    <string name="setting_about">About</string>
     <string name="setting_update_title">Update</string>
     <string name="setting_notification">Notification</string>
     <string name="setting_check_update">Check update</string>
@@ -103,6 +115,17 @@
     <string name="setting_language">Language</string>
     <string name="setting_lines" translatable="false">LINE</string>
     <string name="setting_limit_card_number">%d Card</string>
+
+    <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
+    <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
+
+    <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
+    <string name="dialog_message_setting_max_learn_more_per_day_by">Max learn more per day by</string>
+
+    <string name="message_you_not_complete">You not complete!Touch Learn.</string>
+    <string name="message_total_card_review">Total card review:</string>
+
+    <string name="my_course">My Course</string>
     <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
 
 

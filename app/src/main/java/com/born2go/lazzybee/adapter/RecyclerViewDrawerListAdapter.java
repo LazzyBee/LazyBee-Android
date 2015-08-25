@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.db.Course;
 
 import java.util.List;
 
@@ -28,12 +28,14 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_ABOUT = 5;
     private static final int TYPE_LINES = 6;
 
-    List<Object> objectList;
+    List<String> objectList;
     Context context;
+    LearnApiImplements learnApiImplements;
 
-    public RecyclerViewDrawerListAdapter(Context context, List<Object> objectList) {
+    public RecyclerViewDrawerListAdapter(Context context, List<String> objectList) {
         this.objectList = objectList;
         this.context = context;
+        learnApiImplements=new LearnApiImplements(context);
     }
 
     @Override
@@ -63,10 +65,16 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
         View view = holder.view;
         if (holder.viewType == TYPE_COURSE) {
-            Course course = (Course) objectList.get(position);
+//            Course course = (Course) objectList.get(position);
             TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
-            lbNameCourse.setText(course.getName());
+            TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
+
+            int allCount = learnApiImplements._getAllListCard().size();
+
+            lbNameCourse.setText(String.valueOf( objectList.get(position)));
             lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+
+            lbCount.setText(context.getString(R.string.setting_limit_card_number,allCount));
 
         } else if (holder.viewType == TYPE_ADD_COURCE) {
 
@@ -82,7 +90,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             lbDrawerName.setText(context.getString(R.string.action_settings));
         } else if (holder.viewType == TYPE_ABOUT) {
             TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
-            lbDrawerName.setText(context.getString(R.string.action_about));
+            lbDrawerName.setText(context.getString(R.string.setting_about));
         }
 
 
@@ -90,19 +98,19 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemViewType(int position) {
-        if (objectList.get(position) instanceof Course)
+        if (objectList.get(position).equals("English Word"))
             return TYPE_COURSE;
-        else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_TITLE_COURSE))
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_title_course)))
             return TYPE_TITLE_COURSE;
-        else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_USER))
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_user)))
             return TYPE_USER;
-        else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_SETTING))
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_setting)))
             return TYPE_SETTING;
         else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_ABOUT))
             return TYPE_ABOUT;
-        else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_LINES))
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_line)))
             return TYPE_LINES;
-        else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_ADD_COURSE))
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_add_course)))
             return TYPE_ADD_COURCE;
         else {
             return -1;
