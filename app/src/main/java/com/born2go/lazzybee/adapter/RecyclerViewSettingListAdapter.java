@@ -96,11 +96,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             mSwitch.setVisibility(View.GONE);
             if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT,limit);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT,limit);
 
             }else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY,limit);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY,limit);
 
             } else if (setting.equals(context.getString(R.string.setting_check_update))) {
                 lbLimit.setVisibility(View.GONE);
@@ -113,17 +113,17 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             lbLimit.setVisibility(View.GONE);
             lbSettingName.setText(settings.get(position));
             if (setting.equals(context.getString(R.string.setting_auto_check_update))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.SETTING_AUTO_CHECK_UPDATE);
+                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE);
             } else if (setting.equals(context.getString(R.string.setting_debug_info))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.SETTING_DEBUG_INFOR);
+                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_DEBUG_INFOR);
             } else if (setting.equals(context.getString(R.string.setting_notification))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.SETTING_NOTIFICTION);
+                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
             }
         }else  if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION){
             String limit = learnApiImplements._getValueFromSystemByKey(setting);
             lbSettingName.setText(setting);
             TextView lbDescription= (TextView) view.findViewById(R.id.lbDescription);
-            getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT,limit);
+            getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT,limit);
             lbDescription.setText("");
         }
     }
@@ -132,11 +132,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         // lbLimit.setVisibility(View.VISIBLE);
         int value = 0;
         if (limit == null) {
-            if (key.equals(LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT)) {
+            if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
                 value = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
-            } else if (key.equals(LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT)) {
+            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
                 value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
-            } else if (key.equals(LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY)) {
+            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY)) {
                 value = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
             }
 
@@ -162,11 +162,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         TextView lbSettingLimitName = (TextView) viewDialog.findViewById(R.id.lbSettingLimitName);
         final EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
 
-        if (key == LazzyBeeShare.SETTING_TODAY_NEW_CARD_LIMIT) {
+        if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
-        } else if (key == LazzyBeeShare.SETTING_TODAY_REVIEW_CARD_LIMIT) {
+        } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
             message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        } else if (key == LazzyBeeShare.SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
+        } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY) {
             message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
         }
 
