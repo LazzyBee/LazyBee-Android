@@ -42,6 +42,7 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
+import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -141,10 +142,10 @@ public class MainActivity extends AppCompatActivity
 
     private void _initSettingApplication() {
         _changeLanguage();
-        if (_checkSetting(LazzyBeeShare.SETTING_AUTO_CHECK_UPDATE)) {
+        if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
-        if (_checkSetting(LazzyBeeShare.SETTING_NOTIFICTION)) {
+        if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
             _setUpNotification();
         }
 
@@ -719,7 +720,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onCustomStudyOnClick(View view) {
-        _gotoSetting();
+        //_gotoSetting();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentDialogCustomStudy fragmentDialogCustomStudy=new FragmentDialogCustomStudy();
+        fragmentDialogCustomStudy.show(fm,FragmentDialogCustomStudy.TAG);
     }
     public void _onLearnMoreClick(View view) {
         int today = dataBaseHelper._checkListTodayExit();
