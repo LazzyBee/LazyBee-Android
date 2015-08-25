@@ -5,13 +5,15 @@
     android:orientation="vertical"
     android:id="@+id/main">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/result"
         android:id="@+id/lbResultCount"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp" />
+        android:textColor="@color/teal_500"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
 
     <view
         android:layout_width="wrap_content"
