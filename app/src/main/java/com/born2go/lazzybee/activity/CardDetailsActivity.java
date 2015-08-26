@@ -51,6 +51,7 @@ public class CardDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_details);
         this.context = this;
         cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
+        learnApiImplements=new LearnApiImplements(context);
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
