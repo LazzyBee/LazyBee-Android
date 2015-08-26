@@ -172,7 +172,7 @@ public class LearnApiImplements implements LearnApi {
 //                " question = '" + query + "' THEN 1 WHEN " +
 //                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
         String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
-                + " ORDER BY "+KEY_QUESTION ;
+                + " ORDER BY " + KEY_QUESTION;
 
         //Todo:Seach card
         List<Card> datas = _getListCardQueryString(likeQuery);
@@ -196,15 +196,19 @@ public class LearnApiImplements implements LearnApi {
 
             //TODO: get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
-            datas = _getListCardFromStringArray(value);
-
+            Log.i(TAG, QUEUE_LIST + ":" + value);
+            List<Card> allCardLearn= _getListCardFromStringArray(value);
+            for (int i = 0; i < number; i++) {
+                datas.add(allCardLearn.get(i));
+            }
         } else {
             //limit learn more =5 row
             if (learnmore == true)
-                number =  _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
+                number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
 
             int countNewCard = _get100Card();
             if (countNewCard > 0) {
+                //_getValueFromSystemByKey()
                 String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
 
                 List<Card> cards = _getListCardFromStringArray(value);
@@ -266,7 +270,7 @@ public class LearnApiImplements implements LearnApi {
         JSONObject valueJoson = new JSONObject();
 
         Date nowdate = new Date();
-        long now_date_long = nowdate.getTime();//get Time by @param nowdate
+        long dayInSecond = nowdate.getTime()/1000;//get Time by @param nowdate
 
         //TODO: init ListCardID
         try {
@@ -284,7 +288,7 @@ public class LearnApiImplements implements LearnApi {
             JSONArray cardIDArray = new JSONArray(listCardId);//TODO:init cardID Array
 
             //todo: put properties of @param valueJoson
-            valueJoson.put("date", now_date_long);
+            valueJoson.put("date", dayInSecond);
             valueJoson.put(KEY_CARD_JSON, cardIDArray);
 
             jsonValuestr = valueJoson.toString();
@@ -302,7 +306,7 @@ public class LearnApiImplements implements LearnApi {
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
             //TODO: NO List Queue
-            Log.i(TAG, "_checkListTodayExit:First Initial:Return=-2");
+            Log.i(TAG, "_checkListTodayExit First Initial:Return=-2");
             return -2;
         } else {
             //TODO Yes,Compareto Date
@@ -311,11 +315,13 @@ public class LearnApiImplements implements LearnApi {
                 JSONObject valueObj = new JSONObject(value);
 
                 //TODO:get date create list today
-                long _longQueueDate = (valueObj.getLong("date"));//get Long date
+                long dayInMilis = (valueObj.getLong("date"));//get Long date
                 JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);//get List card ID
-                Log.i(TAG, "-Long date:" + _longQueueDate);
-
-                Date _date = new Date(_longQueueDate);
+                Log.i(TAG, "_checkListTodayExit -Long date:" + dayInMilis);
+//                int dayInSecond = (int) (dayInMilis / 1000);
+//
+//                Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "inday" : "outday");
+                Date _date = new Date(dayInMilis);
                 //new date
                 Date _nowDate = new Date();
 
@@ -811,6 +817,7 @@ public class LearnApiImplements implements LearnApi {
 
     public String _getStringDueToday() {
         String duetoday = LazzyBeeShare.EMPTY;
+
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
 
@@ -829,15 +836,17 @@ public class LearnApiImplements implements LearnApi {
             } else if (todayCount == -1) {
                 todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
             } else {
+                todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                 //Log.i(TAG, "Today:" + todayCount);
             }
         }
+        dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day - todayCount).size();
         if (todayCount > 0 || againCount > 0 || dueCount > 0)
             duetoday = "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>\n" +
                     " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>\n" +
                     " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + dueCount + "</font>";
 
-        Log.i(TAG, "Total learn:"+total_learn_per_day+",Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
+        Log.i(TAG, "Total learn:" + total_learn_per_day + ",Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
         return duetoday;
     }
 
@@ -987,7 +996,7 @@ public class LearnApiImplements implements LearnApi {
 
     public void _addCardIdToQueueList(String cardId) {
         if (_checkListTodayExit() < 0) {
-            _getRandomCard( _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
+            _getRandomCard(_getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
         }
         String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
         List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
