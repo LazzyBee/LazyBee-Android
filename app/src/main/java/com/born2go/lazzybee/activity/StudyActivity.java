@@ -95,18 +95,22 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
 
         //get card due today & agin
-        againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1,0);
+        againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
 
         //get new random card list to day
         //TODO: only take new cards if total learn today not exceed MAX_NEW_LEARN_PER_DAY
         //int newCount = 10 - (againList.size() + dueList.size);
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
-        todayList = dataBaseHelper._getRandomCard(LazzyBeeShare.MAX_NEW_LEARN_PER_DAY, learn_more);
+        int limit_today=dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+        todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
+
         int againCount = againList.size();
         int todayCount = todayList.size();
 
-        int limit_due = LazzyBeeShare.TOTAL_LEAN_PER_DAY - todayCount;
+        int total_lern_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+        int limit_due = total_lern_per_day - todayCount;
+
         dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, limit_due);
         int dueCount = dueList.size();
 
@@ -1137,4 +1141,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         String utteranceId = this.hashCode() + "";
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
+
+
 }

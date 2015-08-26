@@ -30,7 +30,7 @@ import com.born2go.lazzybee.db.Course;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -89,7 +89,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-       // selectItem(mCurrentSelectedPosition);
+        // selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -106,16 +106,17 @@ public class NavigationDrawerFragment extends Fragment {
                 R.layout.fragment_navigation_drawer, container, false);
         this.context = getActivity();
         //init List Object
-        final List<Object> objects = new ArrayList<Object>();
-        objects.add(LazzyBeeShare.DRAWER_USER);
-        objects.add(LazzyBeeShare.DRAWER_TITLE_COURSE);
-        objects.add(new Course("English Word"));
-        objects.add(new Course("Math"));
-        objects.add(LazzyBeeShare.DRAWER_ADD_COURSE);
-        objects.add(LazzyBeeShare.DRAWER_LINES);
-        objects.add(LazzyBeeShare.DRAWER_SETTING);
-        objects.add(LazzyBeeShare.DRAWER_ABOUT);
-        final int obj_size = objects.size();
+        final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
+
+//        objects.add(LazzyBeeShare.DRAWER_USER);
+//        objects.add(LazzyBeeShare.DRAWER_TITLE_COURSE);
+//        objects.add("English Word");
+////        objects.add(new Course("Math"));
+//        objects.add(LazzyBeeShare.DRAWER_ADD_COURSE);
+//        objects.add(LazzyBeeShare.DRAWER_LINES);
+//        objects.add(LazzyBeeShare.DRAWER_SETTING);
+//        objects.add(LazzyBeeShare.DRAWER_ABOUT);
+
 
         //init mRecyclerViewDrawerList
         RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
@@ -137,7 +138,7 @@ public class NavigationDrawerFragment extends Fragment {
                     selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
                 } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
                     selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                }else if(o instanceof Course){
+                } else if (o instanceof Course) {
                     selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
                 }
 

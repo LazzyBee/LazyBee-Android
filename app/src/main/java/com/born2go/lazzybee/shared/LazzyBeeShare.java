@@ -32,8 +32,10 @@ public class LazzyBeeShare {
 
     public static final String KEY_SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
     public static final String KEY_SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
-    public static final String KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY = "total_card_learn_pre_day";
-    public static final String KEY_SETTING_MAX_LEARN_MORE_PER_DAY = "max_learn_more_per_day";
+    public static final String KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT = "max_learn_more_per_day";
+    //Total card learn
+    public static final String KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT = "total_card_learn_pre_day";
+
     public static final String KEY_SETTING_AUTO_CHECK_UPDATE = "auto_check_update";
     public static final String KEY_SETTING_DEBUG_INFOR = "debug_infor";
     public static final String KEY_SETTING_NOTIFICTION = "notification";

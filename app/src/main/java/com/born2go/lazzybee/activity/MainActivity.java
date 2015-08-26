@@ -64,7 +64,7 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface {
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
 
 
     RelativeLayout mDue, mCongratulations;
+    FragmentDialogCustomStudy fragmentDialogCustomStudy;
 
     Button btnStudy;
     private LearnApiImplements dataBaseHelper;
@@ -671,6 +672,13 @@ public class MainActivity extends AppCompatActivity
         this.startActivityForResult(intent, 2);
     }
 
+    @Override
+    public void _finishCustomStudy() {
+        fragmentDialogCustomStudy.dismiss();
+        _getCountCard();
+
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -719,12 +727,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     public void _onCustomStudyOnClick(View view) {
         //_gotoSetting();
         FragmentManager fm = getSupportFragmentManager();
-        FragmentDialogCustomStudy fragmentDialogCustomStudy=new FragmentDialogCustomStudy();
-        fragmentDialogCustomStudy.show(fm,FragmentDialogCustomStudy.TAG);
+        fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
+        fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
     }
+
     public void _onLearnMoreClick(View view) {
         int today = dataBaseHelper._checkListTodayExit();
         if (today == 0)
@@ -749,9 +759,9 @@ public class MainActivity extends AppCompatActivity
 
                 _checkCompleteLearn();
 
-                    Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                    intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-                    startActivityForResult(intent, 1);
+                Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+                intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
+                startActivityForResult(intent, 1);
 
             }
         });
@@ -840,6 +850,9 @@ public class MainActivity extends AppCompatActivity
         if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
             super.onActivityResult(requestCode, resultCode, intent);
         }
+        _getCountCard();
+        if (fragmentDialogCustomStudy != null)
+            fragmentDialogCustomStudy.dismiss();
 
     }
 
@@ -847,9 +860,11 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "Resume");
-        _checkCompleteLearn();
         _getCountCard();
+        if (fragmentDialogCustomStudy != null)
+            fragmentDialogCustomStudy.dismiss();
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
