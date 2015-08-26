@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -59,6 +60,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -124,6 +126,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _setUpNotification() {
+       // String value = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
 
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
@@ -138,7 +147,10 @@ public class MainActivity extends AppCompatActivity
 
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
+
         notificationManager.notify(0, mNotification);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, pIntent);
     }
 
     private void _initSettingApplication() {

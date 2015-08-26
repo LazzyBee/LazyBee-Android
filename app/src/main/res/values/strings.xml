@@ -48,17 +48,21 @@
     <string name="example">Example</string>
     <string name="explain">Explain</string>
     <string name="meaning">Meaning</string>
-    <string name="dialog_message_learn_more">Learn more</string>
+
+    <!--Dialog Learn more-->
     <string name="dialog_title_learn_more">Lean more</string>
+    <string name="dialog_message_learn_more">You can learn more?</string>
+
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="learned">Learned</string>
     <string name="done_card">Done</string>
     <string name="new_card">New</string>
-    <string name="action_add_to_learn">Add to learn</string>
 
-    <string name="dialog_message_add_to_learn">Add to learn</string>
-    <string name="dialog_title_add_to_learn">You can add to learn</string>
+    <!--Dialog add card to learn-->
+    <string name="action_add_to_learn">Add to learn</string>
+    <string name="dialog_message_add_to_learn">You can add card <b>%s</b> to learn</string>
+    <string name="dialog_title_add_to_learn">Add card to learn</string>
 
 
     <string name="notificaion">Notificaion</string>
@@ -67,8 +71,8 @@
     <string name="queue" translatable="false">queue</string>
 
     <!--Dialog Done card-->
-    <string name="dialog_title_done_card">Done card</string>
-    <string name="dialog_message_done_card">You can Done card!</string>
+    <string name="dialog_title_delete_card">Delete card</string>
+    <string name="dialog_message_delete_card">You can delete card %s!</string>
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>

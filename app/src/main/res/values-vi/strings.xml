@@ -30,22 +30,27 @@
     <string name="example">Ví dụ:</string>
     <string name="explain">Giải nghĩa</string>
     <string name="meaning">Nghĩa(Tiếng việt):</string>
-    <string name="dialog_title_learn_more">Tùy chọn học tiếp</string>
     <string name="cancel">Hủy bỏ</string>
     <string name="ok">Đồng ý</string>
+
+    <!--Dialog Learn more-->
+    <string name="dialog_title_learn_more">Tùy chọn học tiếp</string>
     <string name="dialog_message_learn_more">Bạn có muốn học tiếp không?</string>
+
     <string name="learned">Đã học</string>
     <string name="done_card">Đã xóa</string>
     <string name="new_card">Mới</string>
-    <string name="action_add_to_learn">Thêm vào khóa học</string>
-    <string name="dialog_message_add_to_learn">Thêm vào khóa học</string>
+
+    <string name="action_add_to_learn">Thêm thẻ vào khóa học</string>
+    <string name="dialog_message_add_to_learn">Bạn có muốn thêm thẻ <b>%s</b> vào khóa học</string>
+    <string name="dialog_title_add_to_learn">Thêm thẻ vào khóa học</string>
+
     <string name="notificaion">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
     <string name="add_to">Thêm vào</string>
     <string name="queue" />
-    <string name="dialog_message_done_card">Bạn có muốn xóa từ này?</string>
-    <string name="dialog_title_done_card">Xóa từ</string>
-    <string name="dialog_title_add_to_learn">Bạn có muốn thêm từ vào khóa học?</string>
+    <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
+    <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
     <string name="lang_english">Tiếng anh</string>
     <string name="lang_viet">Tiếng việt</string>
