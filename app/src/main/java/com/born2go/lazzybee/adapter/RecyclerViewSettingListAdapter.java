@@ -94,6 +94,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         } else if (holder.viewType == TYPE_SETTING_NAME) {
             lbSettingName.setText(settings.get(position));
             mSwitch.setVisibility(View.GONE);
+            lbLimit.setVisibility(View.GONE);
             if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
                 getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT,limit);
@@ -108,7 +109,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             } else if (setting.equals(context.getString(R.string.setting_language))) {
                 lbLimit.setVisibility(View.GONE);
                 changeLanguage(mCardView);
+            } else if (setting.equals(context.getString(R.string.setting_about))) {
+                lbSettingName.setText(context.getString(R.string.setting_about_message));
             }
+
+
         } else if (holder.viewType == TYPE_SETTING_SWITCH) {
             lbLimit.setVisibility(View.GONE);
             lbSettingName.setText(settings.get(position));
@@ -330,7 +335,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
-                || setting.equals(context.getString(R.string.setting_check_update)))
+                || setting.equals(context.getString(R.string.setting_check_update))
+                || setting.equals(context.getString(R.string.setting_about)))
             return TYPE_SETTING_NAME;
         else if (setting.equals(context.getString(R.string.setting_notification))
                 || setting.equals(context.getString(R.string.setting_auto_check_update))

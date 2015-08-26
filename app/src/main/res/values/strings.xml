@@ -128,5 +128,10 @@
     <string name="my_course">My Course</string>
     <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
 
-
+    <string name="drawer_user">user</string>
+    <string name="drawer_title_course">title_course</string>
+    <string name="drawer_add_course">add_course</string>
+    <string name="drawer_line">lines</string>
+    <string name="drawer_setting">settings</string>
+    <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
 </resources>

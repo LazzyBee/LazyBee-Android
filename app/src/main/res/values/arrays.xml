@@ -16,7 +16,6 @@
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_information_applicaion</item>
     </string-array>
 
     <string-array name="custom_study">
@@ -36,11 +35,4 @@
         <item>@string/drawer_setting</item>
     </string-array>
 
-
-    <string name="drawer_user">user</string>
-    <string name="drawer_title_course">title_course</string>
-    <string name="drawer_add_course">add_course</string>
-    <string name="drawer_line">lines</string>
-    <string name="drawer_setting">settings</string>
-    <string name="setting_information_applicaion">Information application</string>
 </resources>
