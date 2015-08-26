@@ -11,7 +11,7 @@
 
     </style>
 
-    <style name="DialogLearnMore" parent="Theme.AppCompat.Dialog">
+    <style name="DialogLearnMore" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowNoTitle">true</item>
 
     </style>
