@@ -1005,7 +1005,7 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public void _insertOrUpdateCard(Card card) {
-        Log.i(TAG, "q: " + card.getQuestion());
+        // Log.i(TAG, "q: " + card.getQuestion());
         String cardId = String.valueOf(card.getId());
         //TODO: Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
@@ -1016,13 +1016,23 @@ public class LearnApiImplements implements LearnApi {
         values.put(KEY_ANSWERS, card.getAnswers());
         values.put(KEY_LEVEL, card.getLevel());
         values.put(KEY_PACKAGES, card.getPackage());
+//        db.replace(TABLE_VOCABULARY,null,values);
+        //int id = (int) db.insertWithOnConflict(TABLE_VOCABULARY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        //if (id == -1) {
+//            db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+//                    new String[]{cardId});
+        //}
 
-
+        //db.in
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{cardId});
-        // Log.i(TAG, "update_result: " + update_result);
-        db.close();
+        Log.i(TAG, "Card id:" + cardId + ",update_result : " + update_result);
+        if (update_result == 0) {
+            db.insert(TABLE_VOCABULARY, null, values);
+        }
+
+        //db.close();
 
     }
 
