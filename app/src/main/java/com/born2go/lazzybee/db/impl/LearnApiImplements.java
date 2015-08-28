@@ -134,8 +134,8 @@ public class LearnApiImplements implements LearnApi {
                     card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                     card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
-                    Log.i(TAG, card.toString());
-                    System.out.print(card.toString());
+                    //Log.i(TAG, card.toString());
+                    //System.out.print(card.toString());
 
                 } while (cursor.moveToNext());
         }
@@ -197,7 +197,7 @@ public class LearnApiImplements implements LearnApi {
             //TODO: get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
             Log.i(TAG, QUEUE_LIST + ":" + value);
-            List<Card> allCardLearn= _getListCardFromStringArray(value);
+            List<Card> allCardLearn = _getListCardFromStringArray(value);
             for (int i = 0; i < number; i++) {
                 datas.add(allCardLearn.get(i));
             }
@@ -270,7 +270,7 @@ public class LearnApiImplements implements LearnApi {
         JSONObject valueJoson = new JSONObject();
 
         Date nowdate = new Date();
-        long dayInSecond = nowdate.getTime()/1000;//get Time by @param nowdate
+        long dayInSecond = nowdate.getTime() / 1000;//get Time by @param nowdate
 
         //TODO: init ListCardID
         try {
@@ -318,29 +318,16 @@ public class LearnApiImplements implements LearnApi {
                 long dayInMilis = (valueObj.getLong("date"));//get Long date
                 JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);//get List card ID
                 Log.i(TAG, "_checkListTodayExit -Long date:" + dayInMilis);
-//                int dayInSecond = (int) (dayInMilis / 1000);
+                int dayInSecond = (int) (dayInMilis);
 //
-//                Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "inday" : "outday");
-                Date _date = new Date(dayInMilis);
-                //new date
-                Date _nowDate = new Date();
-
                 int countListId = listIdArray.length();
+                Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "inday" : "outday");
 
-                //TODO: format date to string
-                String today_parse = outputFormat.format(_date);
-                String str_date_now = outputFormat.format(_nowDate);
-
-                //TODO: compareTo date learn vs now date
-                if (today_parse.compareTo(str_date_now) == 0) {
-
+                if (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) {
                     Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now");
-
                     return countListId;
                 } else {
-
                     Log.i(TAG, "_checkListTodayExit:today_parse is not equal to date_now");
-
                     return -1;
                 }
             } catch (JSONException e) {
@@ -542,17 +529,18 @@ public class LearnApiImplements implements LearnApi {
             db_insert.close();
             return (int) long_insert_results;
         } else {
+            SQLiteDatabase db_update = this.dataBaseHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             //TODO put value
             values.put(KEY_SYSTEM_VALUE, value);
             //TODO update to system table
-            SQLiteDatabase db_update = this.dataBaseHelper.getWritableDatabase();
             try {
                 int update_results = db_update.update(TABLE_SYSTEM, values, KEY_SYSTEM + " = ?",
                         new String[]{String.valueOf(key)});
                 Log.i(TAG, "update_results:" + update_results);
                 String valueUpdate = _getValueFromSystemByKey(key);
                 Log.i(TAG, "Update Key:" + key + " ,value:" + valueUpdate);
+                db_update.close();
                 return update_results;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -584,7 +572,7 @@ public class LearnApiImplements implements LearnApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        db.close();
         return queue_List_value;
     }
 
@@ -760,6 +748,7 @@ public class LearnApiImplements implements LearnApi {
                 } while (cursor.moveToNext());
         }
         Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
+        db.close();
         return datas;
     }
 
@@ -771,7 +760,7 @@ public class LearnApiImplements implements LearnApi {
     @Override
     public int _updateCard(Card card) {
 
-        Log.i(TAG, "_updateCard: Card=" + card.toString());
+       // Log.i(TAG, "_updateCard: Card=" + card.toString());
         String cardId = String.valueOf(card.getId());
 
         //TODO: Update staus card by id
@@ -1026,6 +1015,7 @@ public class LearnApiImplements implements LearnApi {
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{cardId});
         // Log.i(TAG, "update_result: " + update_result);
+        db.close();
 
     }
 
