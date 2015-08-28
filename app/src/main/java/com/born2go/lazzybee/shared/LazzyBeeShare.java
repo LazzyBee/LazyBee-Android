@@ -104,11 +104,14 @@ public class LazzyBeeShare {
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
 
 
-    public static int VERSION_SERVER = 1;
+    public static int VERSION_SERVER = 3;
 
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFR0hIU3FCU0xuU28
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E
-    public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E";
+
+    //28/8/2015 database upgrade
+    //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28
+    public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28";
 
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 

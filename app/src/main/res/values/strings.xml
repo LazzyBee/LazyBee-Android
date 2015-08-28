@@ -163,6 +163,7 @@
     <string name="speech_rate_normal_value" translatable="false">1.0</string>
     <string name="speech_rate_fast_value" translatable="false">1.5</string>
     <string name="speech_rate_very_fast_value" translatable="false">2.0</string>
+    <string name="update_database_sucsessfuly" translatable="false">Update database sucsessfuly</string>
 
 
     <string-array name="settings">

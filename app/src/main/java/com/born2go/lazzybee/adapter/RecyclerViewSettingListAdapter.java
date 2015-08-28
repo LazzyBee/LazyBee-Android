@@ -438,11 +438,15 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 } else {
                     _clientVesion = Integer.valueOf(db_v);
                 }
+                Log.i(TAG, _clientVesion + ":" + update_local_version);
 
                 if (_clientVesion == 0) {
                     if (update_local_version == -1) {
                         Log.i(TAG, "_checkUpdate():update_local_version == -1");
                         _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+                    } else {
+                        Log.i(TAG, "_checkUpdate():update_local_version != -1");
+                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
                     }
                 } else {
                     if (update_local_version > _clientVesion) {
@@ -510,8 +514,9 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
-            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(databaseUpgrade._getVersionDB()));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
             databaseUpgrade.close();
+            Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();

@@ -83,7 +83,6 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
 
                     card.setPackage(cursor.getString(LazzyBeeShare.CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(LazzyBeeShare.CARD_INDEX_LEVEL));
-                    Log.i(TAG, "q: " + card.getQuestion());
                     datas.add(card);
 
                 } while (cursor.moveToNext());
