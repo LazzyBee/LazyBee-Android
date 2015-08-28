@@ -178,7 +178,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                         } else if (items[item].equals(context.getString(R.string.speech_rate_fast))) {
                             speechRate = 1.5f;
                         } else if (items[item].equals(context.getString(R.string.speech_rate_very_fast))) {
-                            speechRate = 2.5f;
+                            speechRate = 2.0f;
                         }
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
                         dialog.cancel();
