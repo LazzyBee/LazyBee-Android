@@ -48,7 +48,6 @@
     <string name="notificaion">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
     <string name="add_to">Thêm vào</string>
-    <string name="queue" />
     <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
@@ -85,4 +84,7 @@
     <string name="message_congratulations">Bấm vào <b><u>Học thêm</u></b> để học tiếp,bấm vào <b><u>Đã học</u></b> để xem lại thẻ đã học</string>
     <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
     <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>
+    <string name="under_construction">Under construction</string>
+
+    <string name="notificaion_title">%1$s %2$s</string>
 </resources>

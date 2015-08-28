@@ -86,10 +86,14 @@
     <string name="action_login">Login</string>
 
     <!--Config Google,Facebook -->
-    <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
-    <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
-    <string name="SERVER_WIDGET_URL" translatable="false">http://www.lazzybee.com/oauth2callback</string>
-    <string name="fb_app_id" translatable="false">1615269568686595</string>
+    <!--AIzaSyDGoIb-19xn16xjhgJh2v38rRsfcsRQZQ-->
+    <!--AIzaSyCbi0IvEFiU4po-6rmXYkaqn_OkOFmL1gg-->
+    <!--269585672935-q4c3mqc21qkfv62cnn1oacvfcnkrerme.apps.googleusercontent.com-->
+    <string name="API_KEY" translatable="false">AIzaSyBUUO5SWQV0KBIUHxiLmvrxDMHJcB6W5EI</string>
+    <string name="SERVER_CLIENT_ID" translatable="false">269585672935-csg1ub9uk4r7rbbiua7o63e5cmq1qg8r.apps.googleusercontent.com</string>
+    <string name="SERVER_WIDGET_URL" translatable="false">http://localhost<!--http://www.lazzybee.com/oauth2callback--></string>
+    <string name="fb_app_id" translatable="false">386540048195283</string>
+
 
     <string name="action_check_update_database">Check Update</string>
 
@@ -132,10 +136,14 @@
     <string name="my_course">My Course</string>
     <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
 
-    <string name="drawer_user">user</string>
-    <string name="drawer_title_course">title_course</string>
-    <string name="drawer_add_course">add_course</string>
-    <string name="drawer_line">lines</string>
-    <string name="drawer_setting">settings</string>
-    <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
+    <string name="drawer_user" translatable="false">user</string>
+    <string name="drawer_title_course" translatable="false">title_course</string>
+    <string name="drawer_add_course" translatable="false">add_course</string>
+    <string name="drawer_line" translatable="false">lines</string>
+    <string name="drawer_setting" translatable="false">settings</string>
+    <string name="setting_about_message" translatable="false">Born2Go © 2015 All Rights Reserved</string>
+    <string name="under_construction">Under construction</string>
+
+    <string name="notificaion_title">%1$s %2$s</string>
+    <string name="message_hellp_study" >Tip help Study(under construction)</string>
 </resources>

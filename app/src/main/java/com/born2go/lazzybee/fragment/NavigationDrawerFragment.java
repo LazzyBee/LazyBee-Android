@@ -89,7 +89,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-        // selectItem(mCurrentSelectedPosition);
+       // selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class NavigationDrawerFragment extends Fragment {
                     selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
                 } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
                     selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                } else if (o instanceof Course) {
+                }else if(o instanceof Course){
                     selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
                 }
 
