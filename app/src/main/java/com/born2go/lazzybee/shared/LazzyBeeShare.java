@@ -39,20 +39,22 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_AUTO_CHECK_UPDATE = "auto_check_update";
     public static final String KEY_SETTING_DEBUG_INFOR = "debug_infor";
     public static final String KEY_SETTING_NOTIFICTION = "notification";
+    public static final String KEY_SETTING_SPEECH_RATE = "speech_rate";
+
 
     public static final String DRAWER_USER = "user";
     public static final String DRAWER_TITLE_COURSE = "title_course";
     public static final String DRAWER_SETTING = "settings";
-    public static final String DRAWER_ABOUT = "about";
 
+    public static final String DRAWER_ABOUT = "about";
     public static final String DRAWER_LINES = "lines";
     public static final String DRAWER_ADD_COURSE = "add_course";
     public static final int DRAWER_ADD_COURSE_INDEX = 0;
     public static final int DRAWER_SETTINGS_INDEX = 1;
+
     public static final int DRAWER_ABOUT_INDEX = 2;
 
     public static final int DRAWER_USER_INDEX = 3;
-
     public static final int DRAWER_COURSE_INDEX = 4;
     private static boolean DEBUG = true;
     public static final String CARD_MEANING = "meaning";
@@ -514,6 +516,7 @@ public class LazzyBeeShare {
         }
 
     }
+
 
 
 }

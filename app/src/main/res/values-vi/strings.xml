@@ -86,5 +86,66 @@
     <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>
     <string name="under_construction">Under construction</string>
 
+    <string name="message_hellp_study" >Tip hỗ trợ học(Đang xây dựng)</string>
+
     <string name="notificaion_title">%1$s %2$s</string>
+    <string name="setting_speech_rate">Tốc độ đọc</string>
+    <string name="action_change_speech_rate">Tốc độ đọc</string>
+
+    <string name="speech_rate_very_slow">Rất chậm</string>
+    <string name="speech_rate_slow">Chậm</string>
+    <string name="speech_rate_normal">Mặc định</string>
+    <string name="speech_rate_fast">Nhanh</string>
+    <string name="speech_rate_very_fast">Rất nhanh</string>
+
+    <string name="dialog_title_change_speech_rate">Thay đổi tốc độ đọc</string>
+
+
+    <string-array name="settings">
+        <!--<item>@string/setting_learn_title</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>-->
+        <!--<item>@string/setting_today_review_card_limit</item>-->
+        <item >@string/setting_lines</item>
+        <item>@string/setting_notification</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_speech_rate</item>
+        <!--<item>@string/setting_speech_rate_slider</item>-->
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_auto_check_update</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_about</item>
+    </string-array>
+
+    <string-array name="custom_study">
+        <item>@string/custom_study</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>
+        <item>@string/setting_max_learn_more_per_day</item>
+    </string-array>
+
+    <string-array name="drawer_list" >
+        <!--<item>@string/drawer_user</item>-->
+        <item>@string/drawer_title_course</item>
+        <item>English Word</item>
+        <!--  <item>@string/drawer_add_course</item>-->
+        <item>@string/drawer_line</item>
+        <item>@string/drawer_setting</item>
+    </string-array>
+
+    <string-array name="speech_rate">
+        <item>@string/speech_rate_very_slow</item>
+        <item>@string/speech_rate_slow</item>
+        <item>@string/speech_rate_normal</item>
+        <item>@string/speech_rate_fast</item>
+        <item>@string/speech_rate_very_fast</item>
+    </string-array>
 </resources>

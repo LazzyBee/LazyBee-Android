@@ -102,7 +102,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         //int newCount = 10 - (againList.size() + dueList.size);
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
-        int limit_today=dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+        int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
         todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
 
         int againCount = againList.size();
@@ -165,15 +165,24 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     }
 
     private void _initTextToSpeech() {
+        String sp = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+        float speech = 1.0f;
+        if (sp != null)
+            speech = Float.valueOf(sp);
+
         //Todo:init TextToSpeech
+        final float finalSpeech = speech;
         textToSpeech = new TextToSpeech(this.getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
                     textToSpeech.setLanguage(Locale.US);
+                    textToSpeech.setSpeechRate(finalSpeech);
                 }
             }
         });
+
+
     }
 
     private void _initView() {
@@ -253,9 +262,9 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             _doneCard();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
 
     boolean done_card = false;
 
@@ -533,93 +542,116 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         _addJavascriptInterfaceQuestionAndAnswer();
 
 
-        //btnShowAnswer onCLick
-        btnShowAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        //btnShowAnswer onCLick
+//        btnShowAnswer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
+//
+//        //Todo:btnAgain on click
+//        btnAgain0.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //set display card queue==2
+//                //update due
+//                //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
+//                //if end card else complete
+//                //update rev_count
+//                //show btnShowAnswer and hide btnAgain0
+//                _answerAgainCard();
+//            }
+//
+//
+//        });
+//        //
+//
+//        btnHard1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                _answerDueCard(Card.EASE_HARD);
+//
+//            }
+//        });
+//
+//        //btnGood2 onClick
+//        //set display card queue==2
+//        //update due
+//        //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
+//        //if end card else complete
+//        btnGood2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                _answerDueCard(Card.EASE_GOOD);
+//            }
+//        });
+//
+//
+//        btnEasy3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                _answerDueCard(Card.EASE_EASY);
+//            }
+//        });
 
-                //hide btnShowAnswer and show mLayoutButton
-                btnShowAnswer.setVisibility(View.GONE);
-                mLayoutButton.setVisibility(View.VISIBLE);
+    }
 
-                try {
-                    //get card
-                    Card card = currentCard;
-                    Card card1 = dataBaseHelper._getCardByID("" + card.getId());
-                    Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + card1.getQueue());
-                    //Show answer question
-                    //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
-                    // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
+    public void onbtnShowAnswerClick(View view) {
+        _showAnswer();
+    }
 
-                    //Load Answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
+    public void onbtnAgainClick(View view) {
+        _answerAgainCard();
+    }
+
+    public void onbtnHardClick(View view) {
+        _answerDueCard(Card.EASE_HARD);
+    }
+
+    public void onbtnGoodClick(View view) {
+        _answerDueCard(Card.EASE_GOOD);
+    }
+
+    public void onbtnEasyClick(View view) {
+        _answerDueCard(Card.EASE_EASY);
+    }
+
+    private void _showAnswer() {
+        //hide btnShowAnswer and show mLayoutButton
+        btnShowAnswer.setVisibility(View.GONE);
+        mLayoutButton.setVisibility(View.VISIBLE);
+
+        try {
+            //get card
+            Card card = currentCard;
+            Card card1 = dataBaseHelper._getCardByID("" + card.getId());
+            Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + card1.getQueue());
+            //Show answer question
+            //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
+            // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
+
+            //Load Answer
+            _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
 
 //                    //set current card
 //                    currentCard[0] = card;
 
-                    //get  next Ivl String List
-                    String[] ivlStrList = cardSched.nextIvlStrLst(card);
+            //get  next Ivl String List
+            String[] ivlStrList = cardSched.nextIvlStrLst(card);
 
-                    //set text btn
-                    btnAgain0.setText(Html.fromHtml(ivlStrList[Card.EASE_AGAIN] + "<br/>" + getString(R.string.EASE_AGAIN)));
-                    btnHard1.setText(Html.fromHtml(ivlStrList[Card.EASE_HARD] + "<br/>" + getString(R.string.EASE_HARD)));
-                    btnGood2.setText(Html.fromHtml(ivlStrList[Card.EASE_GOOD] + "<br/>" + getString(R.string.EASE_GOOD)));
-                    btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
+            //set text btn
+            btnAgain0.setText(Html.fromHtml(ivlStrList[Card.EASE_AGAIN] + "<br/>" + getString(R.string.EASE_AGAIN)));
+            btnHard1.setText(Html.fromHtml(ivlStrList[Card.EASE_HARD] + "<br/>" + getString(R.string.EASE_HARD)));
+            btnGood2.setText(Html.fromHtml(ivlStrList[Card.EASE_GOOD] + "<br/>" + getString(R.string.EASE_GOOD)));
+            btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        });
-
-        //Todo:btnAgain on click
-        btnAgain0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //set display card queue==2
-                //update due
-                //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
-                //if end card else complete
-                //update rev_count
-                //show btnShowAnswer and hide btnAgain0
-                _answerAgainCard();
-            }
-
-
-        });
-        //
-
-        btnHard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _answerDueCard(Card.EASE_HARD);
-
-            }
-        });
-
-        //btnGood2 onClick
-        //set display card queue==2
-        //update due
-        //display card next if cardQueuesize>0 else priority cardQueue>cardDue>cardNew
-        //if end card else complete
-        btnGood2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _answerDueCard(Card.EASE_GOOD);
-            }
-        });
-
-
-        btnEasy3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _answerDueCard(Card.EASE_EASY);
-            }
-        });
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     private void _answerAgainCard() {
         final int curren_time = (int) (new Date().getTime() / 1000);/*curent time*/

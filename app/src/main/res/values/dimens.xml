@@ -14,4 +14,6 @@
     <dimen name="study_question_size">30px</dimen>
 
     <dimen name="setting_card_view_elevation">0dp</dimen>
+
+
 </resources>

@@ -145,5 +145,73 @@
     <string name="under_construction">Under construction</string>
 
     <string name="notificaion_title">%1$s %2$s</string>
-    <string name="message_hellp_study" >Tip help Study(under construction)</string>
+    <string name="message_hellp_study">Tip help Study(under construction)</string>
+    <string name="setting_speech_rate">Speech Rate</string>
+    <string name="setting_speech_rate_slider" translatable="false">
+        SpeechSlider</string>
+    <string name="action_change_speech_rate">Speech rate</string>
+
+    <string name="speech_rate_very_slow">Very Slow</string>
+    <string name="speech_rate_slow">Slow</string>
+    <string name="speech_rate_normal">Normal</string>
+    <string name="speech_rate_fast">Fast</string>
+    <string name="speech_rate_very_fast">Very Fast</string>
+    <string name="dialog_title_change_speech_rate">Change speech rate</string>
+
+    <string name="speech_rate_very_slow_value" translatable="false">0.1</string>
+    <string name="speech_rate_slow_value" translatable="false">0.5</string>
+    <string name="speech_rate_normal_value" translatable="false">1.0</string>
+    <string name="speech_rate_fast_value" translatable="false">1.5</string>
+    <string name="speech_rate_very_fast_value" translatable="false">2.0</string>
+
+
+    <string-array name="settings">
+        <!--<item>@string/setting_learn_title</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>-->
+        <!--<item>@string/setting_today_review_card_limit</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_notification</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_speech_rate</item>
+        <!--<item>@string/setting_speech_rate_slider</item>-->
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_auto_check_update</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_about</item>
+    </string-array>
+
+    <string-array name="custom_study">
+        <item>@string/custom_study</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>
+        <item>@string/setting_max_learn_more_per_day</item>
+    </string-array>
+
+    <string-array name="drawer_list">
+        <!--<item>@string/drawer_user</item>-->
+        <item>@string/drawer_title_course</item>
+        <item>English Word</item>
+        <!--  <item>@string/drawer_add_course</item>-->
+        <item>@string/drawer_line</item>
+        <item>@string/drawer_setting</item>
+    </string-array>
+
+    <string-array name="speech_rate">
+        <item>@string/speech_rate_very_slow</item>
+        <item>@string/speech_rate_slow</item>
+        <item>@string/speech_rate_normal</item>
+        <item>@string/speech_rate_fast</item>
+        <item>@string/speech_rate_very_fast</item>
+    </string-array>
 </resources>

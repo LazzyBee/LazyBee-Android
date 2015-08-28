@@ -2,8 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.born2go.lazzybee.activity.StudyActivity">
+
     <item android:id="@+id/action_detelte" android:title="@string/action_delete_card"
         android:orderInCategory="100" app:showAsAction="never" />
+
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search_white"
@@ -11,3 +13,4 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="withText|ifRoom" />
 </menu>
+
