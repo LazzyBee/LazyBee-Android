@@ -228,8 +228,8 @@ public class MainActivity extends AppCompatActivity
             _visibilityCount(true);
         } else {
             //Comprete
-            Log.i(TAG, "_checkCompleteLearn:Complete");
-            Log.i(TAG, "Learn more");
+//            Log.i(TAG, "_checkCompleteLearn:Complete");
+//            Log.i(TAG, "Learn more");
             mCardViewStudy.setVisibility(View.GONE);
 
             _visibilityCount(false);
@@ -238,9 +238,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _getCountCard() {
+        Log.i(TAG,"_getCountCard()-------------------------------------------------------");
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
+        Log.i(TAG,"-------------------------------END-------------------------------------\n");
+
         if (dueToday != null)
             lbDueToday.setText(Html.fromHtml(dueToday));
         lbTotalsCount.setText("" + allCount);
@@ -994,7 +997,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "Resume");
-        _getCountCard();
+       // _getCountCard();
         if (fragmentDialogCustomStudy != null)
             fragmentDialogCustomStudy.dismiss();
     }
