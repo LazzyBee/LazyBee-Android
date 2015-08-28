@@ -198,6 +198,10 @@ public class LearnApiImplements implements LearnApi {
             String value = _getValueFromSystemByKey(QUEUE_LIST);
             Log.i(TAG, QUEUE_LIST + ":" + value);
             List<Card> allCardLearn = _getListCardFromStringArray(value);
+            //
+            if (number > allCardLearn.size())
+                number = allCardLearn.size();
+
             for (int i = 0; i < number; i++) {
                 datas.add(allCardLearn.get(i));
             }
@@ -321,7 +325,7 @@ public class LearnApiImplements implements LearnApi {
                 int dayInSecond = (int) (dayInMilis);
 //
                 int countListId = listIdArray.length();
-                Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "inday" : "outday");
+                Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "_checkListTodayExit:inday" : "_checkListTodayExit:outday");
 
                 if (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) {
                     Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now");
@@ -760,7 +764,7 @@ public class LearnApiImplements implements LearnApi {
     @Override
     public int _updateCard(Card card) {
 
-       // Log.i(TAG, "_updateCard: Card=" + card.toString());
+        // Log.i(TAG, "_updateCard: Card=" + card.toString());
         String cardId = String.valueOf(card.getId());
 
         //TODO: Update staus card by id
@@ -813,7 +817,7 @@ public class LearnApiImplements implements LearnApi {
         int total_learn_per_day = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
 
 
-        int dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day - todayCount).size();
+        int dueCount = 0;
         if (todayCount == -2) {
             dueCount = 0;
             againCount = 0;
@@ -825,7 +829,10 @@ public class LearnApiImplements implements LearnApi {
             } else if (todayCount == -1) {
                 todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
             } else {
-                todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+                int limitNew = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+                if (todayCount > limitNew)
+                    todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+
                 //Log.i(TAG, "Today:" + todayCount);
             }
         }
@@ -856,12 +863,11 @@ public class LearnApiImplements implements LearnApi {
         int today = _checkListTodayExit();
         int again = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
         int due = _getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.TOTAL_LEAN_PER_DAY - today).size();
-
-        Log.i(TAG, today + ":" + again + ":" + due);
-
         if (today > 0 || again > 0 || due > 0 || today == -1 || today == -2) {
+            Log.i(TAG, "_checkCompleteLearned:Not complete");
             return 1;
         } else {
+            Log.i(TAG, "_checkCompleteLearned:Complete");
             return 0;
         }
 
@@ -877,6 +883,7 @@ public class LearnApiImplements implements LearnApi {
                 int count = jsonObject.getInt(KEY_COUNT_JSON);
 
                 if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
+                    Log.i(TAG, "_get100Card: New 100 Card");
                     return _initPreFetchNewCardList();
                 } else {
                     Log.i(TAG, "_get100Card:" + count);
