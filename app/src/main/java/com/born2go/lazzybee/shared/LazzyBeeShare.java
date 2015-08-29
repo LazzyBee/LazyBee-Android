@@ -57,7 +57,8 @@ public class LazzyBeeShare {
     public static final int DRAWER_USER_INDEX = 3;
     public static final int DRAWER_COURSE_INDEX = 4;
 
-    public static final int COMPLETE_STUDY = 1000;
+    public static final int CODE_COMPLETE_STUDY_RESULTS = 1000;
+    public static final int CODE_SEARCH_RESULT = 1001;
 
     private static boolean DEBUG = true;
     public static final String CARD_MEANING = "meaning";

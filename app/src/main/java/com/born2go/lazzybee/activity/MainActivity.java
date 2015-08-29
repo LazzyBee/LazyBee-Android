@@ -735,7 +735,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivityForResult(intent, 2);
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
     }
 
     @Override
@@ -846,7 +846,7 @@ public class MainActivity extends AppCompatActivity
     public void _onBtnStudyOnClick(View view) {
         _checkCompleteLearn();
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-        this.startActivityForResult(intent, LazzyBeeShare.COMPLETE_STUDY);
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
 
     }
 
@@ -972,13 +972,23 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
-//        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
-//            super.onActivityResult(requestCode, resultCode, intent);
-//        }
-        _getCountCard();
+        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+            Log.i(TAG,"Search Result");
+            _checkCompleteLearn();
+            _getCountCard();
+        }
+        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+            Log.i(TAG,"Study Result");
+            _checkCompleteLearn();
+            _getCountCard();
+        }
         if (fragmentDialogCustomStudy != null) {
             fragmentDialogCustomStudy.dismiss();
         }
+//        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
+//            super.onActivityResult(requestCode, resultCode, intent);
+//        }
+
 //        if (requestCode == RC_SIGN_IN) {
 //            if (resultCode != RESULT_OK) {
 //                mSignInClicked = false;
@@ -990,13 +1000,6 @@ public class MainActivity extends AppCompatActivity
 //            }
 //                mGoogleApiClient.connect();
 //        }
-        if (resultCode == LazzyBeeShare.COMPLETE_STUDY) {
-            Log.i(TAG, "Complete Learn");
-            _checkCompleteLearn();
-        } else {
-
-        }
-
     }
 
     @Override

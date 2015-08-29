@@ -154,7 +154,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     }
 
     private void _completeLean() {
-        setResult(LazzyBeeShare.COMPLETE_STUDY,new Intent());
+        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS,new Intent());
         onBackPressed();
     }
 
