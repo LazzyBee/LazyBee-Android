@@ -222,16 +222,14 @@ public class MainActivity extends AppCompatActivity
     private void _checkCompleteLearn() {
         int complete = dataBaseHelper._checkCompleteLearned();
         if (complete == 1) {
-            //No complete
+            //TODO: Not complete Study
             mCardViewStudy.setVisibility(View.VISIBLE);
             _visibilityCount(true);
         } else {
-            //Comprete
-//            Log.i(TAG, "_checkCompleteLearn:Complete");
-//            Log.i(TAG, "Learn more");
+            //TODO: Complete Study
             mCardViewStudy.setVisibility(View.GONE);
-
             _visibilityCount(false);
+            Toast.makeText(context, R.string.congratulations, Toast.LENGTH_SHORT).show();
         }
 
     }
