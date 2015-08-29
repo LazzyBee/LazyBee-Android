@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     int TYPE_SETTING_SWITCH = 2;
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
     private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
+    private static final int TYPE_SETTING_ABOUT = 5;
 
     public RecyclerViewSettingListAdapter(Context context, List<String> settings) {
         this.context = context;
@@ -73,6 +75,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_today_limit_review, parent, false); //Inflating the layout
         } else if (viewType == TYPE_SETTING_SPEECH_RATE_SLIDE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_speech_rate_slide, parent, false); //Inflating the layout
+        } else if (viewType == TYPE_SETTING_ABOUT) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_about, parent, false); //Inflating the layout
         }
         RecyclerViewSettingListAdapterViewHolder recyclerViewSettingListAdapterViewHolder = new RecyclerViewSettingListAdapterViewHolder(view, viewType);
         return recyclerViewSettingListAdapterViewHolder;
@@ -113,7 +117,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 lbLimit.setVisibility(View.GONE);
                 changeLanguage(mCardView);
             } else if (setting.equals(context.getString(R.string.setting_about))) {
-                lbSettingName.setText(context.getString(R.string.setting_about_message));
+
             } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
                 _showDialogChangeSpeechRate(mCardView);
             }
@@ -135,7 +139,14 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             TextView lbDescription = (TextView) view.findViewById(R.id.lbDescription);
             getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT, limit);
             lbDescription.setText("");
+        } else if (holder.viewType == TYPE_SETTING_ABOUT) {
+            TextView lbAppVersion = (TextView) view.findViewById(R.id.lbAppVersion);
+            TextView lbDbVersion = (TextView) view.findViewById(R.id.lbDbVersion);
+            lbAppVersion.setText("AppVersion: 1.1.1");
+            lbDbVersion.setText("DBVersion:3");
+
         }
+
 
     }
 
@@ -397,7 +408,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
                 || setting.equals(context.getString(R.string.setting_check_update))
-                || setting.equals(context.getString(R.string.setting_about))
+
+                || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_speech_rate)))
             return TYPE_SETTING_NAME;
         else if (setting.equals(context.getString(R.string.setting_notification))
@@ -408,8 +420,10 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
             return TYPE_SETTING_NAME_WITH_DESCRIPTION;
         else if (setting.equals(context.getString(R.string.setting_speech_rate_slider)))
-
             return TYPE_SETTING_SPEECH_RATE_SLIDE;
+        else if (setting.equals(context.getString(R.string.setting_about)))
+
+            return TYPE_SETTING_ABOUT;
         else
             return -1;
     }
@@ -443,7 +457,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 if (_clientVesion == 0) {
                     if (update_local_version == -1) {
                         Log.i(TAG, "_checkUpdate():update_local_version == -1");
-                        _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
                     } else {
                         Log.i(TAG, "_checkUpdate():update_local_version != -1");
                         _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
@@ -451,7 +465,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 } else {
                     if (update_local_version > _clientVesion) {
                         Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
-                        _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
                     } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
                         Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
                         _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
@@ -514,7 +528,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
-            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
+            //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
             databaseUpgrade.close();
             Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
         } catch (Exception e) {
@@ -527,9 +541,10 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
     class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
         Context context;
-
+        ProgressDialog progressDialog;
         public DownloadFileUpdateDatabaseTask(Context context) {
             this.context = context;
+            progressDialog=new ProgressDialog(context);
 
         }
 
@@ -555,7 +570,6 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 }
                 fos.close();
                 Log.e("Download file update:", "Complete");
-                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
             } catch (MalformedURLException mue) {
                 Log.e("SYNC getUpdate", "malformed url error", mue);
             } catch (IOException ioe) {
@@ -563,7 +577,17 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             } catch (SecurityException se) {
                 Log.e("SYNC getUpdate", "security error", se);
             }
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+           // progressDialog.show(context, null, "Download file update:Update...");
+            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+            Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
+            //progressDialog.dismiss();
         }
     }
 }

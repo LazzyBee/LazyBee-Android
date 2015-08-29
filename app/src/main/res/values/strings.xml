@@ -164,6 +164,7 @@
     <string name="speech_rate_fast_value" translatable="false">1.5</string>
     <string name="speech_rate_very_fast_value" translatable="false">2.0</string>
     <string name="update_database_sucsessfuly" translatable="false">Update database sucsessfuly</string>
+    <string name="setting_all_right" translatable="false">@string/setting_about_message</string>
 
 
     <string-array name="settings">
@@ -187,8 +188,8 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
-
         <item>@string/setting_about</item>
+        <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="custom_study">
