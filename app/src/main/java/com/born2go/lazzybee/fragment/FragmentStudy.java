@@ -3,6 +3,7 @@ package com.born2go.lazzybee.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.activity.StudyActivity;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -48,7 +48,7 @@ public class FragmentStudy extends Fragment {
     String mime = "text/html";
     String encoding = "utf-8";
     String ASSETS = "file:///android_asset/";
-
+    Context context;
     int index = 0;
 
     public FragmentStudy() {
@@ -93,8 +93,6 @@ public class FragmentStudy extends Fragment {
 
     public boolean leanrmore = false;
 
-    StudyActivity studyActivity;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +104,9 @@ public class FragmentStudy extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_study, container, false);
-        studyActivity = (StudyActivity) getActivity();
+        context=this.getActivity();
+
+
         //init Webview
         mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
 
