@@ -663,20 +663,13 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 + currentQueue + ",question:" + currentCard.getQuestion());
         //_checkContainsAndRemove(againList);
         if (currentQueue >= Card.QUEUE_NEW_CRAM0) {
-            //TODO:Reset count list again,new,due
+            //TODO:Reset count list again,new,due (nobody: how can it be smaller than 0?)
             if (currentQueue == Card.QUEUE_NEW_CRAM0) {
                 //reset new card count
                 todayList.remove(currentCard);
                 int countNew = todayList.size();
                 lbCountNew.setText("" + countNew);
             }
-//        if (currentQueue == Card.QUEUE_LNR1) {
-////            reset new card again
-
-//            int countAgain = againList.size();
-//            lbCountAgain.setText("" + countAgain);
-//
-//        }
             if (currentQueue == Card.QUEUE_REV2) {
                 //reset new card due
                 dueList.remove(currentCard);
@@ -721,74 +714,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             //_nextNewCard();
             // _nextAfterDoneCard(currentQueue);
         }
-
-
-//        int flag_queue = 1;
-//        int due_time = (int) (curren_time + 600);
-//
-//        try {
-//            //getCurrent Card Queue
-//            int currentCardQueue = currentCard.getQueue();
-//
-//            //Check Contains
-//            if (againList.contains(currentCard)) {
-//                Log.i(TAG, "Card Contains againList");
-//                //remove current Card
-//                againList.remove(currentCard);
-//            }
-//            if (cardListAgainToday.contains(currentCard)) {
-//                Log.i(TAG, "Card Contains in cardListAgainToday");
-//                //remove current Card
-//                cardListAgainToday.remove(currentCard);
-//            }
-//
-//
-//            cardSched.answerCard(currentCard, Card.EASE_AGAIN);
-//
-//
-//            againList.add(currentCard);
-//            cardListAgainToday.add(currentCard);
-//
-//
-//            dataBaseHelper._updateCard(currentCard);//update card
-//
-//            int _count = todayList.size();
-//            //reset total vocabilary
-//            int current_count = _count - cardListAgainToday.size();
-//            lbCountNew.setText("" + current_count);
-//
-//            //Update Count Again
-//            int count_card_list_again = againList.size();
-//            //reset total vocabilary
-//            lbCountAgain.setText("" + count_card_list_again);
-//
-//            if (position < todayList.size()) {
-//                if (currentCardQueue == Card.QUEUE_NEW_CRAM0) {
-//                    //if currentCardQueue == Card.QUEUE_NEW_CRAM0 next card again if againList.size>0
-//                    Log.i(TAG, "Card.QUEUE_NEW_CRAM0");
-//                    _nextAgainCard();
-//
-//
-//                } else if (currentCardQueue == Card.QUEUE_LNR1) {
-//                    Log.i(TAG, "Card.QUEUE_LNR1");
-//                    _nextDueCard();
-//
-//
-//                } else if (currentCardQueue == Card.QUEUE_REV2) {
-//                    Log.i(TAG, "Card.QUEUE_REV2");
-//                    _nextNewCard();
-//
-//                }
-//            } else {
-//                _completeLean();
-//
-//            }
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     /**
