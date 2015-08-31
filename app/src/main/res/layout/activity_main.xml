@@ -197,9 +197,9 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:autoText="false"
+                android:onClick="onBtnStudyOnClick"
                 android:background="@color/teal_500"
                 android:nestedScrollingEnabled="false"
-                android:onClick="_onBtnStudyOnClick"
                 app:cardBackgroundColor="@color/teal_500"
                 app:cardElevation="@dimen/setting_card_view_elevation">
 
