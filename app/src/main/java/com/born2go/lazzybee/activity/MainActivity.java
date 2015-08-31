@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
-        _checkCompleteLearn();
+        _checkCompleteLearn(0);
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
@@ -224,17 +224,15 @@ public class MainActivity extends AppCompatActivity
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
-    private void _checkCompleteLearn() {
+    private void _checkCompleteLearn(int resultCode) {
         int complete = dataBaseHelper._checkCompleteLearned();
-        if (complete == 1) {
-            //TODO: Not complete Study
-            mCardViewStudy.setVisibility(View.VISIBLE);
-            _visibilityCount(true);
-        } else {
-            //TODO: Complete Study
+        if (complete == 0) {
             mCardViewStudy.setVisibility(View.GONE);
             _visibilityCount(false);
-            Toast.makeText(context, R.string.congratulations, Toast.LENGTH_SHORT).show();
+        } else if (complete == 1) {
+            mCardViewStudy.setVisibility(View.VISIBLE);
+            _visibilityCount(true);
+
         }
 
     }
@@ -848,11 +846,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void _onBtnStudyOnClick(View view) {
-        _checkCompleteLearn();
+    public void onBtnStudyOnClick(View view) {
+        _checkCompleteLearn(0);
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-
+        Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -885,11 +883,11 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
 
-                _checkCompleteLearn();
+                _checkCompleteLearn(0);
 
                 Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
                 intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
 
             }
         });
@@ -978,15 +976,17 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            Log.i(TAG,"Search Result");
-            _checkCompleteLearn();
+            Log.i(TAG, "Search Result");
+            _checkCompleteLearn(resultCode);
             _getCountCard();
         }
-        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
-            Log.i(TAG,"Study Result");
-            _checkCompleteLearn();
+        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+            _checkCompleteLearn(resultCode);
             _getCountCard();
         }
+//        if (requestCode == 1) {
+//            _getCountCard();
+//        }
         if (fragmentDialogCustomStudy != null) {
             fragmentDialogCustomStudy.dismiss();
         }
