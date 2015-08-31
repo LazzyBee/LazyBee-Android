@@ -1,6 +1,6 @@
-package com.born2go.lazzybee.activity;
+    package com.born2go.lazzybee.activity;
 
-import android.app.Activity;
+    import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -48,6 +48,11 @@ import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
@@ -63,8 +68,9 @@ import java.util.List;
 import java.util.Locale;
 
 
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface,ConnectionCallbacks, OnConnectionFailedListener {
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
@@ -101,6 +107,19 @@ public class MainActivity extends AppCompatActivity
     private Context context = this;
 
     private GitkitClient gitkitClient;
+
+    GoogleApiClient mGoogleApiClient;
+
+    /**
+     * A flag indicating that a PendingIntent is in progress and prevents us
+     * from starting further intents.
+     */
+    private boolean mIntentInProgress;
+
+    private boolean mSignInClicked;
+    private static final int RC_SIGN_IN = 0;
+
+    private ConnectionResult mConnectionResult;
     // Toolbar toolbar;
 
     @Override
@@ -117,28 +136,48 @@ public class MainActivity extends AppCompatActivity
         _intInterfaceView();
         _getCountCard();
         _checkCompleteLearn();
+        _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
 
 
     }
 
-    private void _setUpNotification() {
+    private void _initGoogleApiClient() {
+        // Initializing google plus api client
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this).addApi(Plus.API, Plus.PlusOptions.builder().build())
+//                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+        // Build GoogleApiClient with access to basic profile
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(Plus.API)
+//                .addScope(new Scope(Scopes.PROFILE))
+//                .build();
+    }
 
+    private void _setUpNotification() {
+        // String value = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+
         Notification mNotification = new Notification.Builder(this)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText("Here's an awesome update for you!")
+                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
+                .setContentText("Sample Notification")
                 .setSmallIcon(R.drawable.ic_action_back)
                 .setContentIntent(pIntent)
-                .addAction(R.drawable.ic_drawer, "View", pIntent)
-                .addAction(0, "Remind", pIntent)
+//                .addAction(R.drawable.ic_drawer, "View", pIntent)
+//                .addAction(0, "Remind", pIntent)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
+
         notificationManager.notify(0, mNotification);
+
+
     }
 
     private void _initSettingApplication() {
@@ -147,7 +186,7 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-            _setUpNotification();
+          //  _setUpNotification();
         }
 
 
@@ -189,8 +228,8 @@ public class MainActivity extends AppCompatActivity
             _visibilityCount(true);
         } else {
             //Comprete
-            Log.i(TAG, "_checkCompleteLearn:Complete");
-            Log.i(TAG, "Learn more");
+//            Log.i(TAG, "_checkCompleteLearn:Complete");
+//            Log.i(TAG, "Learn more");
             mCardViewStudy.setVisibility(View.GONE);
 
             _visibilityCount(false);
@@ -199,9 +238,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _getCountCard() {
+        Log.i(TAG,"_getCountCard()-------------------------------------------------------");
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
+        Log.i(TAG,"-------------------------------END-------------------------------------\n");
+
         if (dueToday != null)
             lbDueToday.setText(Html.fromHtml(dueToday));
         lbTotalsCount.setText("" + allCount);
@@ -314,10 +356,11 @@ public class MainActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         switch (position) {
             case LazzyBeeShare.DRAWER_ABOUT_INDEX:
-                Toast.makeText(context, "Dang xay dung", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
                 break;
             case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
-                _gotoAddCourse();
+                //_gotoAddCourse();
+                Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
                 break;
             case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
                 _gotoSetting();
@@ -448,22 +491,23 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_settings:
                 _gotoSetting();
                 break;
-            case R.id.action_login:
-//                if (item.getTitle() == getString(R.string.action_login))
-                _login();
-//                else {
-//                    _gotoProfile();
-//                }
-                break;
-            case R.id.action_logout:
-                //Log out Application
-                Toast.makeText(this, getString(R.string.action_logout), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.action_check_update_database:
-                //Check update app
-                _checkUpdate();
-
-                break;
+//            case R.id.action_login:
+////                if (item.getTitle() == getString(R.string.action_login))
+//                _login();
+////                signInWithGplus();
+////                else {
+////                    _gotoProfile();
+////                }
+//                break;
+//            case R.id.action_logout:
+//                //Log out Application
+//                Toast.makeText(this, getString(R.string.action_logout), Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.action_check_update_database:
+//                //Check update app
+//                _checkUpdate();
+//
+//                break;
             //case R.id.action_search:
             //Search
 //                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
@@ -478,6 +522,30 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sign-in into google
+     * */
+    private void signInWithGplus() {
+//        if (!mGoogleApiClient.isConnecting()) {
+//            mSignInClicked = true;
+//            resolveSignInError();
+//        }
+    }
+
+    /**
+     * Method to resolve any signin errors
+     * */
+    private void resolveSignInError() {
+//        if (mConnectionResult.hasResolution()) {
+//            try {
+//                mIntentInProgress = true;
+//                mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
+//            } catch (IntentSender.SendIntentException e) {
+//                mIntentInProgress = false;
+//                mGoogleApiClient.connect();
+//            }
+//        }
+    }
     private void _checkUpdate() {
         //Check vesion form server
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
@@ -679,6 +747,63 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        mSignInClicked = false;
+        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+
+        // Get user's information
+        getProfileInformation();
+
+        // Update the UI after signin
+       // updateUI(true);
+    }
+
+    private void getProfileInformation() {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+       // mGoogleApiClient.connect();
+        //updateUI(false);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (!result.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+                    0).show();
+            Log.e(TAG,"ConnectionFailed:"+result.getErrorCode());
+            return;
+        }
+
+        if (!mIntentInProgress) {
+            // Store the ConnectionResult for later usage
+            mConnectionResult = result;
+
+            if (mSignInClicked) {
+                // The user has already clicked 'sign-in' so we attempt to
+                // resolve all
+                // errors until the user is signed in, or they cancel.
+                resolveSignInError();
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+       // mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        if (mGoogleApiClient.isConnected()) {
+//            mGoogleApiClient.disconnect();
+//        }
+    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -847,12 +972,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
-            super.onActivityResult(requestCode, resultCode, intent);
-        }
+//        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
+//            super.onActivityResult(requestCode, resultCode, intent);
+//        }
         _getCountCard();
         if (fragmentDialogCustomStudy != null)
             fragmentDialogCustomStudy.dismiss();
+//        if (requestCode == RC_SIGN_IN) {
+//            if (resultCode != RESULT_OK) {
+//                mSignInClicked = false;
+//            }
+//
+//            mIntentInProgress = false;
+//
+//            if (!mGoogleApiClient.isConnecting()) {
+//                mGoogleApiClient.connect();
+//            }
+//        }
+        super.onActivityResult(requestCode, resultCode, intent);
 
     }
 
@@ -860,7 +997,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "Resume");
-        _getCountCard();
+       // _getCountCard();
         if (fragmentDialogCustomStudy != null)
             fragmentDialogCustomStudy.dismiss();
     }

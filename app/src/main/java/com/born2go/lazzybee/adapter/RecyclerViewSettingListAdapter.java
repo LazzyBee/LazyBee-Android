@@ -44,11 +44,12 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     List<String> settings;
     LearnApiImplements learnApiImplements;
     DatabaseUpgrade databaseUpgrade;
+    int TYPE_LINE = -1;
     int TYPE_TITLE = 0;
     int TYPE_SETTING_NAME = 1;
     int TYPE_SETTING_SWITCH = 2;
-    int TYPE_LINE = -1;
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
+    private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
 
     public RecyclerViewSettingListAdapter(Context context, List<String> settings) {
         this.context = context;
@@ -70,6 +71,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_lines, parent, false); //Inflating the layout
         } else if (viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_today_limit_review, parent, false); //Inflating the layout
+        } else if (viewType == TYPE_SETTING_SPEECH_RATE_SLIDE) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_speech_rate_slide, parent, false); //Inflating the layout
         }
         RecyclerViewSettingListAdapterViewHolder recyclerViewSettingListAdapterViewHolder = new RecyclerViewSettingListAdapterViewHolder(view, viewType);
         return recyclerViewSettingListAdapterViewHolder;
@@ -97,11 +100,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             lbLimit.setVisibility(View.GONE);
             if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT,limit);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, limit);
 
-            }else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
+            } else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT,limit);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
 
             } else if (setting.equals(context.getString(R.string.setting_check_update))) {
                 lbLimit.setVisibility(View.GONE);
@@ -111,6 +114,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 changeLanguage(mCardView);
             } else if (setting.equals(context.getString(R.string.setting_about))) {
                 lbSettingName.setText(context.getString(R.string.setting_about_message));
+            } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
+                _showDialogChangeSpeechRate(mCardView);
             }
 
 
@@ -124,16 +129,72 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             } else if (setting.equals(context.getString(R.string.setting_notification))) {
                 getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
             }
-        }else  if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION){
+        } else if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
             String limit = learnApiImplements._getValueFromSystemByKey(setting);
             lbSettingName.setText(setting);
-            TextView lbDescription= (TextView) view.findViewById(R.id.lbDescription);
-            getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT,limit);
+            TextView lbDescription = (TextView) view.findViewById(R.id.lbDescription);
+            getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT, limit);
             lbDescription.setText("");
         }
+
     }
 
-    private void getSettingLimitOrUpdate(View mCardView, TextView lbLimit, final String key,String limit) {
+    private void _showDialogChangeSpeechRate(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                builder.setTitle(context.getString(R.string.dialog_title_change_speech_rate));
+                final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
+                String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+                int index = 0;
+                if (sp == null) {
+                    index = 2;
+                } else {
+
+                    if (sp.equals(context.getString(R.string.speech_rate_very_slow_value))) {
+                        index = 0;
+                    } else if (sp.equals(context.getString(R.string.speech_rate_slow_value))) {
+                        index = 1;
+                    } else if (sp.equals(context.getString(R.string.speech_rate_normal_value))) {
+                        index = 2;
+                    } else if (sp.equals(context.getString(R.string.speech_rate_fast_value))) {
+                        index = 3;
+                    } else if (sp.equals(context.getString(R.string.speech_rate_very_fast))) {
+                        index = 4;
+                    }
+
+                }
+                builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        float speechRate = 1.0f;
+                        if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
+                            speechRate = 0.1f;
+                        } else if (items[item].equals(context.getString(R.string.speech_rate_slow))) {
+                            speechRate = 0.5f;
+                        } else if (items[item].equals(context.getString(R.string.speech_rate_normal))) {
+                            speechRate = 1.0f;
+                        } else if (items[item].equals(context.getString(R.string.speech_rate_fast))) {
+                            speechRate = 1.5f;
+                        } else if (items[item].equals(context.getString(R.string.speech_rate_very_fast))) {
+                            speechRate = 2.0f;
+                        }
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
+                        dialog.cancel();
+                    }
+                });
+                // Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+
+
+            }
+        });
+    }
+
+    private void getSettingLimitOrUpdate(View mCardView, TextView lbLimit, final String key, String limit) {
         // lbLimit.setVisibility(View.VISIBLE);
         int value = 0;
         if (limit == null) {
@@ -336,7 +397,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
                 || setting.equals(context.getString(R.string.setting_check_update))
-                || setting.equals(context.getString(R.string.setting_about)))
+                || setting.equals(context.getString(R.string.setting_about))
+                || setting.equals(context.getString(R.string.setting_speech_rate)))
             return TYPE_SETTING_NAME;
         else if (setting.equals(context.getString(R.string.setting_notification))
                 || setting.equals(context.getString(R.string.setting_auto_check_update))
@@ -345,6 +407,9 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         else if (setting.equals(context.getString(R.string.setting_today_review_card_limit)))
 
             return TYPE_SETTING_NAME_WITH_DESCRIPTION;
+        else if (setting.equals(context.getString(R.string.setting_speech_rate_slider)))
+
+            return TYPE_SETTING_SPEECH_RATE_SLIDE;
         else
             return -1;
     }

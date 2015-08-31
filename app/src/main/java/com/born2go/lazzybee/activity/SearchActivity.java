@@ -237,8 +237,8 @@ public class SearchActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
         // Chain together various setter methods to set the dialog characteristics
-        builder.setMessage(R.string.dialog_message_done_card)
-                .setTitle(R.string.dialog_title_done_card);
+        builder.setMessage(getString(R.string.dialog_message_delete_card, card.getQuestion()))
+                .setTitle(R.string.dialog_title_delete_card);
 
         // Add the buttons
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -267,8 +267,8 @@ public class SearchActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
         // Chain together various setter methods to set the dialog characteristics
-        builder.setMessage(R.string.dialog_message_add_to_learn)
-                .setTitle(R.string.dialog_title_add_to_learn);
+        builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
+                .setTitle(getString(R.string.dialog_title_add_to_learn));
 
         // Add the buttons
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

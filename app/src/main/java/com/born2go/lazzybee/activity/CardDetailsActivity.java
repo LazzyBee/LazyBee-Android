@@ -4,9 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
@@ -20,25 +18,14 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.SlidingTabsBasicFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.view.SlidingTabLayout;
 
 public class CardDetailsActivity extends AppCompatActivity {
 
 
     private static final String TAG = "CardDetailsActivity";
-    /**
-     * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
-     * above, but is designed to give continuous feedback to the user when scrolling.
-     */
-    private SlidingTabLayout mSlidingTabLayout;
-
-    /**
-     * A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above.
-     */
-    private ViewPager mViewPager;
 
     private Context context;
-    TextToSpeech textToSpeech;
+
 
     Card card;
     String cardId;
@@ -51,6 +38,7 @@ public class CardDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_details);
         this.context = this;
         cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
+        learnApiImplements = new LearnApiImplements(context);
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
@@ -61,6 +49,7 @@ public class CardDetailsActivity extends AppCompatActivity {
             transaction.commit();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 
     }
@@ -112,12 +101,14 @@ public class CardDetailsActivity extends AppCompatActivity {
     }
 
     private void addCardToLearn() {
+        if (card == null)
+            card = learnApiImplements._getCardByID(cardId);
         // Instantiate an AlertDialog.Builder with its constructor
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
         // Chain together various setter methods to set the dialog characteristics
-        builder.setMessage(R.string.dialog_message_add_to_learn)
-                .setTitle(R.string.dialog_title_add_to_learn);
+        builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
+                .setTitle(getString(R.string.dialog_title_add_to_learn));
 
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

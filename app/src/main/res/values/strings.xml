@@ -48,17 +48,21 @@
     <string name="example">Example</string>
     <string name="explain">Explain</string>
     <string name="meaning">Meaning</string>
-    <string name="dialog_message_learn_more">Learn more</string>
+
+    <!--Dialog Learn more-->
     <string name="dialog_title_learn_more">Lean more</string>
+    <string name="dialog_message_learn_more">You can learn more?</string>
+
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="learned">Learned</string>
     <string name="done_card">Done</string>
     <string name="new_card">New</string>
-    <string name="action_add_to_learn">Add to learn</string>
 
-    <string name="dialog_message_add_to_learn">Add to learn</string>
-    <string name="dialog_title_add_to_learn">You can add to learn</string>
+    <!--Dialog add card to learn-->
+    <string name="action_add_to_learn">Add to learn</string>
+    <string name="dialog_message_add_to_learn">You can add card <b>%s</b> to learn</string>
+    <string name="dialog_title_add_to_learn">Add card to learn</string>
 
 
     <string name="notificaion">Notificaion</string>
@@ -67,8 +71,8 @@
     <string name="queue" translatable="false">queue</string>
 
     <!--Dialog Done card-->
-    <string name="dialog_title_done_card">Done card</string>
-    <string name="dialog_message_done_card">You can Done card!</string>
+    <string name="dialog_title_delete_card">Delete card</string>
+    <string name="dialog_message_delete_card">You can delete card %s!</string>
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
@@ -82,10 +86,14 @@
     <string name="action_login">Login</string>
 
     <!--Config Google,Facebook -->
-    <string name="API_KEY" translatable="false">AIzaSyDGoIb--19xn16xjhgJh2v38rRsfcsRQZQ</string>
-    <string name="SERVER_CLIENT_ID" translatable="false">1090254847247-1utk4uifa84393hqa24rr4djopngdc4g.apps.googleusercontent.com</string>
-    <string name="SERVER_WIDGET_URL" translatable="false">http://www.lazzybee.com/oauth2callback</string>
-    <string name="fb_app_id" translatable="false">1615269568686595</string>
+    <!--AIzaSyDGoIb-19xn16xjhgJh2v38rRsfcsRQZQ-->
+    <!--AIzaSyCbi0IvEFiU4po-6rmXYkaqn_OkOFmL1gg-->
+    <!--269585672935-q4c3mqc21qkfv62cnn1oacvfcnkrerme.apps.googleusercontent.com-->
+    <string name="API_KEY" translatable="false">AIzaSyBUUO5SWQV0KBIUHxiLmvrxDMHJcB6W5EI</string>
+    <string name="SERVER_CLIENT_ID" translatable="false">269585672935-csg1ub9uk4r7rbbiua7o63e5cmq1qg8r.apps.googleusercontent.com</string>
+    <string name="SERVER_WIDGET_URL" translatable="false">http://localhost<!--http://www.lazzybee.com/oauth2callback--></string>
+    <string name="fb_app_id" translatable="false">386540048195283</string>
+
 
     <string name="action_check_update_database">Check Update</string>
 
@@ -128,10 +136,82 @@
     <string name="my_course">My Course</string>
     <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
 
-    <string name="drawer_user">user</string>
-    <string name="drawer_title_course">title_course</string>
-    <string name="drawer_add_course">add_course</string>
-    <string name="drawer_line">lines</string>
-    <string name="drawer_setting">settings</string>
-    <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
+    <string name="drawer_user" translatable="false">user</string>
+    <string name="drawer_title_course" translatable="false">title_course</string>
+    <string name="drawer_add_course" translatable="false">add_course</string>
+    <string name="drawer_line" translatable="false">lines</string>
+    <string name="drawer_setting" translatable="false">settings</string>
+    <string name="setting_about_message" translatable="false">Born2Go © 2015 All Rights Reserved</string>
+    <string name="under_construction">Under construction</string>
+
+    <string name="notificaion_title">%1$s %2$s</string>
+    <string name="message_hellp_study">Tip help Study(under construction)</string>
+    <string name="setting_speech_rate">Speech Rate</string>
+    <string name="setting_speech_rate_slider" translatable="false">
+        SpeechSlider</string>
+    <string name="action_change_speech_rate">Speech rate</string>
+
+    <string name="speech_rate_very_slow">Very Slow</string>
+    <string name="speech_rate_slow">Slow</string>
+    <string name="speech_rate_normal">Normal</string>
+    <string name="speech_rate_fast">Fast</string>
+    <string name="speech_rate_very_fast">Very Fast</string>
+    <string name="dialog_title_change_speech_rate">Change speech rate</string>
+
+    <string name="speech_rate_very_slow_value" translatable="false">0.1</string>
+    <string name="speech_rate_slow_value" translatable="false">0.5</string>
+    <string name="speech_rate_normal_value" translatable="false">1.0</string>
+    <string name="speech_rate_fast_value" translatable="false">1.5</string>
+    <string name="speech_rate_very_fast_value" translatable="false">2.0</string>
+
+
+    <string-array name="settings">
+        <!--<item>@string/setting_learn_title</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>-->
+        <!--<item>@string/setting_today_review_card_limit</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_notification</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_speech_rate</item>
+        <!--<item>@string/setting_speech_rate_slider</item>-->
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_auto_check_update</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_about</item>
+    </string-array>
+
+    <string-array name="custom_study">
+        <item>@string/custom_study</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>
+        <item>@string/setting_max_learn_more_per_day</item>
+    </string-array>
+
+    <string-array name="drawer_list">
+        <!--<item>@string/drawer_user</item>-->
+        <item>@string/drawer_title_course</item>
+        <item>English Word</item>
+        <!--  <item>@string/drawer_add_course</item>-->
+        <item>@string/drawer_line</item>
+        <item>@string/drawer_setting</item>
+    </string-array>
+
+    <string-array name="speech_rate">
+        <item>@string/speech_rate_very_slow</item>
+        <item>@string/speech_rate_slow</item>
+        <item>@string/speech_rate_normal</item>
+        <item>@string/speech_rate_fast</item>
+        <item>@string/speech_rate_very_fast</item>
+    </string-array>
 </resources>

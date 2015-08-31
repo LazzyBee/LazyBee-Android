@@ -103,9 +103,10 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
+
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginTop="@dimen/cardview_study_margin_top"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
@@ -121,8 +122,25 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/black"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="@string/banner_ad_unit_id"
+                android:visibility="gone"></com.google.android.gms.ads.AdView>
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="50dp">
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textAppearance="?android:attr/textAppearanceMedium"
+                   android:text="@string/message_hellp_study"
+                   android:id="@+id/textView11"
+                   android:textColor="@color/blue_500"
+                   android:layout_centerVertical="true"
+                   android:layout_centerHorizontal="true" />
+           </RelativeLayout>
         </android.support.v7.widget.CardView>
+
+
+
 
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
@@ -143,7 +161,8 @@
                     android:layout_height="fill_parent"
                     android:background="@color/material_deep_teal_500"
                     android:text="@string/show_answer"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:onClick="onbtnShowAnswerClick"/>
 
                 <LinearLayout
                     android:id="@+id/mLayoutButton"
@@ -164,7 +183,8 @@
                         android:layout_weight="0.3"
                         android:background="@color/teal_500"
                         android:paddingRight="5dp"
-                        android:text="@string/EASE_AGAIN" />
+                        android:text="@string/EASE_AGAIN"
+                        android:onClick="onbtnAgainClick"/>
 
                     <Button
                         android:id="@+id/btnHard1"
@@ -174,7 +194,8 @@
                         android:layout_weight="0.3"
                         android:background="@color/material_deep_teal_500"
                         android:paddingRight="5dp"
-                        android:text="@string/EASE_HARD" />
+                        android:text="@string/EASE_HARD"
+                        android:onClick="onbtnHardClick"/>
 
                     <Button
                         android:id="@+id/btnGood2"
@@ -183,7 +204,8 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
                         android:background="@color/material_deep_teal_500"
-                        android:text="@string/EASE_GOOD" />
+                        android:text="@string/EASE_GOOD"
+                        android:onClick="onbtnGoodClick"/>
 
                     <Button
                         android:id="@+id/btnEasy3"
@@ -191,7 +213,8 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="0.3"
                         android:background="@color/material_deep_teal_500"
-                        android:text="@string/EASE_EASY" />
+                        android:text="@string/EASE_EASY"
+                        android:onClick="onbtnEasyClick"/>
 
 
                 </LinearLayout>
