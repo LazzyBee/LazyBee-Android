@@ -165,6 +165,8 @@
     <string name="speech_rate_very_fast_value" translatable="false">2.0</string>
     <string name="update_database_sucsessfuly" translatable="false">Update database sucsessfuly</string>
     <string name="setting_all_right" translatable="false">@string/setting_about_message</string>
+    <string name="setting_reset_cache" translatable="false">Reset Cache</string>
+    <string name="dialog_title_clear_cache_and_restart_app" translatable="false">Clear cache and restart app</string>
 
 
     <string-array name="settings">
@@ -187,6 +189,7 @@
 
         <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
+        <item>@string/setting_reset_cache</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>

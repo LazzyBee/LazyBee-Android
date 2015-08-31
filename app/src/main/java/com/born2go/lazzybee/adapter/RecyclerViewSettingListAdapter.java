@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -120,6 +121,9 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
             } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
                 _showDialogChangeSpeechRate(mCardView);
+            } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
+                lbLimit.setVisibility(View.GONE);
+                resetCache(mCardView);
             }
 
 
@@ -142,12 +146,57 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         } else if (holder.viewType == TYPE_SETTING_ABOUT) {
             TextView lbAppVersion = (TextView) view.findViewById(R.id.lbAppVersion);
             TextView lbDbVersion = (TextView) view.findViewById(R.id.lbDbVersion);
-            lbAppVersion.setText("AppVersion: 1.1.1");
-            lbDbVersion.setText("DBVersion:3");
+            String versionName = "1";
+            try {
+                versionName = context.getPackageManager()
+                        .getPackageInfo(context.getPackageName(), 0).versionName;
+                lbAppVersion.setText("AppVersion:" + versionName);
+                lbDbVersion.setText("DBVersion:3");
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                lbAppVersion.setText("AppVersion:" + versionName);
+            }
+
 
         }
 
 
+    }
+
+    private void resetCache(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Instantiate an AlertDialog.Builder with its constructor
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+                // Chain together various setter methods to set the dialog characteristics
+                builder.setTitle(R.string.dialog_title_clear_cache_and_restart_app);
+
+                // Add the buttons
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.cancel();
+                    }
+                });
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Clean cache
+                        learnApiImplements.cleanCache();
+                        //restart app
+                        Intent i = context.getPackageManager()
+                                .getLaunchIntentForPackage(context.getPackageName());
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(i);
+                    }
+                });
+                // Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+            }
+        });
     }
 
     private void _showDialogChangeSpeechRate(RelativeLayout mCardView) {
@@ -408,7 +457,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
                 || setting.equals(context.getString(R.string.setting_check_update))
-
+                || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_speech_rate)))
             return TYPE_SETTING_NAME;
@@ -542,9 +591,10 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
         Context context;
         ProgressDialog progressDialog;
+
         public DownloadFileUpdateDatabaseTask(Context context) {
             this.context = context;
-            progressDialog=new ProgressDialog(context);
+            progressDialog = new ProgressDialog(context);
 
         }
 
@@ -584,7 +634,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-           // progressDialog.show(context, null, "Download file update:Update...");
+            // progressDialog.show(context, null, "Download file update:Update...");
             _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
             Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
             //progressDialog.dismiss();
