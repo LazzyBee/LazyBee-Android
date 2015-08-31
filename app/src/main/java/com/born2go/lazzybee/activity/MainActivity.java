@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        _checkAppVesion();
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         _checkLogin();
         _initSQlIte();
@@ -139,6 +140,10 @@ public class MainActivity extends AppCompatActivity
 
         dataBaseHelper._get100Card();
 
+
+    }
+
+    private void _checkAppVesion() {
 
     }
 
