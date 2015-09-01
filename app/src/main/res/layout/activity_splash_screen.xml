@@ -13,10 +13,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name"
         android:id="@+id/textView14"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:textColor="#ffffff"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,5 +26,12 @@
         android:text="@string/setting_about_message"
         android:id="@+id/textView15"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/textView14"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
