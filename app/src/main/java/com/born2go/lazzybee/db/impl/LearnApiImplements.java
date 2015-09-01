@@ -839,8 +839,9 @@ public class LearnApiImplements implements LearnApi {
                 } else if (total_learn_per_day - dueCount > limitToday) {
                     Log.i(TAG, "_getStringDueToday  total_learn_per_day - dueCount > limit_today");
                 }
-            } else {
+            } else if (dueCount >= total_learn_per_day) {
                 dueCount = total_learn_per_day;
+                todayCount = 0;
             }
         }
 
