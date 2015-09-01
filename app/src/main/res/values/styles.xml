@@ -6,6 +6,9 @@
         <item name="colorPrimaryDark">@color/teal_200</item>
         <item name="android:windowBackground">@color/grey_300</item>
     </style>
+    <style name="SplashScreen" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="colorPrimaryDark">@color/teal_200</item>
+    </style>
 
     <style name="ActionBarTheme" parent="Base.Theme.AppCompat.Light">
 
