@@ -291,5 +291,10 @@ public class SearchActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
+        super.onBackPressed();
 
+    }
 }

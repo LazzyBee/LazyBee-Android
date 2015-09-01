@@ -94,30 +94,42 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         //get lean_more form intern
         learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
 
+        int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+        int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
         //get card due today & agin
         againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
+        dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.TOTAL_LEAN_PER_DAY);
+        int dueCount = dueList.size();
 
         //get new random card list to day
-        //TODO: only take new cards if total learn today not exceed MAX_NEW_LEARN_PER_DAY
-        //int newCount = 10 - (againList.size() + dueList.size);
+        //int newCount =
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
-        int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+        if (dueCount == 0) {
+            Log.i(TAG,"onCreate()  dueCount == 0");
+        }else {
+            Log.i(TAG,"onCreate()  dueCount != 0");
+            if (dueCount < total_learn_per_day) {
+                Log.i(TAG,"onCreate()  dueCount < total_learn_per_day");
+                if (total_learn_per_day - dueCount < limit_today) {
+                    Log.i(TAG,"onCreate()  total_learn_per_day - dueCount < limit_today");
+                    limit_today = total_learn_per_day - dueCount;
+                }else if (total_learn_per_day - dueCount > limit_today){
+                    Log.i(TAG,"onCreate()  total_learn_per_day - dueCount > limit_today");
+                }
+            }else {
+                Log.i(TAG,"onCreate()  dueCount > total_learn_per_day");
+            }
+        }
+
         todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
 
         int againCount = againList.size();
         int todayCount = todayList.size();
 
-        int total_lern_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
-        int limit_due = total_lern_per_day - todayCount;
-
-        dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, limit_due);
-        int dueCount = dueList.size();
-
-
         Log.i(TAG, "againCount:" + againCount);
         Log.i(TAG, "todayCount:" + todayCount);
-        Log.i(TAG, "dueCount:" + dueCount + ",limit:" + limit_due + ",today:" + todayCount);
+        Log.i(TAG, "dueCount:" + dueCount + ",limit:" + dueCount + ",today:" + todayCount);
 
         //set data
         boolean check_learn = againCount > 0 || dueCount > 0 || todayCount > 0;
@@ -154,6 +166,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     }
 
     private void _completeLean() {
+        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS, new Intent());
         onBackPressed();
     }
 
@@ -803,7 +816,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 //            try {
             //get next card again
             Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
-            currentCard = todayList.get(position);
+            currentCard = todayList.get(0);
 
             //TODO:Display next card
             _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
@@ -831,15 +844,15 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         Log.i(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
 
         if (dueList.size() > 0) {//Check dueList.size()>0
-            if (flag_due) {
-                position_due = 0;
-            } else {
-                position_due++;
-            }
-            Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
+//            if (flag_due) {
+//                position_due = 0;
+//            } else {
+//                position_due++;
+//            }
+//            Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
 
             // position_due = (dueList.size() - 1);
-            currentCard = dueList.get(position_due);
+            currentCard = dueList.get(0);
 
 //            lbCountDue.setBackgroundResource(R.color.teal_200);
 //            lbCountAgain.setBackgroundResource(R.color.white);
@@ -877,42 +890,42 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         //Log.i(TAG, "_nextAgainCard:Current Card:" + currentCard.toString());
         if (againList.size() > 0) {//Check againList.size()>0
             try {
-                if (flag_one) {
-                    position_again = 0;
+//                if (flag_one) {
+//                    position_again = 0;
+//                } else {
+//                    position_again++;
+//                }
+//                if (position_again < (againList.size())) {
+                currentCard = againList.get(0);
+
+                //get current time and du card
+                int current_time = (int) (new Date().getTime() / 1000);
+                int due = (int) currentCard.getDue();
+
+                Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
+                if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
+                    Log.i(TAG, "_nextAgainCard:Next card is again card 2");
+                    flag_one = false;
+                    //TODO:Display next card
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
+
                 } else {
-                    position_again++;
+                    Log.i(TAG, "_nextAgainCard:Next card is due card 1");
+                    _nextDueCard();
                 }
-                if (position_again < (againList.size())) {
-                    currentCard = againList.get(position_again);
-
-                    //get current time and du card
-                    int current_time = (int) (new Date().getTime() / 1000);
-                    int due = (int) currentCard.getDue();
-
-                    Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
-                    if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
-                        Log.i(TAG, "_nextAgainCard:Next card is again card 2");
-                        flag_one = false;
-                        //TODO:Display next card
-                        _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
-
-                    } else {
-                        Log.i(TAG, "_nextAgainCard:Next card is due card 1");
-                        _nextDueCard();
-                    }
-                } else {
-                    if (againList.size() > 0) {
-                        Log.i(TAG, "_nextAgainCard:again >0");
-                        flag_one = true;
-                        _nextAgainCard();
-                    } else if (todayList.size() > 0) {
-                        Log.i(TAG, "_nextAgainCard:Next card is new card 3");
-                        _nextNewCard();
-                    } else {
-                        Log.i(TAG, "_nextAgainCard:_completeLean 3:" + againList.size());
-                        _completeLean();
-                    }
-                }
+//                } else {
+//                    if (againList.size() > 0) {
+//                        Log.i(TAG, "_nextAgainCard:again >0");
+//                        flag_one = true;
+//                        _nextAgainCard();
+//                    } else if (todayList.size() > 0) {
+//                        Log.i(TAG, "_nextAgainCard:Next card is new card 3");
+//                        _nextNewCard();
+//                    } else {
+//                        Log.i(TAG, "_nextAgainCard:_completeLean 3:" + againList.size());
+//                        _completeLean();
+//                    }
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.i(TAG, "_nextAgainCard: _completeLean();");

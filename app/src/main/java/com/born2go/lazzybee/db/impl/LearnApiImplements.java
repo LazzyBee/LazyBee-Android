@@ -815,34 +815,41 @@ public class LearnApiImplements implements LearnApi {
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
 
         int total_learn_per_day = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+        int limitToday = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
-
-        int dueCount = 0;
+        int dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day).size();
         if (todayCount == -2) {
+            Log.i(TAG, "_getStringDueToday: todayCount == -2");
             dueCount = 0;
             againCount = 0;
-            todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+            todayCount = limitToday;
+        } else if (todayCount == 0) {
+            Log.i(TAG, "_getStringDueToday: todayCount == 0");
+        } else if (todayCount == -1) {
+            Log.i(TAG, "_getStringDueToday: todayCount == -1");
+            todayCount = limitToday;
+        }
+        if (dueCount == 0) {
+            Log.i(TAG, "_getStringDueToday:dueCount == 0");
         } else {
-            if (todayCount == 0) {
-                //Complete leanrn today
-                todayCount = 0;
-            } else if (todayCount == -1) {
-                todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+            if (dueCount < total_learn_per_day) {
+                if (total_learn_per_day - dueCount < limitToday) {
+                    Log.i(TAG, "_getStringDueToday total_learn_per_day - dueCount < limit_today");
+                    todayCount = total_learn_per_day - dueCount;
+                } else if (total_learn_per_day - dueCount > limitToday) {
+                    Log.i(TAG, "_getStringDueToday  total_learn_per_day - dueCount > limit_today");
+                }
             } else {
-                int limitNew = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-                if (todayCount > limitNew)
-                    todayCount = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-
-                //Log.i(TAG, "Today:" + todayCount);
+                dueCount = total_learn_per_day;
             }
         }
-        dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day - todayCount).size();
+
         if (todayCount > 0 || againCount > 0 || dueCount > 0)
             duetoday = "<font color='" + context.getResources().getColor(R.color.card_new_color) + "'>" + todayCount + "</font>\n" +
                     " <font color='" + context.getResources().getColor(R.color.card_again_color) + "'>" + againCount + "</font>\n" +
                     " <font color='" + context.getResources().getColor(R.color.card_due_color) + "'>" + dueCount + "</font>";
 
-        Log.i(TAG, "Total learn:" + total_learn_per_day + ",Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
+        Log.i(TAG, "_getStringDueToday  Total learn:" + total_learn_per_day + ",Today:" + todayCount + ",Again:" + againCount + ",Due:" + dueCount);
         return duetoday;
     }
 
@@ -1005,7 +1012,7 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public void _insertOrUpdateCard(Card card) {
-        Log.i(TAG, "q: " + card.getQuestion());
+        // Log.i(TAG, "q: " + card.getQuestion());
         String cardId = String.valueOf(card.getId());
         //TODO: Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
@@ -1016,13 +1023,23 @@ public class LearnApiImplements implements LearnApi {
         values.put(KEY_ANSWERS, card.getAnswers());
         values.put(KEY_LEVEL, card.getLevel());
         values.put(KEY_PACKAGES, card.getPackage());
+//        db.replace(TABLE_VOCABULARY,null,values);
+        //int id = (int) db.insertWithOnConflict(TABLE_VOCABULARY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        //if (id == -1) {
+//            db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+//                    new String[]{cardId});
+        //}
 
-
+        //db.in
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{cardId});
-        // Log.i(TAG, "update_result: " + update_result);
-        db.close();
+        Log.i(TAG, "Card id:" + cardId + ",update_result : " + update_result);
+        if (update_result == 0) {
+            db.insert(TABLE_VOCABULARY, null, values);
+        }
+
+        //db.close();
 
     }
 
@@ -1045,5 +1062,16 @@ public class LearnApiImplements implements LearnApi {
         String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
                 " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " LIMIT " + limit;
         return _getListCardQueryString(select_list_card_by_queue);
+    }
+
+    public void cleanCache() {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        if (db.delete(TABLE_SYSTEM, " key = ? ", new String[]{QUEUE_LIST}) > 0) {
+            Log.i(TAG, "resetCache key:" + QUEUE_LIST + ",result:OK");
+        }
+        if (db.delete(TABLE_SYSTEM, " key = ? ", new String[]{LazzyBeeShare.PRE_FETCH_NEWCARD_LIST}) > 0) {
+            Log.i(TAG, "resetCache key:" + LazzyBeeShare.PRE_FETCH_NEWCARD_LIST + ",result:OK");
+        }
+
     }
 }

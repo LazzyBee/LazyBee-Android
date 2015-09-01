@@ -1,6 +1,6 @@
-    package com.born2go.lazzybee.activity;
+package com.born2go.lazzybee.activity;
 
-    import android.app.Activity;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -68,9 +68,8 @@ import java.util.List;
 import java.util.Locale;
 
 
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface,ConnectionCallbacks, OnConnectionFailedListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface, ConnectionCallbacks, OnConnectionFailedListener {
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
@@ -125,6 +124,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        _checkAppVesion();
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         _checkLogin();
         _initSQlIte();
@@ -135,11 +135,15 @@ public class MainActivity extends AppCompatActivity
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
-        _checkCompleteLearn();
+        _checkCompleteLearn(0);
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
 
+
+    }
+
+    private void _checkAppVesion() {
 
     }
 
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-          //  _setUpNotification();
+            //  _setUpNotification();
         }
 
 
@@ -220,29 +224,25 @@ public class MainActivity extends AppCompatActivity
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
-    private void _checkCompleteLearn() {
+    private void _checkCompleteLearn(int resultCode) {
         int complete = dataBaseHelper._checkCompleteLearned();
-        if (complete == 1) {
-            //No complete
+        if (complete == 0) {
+            mCardViewStudy.setVisibility(View.GONE);
+            _visibilityCount(false);
+        } else if (complete == 1) {
             mCardViewStudy.setVisibility(View.VISIBLE);
             _visibilityCount(true);
-        } else {
-            //Comprete
-//            Log.i(TAG, "_checkCompleteLearn:Complete");
-//            Log.i(TAG, "Learn more");
-            mCardViewStudy.setVisibility(View.GONE);
 
-            _visibilityCount(false);
         }
 
     }
 
     private void _getCountCard() {
-        Log.i(TAG,"_getCountCard()-------------------------------------------------------");
+        Log.i(TAG, "_getCountCard()-------------------------------------------------------");
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
-        Log.i(TAG,"-------------------------------END-------------------------------------\n");
+        Log.i(TAG, "-------------------------------END-------------------------------------\n");
 
         if (dueToday != null)
             lbDueToday.setText(Html.fromHtml(dueToday));
@@ -524,7 +524,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Sign-in into google
-     * */
+     */
     private void signInWithGplus() {
 //        if (!mGoogleApiClient.isConnecting()) {
 //            mSignInClicked = true;
@@ -534,7 +534,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Method to resolve any signin errors
-     * */
+     */
     private void resolveSignInError() {
 //        if (mConnectionResult.hasResolution()) {
 //            try {
@@ -546,6 +546,7 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        }
     }
+
     private void _checkUpdate() {
         //Check vesion form server
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
@@ -737,7 +738,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivityForResult(intent, 2);
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
     }
 
     @Override
@@ -756,7 +757,7 @@ public class MainActivity extends AppCompatActivity
         getProfileInformation();
 
         // Update the UI after signin
-       // updateUI(true);
+        // updateUI(true);
     }
 
     private void getProfileInformation() {
@@ -765,7 +766,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-       // mGoogleApiClient.connect();
+        // mGoogleApiClient.connect();
         //updateUI(false);
     }
 
@@ -774,7 +775,7 @@ public class MainActivity extends AppCompatActivity
         if (!result.hasResolution()) {
             GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
                     0).show();
-            Log.e(TAG,"ConnectionFailed:"+result.getErrorCode());
+            Log.e(TAG, "ConnectionFailed:" + result.getErrorCode());
             return;
         }
 
@@ -794,7 +795,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-       // mGoogleApiClient.connect();
+        // mGoogleApiClient.connect();
     }
 
     @Override
@@ -845,11 +846,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void _onBtnStudyOnClick(View view) {
-        _checkCompleteLearn();
+    public void onBtnStudyOnClick(View view) {
+        _checkCompleteLearn(0);
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-        this.startActivityForResult(intent, RESULT_OK);
-
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -882,11 +883,11 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
 
-                _checkCompleteLearn();
+                _checkCompleteLearn(0);
 
                 Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
                 intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
 
             }
         });
@@ -972,12 +973,27 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+            Log.i(TAG, "Search Result");
+            _checkCompleteLearn(resultCode);
+            _getCountCard();
+        }
+        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+            _checkCompleteLearn(resultCode);
+            _getCountCard();
+        }
+//        if (requestCode == 1) {
+//            _getCountCard();
+//        }
+        if (fragmentDialogCustomStudy != null) {
+            fragmentDialogCustomStudy.dismiss();
+        }
 //        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
 //            super.onActivityResult(requestCode, resultCode, intent);
 //        }
-        _getCountCard();
-        if (fragmentDialogCustomStudy != null)
-            fragmentDialogCustomStudy.dismiss();
+
 //        if (requestCode == RC_SIGN_IN) {
 //            if (resultCode != RESULT_OK) {
 //                mSignInClicked = false;
@@ -986,18 +1002,16 @@ public class MainActivity extends AppCompatActivity
 //            mIntentInProgress = false;
 //
 //            if (!mGoogleApiClient.isConnecting()) {
-//                mGoogleApiClient.connect();
 //            }
+//                mGoogleApiClient.connect();
 //        }
-        super.onActivityResult(requestCode, resultCode, intent);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "Resume");
-       // _getCountCard();
+        // _getCountCard();
         if (fragmentDialogCustomStudy != null)
             fragmentDialogCustomStudy.dismiss();
     }
