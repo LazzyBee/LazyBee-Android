@@ -224,17 +224,29 @@ public class MainActivity extends AppCompatActivity
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
-    private void _checkCompleteLearn(int resultCode) {
-        int complete = dataBaseHelper._checkCompleteLearned();
-        if (complete == 0) {
-            mCardViewStudy.setVisibility(View.GONE);
-            _visibilityCount(false);
-        } else if (complete == 1) {
+    private int _checkCompleteLearn(int resultCode) {
+        String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS));
+        int check = dataBaseHelper._checkListTodayExit();
+        int complete = 0;
+        if (value != null) {
+            complete = Integer.valueOf(value);
+        }
+        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+            if (check >= 0) {
+                //inday
+                //finish Lession
+                mCardViewStudy.setVisibility(View.GONE);
+                _visibilityCount(false);
+            } else {
+                mCardViewStudy.setVisibility(View.VISIBLE);
+                _visibilityCount(true);
+            }
+        } else if (complete == 0) {
             mCardViewStudy.setVisibility(View.VISIBLE);
             _visibilityCount(true);
 
         }
-
+        return complete;
     }
 
     private void _getCountCard() {
@@ -862,11 +874,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onLearnMoreClick(View view) {
-        int today = dataBaseHelper._checkListTodayExit();
-        if (today == 0)
-            _learnMore();
-        else {
+        int finish = _checkCompleteLearn(0);
+        if (finish == 0) {
             Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+        } else {
+            _learnMore();
         }
     }
 
@@ -882,9 +894,7 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-
-                _checkCompleteLearn(0);
-
+                //_checkCompleteLearn(0);
                 Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
                 intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
                 startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
@@ -981,7 +991,7 @@ public class MainActivity extends AppCompatActivity
             _getCountCard();
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
-            _checkCompleteLearn(resultCode);
+            _checkCompleteLearnbyResultCode(resultCode);
             _getCountCard();
         }
 //        if (requestCode == 1) {
@@ -1005,6 +1015,24 @@ public class MainActivity extends AppCompatActivity
 //            }
 //                mGoogleApiClient.connect();
 //        }
+    }
+
+    private void _checkCompleteLearnbyResultCode(int resultCode) {
+        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+            //Complete
+            mCardViewStudy.setVisibility(View.GONE);
+            _visibilityCount(false);
+            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+            dataBaseHelper._insertOrUpdateToSystemTable(value, value);
+        } else {
+            mCardViewStudy.setVisibility(View.VISIBLE);
+            _visibilityCount(true);
+            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+            dataBaseHelper._insertOrUpdateToSystemTable(value, String.valueOf(1));
+
+        }
+
+
     }
 
     @Override
