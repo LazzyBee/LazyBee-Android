@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 //        toolbar = (Toolbar) findViewById(R.id.action_bar_main);
 //        setSupportActionBar(toolbar);
-        _initToolBar();
+        //_initToolBar();
         _intInterfaceView();
         _getCountCard();
         _checkCompleteLearn(0);
@@ -250,16 +250,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _getCountCard() {
-        Log.i(TAG, "_getCountCard()-------------------------------------------------------");
+        Log.i(TAG, "--------------------------_getCountCard()------------------------------\n");
+
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
+
         Log.i(TAG, "-------------------------------END-------------------------------------\n");
 
-        if (dueToday != null)
+        if (dueToday != null) {
             lbDueToday.setText(Html.fromHtml(dueToday));
-        lbTotalsCount.setText("" + allCount);
-        lbTotalNewCount.setText("" + (allCount - learnCount));
+        }
+        lbTotalsCount.setText(String.valueOf(allCount));
+        lbTotalNewCount.setText(String.valueOf((allCount - learnCount)));
 
     }
 
@@ -282,21 +285,13 @@ public class MainActivity extends AppCompatActivity
         if (visibility) {
             mDue.setVisibility(View.VISIBLE);
             mCongratulations.setVisibility(View.GONE);
-//            pTotalCards.setVisibility(View.VISIBLE);
-//            pTotalNewCard.setVisibility(View.VISIBLE);
-//            pDueToday.setVisibility(View.VISIBLE);
         } else {
             mDue.setVisibility(View.GONE);
             mCongratulations.setVisibility(View.VISIBLE);
-//            pTotalCards.setVisibility(View.GONE);
-//            pTotalNewCard.setVisibility(View.GONE);
-//            pDueToday.setVisibility(View.GONE);
         }
     }
 
     private void _initToolBar() {
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar_main);
-//        setSupportActionBar(toolbar);
         _initNavigationDrawerFragment(null);
     }
 
@@ -308,7 +303,6 @@ public class MainActivity extends AppCompatActivity
         gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
             @Override
             public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
-                //authenticate();
                 Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
             }
 
@@ -352,15 +346,15 @@ public class MainActivity extends AppCompatActivity
      * @param toolbar
      */
     private void _initNavigationDrawerFragment(Toolbar toolbar) {
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer, toolbar,
-                drawerLayout);
+//        mNavigationDrawerFragment = (NavigationDrawerFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+//        mTitle = getTitle();
+//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//
+//        // Set up the drawer.
+//        mNavigationDrawerFragment.setUp(
+//                R.id.navigation_drawer, toolbar,
+//                drawerLayout);
     }
 
 
@@ -447,44 +441,44 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            MenuInflater inflater = getMenuInflater();
-            // Inflate menu to add items to action bar if it is present.
-            inflater.inflate(R.menu.main, menu);
-            // Associate searchable configuration with the SearchView
-            SearchManager searchManager =
-                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView =
-                    (SearchView) menu.findItem(R.id.menu_search).getActionView();
+//        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        // Only show items in the action bar relevant to this screen
+        // if the drawer is not showing. Otherwise, let the drawer
+        // decide what to show in the action bar.
+        MenuInflater inflater = getMenuInflater();
+        // Inflate menu to add items to action bar if it is present.
+        inflater.inflate(R.menu.main, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.menu_search).getActionView();
 //            searchView.setSearchableInfo(
 //                    searchManager.getSearchableInfo(getComponentName()));
 
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // TODO Auto-generated method stub
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
 
-                    Toast.makeText(getBaseContext(), query,
-                            Toast.LENGTH_SHORT).show();
-                    _gotoSeach(query);
-                    return false;
-                }
+                Toast.makeText(getBaseContext(), query,
+                        Toast.LENGTH_SHORT).show();
+                _gotoSeach(query);
+                return false;
+            }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    // TODO Auto-generated method stub
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
 
-                    //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            });
-            _restoreActionBar();
-            return true;
-        }
+                //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+        _restoreActionBar();
+        // return true;
+//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -675,15 +669,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Set up action bar
-     * <p>Hide Tittle and setting menu</p>
-     * <p>Add textbox in Action bar</p>
-     */
-    private void _setUpSearchActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-    }
 
     /**
      * Goto Fragment Profile
@@ -708,19 +693,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Goto fragment setting
+     * Goto setting
      */
     private void _gotoSetting() {
-//        Toast.makeText(this, getString(R.string.action_settings), Toast.LENGTH_SHORT).show();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        //intit
-//        FragmentSetting fragmentSetting = new FragmentSetting();
-//        //replace from container to fragmentSetting
-//        fragmentTransaction.replace(R.id.container, fragmentSetting)
-//                .addToBackStack(FragmentSetting.TAG).commit();
-
-
         //init inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -733,20 +708,6 @@ public class MainActivity extends AppCompatActivity
      * Goto FragemenSearch with query
      */
     private void _gotoSeach(String query) {
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentSearch
-//        FragmentSearch fragmentSearch = new FragmentSearch();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set QUERY_TEXT
-//        bundle.putString(FragmentSearch.QUERY_TEXT, query);
-//        //setArguments for fragmentSearch
-//        fragmentSearch.setArguments(bundle);
-//        //replace from container to fragmentSearch
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentSearch)
-//                .addToBackStack(FragmentSearch.TAG).commit();
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -919,50 +880,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoReviewToday() {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentReview
-//        FragmentReviewToday fragmentReview = new FragmentReviewToday();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set COURSE_ID
-//        bundle.putString(FragmentReviewToday.COURSE_ID, "");
-//        //setArguments for fragmentReview
-//        fragmentReview.setArguments(bundle);
-//        //replace from container to fragmentReview
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentReview)
-//                .addToBackStack(FragmentReviewToday.TAG).commit();
-
         //init inten
         Intent intent = new Intent(this, ReviewCardActivity.class);
         //start intent
         startActivity(intent);
-    }
-
-
-    private void _gotoStudy(Object tag) {
-
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentStudy
-//        FragmentStudy fragmentStudy = new FragmentStudy();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set COURSE_ID
-//        bundle.putString(FragmentStudy.COURSE_ID, "");
-//        //setArguments for fragmentStudy
-//        fragmentStudy.setArguments(bundle);
-//        //replace from container to fragmentStudy
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentStudy)
-//                .addToBackStack(FragmentStudy.TAG).commit();
-
-//        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + (Boolean) tag);
-//
-//        Intent intent = new Intent(this, StudyActivity.class);
-//        intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) tag);
-//
-//        this.startActivityForResult(intent, 1);
     }
 
     @Override
@@ -986,8 +907,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            Log.i(TAG, "Search Result");
-            _checkCompleteLearn(resultCode);
+            _checkCompleteLearnbyResultCode(resultCode);
             _getCountCard();
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
@@ -1018,7 +938,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _checkCompleteLearnbyResultCode(int resultCode) {
-        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS||resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             //Complete
             mCardViewStudy.setVisibility(View.GONE);
             _visibilityCount(false);
@@ -1031,8 +951,6 @@ public class MainActivity extends AppCompatActivity
             dataBaseHelper._insertOrUpdateToSystemTable(value, String.valueOf(1));
 
         }
-
-
     }
 
     @Override
