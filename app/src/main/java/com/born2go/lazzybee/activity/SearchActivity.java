@@ -39,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
     SearchView search;
     private Context context;
     String query;
+    private int ADD_TO_LEARN = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class SearchActivity extends AppCompatActivity {
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
                 Card card = (Card) lbQuestion.getTag();
-                String cardID = "" + card.getId();
+                //String cardID = "" + card.getId();
                 _optionList(card);
             }
         });
@@ -280,9 +281,9 @@ public class SearchActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // TODO:Update Queue_list in system table
-                dataBaseHelper._addCardIdToQueueList("" + card.getId());
-                String action = getString(R.string.add_to) + " " + card.getQuestion() + " " + getString(R.string.queue);
-                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
+                dataBaseHelper._addCardIdToQueueList(String.valueOf(card.getId()));
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+                ADD_TO_LEARN = 1;
             }
         });
         // Get the AlertDialog from create()
@@ -293,7 +294,10 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
+        if (ADD_TO_LEARN == 1)
+            setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
+        else
+            setResult(RESULT_OK, new Intent());
         super.onBackPressed();
 
     }
