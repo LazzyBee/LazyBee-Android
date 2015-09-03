@@ -819,6 +819,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onBtnStudyOnClick(View view) {
+        _study();
+    }
+    private void _study() {
         _checkCompleteLearn(0);
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
@@ -835,10 +838,11 @@ public class MainActivity extends AppCompatActivity
 
     public void _onLearnMoreClick(View view) {
         int finish = _checkCompleteLearn(0);
-        if (finish == 0) {
-            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
-        } else {
+        Log.i(TAG, "Complet code:" + finish);
+        if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
             _learnMore();
+        } else {
+            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -859,7 +863,7 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
                 startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
                 String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-                dataBaseHelper._insertOrUpdateToSystemTable(key, key);
+                dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
 
             }
         });
