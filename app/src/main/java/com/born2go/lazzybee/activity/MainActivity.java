@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -167,19 +166,19 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 
-        Notification mNotification = new Notification.Builder(this)
-                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
-                .setContentText("Sample Notification")
-                .setSmallIcon(R.drawable.ic_action_back)
-                .setContentIntent(pIntent)
-//                .addAction(R.drawable.ic_drawer, "View", pIntent)
-//                .addAction(0, "Remind", pIntent)
-                .build();
+//        Notification mNotification = new Notification.Builder(this)
+//                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
+//                .setContentText("Sample Notification")
+//                .setSmallIcon(R.drawable.ic_action_back)
+//                .setContentIntent(pIntent)
+////                .addAction(R.drawable.ic_drawer, "View", pIntent)
+////                .addAction(0, "Remind", pIntent)
+//                .build();
 
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, mNotification);
+        //notificationManager.notify(0, mNotification);
 
 
     }
@@ -859,6 +858,8 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
                 intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
                 startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+                String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+                dataBaseHelper._insertOrUpdateToSystemTable(key, key);
 
             }
         });
@@ -938,7 +939,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _checkCompleteLearnbyResultCode(int resultCode) {
-        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS||resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS || resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             //Complete
             mCardViewStudy.setVisibility(View.GONE);
             _visibilityCount(false);

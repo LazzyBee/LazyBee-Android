@@ -216,7 +216,7 @@ public class LearnApiImplements implements LearnApi {
                 String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
 
                 List<Card> cards = _getListCardFromStringArray(value);
-                Log.i(TAG, "_getRandomCard: cards toArray:" + cards.toString());
+                Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
                 randomGenerator = new Random();
 
                 for (int i = 0; i < number; i++) {
@@ -224,7 +224,7 @@ public class LearnApiImplements implements LearnApi {
                     datas.add(cards.get(index));
                     cards.remove(cards.get(index));
                 }
-                Log.i(TAG, "_getRandomCard: cards toArray after remove:" + cards.toString());
+                Log.d(TAG, "_getRandomCard: cards toArray after remove:" + cards.toString());
                 //remove
                 //cards.removeAll(datas);
                 _insertOrUpdatePreFetchNewCardList(cards);
