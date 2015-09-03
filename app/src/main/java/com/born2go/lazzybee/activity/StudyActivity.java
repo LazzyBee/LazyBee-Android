@@ -610,13 +610,14 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 
 
     private void _answerAgainCard() {
+        Log.i(TAG, "----------------_answerAgainCard----------------");
         final int curren_time = (int) (new Date().getTime() / 1000);/*curent time*/
         int currentQueue = currentCard.getQueue();//Get current Queue
-        Log.i(TAG, "_answerAgainCard:Currrent Card Queue:"
+        Log.i(TAG, "_answerAgainCard:\tCurrrent Card Queue:"
                 + currentQueue + ",question:" + currentCard.getQuestion());
         //_checkContainsAndRemove(againList);
         if (currentQueue < Card.QUEUE_NEW_CRAM0) {//Something's wrong???
-            Log.i(TAG, "_answerAgainCard:Queue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
+            Log.i(TAG, "_answerAgainCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
             return;
         }
 
@@ -624,12 +625,12 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             //reset new card due
             dueList.remove(currentCard);
             int countDue = dueList.size();
-            lbCountDue.setText("" + countDue);
+            lbCountDue.setText(String.valueOf(countDue));
         } else if (currentQueue == Card.QUEUE_NEW_CRAM0) {
             //reset new card count
             todayList.remove(currentCard);
             int countNew = todayList.size();
-            lbCountNew.setText("" + countNew);
+            lbCountNew.setText(String.valueOf(countNew));
         }
 
         //We remove object, not index, cuz the object may be from other list
@@ -663,6 +664,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             e.printStackTrace();
             _completeLean();
         }
+        Log.i(TAG, "----------------------END-----------------------");
     }
 
     /**
@@ -788,7 +790,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 
 
     private void _nextNewCard() {
-        Log.i(TAG, "Curent new card:" + currentCard.toString());
+        Log.d(TAG, "Curent new card:" + currentCard.toString());
         if (todayList.size() > 0) {
             position = todayList.size() - 1;
 
@@ -811,7 +813,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 
 
     private void _nextDueCard() {
-        Log.i(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
+        Log.d(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
 
         if (dueList.size() > 0) {//Check dueList.size()>0
 
