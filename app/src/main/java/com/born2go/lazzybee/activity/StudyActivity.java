@@ -106,21 +106,24 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
         if (dueCount == 0) {
-            Log.i(TAG,"onCreate()  dueCount == 0");
-        }else {
-            Log.i(TAG,"onCreate()  dueCount != 0");
+            Log.i(TAG, "onCreate()  dueCount == 0");
+        } else {
+            Log.i(TAG, "onCreate()  dueCount != 0");
             if (dueCount < total_learn_per_day) {
-                Log.i(TAG,"onCreate()  dueCount < total_learn_per_day");
+                Log.i(TAG, "onCreate()  dueCount < total_learn_per_day");
                 if (total_learn_per_day - dueCount < limit_today) {
-                    Log.i(TAG,"onCreate()  total_learn_per_day - dueCount < limit_today");
+                    Log.i(TAG, "onCreate()  total_learn_per_day - dueCount < limit_today");
                     limit_today = total_learn_per_day - dueCount;
-                }else if (total_learn_per_day - dueCount > limit_today){
-                    Log.i(TAG,"onCreate()  total_learn_per_day - dueCount > limit_today");
+                } else if (total_learn_per_day - dueCount > limit_today) {
+                    Log.i(TAG, "onCreate()  total_learn_per_day - dueCount > limit_today");
                 }
-            }else {
-                Log.i(TAG,"onCreate()  dueCount > total_learn_per_day");
+            } else if (dueCount >= total_learn_per_day) {
+                Log.i(TAG, "onCreate()  dueCount >= total_learn_per_day");
+                limit_today = 0;
             }
         }
+        if (dueCount > 0)
+            learn_more = false;
 
         todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
 
