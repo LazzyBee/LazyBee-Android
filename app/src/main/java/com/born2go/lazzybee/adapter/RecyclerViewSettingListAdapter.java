@@ -221,7 +221,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                         index = 2;
                     } else if (sp.equals(context.getString(R.string.speech_rate_fast_value))) {
                         index = 3;
-                    } else if (sp.equals(context.getString(R.string.speech_rate_very_fast))) {
+                    } else if (sp.equals(context.getString(R.string.speech_rate_very_fast_value))) {
                         index = 4;
                     }
 
@@ -230,15 +230,15 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                     public void onClick(DialogInterface dialog, int item) {
                         float speechRate = 1.0f;
                         if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
-                            speechRate = 0.1f;
+                            speechRate = 0.7f;
                         } else if (items[item].equals(context.getString(R.string.speech_rate_slow))) {
-                            speechRate = 0.5f;
+                            speechRate = 0.9f;
                         } else if (items[item].equals(context.getString(R.string.speech_rate_normal))) {
                             speechRate = 1.0f;
                         } else if (items[item].equals(context.getString(R.string.speech_rate_fast))) {
-                            speechRate = 1.5f;
+                            speechRate = 1.1f;
                         } else if (items[item].equals(context.getString(R.string.speech_rate_very_fast))) {
-                            speechRate = 2.0f;
+                            speechRate = 1.3f;
                         }
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
                         dialog.cancel();
