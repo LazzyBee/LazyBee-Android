@@ -138,106 +138,6 @@ public class LazzyBeeShare {
      * init HTML answer
      */
     public static String getAnswerHTML(Context context, Card card) {
-//        String html = null;
-//        try {
-//            JSONObject answerObj = new JSONObject(card.getAnswers());
-//            String pronoun = answerObj.getString("pronoun");
-//            JSONObject packagesObj = answerObj.getJSONObject("packages");
-//
-//            String meaning = EMPTY;
-//            String explain = EMPTY;
-//            String example = EMPTY;
-//
-//
-//            try {
-//                JSONObject commonObj = packagesObj.getJSONObject("common");
-//                if (commonObj != null) {
-//
-//                    meaning = Html.fromHtml(commonObj.getString("meaning")).toString();
-//                    explain = Html.fromHtml(commonObj.getString("explain")).toString();
-//                    example = Html.fromHtml(commonObj.getString("example")).toString();
-////                    meaning = commonObj.getString("meaning");
-////                    explain = commonObj.getString("explain");
-////                    example = commonObj.getString("example");
-////                    Log.i(TAG, "meaning" + meaning);
-////                    Log.i(TAG, "explain" + explain);
-////                    Log.i(TAG, "example" + example);
-//                }
-//            } catch (JSONException e) {
-////                e.printStackTrace();
-//                System.out.print("Error 1:" + e.getMessage());
-//            }
-//
-//
-//            String explainTagA = EMPTY;
-//            String exampleTagA = EMPTY;
-//
-//
-////            if (!meaning.isEmpty())
-////                meaning = meaning + "<a onclick='meaning.playQuestion();'><img src='ic_speaker_red.png'/></a>";
-////            else
-////                meaning = "";
-//
-//            if (!explain.isEmpty())
-//                explainTagA = "<a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a>";
-//
-//            if (!example.isEmpty())
-//                exampleTagA = "<a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a>";
-//
-//            String imageURL = EMPTY;
-//            html = "<html>\n" +
-//                    "<head>\n" +
-//                    "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
-//                    "name=\"viewport\">\n" +
-//                    "</head>\n" +
-//                    "<body >\n" +
-//                    "   <div style='width:100%'>\n" +
-//                    "       <div style='float:left;width:90%;text-align: center;'>\n" +
-//                    "           <strong style='font-size:25pt;'>" + card.getQuestion() + "</strong>\n" +
-//                    "       </div>\n" +
-//                    "       <div style='float:left;width:10%'>\n" +
-//                    "           <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a>\n" +
-//                    "       </div>\n" +
-//                    "       <div style='width:90%'>\n" +
-//                    "           <center><font>" + pronoun + "</font></center>\n" +
-//                    "           <p style='text-align: center'><em style='color:blue;'>" + meaning + "</em></p>\n" +
-//                    "       </div>\n" +
-//                    "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
-//                    "       <div style=\"width:100%\">\n" +
-//                    "           <div style=\"float:left;width:90%\">" +
-//                    "               <p><strong>" + _explain + "</strong></br>" + explain + "</p>\n" +
-//                    "               <p><strong>" + _example + "</strong></br>" + example + "</p>\n" +
-//                    "           </div>\n" +
-//                    "           <div style=\"float:right;;width:10%\">\n " +
-//                    "               <p><strong></strong></br>" + explainTagA + "</p>\n" +
-//                    "               <p><strong></strong></br>" + exampleTagA + "</p>\n" +
-//                    "           </div>\n" +
-//                    "       </div>\n" +
-//                    "   </div>\n";
-//
-//            // Log.v(TAG, "html:" + html);
-//            String debug = "</body></html>\n";
-//            if (DEBUG) {
-//                debug = "       </div>\n" +
-//                        "           <div id='debug'>\n " +
-//                        "              Debug infor:</br>\n" +
-//                        "              -------------------------------------</br>\n" +
-//                        "              Level:" + card.getLevel() + "</br>\n" +
-//                        "              lat_ivl:" + card.getLast_ivl() + "</br>\n" +
-//                        "              Factor:" + card.getFactor() + "</br>\n" +
-//                        "              Rev_count:" + card.getRev_count() + "</br>\n" +
-//                        "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
-//                        "              -------------------------------------</br>\n" +
-//                        "           </div>\n" +
-//                        "   </body>" +
-//                        "</html>\n";
-//            }
-//            html += debug;
-//        } catch (JSONException e) {
-//            // e.printStackTrace();
-//            System.out.print("Error 2:" + e.getMessage());
-//        }
-//        return html;
         return getAnswerHTMLwithPackage(context, card, "common", false);
     }
 
@@ -251,22 +151,6 @@ public class LazzyBeeShare {
                         "<head>\n" +
                         "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
                         "name=\"viewport\">\n" +
-                        /*"<style>\n" +
-                        " figure {" +
-                        "   text-align: center;" +
-                        "   margin: auto;" +
-                        "}" +
-                        "figure.image img {" +
-                        "   width: 100% !important;" +
-                        "   height: auto !important;" +
-                        "}" +
-                        "figcaption {" +
-                        "   font-size: 10px;" +
-                        "}" +
-                        "a {" +
-                        " margin-top:5px;" +
-                        "}" +
-                        "</style>\n" +*/
                         "</head>\n" +
                         "<body onload='question.playQuestion()'>\n" +
                         "<div style='width:100%'>\n" +
@@ -284,9 +168,7 @@ public class LazzyBeeShare {
     }
 
 
-    public static boolean compareDate(Date date1, Date date2) {
-        return fmt.format(date1).equals(fmt.format(date2));
-    }
+
 
     public static String _getValueFromKey(String answer, String key) {
         String value = EMPTY;
@@ -460,38 +342,6 @@ public class LazzyBeeShare {
         }
     }
 
-    //    public static String convertJsonObjMaxLearnPerDayToString(int maxlearn) {
-//        String value = "";
-//        Date date = new Date();
-//
-//        long long_date = date.getTime() / 1000;
-//        JSONObject jsonObject = new JSONObject();
-//
-//        try {
-//            jsonObject.put("date", long_date);
-//            jsonObject.put("max", maxlearn);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        value = jsonObject.toString();
-//        return value;
-//    }
-//
-//    public static int getMaxLearnPerDay(String maxlearn) {
-//        int value = MAX_NEW_LEARN_PER_DAY;
-//
-//        try {
-//            JSONObject jsonObject = new JSONObject(maxlearn);
-//            value = jsonObject.getInt("date");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        return value;
-//    }
- /*
        /*
     *Java Scrip Object Question
     * */
