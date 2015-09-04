@@ -28,5 +28,8 @@
     <style name="ThemeCardDetails" parent="Theme.AppCompat.NoActionBar">
 
     </style>
+    <style name="ThemeNoActionBar" parent="Theme.AppCompat.NoActionBar">
+
+    </style>
 
 </resources>
