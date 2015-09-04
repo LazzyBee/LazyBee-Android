@@ -3,12 +3,15 @@ package com.born2go.lazzybee.activity;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
@@ -276,10 +279,39 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 return true;
             case R.id.action_detelte:
                 Log.i(TAG, "_deleteCard question:" + currentCard.getQuestion());
-                _deleteCard();
+                _showDialogDeleteCard();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _showDialogDeleteCard() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(getString(R.string.dialog_message_delete_card, currentCard.getQuestion()))
+                .setTitle(R.string.dialog_title_delete_card);
+
+        // Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Update Queue_list in system table
+                _deleteCard();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
     }
 
 
