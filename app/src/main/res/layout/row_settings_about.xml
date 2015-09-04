@@ -20,8 +20,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/lbAppVersion"
         android:layout_below="@+id/textView13"
-        android:layout_alignStart="@+id/textView13"
-        android:textColor="@color/grey_300" />
+        android:textColor="@color/grey_300"
+        android:layout_marginLeft="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/lbDbVersion"
         android:layout_below="@+id/lbAppVersion"
-        android:layout_alignStart="@+id/lbAppVersion"
-        android:textColor="@color/grey_300" />
+        android:textColor="@color/grey_300"
+        android:layout_marginLeft="16dp" />
 
 </RelativeLayout>

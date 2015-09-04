@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.born2go.lazzybee.activity.StudyActivity">
-
-
-    <FrameLayout
-        android:id="@+id/fragmentStudy"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone"></FrameLayout>
-
     <!--<fragment-->
     <!--android:layout_width="fill_parent"-->
     <!--android:layout_height="fill_parent"-->
@@ -48,38 +40,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="15dp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/card_new_color" />
+                    android:textColor="@color/card_new_color"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/lbCountAgainInday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/lbCountTotalVocabulary"
-                    android:layout_marginStart="15dp"
-                    android:layout_toEndOf="@+id/lbCountTotalVocabulary"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/card_again_color" />
+                    android:textColor="@color/card_again_color"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="41dp"
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/lbAgainDue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/lbCountAgainInday"
-                    android:layout_marginStart="16dp"
-                    android:layout_toEndOf="@+id/lbCountAgainInday"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/card_due_color" />
+                    android:textColor="@color/card_due_color"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="66dp" />
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
         <!--WebView-->
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:visibility="visible" />
+
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,7 +99,6 @@
                     android:layout_weight="1" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
-
 
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"

@@ -7,4 +7,5 @@
     <dimen name="study_question_size">35px</dimen>
 
     <dimen name="setting_card_view_elevation">1dp</dimen>
+    <dimen name="margin_left_due_card">0dp</dimen>
 </resources>

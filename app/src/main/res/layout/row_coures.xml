@@ -23,7 +23,8 @@
         android:id="@+id/lbCountMyWord"
         android:textColor="@color/teal_500"
 
-        android:layout_marginEnd="15dp"
-        android:layout_alignBottom="@+id/lbNameCourse"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp" />
 </RelativeLayout>

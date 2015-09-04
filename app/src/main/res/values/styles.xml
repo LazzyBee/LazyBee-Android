@@ -25,5 +25,8 @@
 
     <style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown"></style>
 
+    <style name="ThemeCardDetails" parent="Theme.AppCompat.NoActionBar">
+
+    </style>
 
 </resources>

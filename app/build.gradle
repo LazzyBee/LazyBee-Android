@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId "com.born2go.lazzybee"
-        minSdkVersion 17
+        minSdkVersion 14
         targetSdkVersion 22
-        versionCode 4
-        versionName "1.1.4"
+        versionCode 8
+        versionName "1.1.8"
     }
     buildTypes {
         release {
@@ -31,6 +31,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services-analytics:7.3.0'
     compile 'com.facebook.android:facebook-android-sdk:3.20.0'
 
     compile(name: 'identitytoolkit-api11', ext: 'aar')

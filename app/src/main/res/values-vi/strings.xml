@@ -99,6 +99,7 @@
     <string name="speech_rate_very_fast">Rất nhanh</string>
 
     <string name="dialog_title_change_speech_rate">Thay đổi tốc độ đọc</string>
+    <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
 
 
     <string-array name="settings">

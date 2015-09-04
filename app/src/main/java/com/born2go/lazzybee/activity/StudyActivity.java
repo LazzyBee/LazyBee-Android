@@ -3,12 +3,15 @@ package com.born2go.lazzybee.activity;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
@@ -23,14 +26,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.born2go.lazzybee.LazzyBeeApplication;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.fragment.FragmentStudy;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,12 +43,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class StudyActivity extends AppCompatActivity implements FragmentStudy.FragmentStudyListener {
+public class StudyActivity extends AppCompatActivity  {
 
     private static final String TAG = "StudyActivity";
     private Context context;
 
-    FragmentStudy fragmentStudy;
     boolean learn_more;
 
     LearnApiImplements dataBaseHelper;
@@ -72,14 +76,13 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     int position = 0;
     int position_again = 0;
     int position_due = 0;
-
-
-    boolean complete_new_learn = false;
+    Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
+        _trackerApplication();
         context = this;
         _initView();
 
@@ -168,6 +171,15 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + learn_more);
     }
 
+    private void _trackerApplication() {
+        LazzyBeeApplication lazzyBeeApplication= (LazzyBeeApplication) getApplication();
+        mTracker = lazzyBeeApplication.getDefaultTracker();
+        Log.i(TAG, "Setting screen name: " + TAG);
+        mTracker.setScreenName("Image~" + TAG);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+    }
+
     private void _completeLean() {
         setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS, new Intent());
         onBackPressed();
@@ -250,7 +262,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             @Override
             public boolean onQueryTextChange(String newText) {
                 // TODO Auto-generated method stub
-
                 //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -271,14 +282,47 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                // I do not want this...
+                // Home as up button is to navigate to Home-Activity not previous acitivity
+                super.onBackPressed();
+                return true;
+            case R.id.action_detelte:
+                Log.i(TAG, "_deleteCard question:" + currentCard.getQuestion());
+                _showDialogDeleteCard();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_detelte) {
-            Log.i(TAG, "_deleteCard question:" + currentCard.getQuestion());
-            _deleteCard();
-            return true;
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _showDialogDeleteCard() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(getString(R.string.dialog_message_delete_card, currentCard.getQuestion()))
+                .setTitle(R.string.dialog_title_delete_card);
+
+        // Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Update Queue_list in system table
+                _deleteCard();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
     }
 
 
@@ -484,21 +528,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         Log.i(TAG, "_nextAfterDoneCard  Affter next currentQueue:" + currentQueue);
     }
 
-
-    /**
-     * Hoan thanh khoa hoc rui quay tro lai DetailCourse
-     */
-    @Override
-    public void completeCourse() {
-        try {
-            onBackPressed();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
     /**
      * Set data for webview.
      * <p/>
@@ -553,18 +582,28 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     }
 
     public void onbtnAgainClick(View view) {
+        _showBtnAnswer();
         _answerAgainCard();
     }
 
+    private void _showBtnAnswer() {
+        //TODO:show btnShowAnswer and hide btnAgain0
+        btnShowAnswer.setVisibility(View.VISIBLE);
+        mLayoutButton.setVisibility(View.GONE);
+    }
+
     public void onbtnHardClick(View view) {
+        _showBtnAnswer();
         _answerDueCard(Card.EASE_HARD);
     }
 
     public void onbtnGoodClick(View view) {
+        _showBtnAnswer();
         _answerDueCard(Card.EASE_GOOD);
     }
 
     public void onbtnEasyClick(View view) {
+        _showBtnAnswer();
         _answerDueCard(Card.EASE_EASY);
     }
 
@@ -579,14 +618,9 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             Card card1 = dataBaseHelper._getCardByID("" + card.getId());
             Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + card1.getQueue());
             //Show answer question
-            //mWebViewLeadDetails.loadDataWithBaseURL(ASSETS, getAnswerHTML(card), mime, encoding, null);
-            // Log.i(TAG, "HTML init:" + getAnswerHTML(card));
 
             //Load Answer
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
-
-//                    //set current card
-//                    currentCard[0] = card;
 
             //get  next Ivl String List
             String[] ivlStrList = cardSched.nextIvlStrLst(card);
@@ -604,16 +638,14 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 
 
     private void _answerAgainCard() {
+        Log.i(TAG, "----------------_answerAgainCard----------------");
         final int curren_time = (int) (new Date().getTime() / 1000);/*curent time*/
-        btnShowAnswer.setVisibility(View.VISIBLE);
-        mLayoutButton.setVisibility(View.GONE);
-
         int currentQueue = currentCard.getQueue();//Get current Queue
-        Log.i(TAG, "_answerAgainCard:Currrent Card Queue:"
+        Log.i(TAG, "_answerAgainCard:\tCurrrent Card Queue:"
                 + currentQueue + ",question:" + currentCard.getQuestion());
         //_checkContainsAndRemove(againList);
         if (currentQueue < Card.QUEUE_NEW_CRAM0) {//Something's wrong???
-            Log.i(TAG, "_answerAgainCard:Queue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
+            Log.i(TAG, "_answerAgainCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
             return;
         }
 
@@ -621,12 +653,12 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             //reset new card due
             dueList.remove(currentCard);
             int countDue = dueList.size();
-            lbCountDue.setText("" + countDue);
+            lbCountDue.setText(String.valueOf(countDue));
         } else if (currentQueue == Card.QUEUE_NEW_CRAM0) {
             //reset new card count
             todayList.remove(currentCard);
             int countNew = todayList.size();
-            lbCountNew.setText("" + countNew);
+            lbCountNew.setText(String.valueOf(countNew));
         }
 
         //We remove object, not index, cuz the object may be from other list
@@ -660,6 +692,7 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             e.printStackTrace();
             _completeLean();
         }
+        Log.i(TAG, "----------------------END-----------------------");
     }
 
     /**
@@ -667,16 +700,11 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
      * get next card
      */
     private void _answerDueCard(int easy) {
-        //TODO:show btnShowAnswer and hide btnAgain0
-        btnShowAnswer.setVisibility(View.VISIBLE);
-        mLayoutButton.setVisibility(View.GONE);
-
         int currentQueue = currentCard.getQueue();//Get current Queue
 
         Log.i(TAG, "_answerDueCard:Currrent Card Queue:" + currentQueue);
         if (currentQueue >= Card.QUEUE_NEW_CRAM0) {
             //Check Contains and Remove
-            // _checkContainsAndRemove(dueList);
             _checkContainsAndRemove(cardListAddDueToDay);
 
             //TODO:Reset count list again,new,due
@@ -745,9 +773,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 //get text to Speak
                 String toSpeak = currentCard.getQuestion();
 
-                //Toast Text Speak
-                //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
-
                 //Speak text
                 _speakText(toSpeak);
 
@@ -776,25 +801,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 _speakText(toSpeech);
             }
         }, "example");
-
-//        //Todo: addJavascriptInterface play answer
-//        mWebViewLeadDetails.addJavascriptInterface(new JsObjectAnswers() {
-//            @JavascriptInterface
-//            public void playAnswers() {
-//                //get text to Speak
-//                String toSpeak = currentCard.getAnswers();
-//
-//                //Toast Text Speak
-//                //Toast.makeText(this, toSpeak, Toast.LENGTH_SHORT).show();
-//
-//                //Speak text
-//                _speakText(toSpeak);
-//
-//                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-//            }
-//        }, "answers");
-
-
     }
 
     private void _checkContainsAndRemove(List<Card> cardLis) {
@@ -812,23 +818,15 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
 
 
     private void _nextNewCard() {
-        Log.i(TAG, "Curent new card:" + currentCard.toString());
+        Log.d(TAG, "Curent new card:" + currentCard.toString());
         if (todayList.size() > 0) {
-
             position = todayList.size() - 1;
-//            try {
+
             //get next card again
             Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
             currentCard = todayList.get(0);
 
-            //TODO:Display next card
             _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
-
-//            } catch (Exception e) {
-//                Log.i(TAG, "_nextNewCard:Error:" + e.getMessage());
-//                e.printStackTrace();
-//                _completeLean();
-//            }
         } else if (againList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Again card");
             _nextAgainCard();
@@ -841,25 +839,14 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         }
     }
 
-    boolean flag_due = true;
 
     private void _nextDueCard() {
-        Log.i(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
+        Log.d(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
 
         if (dueList.size() > 0) {//Check dueList.size()>0
-//            if (flag_due) {
-//                position_due = 0;
-//            } else {
-//                position_due++;
-//            }
-//            Log.i(TAG, "_nextDueCard:Next card is due card " + dueList.size());
 
-            // position_due = (dueList.size() - 1);
             currentCard = dueList.get(0);
 
-//            lbCountDue.setBackgroundResource(R.color.teal_200);
-//            lbCountAgain.setBackgroundResource(R.color.white);
-//            lbCountNew.setBackgroundResource(R.color.white);
             lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
@@ -890,15 +877,8 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     boolean flag_one = true;
 
     private void _nextAgainCard() {
-        //Log.i(TAG, "_nextAgainCard:Current Card:" + currentCard.toString());
         if (againList.size() > 0) {//Check againList.size()>0
             try {
-//                if (flag_one) {
-//                    position_again = 0;
-//                } else {
-//                    position_again++;
-//                }
-//                if (position_again < (againList.size())) {
                 currentCard = againList.get(0);
 
                 //get current time and du card
@@ -909,26 +889,13 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
                 if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
                     Log.i(TAG, "_nextAgainCard:Next card is again card 2");
                     flag_one = false;
-                    //TODO:Display next card
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
 
+                    //Display next card
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
                 } else {
                     Log.i(TAG, "_nextAgainCard:Next card is due card 1");
                     _nextDueCard();
                 }
-//                } else {
-//                    if (againList.size() > 0) {
-//                        Log.i(TAG, "_nextAgainCard:again >0");
-//                        flag_one = true;
-//                        _nextAgainCard();
-//                    } else if (todayList.size() > 0) {
-//                        Log.i(TAG, "_nextAgainCard:Next card is new card 3");
-//                        _nextNewCard();
-//                    } else {
-//                        Log.i(TAG, "_nextAgainCard:_completeLean 3:" + againList.size());
-//                        _completeLean();
-//                    }
-//                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.i(TAG, "_nextAgainCard: _completeLean();");
@@ -954,30 +921,19 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         } else {
             mWebViewLeadDetails.loadUrl("about:blank");
         }
-        //
-        //  Log.i(TAG, "HTML FROM:" + questionDisplay.toString());
 
         if (queue == Card.QUEUE_NEW_CRAM0) {
             //set BackBackground color
-//            lbCountDue.setBackgroundResource(R.color.white);
-//            lbCountAgain.setBackgroundResource(R.color.white);
-//            lbCountNew.setBackgroundResource(R.color.teal_200);
             lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else if (queue == Card.QUEUE_LNR1) {
             //set BackBackground color
-//            lbCountDue.setBackgroundResource(R.color.white);
-//            lbCountAgain.setBackgroundResource(R.color.teal_200);
-//            lbCountNew.setBackgroundResource(R.color.white);
             lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
         } else if (queue == Card.QUEUE_REV2) {
             //set BackBackground color
-//            lbCountDue.setBackgroundResource(R.color.teal_200);
-//            lbCountAgain.setBackgroundResource(R.color.white);
-//            lbCountNew.setBackgroundResource(R.color.white);
             lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
@@ -987,39 +943,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
     }
-
-//    /**
-//     * init HTML question
-//     */
-//    private String _getQuestionDisplay(String s) {
-//        String html =
-//                "<!DOCTYPE html>\n" +
-//                        "<html>\n" +
-//                        "<head>\n" +
-//                        "<style>\n" +
-//                        " figure {" +
-//                        "   text-align: center;" +
-//                        "   margin: auto;" +
-//                        "}" +
-//                        "figure.image img {" +
-//                        "   width: 100% !important;" +
-//                        "   height: auto !important;" +
-//                        "}" +
-//                        "figcaption {" +
-//                        "   font-size: 10px;" +
-//                        "}" +
-//                        "a {" +
-//                        " margin-top:5px;" +
-//                        "}" +
-//                        "</style>\n" +
-//                        "</head>\n" +
-//                        "<body>\n" +
-//                        "<h1 >" + s + "<a onclick='question.playQuestion();'><img src='ic_play_black.png'/></a></h1>"
-//                        + "</body>\n" +
-//                        "</html>";
-//        return html;
-//    }
-
 
     /**
      * Speak text theo version andorid

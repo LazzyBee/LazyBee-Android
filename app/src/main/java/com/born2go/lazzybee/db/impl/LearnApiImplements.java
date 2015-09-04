@@ -216,7 +216,7 @@ public class LearnApiImplements implements LearnApi {
                 String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
 
                 List<Card> cards = _getListCardFromStringArray(value);
-                Log.i(TAG, "_getRandomCard: cards toArray:" + cards.toString());
+                Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
                 randomGenerator = new Random();
 
                 for (int i = 0; i < number; i++) {
@@ -224,7 +224,7 @@ public class LearnApiImplements implements LearnApi {
                     datas.add(cards.get(index));
                     cards.remove(cards.get(index));
                 }
-                Log.i(TAG, "_getRandomCard: cards toArray after remove:" + cards.toString());
+                Log.d(TAG, "_getRandomCard: cards toArray after remove:" + cards.toString());
                 //remove
                 //cards.removeAll(datas);
                 _insertOrUpdatePreFetchNewCardList(cards);
@@ -306,41 +306,46 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int _checkListTodayExit() {
-        //TODO:get value queue List
+        //get value queue List
+        Log.i(TAG, "|---------------------_checkListTodayExit------------------|\n");
         String value = _getValueFromSystemByKey(QUEUE_LIST);
         if (value == null) {
-            //TODO: NO List Queue
-            Log.i(TAG, "_checkListTodayExit First Initial:Return=-2");
+            //NO List Queue
+            Log.i(TAG, "_checkListTodayExit First Initial:Return=-2\n");
+            Log.i(TAG, "|------------------------------End-------------------------|");
             return -2;
         } else {
-            //TODO Yes,Compareto Date
+            //Yes,Compareto Date
             try {
-                //TODO:Pass string value to object
+                //Pass string value to object
                 JSONObject valueObj = new JSONObject(value);
 
-                //TODO:get date create list today
+                //get date create list today
                 long dayInMilis = (valueObj.getLong("date"));//get Long date
                 JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);//get List card ID
-                Log.i(TAG, "_checkListTodayExit -Long date:" + dayInMilis);
+                //Log.i(TAG, "_checkListTodayExit -Long date:" + dayInMilis);
                 int dayInSecond = (int) (dayInMilis);
 //
                 int countListId = listIdArray.length();
-                Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "_checkListTodayExit:inday" : "_checkListTodayExit:outday");
+                //Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "_checkListTodayExit: inday" : "_checkListTodayExit: outday");
 
                 if (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) {
-                    Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now");
+                    Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now\n");
+                    Log.i(TAG, "|------------------------------End-------------------------|\n");
                     return countListId;
                 } else {
-                    Log.i(TAG, "_checkListTodayExit:today_parse is not equal to date_now");
+                    Log.i(TAG, "_checkListTodayExit:today_parse is not equal to date_now\n");
+                    Log.i(TAG, "|------------------------------End-------------------------|\n");
                     return -1;
                 }
+
             } catch (JSONException e) {
-                Log.i(TAG, "_checkListTodayExit:Error Return=" + -1);
+                Log.i(TAG, "_checkListTodayExit:Error Return=" + -1 + "\n");
                 e.printStackTrace();
+                Log.i(TAG, "|------------------------------End-------------------------|\n");
                 return -1;
             }
         }
-
 
     }
 
@@ -647,8 +652,8 @@ public class LearnApiImplements implements LearnApi {
 
         int curent_time = (int) (long_curent_time / 1000);
         int endofday = getEndOfDayInSecond();
-        Log.i(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
-        Log.i(TAG, "StartOfDayInMillis:" + getStartOfDayInMillis() + ":" + getEndOfDayInSecond());
+        Log.d(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
+        Log.d(TAG, "StartOfDayInMillis:" + getStartOfDayInMillis() + ":" + getEndOfDayInSecond());
         String select_list_card_by_queue = "";
 
         if (queue == Card.QUEUE_LNR1) {
@@ -719,13 +724,12 @@ public class LearnApiImplements implements LearnApi {
      *
      * */
     private List<Card> _getListCardQueryString(String query) {
-        Log.i(TAG, "Query String: " + query);
         List<Card> datas = new ArrayList<Card>();
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
+            if (cursor.getCount() > 0) {
                 do {
                     Card card = new Card();
                     card.setId(cursor.getInt(CARD_INDEX_ID));
@@ -750,8 +754,11 @@ public class LearnApiImplements implements LearnApi {
                     datas.add(card);
 
                 } while (cursor.moveToNext());
+            }
         }
-        Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
+        //Log.i(TAG, "-------------------------_getListCardQueryString-------------------------");
+        Log.i(TAG, "_getListCardQueryString: \t Result card count=" + datas.size() + " \t,Query String: " + query + "\n");
+        //Log.i(TAG, "---------------------------------END-------------------------------------\n");
         db.close();
         return datas;
     }

@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
-        _checkCompleteLearn(0);
+        _checkCompleteLearn();
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
@@ -167,19 +166,19 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 
-        Notification mNotification = new Notification.Builder(this)
-                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
-                .setContentText("Sample Notification")
-                .setSmallIcon(R.drawable.ic_action_back)
-                .setContentIntent(pIntent)
-//                .addAction(R.drawable.ic_drawer, "View", pIntent)
-//                .addAction(0, "Remind", pIntent)
-                .build();
+//        Notification mNotification = new Notification.Builder(this)
+//                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
+//                .setContentText("Sample Notification")
+//                .setSmallIcon(R.drawable.ic_action_back)
+//                .setContentIntent(pIntent)
+////                .addAction(R.drawable.ic_drawer, "View", pIntent)
+////                .addAction(0, "Remind", pIntent)
+//                .build();
 
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, mNotification);
+        //notificationManager.notify(0, mNotification);
 
 
     }
@@ -224,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
-    private int _checkCompleteLearn(int resultCode) {
+    private int _checkCompleteLearn() {
         String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS));
         int check = dataBaseHelper._checkListTodayExit();
         int complete = 0;
@@ -250,16 +249,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _getCountCard() {
-        Log.i(TAG, "_getCountCard()-------------------------------------------------------");
+        Log.i(TAG, "--------------------------_getCountCard()------------------------------\n");
+
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
+
         Log.i(TAG, "-------------------------------END-------------------------------------\n");
 
-        if (dueToday != null)
+        if (dueToday != null) {
             lbDueToday.setText(Html.fromHtml(dueToday));
-        lbTotalsCount.setText("" + allCount);
-        lbTotalNewCount.setText("" + (allCount - learnCount));
+        }
+        lbTotalsCount.setText(String.valueOf(allCount));
+        lbTotalNewCount.setText(String.valueOf((allCount - learnCount)));
 
     }
 
@@ -282,21 +284,13 @@ public class MainActivity extends AppCompatActivity
         if (visibility) {
             mDue.setVisibility(View.VISIBLE);
             mCongratulations.setVisibility(View.GONE);
-//            pTotalCards.setVisibility(View.VISIBLE);
-//            pTotalNewCard.setVisibility(View.VISIBLE);
-//            pDueToday.setVisibility(View.VISIBLE);
         } else {
             mDue.setVisibility(View.GONE);
             mCongratulations.setVisibility(View.VISIBLE);
-//            pTotalCards.setVisibility(View.GONE);
-//            pTotalNewCard.setVisibility(View.GONE);
-//            pDueToday.setVisibility(View.GONE);
         }
     }
 
     private void _initToolBar() {
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar_main);
-//        setSupportActionBar(toolbar);
         _initNavigationDrawerFragment(null);
     }
 
@@ -308,7 +302,6 @@ public class MainActivity extends AppCompatActivity
         gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
             @Override
             public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
-                //authenticate();
                 Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
             }
 
@@ -354,8 +347,10 @@ public class MainActivity extends AppCompatActivity
     private void _initNavigationDrawerFragment(Toolbar toolbar) {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+//        mTitle = getTitle();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        // drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -483,7 +478,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             _restoreActionBar();
-            return true;
+            // return true;
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -675,15 +670,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Set up action bar
-     * <p>Hide Tittle and setting menu</p>
-     * <p>Add textbox in Action bar</p>
-     */
-    private void _setUpSearchActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-    }
 
     /**
      * Goto Fragment Profile
@@ -708,19 +694,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Goto fragment setting
+     * Goto setting
      */
     private void _gotoSetting() {
-//        Toast.makeText(this, getString(R.string.action_settings), Toast.LENGTH_SHORT).show();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        //intit
-//        FragmentSetting fragmentSetting = new FragmentSetting();
-//        //replace from container to fragmentSetting
-//        fragmentTransaction.replace(R.id.container, fragmentSetting)
-//                .addToBackStack(FragmentSetting.TAG).commit();
-
-
         //init inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -733,20 +709,6 @@ public class MainActivity extends AppCompatActivity
      * Goto FragemenSearch with query
      */
     private void _gotoSeach(String query) {
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentSearch
-//        FragmentSearch fragmentSearch = new FragmentSearch();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set QUERY_TEXT
-//        bundle.putString(FragmentSearch.QUERY_TEXT, query);
-//        //setArguments for fragmentSearch
-//        fragmentSearch.setArguments(bundle);
-//        //replace from container to fragmentSearch
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentSearch)
-//                .addToBackStack(FragmentSearch.TAG).commit();
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -859,10 +821,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onBtnStudyOnClick(View view) {
-        _checkCompleteLearn(0);
+        _gotoStudy();
+    }
+
+    private void _gotoStudy() {
+        //_checkCompleteLearn(0);
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-        Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -874,11 +840,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onLearnMoreClick(View view) {
-        int finish = _checkCompleteLearn(0);
-        if (finish == 0) {
-            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
-        } else {
+        int finish = _checkCompleteLearn();
+        Log.i(TAG, "Complet code:" + finish);
+        if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
             _learnMore();
+        } else {
+            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -898,6 +865,8 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
                 intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
                 startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+                String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+                dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
 
             }
         });
@@ -919,50 +888,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoReviewToday() {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentReview
-//        FragmentReviewToday fragmentReview = new FragmentReviewToday();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set COURSE_ID
-//        bundle.putString(FragmentReviewToday.COURSE_ID, "");
-//        //setArguments for fragmentReview
-//        fragmentReview.setArguments(bundle);
-//        //replace from container to fragmentReview
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentReview)
-//                .addToBackStack(FragmentReviewToday.TAG).commit();
-
         //init inten
         Intent intent = new Intent(this, ReviewCardActivity.class);
         //start intent
         startActivity(intent);
-    }
-
-
-    private void _gotoStudy(Object tag) {
-
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        //New fragmentStudy
-//        FragmentStudy fragmentStudy = new FragmentStudy();
-//        //New bunder
-//        Bundle bundle = new Bundle();
-//        //Set COURSE_ID
-//        bundle.putString(FragmentStudy.COURSE_ID, "");
-//        //setArguments for fragmentStudy
-//        fragmentStudy.setArguments(bundle);
-//        //replace from container to fragmentStudy
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragmentStudy)
-//                .addToBackStack(FragmentStudy.TAG).commit();
-
-//        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + (Boolean) tag);
-//
-//        Intent intent = new Intent(this, StudyActivity.class);
-//        intent.putExtra(LazzyBeeShare.LEARN_MORE, /*Cast tag to boolean*/(Boolean) tag);
-//
-//        this.startActivityForResult(intent, 1);
     }
 
     @Override
@@ -986,8 +915,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            Log.i(TAG, "Search Result");
-            _checkCompleteLearn(resultCode);
+            _checkCompleteLearnbyResultCode(resultCode);
             _getCountCard();
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
@@ -1018,7 +946,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _checkCompleteLearnbyResultCode(int resultCode) {
-        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS || resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             //Complete
             mCardViewStudy.setVisibility(View.GONE);
             _visibilityCount(false);
@@ -1031,8 +959,6 @@ public class MainActivity extends AppCompatActivity
             dataBaseHelper._insertOrUpdateToSystemTable(value, String.valueOf(1));
 
         }
-
-
     }
 
     @Override
