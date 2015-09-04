@@ -23,6 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    signingConfigs {
+        debug {
+            storeFile file("keystore.jks")
+            keyAlias 'lazzybee.keystore'
+            keyPassword 'khongbiet'
+            storePassword 'khongbiet'
+        }
+    }
 
 }
 dependencies {
