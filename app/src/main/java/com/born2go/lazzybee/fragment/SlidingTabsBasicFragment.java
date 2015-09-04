@@ -67,6 +67,7 @@ public class SlidingTabsBasicFragment extends Fragment {
 
     WebView mWebViewLeadDetails;
     TextToSpeech textToSpeech;
+
     private Context context;
     String cardID;
     LearnApiImplements learnApiImplements;
@@ -114,6 +115,7 @@ public class SlidingTabsBasicFragment extends Fragment {
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
     }
@@ -261,11 +263,11 @@ public class SlidingTabsBasicFragment extends Fragment {
             //
             mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
 
-
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
 
             _addJavascriptInterfaceQuestionAndAnswer();
+
 
             String answer = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packages.get(position), true);
 
