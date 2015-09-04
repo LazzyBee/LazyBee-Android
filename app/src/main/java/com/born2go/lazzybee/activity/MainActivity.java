@@ -131,10 +131,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 //        toolbar = (Toolbar) findViewById(R.id.action_bar_main);
 //        setSupportActionBar(toolbar);
-        //_initToolBar();
+        _initToolBar();
         _intInterfaceView();
         _getCountCard();
-        _checkCompleteLearn(0);
+        _checkCompleteLearn();
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
-    private int _checkCompleteLearn(int resultCode) {
+    private int _checkCompleteLearn() {
         String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS));
         int check = dataBaseHelper._checkListTodayExit();
         int complete = 0;
@@ -345,15 +345,17 @@ public class MainActivity extends AppCompatActivity
      * @param toolbar
      */
     private void _initNavigationDrawerFragment(Toolbar toolbar) {
-//        mNavigationDrawerFragment = (NavigationDrawerFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        mTitle = getTitle();
-//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//
-//        // Set up the drawer.
-//        mNavigationDrawerFragment.setUp(
-//                R.id.navigation_drawer, toolbar,
-//                drawerLayout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        // drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer, toolbar,
+                drawerLayout);
     }
 
 
@@ -440,44 +442,44 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-        // Only show items in the action bar relevant to this screen
-        // if the drawer is not showing. Otherwise, let the drawer
-        // decide what to show in the action bar.
-        MenuInflater inflater = getMenuInflater();
-        // Inflate menu to add items to action bar if it is present.
-        inflater.inflate(R.menu.main, menu);
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            MenuInflater inflater = getMenuInflater();
+            // Inflate menu to add items to action bar if it is present.
+            inflater.inflate(R.menu.main, menu);
+            // Associate searchable configuration with the SearchView
+            SearchManager searchManager =
+                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView =
+                    (SearchView) menu.findItem(R.id.menu_search).getActionView();
 //            searchView.setSearchableInfo(
 //                    searchManager.getSearchableInfo(getComponentName()));
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // TODO Auto-generated method stub
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // TODO Auto-generated method stub
 
-                Toast.makeText(getBaseContext(), query,
-                        Toast.LENGTH_SHORT).show();
-                _gotoSeach(query);
-                return false;
-            }
+                    Toast.makeText(getBaseContext(), query,
+                            Toast.LENGTH_SHORT).show();
+                    _gotoSeach(query);
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // TODO Auto-generated method stub
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // TODO Auto-generated method stub
 
-                //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-        _restoreActionBar();
-        // return true;
-//        }
+                    //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+            _restoreActionBar();
+            // return true;
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -819,13 +821,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onBtnStudyOnClick(View view) {
-        _study();
+        _gotoStudy();
     }
-    private void _study() {
-        _checkCompleteLearn(0);
+
+    private void _gotoStudy() {
+        //_checkCompleteLearn(0);
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-        Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -837,7 +840,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onLearnMoreClick(View view) {
-        int finish = _checkCompleteLearn(0);
+        int finish = _checkCompleteLearn();
         Log.i(TAG, "Complet code:" + finish);
         if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
             _learnMore();
