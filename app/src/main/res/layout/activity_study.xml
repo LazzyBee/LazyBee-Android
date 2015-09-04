@@ -1,9 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.born2go.lazzybee.activity.StudyActivity">
+    android:orientation="vertical"
+    tools:context="com.born2go.lazzybee.activity.StudyActivity"
+    android:background="@color/grey_300">
     <!--<fragment-->
     <!--android:layout_width="fill_parent"-->
     <!--android:layout_height="fill_parent"-->
@@ -12,15 +14,31 @@
     <!--android:layout_alignParentTop="true"-->
     <!--android:layout_alignParentStart="true"-->
     <!-- />-->
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/tool_bar"
+        android:id="@+id/toolbar"/>
+    <com.born2go.lazzybee.view.SlidingTabLayout
+        android:id="@+id/sliding_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/teal_500"
+        android:elevation="2dp" />
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context="com.born2go.lazzybee.fragment.FragmentStudy">
-        <!-- TODO: Update blank fragment layout -->
-
         <!--New-Again-Due-->
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
@@ -28,7 +46,8 @@
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginTop="@dimen/cardview_study_margin_top"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginBottom="@dimen/cardview_study_margin_bottom">
+            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -71,11 +90,6 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
         <!--WebView-->
-        <FrameLayout
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:visibility="visible" />
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
@@ -85,7 +99,8 @@
             android:layout_marginRight="@dimen/cardview_study_margin_right"
             android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
             android:layout_weight="1"
-            card_view:cardCornerRadius="4dp">
+            card_view:cardCornerRadius="4dp"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -221,4 +236,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

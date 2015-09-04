@@ -9,15 +9,20 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -32,18 +37,20 @@ import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class StudyActivity extends AppCompatActivity  {
+public class StudyActivity extends AppCompatActivity {
 
     private static final String TAG = "StudyActivity";
     private Context context;
@@ -78,22 +85,31 @@ public class StudyActivity extends AppCompatActivity  {
     int position_due = 0;
     Tracker mTracker;
 
+    ViewPager mViewPager;
+    SlidingTabLayout mSlidingTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
-        _trackerApplication();
         context = this;
-        _initView();
 
-        //db
+        _initActonBar();
         _initDatabase();
+        _trackerApplication();
 
         //init cardSched
         cardSched = new CardSched();
 
-        _initTextToSpeech();
 
+        _initView();
+        _initTextToSpeech();
+        _initAdView();
+
+        _setUpStudy();
+    }
+
+    private void _setUpStudy() {
         //get lean_more form intern
         learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
 
@@ -161,18 +177,23 @@ public class StudyActivity extends AppCompatActivity  {
             Log.i(TAG, "_completeLean");
             _completeLean();
         }
+    }
 
-
-        //Add AdView
+    private void _initAdView() {
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+    }
 
-        Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + learn_more);
+    private void _initActonBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void _trackerApplication() {
-        LazzyBeeApplication lazzyBeeApplication= (LazzyBeeApplication) getApplication();
+        LazzyBeeApplication lazzyBeeApplication = (LazzyBeeApplication) getApplication();
         mTracker = lazzyBeeApplication.getDefaultTracker();
         Log.i(TAG, "Setting screen name: " + TAG);
         mTracker.setScreenName("Image~" + TAG);
@@ -183,6 +204,7 @@ public class StudyActivity extends AppCompatActivity  {
     private void _completeLean() {
         setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS, new Intent());
         onBackPressed();
+
     }
 
     /**
@@ -230,6 +252,11 @@ public class StudyActivity extends AppCompatActivity  {
         lbCountNew = (TextView) findViewById(R.id.lbCountTotalVocabulary);
         lbCountAgain = (TextView) findViewById(R.id.lbCountAgainInday);
         lbCountDue = (TextView) findViewById(R.id.lbAgainDue);
+
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+
+
     }
 
     public boolean isLearn_more() {
@@ -572,39 +599,48 @@ public class StudyActivity extends AppCompatActivity  {
 
         //Showtime
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+        StudyCardPageAdapter studyCardPageAdapter = new StudyCardPageAdapter(context, currentCard, 0);
+        mViewPager.setAdapter(studyCardPageAdapter);
+        mSlidingTabLayout.setViewPager(mViewPager);
+
 
         //Inject native handle to web element
-        _addJavascriptInterfaceQuestionAndAnswer();
+        //_addJavascriptInterfaceQuestionAndAnswer();
     }
 
     public void onbtnShowAnswerClick(View view) {
         _showAnswer();
+        _displayCardByType(1);
+    }
+
+    private void _displayCardByType(int showType) {
+        StudyCardPageAdapter studyCardPageAdapter = new StudyCardPageAdapter(context, currentCard, showType);
+        mViewPager.setAdapter(studyCardPageAdapter);
+        mSlidingTabLayout.setViewPager(mViewPager);
     }
 
     public void onbtnAgainClick(View view) {
         _showBtnAnswer();
         _answerAgainCard();
-    }
-
-    private void _showBtnAnswer() {
-        //TODO:show btnShowAnswer and hide btnAgain0
-        btnShowAnswer.setVisibility(View.VISIBLE);
-        mLayoutButton.setVisibility(View.GONE);
+        _displayCardByType(0);
     }
 
     public void onbtnHardClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_HARD);
+        _displayCardByType(0);
     }
 
     public void onbtnGoodClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_GOOD);
+        _displayCardByType(0);
     }
 
     public void onbtnEasyClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_EASY);
+        _displayCardByType(0);
     }
 
     private void _showAnswer() {
@@ -635,7 +671,6 @@ public class StudyActivity extends AppCompatActivity  {
             e.printStackTrace();
         }
     }
-
 
     private void _answerAgainCard() {
         Log.i(TAG, "----------------_answerAgainCard----------------");
@@ -694,6 +729,7 @@ public class StudyActivity extends AppCompatActivity  {
         }
         Log.i(TAG, "----------------------END-----------------------");
     }
+
 
     /**
      * Answer card by easy
@@ -816,7 +852,6 @@ public class StudyActivity extends AppCompatActivity  {
 
     }
 
-
     private void _nextNewCard() {
         Log.d(TAG, "Curent new card:" + currentCard.toString());
         if (todayList.size() > 0) {
@@ -825,8 +860,7 @@ public class StudyActivity extends AppCompatActivity  {
             //get next card again
             Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
             currentCard = todayList.get(0);
-
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+            //_loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
         } else if (againList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Again card");
             _nextAgainCard();
@@ -852,7 +886,7 @@ public class StudyActivity extends AppCompatActivity  {
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
 
             //TODO:Display next card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2);
+            // _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2);
 
         } else if (todayList.size() > 0) {
             Log.i(TAG, "_nextDueCard:Next card is new card");
@@ -874,6 +908,7 @@ public class StudyActivity extends AppCompatActivity  {
 
     }
 
+
     boolean flag_one = true;
 
     private void _nextAgainCard() {
@@ -891,7 +926,7 @@ public class StudyActivity extends AppCompatActivity  {
                     flag_one = false;
 
                     //Display next card
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
+                    // _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
                 } else {
                     Log.i(TAG, "_nextAgainCard:Next card is due card 1");
                     _nextDueCard();
@@ -944,6 +979,13 @@ public class StudyActivity extends AppCompatActivity  {
 
     }
 
+    private void _showBtnAnswer() {
+        //show btnShowAnswer and hide btnAgain0
+        btnShowAnswer.setVisibility(View.VISIBLE);
+        mLayoutButton.setVisibility(View.GONE);
+
+    }
+
     /**
      * Speak text theo version andorid
      */
@@ -968,5 +1010,160 @@ public class StudyActivity extends AppCompatActivity  {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
+    class StudyCardPageAdapter extends PagerAdapter {
+        Card card;
+        List<String> packages;
+        private Context context;
+        WebView mWebViewStudyConten;
+        private int showType;
+        TextView lbDue;
+        TextView lbNew;
+        TextView lbAgain;
+
+        public StudyCardPageAdapter(Context context, Card card, int showType) {
+            this.card = card;
+            this.context = context;
+            this.showType = showType;
+            if (showType == 0)
+                packages = new ArrayList<String>(Arrays.asList("Study"));
+            else
+                packages = new ArrayList<String>(Arrays.asList("Study", "Dic"));
+
+        }
+
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return packages.get(position);
+        }
+
+        /**
+         * Return the number of views available.
+         */
+        @Override
+        public int getCount() {
+            return packages.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return object == view;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            // Inflate a new layout from our resources
+            View view = getLayoutInflater().inflate(R.layout.page_study_card, container, false);
+
+            // Add the newly created View to the ViewPager
+            container.addView(view);
+            CardView mCardViewCount = (CardView) view.findViewById(R.id.mCardViewCount);
+            mWebViewStudyConten = (WebView) view.findViewById(R.id.mWebViewStudyConten);
+
+            lbDue = (TextView) view.findViewById(R.id.lbDue);
+            lbNew = (TextView) view.findViewById(R.id.lbNew);
+            lbAgain = (TextView) view.findViewById(R.id.lbAgain);
+
+            WebSettings ws = mWebViewStudyConten.getSettings();
+            ws.setJavaScriptEnabled(true);
+
+            _addJavascriptInterfaceQuestionAndAnswer();
+
+            List<String> packs = Arrays.asList("common", "dic");
+
+            String answer = LazzyBeeShare.EMPTY;
+            if (showType == 0) {
+                answer = LazzyBeeShare._getQuestionDisplay(context, card.getQuestion());
+            } else {
+                answer = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packs.get(position), false);
+            }
+            if (position != 0) {
+                mCardViewCount.setVisibility(View.GONE);
+            }
+
+            lbDue.setText(lbCountDue.getText());
+            lbNew.setText(lbCountNew.getText());
+            lbAgain.setText(lbCountAgain.getText());
+            _setPlanPlag(card.getQueue());
+
+            mWebViewStudyConten.loadDataWithBaseURL(LazzyBeeShare.ASSETS, answer, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+
+
+            return view;
+        }
+
+        private void _setPlanPlag(int queue) {
+            if (queue == Card.QUEUE_NEW_CRAM0) {
+                //set BackBackground color
+                lbDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            } else if (queue == Card.QUEUE_LNR1) {
+                //set BackBackground color
+                lbDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                lbNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            } else if (queue == Card.QUEUE_REV2) {
+                //set BackBackground color
+                lbDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                lbAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                lbNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            } else if (queue == 10) {
+            }
+        }
+
+        private void _addJavascriptInterfaceQuestionAndAnswer() {
+            //Todo: addJavascriptInterface play question
+            mWebViewStudyConten.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
+                @JavascriptInterface
+                public void playQuestion() {
+                    //get text to Speak
+                    String toSpeak = card.getQuestion();
+
+                    //Toast Text Speak
+                    //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+
+                    //Speak text
+                    _speakText(toSpeak);
+
+                    //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }, "question");
+            mWebViewStudyConten.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
+                @JavascriptInterface
+                public void speechExplain() {
+                    //get answer json
+                    String answer = card.getAnswers();
+                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
+
+                    //Speak text
+                    _speakText(toSpeech);
+                }
+            }, "explain");
+            mWebViewStudyConten.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
+                @JavascriptInterface
+                public void speechExample() {
+                    //get answer json
+                    String answer = card.getAnswers();
+                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
+
+                    //Speak text
+                    _speakText(toSpeech);
+                }
+            }, "example");
+
+        }
+
+        /**
+         * Destroy the item from the {@link ViewPager}. In our case this is simply removing the
+         * {@link View}.
+         */
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+            // Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
+        }
+
+    }
 
 }
