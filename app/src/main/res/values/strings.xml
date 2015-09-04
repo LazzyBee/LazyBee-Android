@@ -170,6 +170,8 @@
     <string name="dialog_title_clear_cache_and_restart_app" translatable="false">Clear cache and restart app</string>
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
 
+    <string name="tracking_ID" translatable="false">UA-60355111-1</string>
+
 
     <string-array name="settings">
         <!--<item>@string/setting_learn_title</item>

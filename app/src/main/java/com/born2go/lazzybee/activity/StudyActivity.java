@@ -26,14 +26,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.born2go.lazzybee.LazzyBeeApplication;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.fragment.FragmentStudy;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,12 +43,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class StudyActivity extends AppCompatActivity implements FragmentStudy.FragmentStudyListener {
+public class StudyActivity extends AppCompatActivity  {
 
     private static final String TAG = "StudyActivity";
     private Context context;
 
-    FragmentStudy fragmentStudy;
     boolean learn_more;
 
     LearnApiImplements dataBaseHelper;
@@ -75,12 +76,13 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
     int position = 0;
     int position_again = 0;
     int position_due = 0;
-
+    Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
+        _trackerApplication();
         context = this;
         _initView();
 
@@ -167,6 +169,15 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
         mAdView.loadAd(adRequest);
 
         Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + learn_more);
+    }
+
+    private void _trackerApplication() {
+        LazzyBeeApplication lazzyBeeApplication= (LazzyBeeApplication) getApplication();
+        mTracker = lazzyBeeApplication.getDefaultTracker();
+        Log.i(TAG, "Setting screen name: " + TAG);
+        mTracker.setScreenName("Image~" + TAG);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
     }
 
     private void _completeLean() {
@@ -515,21 +526,6 @@ public class StudyActivity extends AppCompatActivity implements FragmentStudy.Fr
             }
         }
         Log.i(TAG, "_nextAfterDoneCard  Affter next currentQueue:" + currentQueue);
-    }
-
-
-    /**
-     * Hoan thanh khoa hoc rui quay tro lai DetailCourse
-     */
-    @Override
-    public void completeCourse() {
-        try {
-            onBackPressed();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     /**
