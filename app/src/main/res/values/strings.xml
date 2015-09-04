@@ -171,6 +171,7 @@
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
 
     <string name="tracking_ID" translatable="false">UA-60355111-1</string>
+    <string name="notificaion_message">Study word english now!</string>
 
 
     <string-array name="settings">

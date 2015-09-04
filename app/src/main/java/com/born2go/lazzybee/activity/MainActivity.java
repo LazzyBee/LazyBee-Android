@@ -1,12 +1,13 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.utils.MyReceiver;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
@@ -63,6 +65,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity
     private Context context = this;
 
     private GitkitClient gitkitClient;
-
+    private PendingIntent pendingIntent;
     GoogleApiClient mGoogleApiClient;
 
     /**
@@ -119,6 +123,9 @@ public class MainActivity extends AppCompatActivity
 
     private ConnectionResult mConnectionResult;
     // Toolbar toolbar;
+    List<PendingIntent> intentArray;
+    AlarmManager alarmManager;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +136,7 @@ public class MainActivity extends AppCompatActivity
         _initSQlIte();
         _initSettingApplication();
         setContentView(R.layout.activity_main);
+        //sp = PreferenceManager.getDefaultSharedPreferences(context);
 //        toolbar = (Toolbar) findViewById(R.id.action_bar_main);
 //        setSupportActionBar(toolbar);
         _initToolBar();
@@ -161,26 +169,31 @@ public class MainActivity extends AppCompatActivity
 //                .build();
     }
 
+
     private void _setUpNotification() {
-        // String value = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        intentArray = new ArrayList<PendingIntent>();
+        int[] hour = {8, 12, 20};
+        //sp.edit().putString(LazzyBeeShare.NOTIFICATION_MESSAGE,getString(R.string.notificaion_message)).commit();
+        for (int i = 0; i < hour.length; i++) {
+            
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour[i]);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.AM_PM, Calendar.PM);
 
-//        Notification mNotification = new Notification.Builder(this)
-//                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
-//                .setContentText("Sample Notification")
-//                .setSmallIcon(R.drawable.ic_action_back)
-//                .setContentIntent(pIntent)
-////                .addAction(R.drawable.ic_drawer, "View", pIntent)
-////                .addAction(0, "Remind", pIntent)
-//                .build();
+            Intent myIntent = new Intent(MainActivity.this, MyReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, i, myIntent, 0);
+            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis());
+            alarmManager.cancel(pendingIntent);
+            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-
-        //notificationManager.notify(0, mNotification);
-
-
+            intentArray.add(pendingIntent);
+        }
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar8.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar12.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar20.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void _initSettingApplication() {
@@ -189,7 +202,7 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-            //  _setUpNotification();
+            _setUpNotification();
         }
 
 
@@ -236,6 +249,7 @@ public class MainActivity extends AppCompatActivity
                 //finish Lession
                 mCardViewStudy.setVisibility(View.GONE);
                 _visibilityCount(false);
+                _cancelNotification();
             } else {
                 mCardViewStudy.setVisibility(View.VISIBLE);
                 _visibilityCount(true);
@@ -246,6 +260,12 @@ public class MainActivity extends AppCompatActivity
 
         }
         return complete;
+    }
+
+    private void _cancelNotification() {
+        if (intentArray != null)
+            for (PendingIntent pendingIntent : intentArray)
+                alarmManager.cancel(pendingIntent);
     }
 
     private void _getCountCard() {
@@ -867,6 +887,7 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
                 String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
                 dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
+                _setUpNotification();
 
             }
         });

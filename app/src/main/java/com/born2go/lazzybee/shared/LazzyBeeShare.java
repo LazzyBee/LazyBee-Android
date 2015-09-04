@@ -59,6 +59,8 @@ public class LazzyBeeShare {
 
     public static final int CODE_COMPLETE_STUDY_RESULTS = 1000;
     public static final int CODE_SEARCH_RESULT = 1001;
+    public static final String NOTIFICATION_MESSAGE = "n_message";
+
 
     private static boolean DEBUG = true;
     public static final String CARD_MEANING = "meaning";
