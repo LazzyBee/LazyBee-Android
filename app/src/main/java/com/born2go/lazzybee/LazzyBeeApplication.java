@@ -48,7 +48,7 @@ public class LazzyBeeApplication extends Application {
         return mTracker;
     }
 
-    synchronized Tracker getTracker(TrackerName trackerId) {
+    synchronized public Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);

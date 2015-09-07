@@ -173,7 +173,7 @@ public class StudyActivity extends AppCompatActivity  {
 
     private void _trackerApplication() {
         LazzyBeeApplication lazzyBeeApplication= (LazzyBeeApplication) getApplication();
-        mTracker = lazzyBeeApplication.getDefaultTracker();
+        mTracker = lazzyBeeApplication.getTracker(LazzyBeeApplication.TrackerName.APP_TRACKER);
         Log.i(TAG, "Setting screen name: " + TAG);
         mTracker.setScreenName("Image~" + TAG);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
