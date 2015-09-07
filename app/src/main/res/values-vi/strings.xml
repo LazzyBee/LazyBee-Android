@@ -62,7 +62,7 @@
     <string name="btn_update">Cập nhật</string>
     <string name="updated">Đã cập nhật</string>
     <string name="auto_check_update">Tự động kiểm tra cập nhật</string>
-    <string name="debug_infor">Thông tin sửa lỗi</string>
+    <string name="debug_infor">Thông tin gỡ lỗi</string>
     <string name="setting_learn_title">Thiết lập học</string>
     <string name="setting_today_new_card_limit">Giới hạn học thẻ mới hôm nay</string>
     <string name="setting_today_review_card_limit">Giới hạn thẻ xem lại hôm nay</string>
@@ -70,7 +70,7 @@
     <string name="setting_total_learn_per_day">Tổng số thẻ học trong một ngày</string>
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Tổng số thẻ muốn học trong một ngày</string>
     <string name="dialog_message_setting_today_new_card_limit_by">Thay đổi sô thẻ mới</string>
-    <string name="message_you_not_complete">Bạn chưa học xong!Bấm học</string>
+    <string name="message_you_not_complete">Bạn chưa học xong bài hôm nay! Bấm để học</string>
     <string name="message_total_card_review">Tổng số thẻ đã học:</string>
     <string name="my_course">Khóa học của bạn</string>
     <string name="setting_about">About</string>
@@ -86,7 +86,7 @@
     <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>
     <string name="under_construction">Under construction</string>
 
-    <string name="message_hellp_study" >Tip hỗ trợ học(Đang xây dựng)</string>
+    <string name="message_hellp_study" >Bảng trợ giúp (Đang xây dựng)</string>
 
     <string name="notificaion_title">%1$s %2$s</string>
     <string name="setting_speech_rate">Tốc độ đọc</string>

@@ -51,7 +51,7 @@
 
     <!--Dialog Learn more-->
     <string name="dialog_title_learn_more">Lean more</string>
-    <string name="dialog_message_learn_more">You can learn more?</string>
+    <string name="dialog_message_learn_more">Do you really want to learn more?</string>
 
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
@@ -61,7 +61,7 @@
 
     <!--Dialog add card to learn-->
     <string name="action_add_to_learn">Add to learn</string>
-    <string name="dialog_message_add_to_learn">You can add card <b>%s</b> to learn</string>
+    <string name="dialog_message_add_to_learn">Do you want to add this card <b>%s</b> to learn?</string>
     <string name="dialog_title_add_to_learn">Add card to learn</string>
 
 
@@ -72,7 +72,7 @@
 
     <!--Dialog Done card-->
     <string name="dialog_title_delete_card">Delete card</string>
-    <string name="dialog_message_delete_card">You can delete card %s!</string>
+    <string name="dialog_message_delete_card">Are you sure to delete card %s!</string>
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
@@ -80,7 +80,7 @@
     <string name="lang_viet">Vietnamse</string>
 
     <!--Dialog restart app-->
-    <string name="dialog_message_restart_app">You restart app now</string>
+    <string name="dialog_message_restart_app">Your app is going to restart now</string>
     <string name="dialog_title_restart_app">Restart App</string>
 
     <string name="action_login">Login</string>
@@ -99,7 +99,7 @@
 
     <!--Dialog update-->
     <string name="dialog_update">Update</string>
-    <string name="dialog_title_update">You can Update</string>
+    <string name="dialog_title_update">Do you want to Update</string>
 
     <string name="btn_update">Update</string>
     <string name="updated">Updated</string>
@@ -130,11 +130,11 @@
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
     <string name="dialog_message_setting_max_learn_more_per_day_by">Max learn more per day by</string>
 
-    <string name="message_you_not_complete">You not complete!Touch Learn.</string>
+    <string name="message_you_not_complete">You haven\'t completed yet! Touch to learn</string>
     <string name="message_total_card_review">Total card review:</string>
 
     <string name="my_course">My Course</string>
-    <string name="message_congratulations">You click <b><u>Learn More</u></b> to Learn More and click <b><u>Review</u></b> to Reiview Card</string>
+    <string name="message_congratulations">Click <b><u>Learn More</u></b> to learn more and click <b><u>Review</u></b> to view learned cards</string>
 
     <string name="drawer_user" translatable="false">user</string>
     <string name="drawer_title_course" translatable="false">title_course</string>
@@ -145,7 +145,7 @@
     <string name="under_construction">Under construction</string>
 
     <string name="notificaion_title">%1$s %2$s</string>
-    <string name="message_hellp_study">Tip help Study(under construction)</string>
+    <string name="message_hellp_study">Tip/help panel(under construction)</string>
     <string name="setting_speech_rate">Speech Rate</string>
     <string name="setting_speech_rate_slider" translatable="false">
         SpeechSlider</string>
