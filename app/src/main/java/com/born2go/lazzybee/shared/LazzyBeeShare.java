@@ -60,6 +60,8 @@ public class LazzyBeeShare {
     public static final int CODE_COMPLETE_STUDY_RESULTS = 1000;
     public static final int CODE_SEARCH_RESULT = 1001;
     public static final String NOTIFICATION_MESSAGE = "n_message";
+    public static final String NOTIFICATION_INDEX = "index";
+    public static final String INIT_NOTIFICATION = "init_notification";
 
 
     private static boolean DEBUG = true;

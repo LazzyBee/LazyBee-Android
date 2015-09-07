@@ -2,6 +2,7 @@ package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -47,6 +49,9 @@ import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.MyReceiver;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
@@ -125,7 +130,9 @@ public class MainActivity extends AppCompatActivity
     // Toolbar toolbar;
     List<PendingIntent> intentArray;
     AlarmManager alarmManager;
-    SharedPreferences sp;
+
+    NotificationManager mManager;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +141,7 @@ public class MainActivity extends AppCompatActivity
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         _checkLogin();
         _initSQlIte();
+
         _initSettingApplication();
         setContentView(R.layout.activity_main);
         //sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -146,8 +154,32 @@ public class MainActivity extends AppCompatActivity
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
+        _initInterstitialAd();
 
 
+    }
+
+    private void _initInterstitialAd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                _gotoStudyLearnMore();
+            }
+        });
+
+        requestNewInterstitial();
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                .build();
+        mInterstitialAd.loadAd(adRequest);
     }
 
     private void _checkAppVesion() {
@@ -171,29 +203,61 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _setUpNotification() {
+        //startService(new Intent(this, MyAlarmService.class));
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         intentArray = new ArrayList<PendingIntent>();
         int[] hour = {8, 12, 20};
-        //sp.edit().putString(LazzyBeeShare.NOTIFICATION_MESSAGE,getString(R.string.notificaion_message)).commit();
-        for (int i = 0; i < hour.length; i++) {
-            
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).apply();
+        {
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, hour[i]);
+            calendar.set(Calendar.HOUR_OF_DAY, hour[0]);
             calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.AM_PM, Calendar.PM);
+            calendar.set(Calendar.SECOND, 1);
 
-            Intent myIntent = new Intent(MainActivity.this, MyReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, i, myIntent, 0);
-            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis());
-            alarmManager.cancel(pendingIntent);
-            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+            Intent myIntent = new Intent(this, MyReceiver.class);
+            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
 
-            intentArray.add(pendingIntent);
+            long time = calendar.getTimeInMillis();
+            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
+
+            alarmManager.set(AlarmManager.RTC, time, pendingIntent);
         }
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar8.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar12.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar20.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+//        {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, hour[1]);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 1);
+//
+//            Intent myIntent = new Intent(this, MyReceiver.class);
+//            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+//
+//            long time = calendar.getTimeInMillis();
+//            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
+//
+//            alarmManager.setRepeating(AlarmManager.RTC, time, 86000 * 1000, pendingIntent);
+//            intentArray.add(pendingIntent);
+//        }
+//        {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, hour[2]);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 1);
+//
+//            Intent myIntent = new Intent(this, MyReceiver.class);
+//            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+//
+//            long time = calendar.getTimeInMillis();
+//            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
+//
+//            alarmManager.setRepeating(AlarmManager.RTC, time, 86000 * 1000, pendingIntent);
+//            intentArray.add(pendingIntent);
+//        }
+        //_stopNotificationServices();
     }
 
     private void _initSettingApplication() {
@@ -202,6 +266,7 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
+
             _setUpNotification();
         }
 
@@ -406,7 +471,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoAddCourse() {
-        //init intent
+        //_initInterstitialAd intent
         Intent intent = new Intent(this, AddCourseActivity.class);
         //start intents
         startActivity(intent);
@@ -717,7 +782,7 @@ public class MainActivity extends AppCompatActivity
      * Goto setting
      */
     private void _gotoSetting() {
-        //init inten Setting
+        //_initInterstitialAd inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //Start Intent
@@ -790,6 +855,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         // mGoogleApiClient.connect();
+        _stopNotificationServices();
     }
 
     @Override
@@ -854,9 +920,15 @@ public class MainActivity extends AppCompatActivity
 
     public void _onCustomStudyOnClick(View view) {
         //_gotoSetting();
+        _showDialogCustomStudy();
+
+    }
+
+    private void _showDialogCustomStudy() {
         FragmentManager fm = getSupportFragmentManager();
         fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
         fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
+
     }
 
     public void _onLearnMoreClick(View view) {
@@ -882,13 +954,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 //_checkCompleteLearn(0);
-                Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-                startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-                String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-                dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
-                _setUpNotification();
+                if (mInterstitialAd.isLoaded()) {
+                    Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+                    mInterstitialAd.show();
 
+                } else {
+                    //ko load van sang study
+                    _gotoStudyLearnMore();
+
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -903,13 +977,22 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    private void _gotoStudyLearnMore() {
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
+        startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
+        _setUpNotification();
+    }
+
     public void _onbtnReviewOnClick(View view) {
         Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
         _gotoReviewToday();
     }
 
     private void _gotoReviewToday() {
-        //init inten
+        //_initInterstitialAd inten
         Intent intent = new Intent(this, ReviewCardActivity.class);
         //start intent
         startActivity(intent);
@@ -917,18 +1000,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // super.onBackPressed();
         //
-        int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
+        //int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
         //Log.i(TAG, "backStackcount:" + backStackcount);
-        try {
-            String back_stack = getSupportFragmentManager().getBackStackEntryAt(0).getName();
-            Log.i(TAG, "back_stack:" + back_stack);
-        } catch (Exception e) {
-            this.finish();
-            System.exit(0);
-        }
-
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        int init = sp.getInt(LazzyBeeShare.INIT_NOTIFICATION, 2);
+        Log.i(TAG, "_initInterstitialAd noti:" + init);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
+        Log.i(TAG, "b _initInterstitialAd noti:" + init);
+        _startNotificationServices();
+        //this.finish();
+        System.exit(0);
     }
 
     @Override
@@ -985,10 +1069,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "Resume");
-        // _getCountCard();
+        Log.i(TAG, "onResume");
+        _checkCompleteLearn();
         if (fragmentDialogCustomStudy != null)
             fragmentDialogCustomStudy.dismiss();
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).commit();
+        _stopNotificationServices();
+
     }
 
 
@@ -1040,4 +1129,31 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
+        _startNotificationServices();
+    }
+
+    private void _startNotificationServices() {
+//        Intent service1 = new Intent(context, MyAlarmService.class);
+//        context.startService(service1);
+    }
+
+    private void _stopNotificationServices() {
+//        Intent service1 = new Intent(context, MyAlarmService.class);
+//        context.stopService(service1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onPause()");
+    }
+
 }

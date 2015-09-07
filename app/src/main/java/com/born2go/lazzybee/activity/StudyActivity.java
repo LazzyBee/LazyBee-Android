@@ -178,7 +178,11 @@ public class StudyActivity extends AppCompatActivity {
 
     private void _initAdView() {
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                .build();
         mAdView.loadAd(adRequest);
     }
 
@@ -572,10 +576,24 @@ public class StudyActivity extends AppCompatActivity {
                 Log.i(TAG, "Load first again card ");
                 //currentCard = againList.get(position_again);
                 currentCard = againList.get(0);
+                //get current time and du card
+                int current_time = (int) (new Date().getTime() / 1000);
+                int due = (int) currentCard.getDue();
 
-                lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
+                if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
+                    Log.i(TAG, "_nextAgainCard:Next card is again card 2");
+                    flag_one = false;
+                    lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                    lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                    lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                    //Display next card
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
+                } else {
+                    Log.i(TAG, "_nextAgainCard:Next card is due card 1");
+                    _nextDueCard();
+                }
+
             } else if (dueList.size() > 0) {
                 Log.i(TAG, "Load first duecard ");
                 //currentCard = dueList.get(position_due);
@@ -584,6 +602,7 @@ public class StudyActivity extends AppCompatActivity {
                 lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
                 lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
                 lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+                mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             } else if (todayList.size() > 0) {
                 Log.i(TAG, "Load first new card ");
                 currentCard = todayList.get(position);
@@ -591,13 +610,13 @@ public class StudyActivity extends AppCompatActivity {
                 lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
                 lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
                 lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         //Showtime
-        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 //        StudyCardPageAdapter studyCardPageAdapter = new StudyCardPageAdapter(context, currentCard, 0);
 //        mViewPager.setAdapter(studyCardPageAdapter);
 //        mSlidingTabLayout.setViewPager(mViewPager);
@@ -627,7 +646,7 @@ public class StudyActivity extends AppCompatActivity {
     public void onbtnHardClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_HARD);
-       // _displayCardByType(0);
+        // _displayCardByType(0);
     }
 
     public void onbtnGoodClick(View view) {
@@ -639,7 +658,7 @@ public class StudyActivity extends AppCompatActivity {
     public void onbtnEasyClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_EASY);
-       // _displayCardByType(0);
+        // _displayCardByType(0);
     }
 
     private void _showAnswer() {
@@ -859,7 +878,7 @@ public class StudyActivity extends AppCompatActivity {
             //get next card again
             Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
             currentCard = todayList.get(0);
-            //_loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
         } else if (againList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Again card");
             _nextAgainCard();
@@ -885,7 +904,7 @@ public class StudyActivity extends AppCompatActivity {
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
 
             //TODO:Display next card
-            // _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2);
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2);
 
         } else if (todayList.size() > 0) {
             Log.i(TAG, "_nextDueCard:Next card is new card");
@@ -925,7 +944,7 @@ public class StudyActivity extends AppCompatActivity {
                     flag_one = false;
 
                     //Display next card
-                    // _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
                 } else {
                     Log.i(TAG, "_nextAgainCard:Next card is due card 1");
                     _nextDueCard();
