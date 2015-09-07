@@ -43,7 +43,7 @@
             android:name=".activity.StudyActivity"
             android:label="@string/title_activity_study"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeCardDetails">
+            android:theme="@style/ThemeNoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
