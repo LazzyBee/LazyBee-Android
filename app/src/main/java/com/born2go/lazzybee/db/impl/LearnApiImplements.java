@@ -1082,4 +1082,9 @@ public class LearnApiImplements implements LearnApi {
         }
 
     }
+
+    @Override
+    public void _exportDateBaseFile() {
+        dataBaseHelper._exportDatabase();
+    }
 }

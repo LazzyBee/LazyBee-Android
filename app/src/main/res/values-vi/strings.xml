@@ -104,6 +104,8 @@
 
     <string name="setting_reset_to_default">Thiết lập lại</string>
     <string name="dialog_title_reset_custom_study">Reset custom study</string>
+    <string name="setting_export_database">Export database</string>
+    <string name="dialog_title_export_database">Export database</string>
 
 
     <string-array name="settings">

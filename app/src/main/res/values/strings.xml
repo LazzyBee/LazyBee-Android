@@ -176,6 +176,8 @@
     <string name="setting_reset_to_default">Reset to default</string>
     <string name="dialog_title_reset_custom_study">Reset to default custom study</string>
     <string name="dialog_message_reset_custom_study">You are reset default custom study?</string>
+    <string name="setting_export_database">Export database</string>
+    <string name="dialog_title_export_database">Export database</string>
 
 
     <string-array name="settings">
@@ -199,6 +201,7 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
         <item>@string/setting_reset_cache</item>
+        <item>@string/setting_export_database</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>

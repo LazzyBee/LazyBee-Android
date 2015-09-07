@@ -123,7 +123,10 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 _showDialogChangeSpeechRate(mCardView);
             } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                 lbLimit.setVisibility(View.GONE);
-                resetCache(mCardView);
+                _resetCache(mCardView);
+            } else if (setting.equals(context.getString(R.string.setting_export_database))) {
+                lbLimit.setVisibility(View.GONE);
+                _exportDatabases(mCardView);
             }
 
 
@@ -163,7 +166,38 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
     }
 
-    private void resetCache(RelativeLayout mCardView) {
+    private void _exportDatabases(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Instantiate an AlertDialog.Builder with its constructor
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+                // Chain together various setter methods to set the dialog characteristics
+                builder.setTitle(R.string.dialog_title_export_database);
+
+                // Add the buttons
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.cancel();
+                    }
+                });
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        learnApiImplements._exportDateBaseFile();
+                        Toast.makeText(context, R.string.dialog_title_export_database, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                // Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+            }
+        });
+    }
+
+    private void _resetCache(RelativeLayout mCardView) {
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -459,6 +493,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_check_update))
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
+                || setting.equals(context.getString(R.string.setting_export_database))
                 || setting.equals(context.getString(R.string.setting_speech_rate)))
             return TYPE_SETTING_NAME;
         else if (setting.equals(context.getString(R.string.setting_notification))
@@ -597,6 +632,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             progressDialog = new ProgressDialog(context);
 
         }
+
         protected void onPreExecute() {
             this.progressDialog.setMessage("Loading...");
             this.progressDialog.setCancelable(false);
@@ -633,7 +669,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 Log.e("SYNC getUpdate", "security error", se);
             }
             _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
-           // Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
+            // Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
             return null;
         }
 
