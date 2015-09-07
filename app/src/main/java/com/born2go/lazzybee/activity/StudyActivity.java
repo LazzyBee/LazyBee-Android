@@ -3,7 +3,6 @@ package com.born2go.lazzybee.activity;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
@@ -11,9 +10,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -253,8 +250,8 @@ public class StudyActivity extends AppCompatActivity {
         lbCountAgain = (TextView) findViewById(R.id.lbCountAgainInday);
         lbCountDue = (TextView) findViewById(R.id.lbAgainDue);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+//        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+//        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
 
     }
@@ -317,40 +314,42 @@ public class StudyActivity extends AppCompatActivity {
                 return true;
             case R.id.action_detelte:
                 Log.i(TAG, "_deleteCard question:" + currentCard.getQuestion());
-                _showDialogDeleteCard();
-
+                //_showDialogDeleteCard();
+                _deleteCard();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void _showDialogDeleteCard() {
-        // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//    private void _showDialogDeleteCard() {
 
-        // Chain together various setter methods to set the dialog characteristics
-        builder.setMessage(getString(R.string.dialog_message_delete_card, currentCard.getQuestion()))
-                .setTitle(R.string.dialog_title_delete_card);
 
-        // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
-        });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Update Queue_list in system table
-                _deleteCard();
-            }
-        });
-        // Get the AlertDialog from create()
-        AlertDialog dialog = builder.create();
+//        // Instantiate an AlertDialog.Builder with its constructor
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//
+//        // Chain together various setter methods to set the dialog characteristics
+//        builder.setMessage(getString(R.string.dialog_message_delete_card, currentCard.getQuestion()))
+//                .setTitle(R.string.dialog_title_delete_card);
+//
+//        // Add the buttons
+//        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int id) {
+//                // User cancelled the dialog
+//                dialog.cancel();
+//            }
+//        });
+//        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int id) {
+//                //Update Queue_list in system table
+//
+//            }
+//        });
+//        // Get the AlertDialog from create()
+//        AlertDialog dialog = builder.create();
+//
+//        dialog.show();
 
-        dialog.show();
-
-    }
+//    }
 
 
     boolean done_card = false;
@@ -599,18 +598,18 @@ public class StudyActivity extends AppCompatActivity {
 
         //Showtime
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-        StudyCardPageAdapter studyCardPageAdapter = new StudyCardPageAdapter(context, currentCard, 0);
-        mViewPager.setAdapter(studyCardPageAdapter);
-        mSlidingTabLayout.setViewPager(mViewPager);
+//        StudyCardPageAdapter studyCardPageAdapter = new StudyCardPageAdapter(context, currentCard, 0);
+//        mViewPager.setAdapter(studyCardPageAdapter);
+//        mSlidingTabLayout.setViewPager(mViewPager);
 
 
         //Inject native handle to web element
-        //_addJavascriptInterfaceQuestionAndAnswer();
+        _addJavascriptInterfaceQuestionAndAnswer();
     }
 
     public void onbtnShowAnswerClick(View view) {
         _showAnswer();
-        _displayCardByType(1);
+        //_displayCardByType(1);
     }
 
     private void _displayCardByType(int showType) {
@@ -622,25 +621,25 @@ public class StudyActivity extends AppCompatActivity {
     public void onbtnAgainClick(View view) {
         _showBtnAnswer();
         _answerAgainCard();
-        _displayCardByType(0);
+        //_displayCardByType(0);
     }
 
     public void onbtnHardClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_HARD);
-        _displayCardByType(0);
+       // _displayCardByType(0);
     }
 
     public void onbtnGoodClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_GOOD);
-        _displayCardByType(0);
+        //_displayCardByType(0);
     }
 
     public void onbtnEasyClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_EASY);
-        _displayCardByType(0);
+       // _displayCardByType(0);
     }
 
     private void _showAnswer() {

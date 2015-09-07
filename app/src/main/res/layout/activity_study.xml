@@ -24,13 +24,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/teal_500"
-        android:elevation="2dp" />
+        android:elevation="2dp"
+        android:visibility="gone" />
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:visibility="gone" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -46,8 +48,7 @@
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginTop="@dimen/cardview_study_margin_top"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-            android:visibility="gone">
+            android:layout_marginBottom="@dimen/cardview_study_margin_bottom">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -99,8 +100,7 @@
             android:layout_marginRight="@dimen/cardview_study_margin_right"
             android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
             android:layout_weight="1"
-            card_view:cardCornerRadius="4dp"
-            android:visibility="gone">
+            card_view:cardCornerRadius="4dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
