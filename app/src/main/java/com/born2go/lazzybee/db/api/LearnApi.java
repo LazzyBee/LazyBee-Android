@@ -149,4 +149,5 @@ public interface LearnApi {
 
     void _insertOrUpdateCard(Card card);
 
+    void _exportDateBaseFile();
 }

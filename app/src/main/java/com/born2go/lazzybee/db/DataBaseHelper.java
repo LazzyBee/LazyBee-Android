@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by Hue on 6/29/2015.
@@ -384,5 +385,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (checkInDowload != null) {
             checkInDowload.close();
         }
+    }
+
+    public void _exportDatabase() {
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+        FileChannel source = null;
+        FileChannel destination = null;
+        String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;;
+
+        String backupDBPath = DB_NAME;
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, "/" + DOWNLOAD + "/" + backupDBPath);
+        try {
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -171,6 +171,13 @@
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
 
     <string name="tracking_ID" translatable="false">UA-60355111-1</string>
+    <string name="notificaion_message">Study word english now!</string>
+    <string name="local_service_started" translatable="false">no</string>
+    <string name="setting_reset_to_default">Reset to default</string>
+    <string name="dialog_title_reset_custom_study">Reset to default custom study</string>
+    <string name="dialog_message_reset_custom_study">You are reset default custom study?</string>
+    <string name="setting_export_database">Export database</string>
+    <string name="dialog_title_export_database">Export database</string>
 
 
     <string-array name="settings">
@@ -194,6 +201,7 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
         <item>@string/setting_reset_cache</item>
+        <item>@string/setting_export_database</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>
@@ -205,6 +213,7 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_max_learn_more_per_day</item>
+        <item>@string/setting_reset_to_default</item>
     </string-array>
 
     <string-array name="drawer_list">
@@ -223,4 +232,10 @@
         <item>@string/speech_rate_fast</item>
         <item>@string/speech_rate_very_fast</item>
     </string-array>
+
+    <string-array name="devices">
+        <item>E05695103149F526FA2EFBABB1E00968</item>
+        <item>062AA843C75A097E7D8B2498E94ACDC9</item>
+    </string-array>
+
 </resources>

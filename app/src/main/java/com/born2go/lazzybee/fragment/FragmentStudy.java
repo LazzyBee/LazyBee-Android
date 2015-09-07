@@ -146,7 +146,7 @@ public class FragmentStudy extends Fragment {
         Log.i(TAG, LazzyBeeShare.LEARN_MORE + ":" + leanrmore);
 
         //get new random card list to day
-        //TODO: only take new cards if total learn today not exceed MAX_NEW_LEARN_PER_DAY
+        //TODO: only take new cards if total learn today not exceed DEFAULT_MAX_NEW_LEARN_PER_DAY
         //int newCount = 10 - (againList.size() + dueList.size);
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);

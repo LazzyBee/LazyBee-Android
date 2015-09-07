@@ -1,16 +1,19 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -45,6 +48,10 @@ import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.utils.MyReceiver;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
@@ -63,6 +70,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -105,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     private Context context = this;
 
     private GitkitClient gitkitClient;
-
+    private PendingIntent pendingIntent;
     GoogleApiClient mGoogleApiClient;
 
     /**
@@ -119,6 +128,11 @@ public class MainActivity extends AppCompatActivity
 
     private ConnectionResult mConnectionResult;
     // Toolbar toolbar;
+    List<PendingIntent> intentArray;
+    AlarmManager alarmManager;
+
+    NotificationManager mManager;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +141,10 @@ public class MainActivity extends AppCompatActivity
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         _checkLogin();
         _initSQlIte();
+
         _initSettingApplication();
         setContentView(R.layout.activity_main);
+        //sp = PreferenceManager.getDefaultSharedPreferences(context);
 //        toolbar = (Toolbar) findViewById(R.id.action_bar_main);
 //        setSupportActionBar(toolbar);
         _initToolBar();
@@ -138,8 +154,32 @@ public class MainActivity extends AppCompatActivity
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
+        _initInterstitialAd();
 
 
+    }
+
+    private void _initInterstitialAd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                _gotoStudyLearnMore();
+            }
+        });
+
+        requestNewInterstitial();
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                .build();
+        mInterstitialAd.loadAd(adRequest);
     }
 
     private void _checkAppVesion() {
@@ -161,26 +201,63 @@ public class MainActivity extends AppCompatActivity
 //                .build();
     }
 
+
     private void _setUpNotification() {
-        // String value = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+        //startService(new Intent(this, MyAlarmService.class));
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        intentArray = new ArrayList<PendingIntent>();
+        int[] hour = {8, 12, 20};
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).apply();
+        {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour[0]);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 1);
 
-//        Notification mNotification = new Notification.Builder(this)
-//                .setContentTitle(getString(R.string.notificaion_title, getString(R.string.app_name), getString(R.string.notificaion)))
-//                .setContentText("Sample Notification")
-//                .setSmallIcon(R.drawable.ic_action_back)
-//                .setContentIntent(pIntent)
-////                .addAction(R.drawable.ic_drawer, "View", pIntent)
-////                .addAction(0, "Remind", pIntent)
-//                .build();
+            Intent myIntent = new Intent(this, MyReceiver.class);
+            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
 
-        NotificationManager notificationManager = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
+            long time = calendar.getTimeInMillis();
+            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
 
-        //notificationManager.notify(0, mNotification);
-
-
+            alarmManager.set(AlarmManager.RTC, time, pendingIntent);
+        }
+//        {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, hour[1]);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 1);
+//
+//            Intent myIntent = new Intent(this, MyReceiver.class);
+//            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+//
+//            long time = calendar.getTimeInMillis();
+//            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
+//
+//            alarmManager.setRepeating(AlarmManager.RTC, time, 86000 * 1000, pendingIntent);
+//            intentArray.add(pendingIntent);
+//        }
+//        {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, hour[2]);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 1);
+//
+//            Intent myIntent = new Intent(this, MyReceiver.class);
+//            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+//
+//            long time = calendar.getTimeInMillis();
+//            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
+//
+//            alarmManager.setRepeating(AlarmManager.RTC, time, 86000 * 1000, pendingIntent);
+//            intentArray.add(pendingIntent);
+//        }
+        //_stopNotificationServices();
     }
 
     private void _initSettingApplication() {
@@ -189,7 +266,8 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-            //  _setUpNotification();
+
+            _setUpNotification();
         }
 
 
@@ -236,6 +314,7 @@ public class MainActivity extends AppCompatActivity
                 //finish Lession
                 mCardViewStudy.setVisibility(View.GONE);
                 _visibilityCount(false);
+                _cancelNotification();
             } else {
                 mCardViewStudy.setVisibility(View.VISIBLE);
                 _visibilityCount(true);
@@ -246,6 +325,12 @@ public class MainActivity extends AppCompatActivity
 
         }
         return complete;
+    }
+
+    private void _cancelNotification() {
+        if (intentArray != null)
+            for (PendingIntent pendingIntent : intentArray)
+                alarmManager.cancel(pendingIntent);
     }
 
     private void _getCountCard() {
@@ -386,7 +471,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoAddCourse() {
-        //init intent
+        //_initInterstitialAd intent
         Intent intent = new Intent(this, AddCourseActivity.class);
         //start intents
         startActivity(intent);
@@ -697,7 +782,7 @@ public class MainActivity extends AppCompatActivity
      * Goto setting
      */
     private void _gotoSetting() {
-        //init inten Setting
+        //_initInterstitialAd inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //Start Intent
@@ -770,6 +855,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         // mGoogleApiClient.connect();
+        _stopNotificationServices();
     }
 
     @Override
@@ -834,9 +920,15 @@ public class MainActivity extends AppCompatActivity
 
     public void _onCustomStudyOnClick(View view) {
         //_gotoSetting();
+        _showDialogCustomStudy();
+
+    }
+
+    private void _showDialogCustomStudy() {
         FragmentManager fm = getSupportFragmentManager();
         fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
         fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
+
     }
 
     public void _onLearnMoreClick(View view) {
@@ -862,12 +954,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 //_checkCompleteLearn(0);
-                Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-                intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-                startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-                String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-                dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
+                if (mInterstitialAd.isLoaded()) {
+                    Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+                    mInterstitialAd.show();
 
+                } else {
+                    //ko load van sang study
+                    _gotoStudyLearnMore();
+
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -882,13 +977,22 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    private void _gotoStudyLearnMore() {
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
+        startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
+        _setUpNotification();
+    }
+
     public void _onbtnReviewOnClick(View view) {
         Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
         _gotoReviewToday();
     }
 
     private void _gotoReviewToday() {
-        //init inten
+        //_initInterstitialAd inten
         Intent intent = new Intent(this, ReviewCardActivity.class);
         //start intent
         startActivity(intent);
@@ -896,18 +1000,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // super.onBackPressed();
         //
-        int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
+        //int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
         //Log.i(TAG, "backStackcount:" + backStackcount);
-        try {
-            String back_stack = getSupportFragmentManager().getBackStackEntryAt(0).getName();
-            Log.i(TAG, "back_stack:" + back_stack);
-        } catch (Exception e) {
-            this.finish();
-            System.exit(0);
-        }
-
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        int init = sp.getInt(LazzyBeeShare.INIT_NOTIFICATION, 2);
+        Log.i(TAG, "_initInterstitialAd noti:" + init);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
+        Log.i(TAG, "b _initInterstitialAd noti:" + init);
+        _startNotificationServices();
+        //this.finish();
+        System.exit(0);
     }
 
     @Override
@@ -964,10 +1069,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "Resume");
-        // _getCountCard();
+        Log.i(TAG, "onResume");
+        _checkCompleteLearn();
         if (fragmentDialogCustomStudy != null)
             fragmentDialogCustomStudy.dismiss();
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).commit();
+        _stopNotificationServices();
+
     }
 
 
@@ -1019,4 +1129,31 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
+        _startNotificationServices();
+    }
+
+    private void _startNotificationServices() {
+//        Intent service1 = new Intent(context, MyAlarmService.class);
+//        context.startService(service1);
+    }
+
+    private void _stopNotificationServices() {
+//        Intent service1 = new Intent(context, MyAlarmService.class);
+//        context.stopService(service1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onPause()");
+    }
+
 }
