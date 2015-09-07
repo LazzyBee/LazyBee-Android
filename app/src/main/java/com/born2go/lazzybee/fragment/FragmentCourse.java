@@ -84,8 +84,8 @@ public class FragmentCourse extends Fragment {
         _initDatabase();
 
 
-        //Update MAX_NEW_LEARN_PER_DAY
-        //dataBaseHelper._insertOrUpdateToSystemTable("MAX_NEW_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
+        //Update DEFAULT_MAX_NEW_LEARN_PER_DAY
+        //dataBaseHelper._insertOrUpdateToSystemTable("DEFAULT_MAX_NEW_LEARN_PER_DAY", LazzyBeeShare.convertJsonObjMaxLearnPerDayToString((10)));
         _checkListTodayExit();
 
 

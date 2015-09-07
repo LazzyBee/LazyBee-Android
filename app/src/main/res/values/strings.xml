@@ -173,6 +173,9 @@
     <string name="tracking_ID" translatable="false">UA-60355111-1</string>
     <string name="notificaion_message">Study word english now!</string>
     <string name="local_service_started" translatable="false">no</string>
+    <string name="setting_reset_to_default">Reset to default</string>
+    <string name="dialog_title_reset_custom_study">Reset to default custom study</string>
+    <string name="dialog_message_reset_custom_study">You are reset default custom study?</string>
 
 
     <string-array name="settings">
@@ -207,6 +210,7 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_max_learn_more_per_day</item>
+        <item>@string/setting_reset_to_default</item>
     </string-array>
 
     <string-array name="drawer_list">

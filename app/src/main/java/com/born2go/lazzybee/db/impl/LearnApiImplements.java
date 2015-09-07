@@ -877,7 +877,7 @@ public class LearnApiImplements implements LearnApi {
     public int _checkCompleteLearned() {
         int today = _checkListTodayExit();
         int again = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
-        int due = _getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.TOTAL_LEAN_PER_DAY - today).size();
+        int due = _getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY - today).size();
         if (today > 0 || again > 0 || due > 0 || today == -1 || today == -2) {
             Log.i(TAG, "_checkCompleteLearned:Not complete");
             return 1;
@@ -971,13 +971,13 @@ public class LearnApiImplements implements LearnApi {
         if (value == null) {
             if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
                 //TODO: Learn more
-                return LazzyBeeShare.MAX_LEARN_MORE_PER_DAY;
+                return LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
                 //TODO: New
-                return LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+                return LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
                 //TODO: Total
-                return LazzyBeeShare.TOTAL_LEAN_PER_DAY;
+                return LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
             } else {
                 return 0;
             }

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -44,7 +45,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         this.customStudys = customStudys;
         this.learnApiImplements = new LearnApiImplements(context);
         this.main = dialog;
-        this.studyInferface=studyInferface;
+        this.studyInferface = studyInferface;
     }
 
     @Override
@@ -73,13 +74,13 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         if (holder.viewType == TYPE_TITLE) {
             lbSettingName.setText(customStudys.get(position));
             mSwitch.setVisibility(View.GONE);
-           // mCardView.setRadius(0f);
+            // mCardView.setRadius(0f);
             lbLimit.setVisibility(View.GONE);
             lbSettingName.setTextSize(15f);
             lbSettingName.setTextColor(context.getResources().getColor(R.color.teal_500));
         } else if (holder.viewType == TYPE_SETTING_NAME) {
             lbSettingName.setText(customStudys.get(position));
-           // mCardView.setRadius(0f);
+            // mCardView.setRadius(0f);
             mSwitch.setVisibility(View.GONE);
             if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
                 String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
@@ -95,8 +96,49 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                 lbLimit.setTag(limit);
                 getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, limit);
 
+            } else if (setting.equals(context.getString(R.string.setting_reset_to_default))) {
+                lbLimit.setVisibility(View.GONE);
+                mCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _showConfirmResetToDefauls();
+                    }
+                });
+
             }
         }
+    }
+
+    private void _showConfirmResetToDefauls() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setTitle(R.string.dialog_title_reset_custom_study).setMessage(R.string.dialog_message_reset_custom_study);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Toast.makeText(context, R.string.setting_reset_to_default, Toast.LENGTH_SHORT).show();
+                //KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT
+                //KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT
+                //KEY_SETTING_TODAY_NEW_CARD_LIMIT
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
+                main.hide();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     @Override
@@ -111,6 +153,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
             return TYPE_TITLE;
         else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
+                || setting.equals(context.getString(R.string.setting_reset_to_default))
                 || setting.equals(context.getString(R.string.setting_max_learn_more_per_day)))
             return TYPE_SETTING_NAME;
         else
@@ -133,13 +176,13 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         int value = 0;
         if (limit == null) {
             if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                value = LazzyBeeShare.MAX_NEW_LEARN_PER_DAY;
+                value = LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
                 value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-                value = LazzyBeeShare.TOTAL_LEAN_PER_DAY;
+                value = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
-                value = LazzyBeeShare.MAX_LEARN_MORE_PER_DAY;
+                value = LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY;
             }
 
         } else {
@@ -192,7 +235,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                 main.hide();
             }
         });
-        builder.setPositiveButton(R.string.ok,null);
+        builder.setPositiveButton(R.string.ok, null);
 
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();

@@ -102,6 +102,9 @@
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
     <string name="notificaion_message">Học từ tiếng anh nào!</string>
 
+    <string name="setting_reset_to_default">Thiết lập lại</string>
+    <string name="dialog_title_reset_custom_study">Reset custom study</string>
+
 
     <string-array name="settings">
         <!--<item>@string/setting_learn_title</item>

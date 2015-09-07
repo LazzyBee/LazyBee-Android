@@ -27,7 +27,7 @@ public class LazzyBeeShare {
     public static final String LEARN_MORE = "LEARN_MORE";
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
-    public static final int TOTAL_LEAN_PER_DAY = 20;
+    public static final int DEFAULT_TOTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
 
     public static final String KEY_SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
@@ -84,9 +84,9 @@ public class LazzyBeeShare {
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
-    public static final int MAX_NEW_LEARN_PER_DAY = 10;
+    public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
-    public static final int MAX_LEARN_MORE_PER_DAY = 5;
+    public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
 
     public static final String DOWNLOAD = "Download";
 
