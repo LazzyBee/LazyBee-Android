@@ -172,6 +172,7 @@
 
     <string name="tracking_ID" translatable="false">UA-60355111-1</string>
     <string name="notificaion_message">Study word english now!</string>
+    <string name="local_service_started" translatable="false">no</string>
 
 
     <string-array name="settings">
@@ -224,4 +225,10 @@
         <item>@string/speech_rate_fast</item>
         <item>@string/speech_rate_very_fast</item>
     </string-array>
+
+    <string-array name="devices">
+        <item>E05695103149F526FA2EFBABB1E00968</item>
+        <item>062AA843C75A097E7D8B2498E94ACDC9</item>
+    </string-array>
+
 </resources>
