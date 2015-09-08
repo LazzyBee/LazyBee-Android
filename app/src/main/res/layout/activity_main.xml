@@ -23,7 +23,7 @@
         <!--layout="@layout/tool_bar"/>-->
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_gravity="left|top"
             android:layout_marginTop="5dp">
 
@@ -42,10 +42,12 @@
                 android:marqueeRepeatLimit ="marquee_forever"
                 android:background="#AEB404"
                 android:textColor="#ffffff"
+                android:textSize="18sp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:textSize="18sp" />
+                android:onClick="onlbTipHelpClick"
+                />
         </RelativeLayout>
 
         <LinearLayout
