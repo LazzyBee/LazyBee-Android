@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -15,6 +16,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -259,7 +261,19 @@ public class StudyActivity extends AppCompatActivity {
 //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
+        TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
+        lbTipHelp.setText("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + getString(R.string.message_hellp_study) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+        lbTipHelp.setSelected(true);
+        //lbTipHelp.setTypeface(null, Typeface.BOLD);
+        lbTipHelp.setSingleLine();
+        lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        lbTipHelp.setHorizontallyScrolling(true);
 
+
+    }
+    public void onlbTipHelpClick(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_lazzybee_website)));
+        startActivity(browserIntent);
     }
 
     public boolean isLearn_more() {

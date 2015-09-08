@@ -49,7 +49,7 @@
                 android:layout_alignEnd="@+id/mSwitch"
                 android:textColor="@color/teal_500"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="10dp"
                 android:layout_alignTop="@+id/lbSettingName"
                 android:layout_marginTop="5dp"
                 android:layout_alignBaseline="@+id/lbSettingName" />

@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity
         mLine = (LinearLayout) findViewById(R.id.mLine);
 
         TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
-        lbTipHelp.setText("****************************" + "http://www.lazzybee.com" + "****************************");
+        lbTipHelp.setText("****************************" + getString(R.string.url_lazzybee_website) + "****************************");
         lbTipHelp.setSelected(true);
         //lbTipHelp.setTypeface(null, Typeface.BOLD);
         lbTipHelp.setSingleLine();
@@ -403,7 +403,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onlbTipHelpClick(View view) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.lazzybee.com"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_lazzybee_website)));
         startActivity(browserIntent);
     }
 
