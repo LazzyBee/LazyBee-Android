@@ -205,7 +205,7 @@ public class StudyActivity extends AppCompatActivity {
     }
 
     private void _completeLean() {
-        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS, new Intent());
+        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000, new Intent());
         onBackPressed();
 
     }

@@ -29,8 +29,9 @@ public class MyReceiver extends BroadcastReceiver {
 //            }
 //        }
 //        if (start) {
-            Intent service1 = new Intent(context, MyAlarmService.class);
-            context.startService(service1);
+        Intent service1 = new Intent(context, MyAlarmService.class);
+        //context.startService(service1);
+        context.stopService(intent);
 //        }
 
     }

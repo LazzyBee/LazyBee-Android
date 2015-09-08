@@ -26,6 +26,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -304,28 +305,48 @@ public class MainActivity extends AppCompatActivity
     }
 
     private int _checkCompleteLearn() {
-        String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS));
-        int check = dataBaseHelper._checkListTodayExit();
+        String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000));
+        String totalLearnCard = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
+
         int complete = 0;
+        int check = dataBaseHelper._checkListTodayExit();
+        int countDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, Integer.valueOf(totalLearnCard)).size();
+
         if (value != null) {
             complete = Integer.valueOf(value);
         }
-        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
-            if (check >= 0) {
-                //inday
-                //finish Lession
-                mCardViewStudy.setVisibility(View.GONE);
-                _visibilityCount(false);
-                _cancelNotification();
+        Log.i(TAG, "_checkCompleteLearn:\t complete code:" + check);
+        int visibility = getResources().getInteger(R.integer.visibility_state_study0);
+        //complete=0 chua hoc xong
+        //complete=CODE_COMPLETE_STUDY_RESULTS_1000 hoc song mot lươt
+        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            //check > 0 hoc xong rui nhung van con card
+            //check = 0 hoc het card rui
+            //check < 0 chua hoc xong
+            //state0 chua hoc song
+            //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
+            //state2 hoc xong het rui
+            check = check + countDue;
+            Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
+            if (check > 0) {
+                //inday finish Lession van cho hoc tiep
+                visibility = getResources().getInteger(R.integer.visibility_state_study1);
+                Log.i(TAG, "_checkCompleteLearn:\t hoc xong rui nhung van con card");
+            } else if (check == 0) {
+                //hoc het card rui
+                Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui");
+                visibility = getResources().getInteger(R.integer.visibility_state_study2);
             } else {
-                mCardViewStudy.setVisibility(View.VISIBLE);
-                _visibilityCount(true);
+                //chua hoc xong
+                Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
+                visibility = getResources().getInteger(R.integer.visibility_state_study0);
             }
         } else if (complete == 0) {
-            mCardViewStudy.setVisibility(View.VISIBLE);
-            _visibilityCount(true);
-
+            //Chua hoc xong
+            Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong 2");
+            visibility = getResources().getInteger(R.integer.visibility_state_study0);
         }
+        _visibilityCount(visibility);
         return complete;
     }
 
@@ -367,18 +388,52 @@ public class MainActivity extends AppCompatActivity
 
         mLine = (LinearLayout) findViewById(R.id.mLine);
 
+        TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
+        lbTipHelp.setText("****************************" + getString(R.string.message_hellp_study) + "****************************");
+        lbTipHelp.setSelected(true);
+        //lbTipHelp.setTypeface(null, Typeface.BOLD);
+        lbTipHelp.setSingleLine();
+        lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        lbTipHelp.setHorizontallyScrolling(true);
+
+
     }
 
-    private void _visibilityCount(boolean visibility) {
-        if (visibility) {
+    private void _visibilityCount(int visibilityCode) {
+        //state0 chua hoc song
+        //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
+        //state2 hoc xong het rui
+        if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study0)) {
+            //state0 chua hoc song
+            mCardViewStudy.setVisibility(View.VISIBLE);
             mDue.setVisibility(View.VISIBLE);
             mCongratulations.setVisibility(View.GONE);
             mLine.setVisibility(View.GONE);
-        } else {
+
+        } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study1)) {
+            //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
+            mDue.setVisibility(View.VISIBLE);
+            mCardViewStudy.setVisibility(View.VISIBLE);
+            mCongratulations.setVisibility(View.VISIBLE);
+            mLine.setVisibility(View.VISIBLE);
+
+        } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study2)) {
+            //state2 hoc xong het rui
+            mCardViewStudy.setVisibility(View.GONE);
             mDue.setVisibility(View.GONE);
             mCongratulations.setVisibility(View.VISIBLE);
             mLine.setVisibility(View.VISIBLE);
         }
+
+//        if (visibility) {
+//            mDue.setVisibility(View.VISIBLE);
+//            mCongratulations.setVisibility(View.GONE);
+//            mLine.setVisibility(View.GONE);
+//        } else {
+//            mDue.setVisibility(View.GONE);
+//            mCongratulations.setVisibility(View.VISIBLE);
+//            mLine.setVisibility(View.VISIBLE);
+//        }
     }
 
     private void _initToolBar() {
@@ -921,7 +976,7 @@ public class MainActivity extends AppCompatActivity
     private void _gotoStudy() {
         //_checkCompleteLearn(0);
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-        this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
         //Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
     }
 
@@ -942,7 +997,7 @@ public class MainActivity extends AppCompatActivity
     public void _onLearnMoreClick(View view) {
         int finish = _checkCompleteLearn();
         Log.i(TAG, "Complet code:" + finish);
-        if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+        if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             _learnMore();
         } else {
             Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
@@ -988,8 +1043,8 @@ public class MainActivity extends AppCompatActivity
     private void _gotoStudyLearnMore() {
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
         intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-        startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
-        String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+        startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+        String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
         dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
         _setUpNotification();
     }
@@ -1028,10 +1083,12 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            _checkCompleteLearnbyResultCode(resultCode);
+            //(resultCode);
+            _checkCompleteLearn();
             _getCountCard();
+
         }
-        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS) {
+        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             _checkCompleteLearnbyResultCode(resultCode);
             _getCountCard();
         }
@@ -1059,17 +1116,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _checkCompleteLearnbyResultCode(int resultCode) {
-        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS || resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 || resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             //Complete
-            mCardViewStudy.setVisibility(View.GONE);
-            _visibilityCount(false);
-            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
             dataBaseHelper._insertOrUpdateToSystemTable(value, value);
+            // _visibilityCount(false, visibility);
         } else {
-            mCardViewStudy.setVisibility(View.VISIBLE);
-            _visibilityCount(true);
-            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS);
+            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
             dataBaseHelper._insertOrUpdateToSystemTable(value, String.valueOf(1));
+            // _visibilityCount(true, visibility);
+
 
         }
     }
