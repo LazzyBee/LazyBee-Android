@@ -25,7 +25,7 @@
     <string name="show_answer">Hiện đáp án</string>
     <string name="study">Học</string>
     <string name="due_today">Mục tiêu hôm nay:</string>
-    <string name="total_new_learn">Tổng số thẻ đã học:</string>
+    <string name="total_new_learn">Tổng số chưa học học:</string>
     <string name="total_cards">Tổng số thẻ:</string>
     <string name="example">Ví dụ:</string>
     <string name="explain">Giải nghĩa</string>
