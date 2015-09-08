@@ -102,9 +102,8 @@
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
     <string name="notificaion_message">Học từ tiếng anh nào!</string>
 
-    <string name="setting_reset_to_default">Thiết lập lại</string>
-    <string name="dialog_title_reset_custom_study">Reset custom study</string>
-    <string name="setting_export_database">Export database</string>
+
+    <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
     <string name="dialog_title_export_database">Export database</string>
 
 
@@ -113,7 +112,7 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_today_new_card_limit</item>-->
         <!--<item>@string/setting_today_review_card_limit</item>-->
-        <item >@string/setting_lines</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
@@ -125,10 +124,14 @@
         <item>@string/setting_check_update</item>
         <item>@string/setting_auto_check_update</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_export_database</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
+        <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="custom_study">
@@ -137,6 +140,7 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_max_learn_more_per_day</item>
+        <item>@string/setting_reset_to_default</item>
     </string-array>
 
     <string-array name="drawer_list" >
@@ -155,4 +159,9 @@
         <item>@string/speech_rate_fast</item>
         <item>@string/speech_rate_very_fast</item>
     </string-array>
+    <string name="dialog_message_reset_custom_study">Bạn có muốn thiết lập về mặc đinh?</string>
+    <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
+    <string name="setting_export_database">Export database</string>
+    <string name="setting_reset_cache">Reset Cache</string>
+    <string name="setting_reset_to_default">Thiết lập mặc định</string>
 </resources>
