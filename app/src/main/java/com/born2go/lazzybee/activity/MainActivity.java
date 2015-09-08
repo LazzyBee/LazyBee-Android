@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity
         String lang = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
         Log.i(TAG, "Lang:" + lang);
         if (lang == null)
-            lang = LazzyBeeShare.LANG_EN;
+            lang = LazzyBeeShare.LANG_VI;
         String languageToLoad = lang; // your language
 
         Locale locale = new Locale(languageToLoad);
