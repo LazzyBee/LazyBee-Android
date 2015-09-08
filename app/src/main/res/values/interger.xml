@@ -5,4 +5,9 @@
     <integer name="visibility_state_study1">1</integer><!--//state1 hoc xon mot luot va van con tu de hoc(trong ngay)-->
     <integer name="visibility_state_study2">2</integer><!--//state2 hoc xong het rui-->
 
+    <integer name="goto_study_code0">0</integer>
+    <integer name="goto_study_code1">1</integer>
+
+    <item name="a" format="float" type="integer">0.1</item>
+
 </resources>

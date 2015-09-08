@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAdClosed() {
                 requestNewInterstitial();
-                _gotoStudyLearnMore();
+                _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
             }
         });
 
@@ -970,14 +970,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onBtnStudyOnClick(View view) {
-        _gotoStudy();
+        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
     }
 
-    private void _gotoStudy() {
-        //_checkCompleteLearn(0);
-        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-        this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-        //Toast.makeText(context, R.string.study, Toast.LENGTH_SHORT).show();
+    private void _gotoStudy(int type) {
+        //goto_study_type0 study
+        //goto_study_type1 learnmore
+        if (type == getResources().getInteger(R.integer.goto_study_code0)) {
+            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+            this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+        } else if (type == getResources().getInteger(R.integer.goto_study_code1)) {
+            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+            intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
+            startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+            String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+            dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
+            _setUpNotification();
+        }
     }
 
 
@@ -1023,7 +1032,7 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
                     //ko load van sang study
-                    _gotoStudyLearnMore();
+                    _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
 
                 }
             }
@@ -1040,14 +1049,9 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
-    private void _gotoStudyLearnMore() {
-        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-        intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-        startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-        String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-        dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
-        _setUpNotification();
-    }
+//    private void _gotoStudyLearnMore() {
+//
+//    }
 
     public void _onbtnReviewOnClick(View view) {
         Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
