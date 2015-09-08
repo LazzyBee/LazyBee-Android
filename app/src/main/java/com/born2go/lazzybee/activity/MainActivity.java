@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity
 
     RelativeLayout mDue, mCongratulations;
     FragmentDialogCustomStudy fragmentDialogCustomStudy;
+    LinearLayout mLine;
 
     Button btnStudy;
     private LearnApiImplements dataBaseHelper;
@@ -363,15 +365,19 @@ public class MainActivity extends AppCompatActivity
         lbTotalNewCount = (TextView) findViewById(R.id.lbTotalNewCount2);
         lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount2);
 
+        mLine = (LinearLayout) findViewById(R.id.mLine);
+
     }
 
     private void _visibilityCount(boolean visibility) {
         if (visibility) {
             mDue.setVisibility(View.VISIBLE);
             mCongratulations.setVisibility(View.GONE);
+            mLine.setVisibility(View.GONE);
         } else {
             mDue.setVisibility(View.GONE);
             mCongratulations.setVisibility(View.VISIBLE);
+            mLine.setVisibility(View.VISIBLE);
         }
     }
 
