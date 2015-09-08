@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -310,7 +311,11 @@ public class MainActivity extends AppCompatActivity
 
         int complete = 0;
         int check = dataBaseHelper._checkListTodayExit();
-        int countDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, Integer.valueOf(totalLearnCard)).size();
+        int total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+        if (totalLearnCard != null)
+            total = Integer.valueOf(totalLearnCard);
+
+        int countDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total).size();
 
         if (value != null) {
             complete = Integer.valueOf(value);
@@ -389,14 +394,17 @@ public class MainActivity extends AppCompatActivity
         mLine = (LinearLayout) findViewById(R.id.mLine);
 
         TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
-        lbTipHelp.setText("****************************" + getString(R.string.message_hellp_study) + "****************************");
+        lbTipHelp.setText("****************************" + "http://www.lazzybee.com" + "****************************");
         lbTipHelp.setSelected(true);
         //lbTipHelp.setTypeface(null, Typeface.BOLD);
         lbTipHelp.setSingleLine();
         lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         lbTipHelp.setHorizontallyScrolling(true);
+    }
 
-
+    public void onlbTipHelpClick(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.lazzybee.com"));
+        startActivity(browserIntent);
     }
 
     private void _visibilityCount(int visibilityCode) {
