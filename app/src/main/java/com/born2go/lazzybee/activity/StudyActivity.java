@@ -114,7 +114,7 @@ public class StudyActivity extends AppCompatActivity {
         int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
         //get card due today & agin
         againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
-        dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY);
+        dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
         int dueCount = dueList.size();
 
         //get new random card list to day
