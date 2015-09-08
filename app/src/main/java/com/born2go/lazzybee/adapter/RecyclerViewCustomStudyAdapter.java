@@ -126,7 +126,8 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
-                main.hide();
+
+                studyInferface._finishCustomStudy();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -232,7 +233,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
                 dialog.cancel();
-                main.hide();
+                //main.hide();
             }
         });
         builder.setPositiveButton(R.string.ok, null);
@@ -259,7 +260,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 lbEror.setText(erorr_message);
                             } else {
                                 learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                main.hide();
+                                //main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 1");
                                 studyInferface._finishCustomStudy();
@@ -274,7 +275,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 lbEror.setText(erorr_message);
                             } else {
                                 learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                main.hide();
+                                //main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 2");
                                 studyInferface._finishCustomStudy();
@@ -287,7 +288,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 lbEror.setText(erorr_message);
                             } else {
                                 learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                main.hide();
+                               // main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 3");
                                 studyInferface._finishCustomStudy();

@@ -141,7 +141,7 @@
     <string name="drawer_add_course" translatable="false">add_course</string>
     <string name="drawer_line" translatable="false">lines</string>
     <string name="drawer_setting" translatable="false">settings</string>
-    <string name="setting_about_message" translatable="false">Born2Go © 2015 All Rights Reserved</string>
+    <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
     <string name="under_construction">Under construction</string>
 
     <string name="notificaion_title">%1$s %2$s</string>
@@ -166,16 +166,21 @@
 
     <string name="update_database_sucsessfuly" translatable="false">Update database sucsessfuly</string>
     <string name="setting_all_right" translatable="false">@string/setting_about_message</string>
-    <string name="setting_reset_cache" translatable="false">Reset Cache</string>
+
+    <string name="setting_reset_cache">Reset Cache</string>
+
     <string name="dialog_title_clear_cache_and_restart_app" translatable="false">Clear cache and restart app</string>
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
 
     <string name="tracking_ID" translatable="false">UA-60355111-1</string>
     <string name="notificaion_message">Study word english now!</string>
     <string name="local_service_started" translatable="false">no</string>
+
     <string name="setting_reset_to_default">Reset to default</string>
+
     <string name="dialog_title_reset_custom_study">Reset to default custom study</string>
     <string name="dialog_message_reset_custom_study">You are reset default custom study?</string>
+
     <string name="setting_export_database">Export database</string>
     <string name="dialog_title_export_database">Export database</string>
 
