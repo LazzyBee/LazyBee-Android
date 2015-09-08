@@ -808,7 +808,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void _finishCustomStudy() {
-        fragmentDialogCustomStudy.dismiss();
+        //fragmentDialogCustomStudy.dismiss();
+        //fragmentDialogCustomStudy.
+        fragmentDialogCustomStudy.setCustomStudyAdapter();
         _getCountCard();
 
     }
@@ -1037,7 +1039,7 @@ public class MainActivity extends AppCompatActivity
 //            _getCountCard();
 //        }
         if (fragmentDialogCustomStudy != null) {
-            fragmentDialogCustomStudy.dismiss();
+            //fragmentDialogCustomStudy.dismiss();
         }
 //        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
 //            super.onActivityResult(requestCode, resultCode, intent);
@@ -1077,8 +1079,8 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         Log.i(TAG, "onResume");
         _checkCompleteLearn();
-        if (fragmentDialogCustomStudy != null)
-            fragmentDialogCustomStudy.dismiss();
+//        if (fragmentDialogCustomStudy != null)
+//            fragmentDialogCustomStudy.dismiss();
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).commit();

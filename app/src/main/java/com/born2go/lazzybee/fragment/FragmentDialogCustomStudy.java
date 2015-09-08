@@ -45,7 +45,10 @@ public class FragmentDialogCustomStudy extends DialogFragment {
     public interface DialogCustomStudyInferface {
         void _finishCustomStudy();
     }
+
+    RecyclerView mRecyclerViewCustomStudy;
     DialogCustomStudyInferface studyInferface;
+    List<String> settings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,19 +56,25 @@ public class FragmentDialogCustomStudy extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dialog_custom_study, container, false);
         context = getActivity();
+
+        settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study));
+
         learnApiImplements = new LearnApiImplements(context);
         //getDialog().setTitle(getString(R.string.custom_study));
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        RecyclerView mRecyclerViewCustomStudy = (RecyclerView) view.findViewById(R.id.mRecyclerViewCustomStudy);
+
+        mRecyclerViewCustomStudy = (RecyclerView) view.findViewById(R.id.mRecyclerViewCustomStudy);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewCustomStudy.getContext(), 1);
 
-        final List<String> settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study));
-
-        RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, getDialog(),studyInferface);
         mRecyclerViewCustomStudy.setLayoutManager(gridLayoutManager);
+        setCustomStudyAdapter();
+        return view;
+    }
+
+    public void setCustomStudyAdapter() {
+        RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, getDialog(), studyInferface);
         mRecyclerViewCustomStudy.setAdapter(recyclerViewCustomStudyAdapter);
 
-        return view;
     }
 
     private void getSettingLimitOrUpdate(View mCardView, final TextView lbLimit, final String key, String limit) {
@@ -148,7 +157,7 @@ public class FragmentDialogCustomStudy extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        studyInferface= (DialogCustomStudyInferface) activity;
+        studyInferface = (DialogCustomStudyInferface) activity;
 
     }
 }
