@@ -183,6 +183,8 @@
 
     <string name="setting_export_database">Export database</string>
     <string name="dialog_title_export_database">Export database</string>
+    <string name="url_lazzybee_website" translatable="false">http://www.lazzybee.com</string>
+    <string name="action_update_card">Update word</string>
 
 
     <string-array name="settings">

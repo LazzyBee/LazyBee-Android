@@ -36,7 +36,7 @@ public class MyAlarmService extends Service {
     public void onCreate() {
         Log.i(TAG, "Service onCreate");
         mManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        showNotification();
+
     }
 
     private void showNotification() {
@@ -61,11 +61,22 @@ public class MyAlarmService extends Service {
         super.onDestroy();
         Toast.makeText(this, "Service destroyed", Toast.LENGTH_LONG).show();
     }
-
-    @Override
+//
+//    @Override
+//    public void onStart(Intent intent, int startId) {
+//        super.onStart(intent, startId);
+//        showNotification();
+//        Log.i(TAG, "Service running");
+//    }
+        @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Service onStartCommand");
+
+        showNotification();
+
         Log.i(TAG, "Service running");
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY;
     }
+
+
 }

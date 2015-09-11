@@ -14,5 +14,7 @@
     <item android:id="@+id/action_detelte" android:title="@string/action_delete_card"
         android:icon="@drawable/ic_action_discard"
         app:showAsAction="never"/>
+    <item android:id="@+id/action_update" android:title="@string/action_update_card"
+        app:showAsAction="never"/>
 </menu>
 

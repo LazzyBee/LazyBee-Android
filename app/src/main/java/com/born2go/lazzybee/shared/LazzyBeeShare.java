@@ -62,6 +62,7 @@ public class LazzyBeeShare {
     public static final String NOTIFICATION_MESSAGE = "n_message";
     public static final String NOTIFICATION_INDEX = "index";
     public static final String INIT_NOTIFICATION = "init_notification";
+    public static final String NOTIFICATION_WHEN = "when";
 
 
     private static boolean DEBUG = true;

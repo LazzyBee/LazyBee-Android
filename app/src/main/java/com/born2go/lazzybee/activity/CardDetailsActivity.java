@@ -1,9 +1,11 @@
 package com.born2go.lazzybee.activity;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -22,6 +24,7 @@ import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
@@ -53,6 +56,7 @@ public class CardDetailsActivity extends AppCompatActivity {
     WebView mWebViewLeadDetails;
     TextToSpeech textToSpeech;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,7 @@ public class CardDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = this;
+        _initTextToSpeech();
         cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
         learnApiImplements = new LearnApiImplements(context);
 //        if (savedInstanceState == null) {
@@ -72,9 +77,7 @@ public class CardDetailsActivity extends AppCompatActivity {
 //            transaction.commit();
 //        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        _initTextToSpeech();
         Card card = learnApiImplements._getCardByID(cardId);
-        // _initTextToSpeech();
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -115,31 +118,33 @@ public class CardDetailsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
 //        Log.i(TAG, "MENU ITEM:" + id + ",Home:" + android.R.id.home);
-//        switch (id) {
-//            case android.R.id.home:
-//                Log.i(TAG, "Back");
-//                finish();
-//                onBackPressed();
-//                return true;
-//            case R.id.action_add_to_learn:
-//                addCardToLearn();
-//                return true;
-//        }
-        if (id == R.id.action_add_to_learn) {
-            addCardToLearn();
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                onBackPressed();
+                return true;
+            case R.id.action_add_to_learn:
+                _addCardToLearn();
+                return true;
+            case R.id.action_update:
+                //
+                _updateCardFormServer();
+                return true;
         }
-        if (id == android.R.id.home) {
-            finish();
-            onBackPressed();
-            return true;
-        }
-
-
         return super.onOptionsItemSelected(item);
     }
 
-    private void addCardToLearn() {
+    private void _updateCardFormServer() {
+        //Check card==null get card form Sqlite by cardID
+        if (card == null)
+            card = learnApiImplements._getCardByID(cardId);
+
+        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer();
+        updateContenCardFormServer.execute(card.getQuestion());
+
+    }
+
+    private void _addCardToLearn() {
         if (card == null)
             card = learnApiImplements._getCardByID(cardId);
         // Instantiate an AlertDialog.Builder with its constructor
@@ -361,5 +366,45 @@ public class CardDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
+
+        private ProgressDialog dialog;
+
+        public UpdateContenCardFormServer() {
+            dialog = new ProgressDialog(context);
+        }
+
+        protected void onPreExecute() {
+            //set up dialog
+            this.dialog.setMessage("Loading...");
+            this.dialog.show();
+        }
+
+        @Override
+        protected Card doInBackground(String... params) {
+            //TODO Call Api Update card
+            Card card = new Card();
+            return card;
+        }
+
+        @Override
+        protected void onPostExecute(Card card) {
+            super.onPostExecute(card);
+            //Dismis dialog
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            //Todo reset viewPage
+            //Update Success reload data
+            //Set Adapter
+//            PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
+//            mViewPager.setAdapter(packageCardPageAdapter);
+//            mSlidingTabLayout.setViewPager(mViewPager);
+
+            Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+        }
     }
 }

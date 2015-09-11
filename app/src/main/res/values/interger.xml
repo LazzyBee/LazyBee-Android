@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="visibility_state_study0">0</integer><!--//state0 chua hoc song-->
-    <integer name="visibility_state_study1">1</integer><!--//state1 hoc xon mot luot va van con tu de hoc(trong ngay)-->
-    <integer name="visibility_state_study2">2</integer><!--//state2 hoc xong het rui-->
+    <integer name="visibility_state_study0">0</integer>
+    <!--//state0 chua hoc song-->
+    <integer name="visibility_state_study1">1</integer>
+    <!--//state1 hoc xon mot luot va van con tu de hoc(trong ngay)-->
+    <integer name="visibility_state_study2">2</integer>
+    <!--//state2 hoc xong het rui-->
+
+    <integer name="goto_study_code0">0</integer>
+    <integer name="goto_study_code1">1</integer>
+
+    <item name="a" format="float" type="integer">0.1</item>
+
+    <integer name="hours8">8</integer>
+    <integer name="hours12">12</integer>
+    <integer name="hours20">20</integer>
+
+    <array name="notification_hours">
+        <item>@integer/hours8</item>
+        <item>@integer/hours12</item>
+        <item>@integer/hours20</item>
+    </array>
 
 </resources>
