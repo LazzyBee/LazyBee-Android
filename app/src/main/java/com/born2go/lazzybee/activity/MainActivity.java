@@ -73,8 +73,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -135,8 +133,19 @@ public class MainActivity extends AppCompatActivity
     List<PendingIntent> intentArray;
     AlarmManager alarmManager;
 
-    NotificationManager mManager;
     InterstitialAd mInterstitialAd;
+
+    int[] hour;
+
+    // Allows us to notify the user that something happened in the background
+    NotificationManager notificationManager;
+
+    // Used to track notifications
+    int notifID = 0;
+
+    // Used to track if notification is active in the task bar
+    boolean isNotificActive = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,72 +214,63 @@ public class MainActivity extends AppCompatActivity
 //                .build();
     }
 
+    private static int MID = 0;
 
     private void _setUpNotification() {
-        //startService(new Intent(this, MyAlarmService.class));
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        intentArray = new ArrayList<PendingIntent>();
-        int[] hour = {8, 12, 20};
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).apply();
-        {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, hour[0]);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 1);
 
-            Intent myIntent = new Intent(this, MyReceiver.class);
-            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+//        for (int i = 0; i < hour.length; i++) {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, hour[0]);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 0);
+//            calendar.set(Calendar.AM_PM,Calendar.PM);
+//            Intent intent1 = new Intent(MainActivity.this, MyReceiver.class);
+//            intent1.putExtra(LazzyBeeShare.INIT_NOTIFICATION, 0);
+//            intent1.putExtra(LazzyBeeShare.NOTIFICATION_WHEN, calendar.getTimeInMillis());
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,pendingIntent);
+//
+//        }
 
-            long time = calendar.getTimeInMillis();
-            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
+        for (int i = 0; i < hour.length; i++) {
+            // Define a time
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, hour[i]);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 0);
+//            calendar.set(Calendar.AM_PM, Calendar.PM);
+//            Long alertTime = calendar.getTimeInMillis();
+//
+//            // Define our intention of executing AlertReceiver
+//            Intent alertIntent = new Intent(this, MyReceiver.class);
+//            alertIntent.putExtra(LazzyBeeShare.INIT_NOTIFICATION, i);
+//
+//            // Define pendingintent
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, alertIntent, 0);
+//
+//            // set() schedules an alarm
+          //  alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alertTime, AlarmManager.INTERVAL_DAY, pendingIntent);
 
-            alarmManager.set(AlarmManager.RTC, time, pendingIntent);
         }
-//        {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(Calendar.HOUR_OF_DAY, hour[1]);
-//            calendar.set(Calendar.MINUTE, 0);
-//            calendar.set(Calendar.SECOND, 1);
-//
-//            Intent myIntent = new Intent(this, MyReceiver.class);
-//            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-//
-//            long time = calendar.getTimeInMillis();
-//            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
-//
-//            alarmManager.setRepeating(AlarmManager.RTC, time, 86000 * 1000, pendingIntent);
-//            intentArray.add(pendingIntent);
-//        }
-//        {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(Calendar.HOUR_OF_DAY, hour[2]);
-//            calendar.set(Calendar.MINUTE, 0);
-//            calendar.set(Calendar.SECOND, 1);
-//
-//            Intent myIntent = new Intent(this, MyReceiver.class);
-//            myIntent.putExtra(LazzyBeeShare.NOTIFICATION_INDEX, String.valueOf(0));
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-//
-//            long time = calendar.getTimeInMillis();
-//            Log.i(TAG, "Calendar Time:" + calendar.getTimeInMillis() + ",Time show:" + time);
-//
-//            alarmManager.setRepeating(AlarmManager.RTC, time, 86000 * 1000, pendingIntent);
-//            intentArray.add(pendingIntent);
-//        }
-        //_stopNotificationServices();
+
     }
 
+//    private void UnregisterAlarmBroadcast() {
+//        alarmManager.cancel(pendingIntent);
+//        getBaseContext().unregisterReceiver(myReceiver);
+//    }
+
     private void _initSettingApplication() {
+        hour = getResources().getIntArray(R.array.notification_hours);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         _changeLanguage();
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-
+            _cancelNotification();
             _setUpNotification();
         }
 
@@ -356,9 +356,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _cancelNotification() {
-        if (intentArray != null)
-            for (PendingIntent pendingIntent : intentArray)
-                alarmManager.cancel(pendingIntent);
+        notificationManager.cancelAll();
+        for (int i = 0; i < hour.length; i++) {
+            Intent intent = new Intent(this, MyReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.cancel(pendingIntent);
+        }
+        // If the notification is still active close it
+        //notificationManager.cancel(notifID);
+
     }
 
     private void _getCountCard() {
@@ -977,7 +983,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onBtnStudyOnClick(View view) {
+    public void _onBtnStudyOnClick(View view) {
         _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
     }
 
@@ -987,6 +993,7 @@ public class MainActivity extends AppCompatActivity
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+
         } else if (type == getResources().getInteger(R.integer.goto_study_code1)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
@@ -1228,8 +1235,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        // unregisterReceiver(myReceiver);
         super.onDestroy();
-        Log.i(TAG, "onPause()");
+        Log.i(TAG, "onDestroy()");
     }
 
 }

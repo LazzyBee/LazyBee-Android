@@ -46,7 +46,15 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.json.gson.GsonFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -116,9 +124,13 @@ public class StudyActivity extends AppCompatActivity {
         _setUpStudy();
     }
 
+    GoogleAccountCredential credential;
+
     private void _initLazzyBeeApi() {
 //        GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(this,
 //                "server:client_id:1090254847247-hhq28qf96obdjm7c7pgr2qo2mt2o842l.apps.googleusercontent.com");
+        credential = GoogleAccountCredential.usingAudience(this, "1090254847247-hhq28qf96obdjm7c7pgr2qo2mt2o842l.apps.googleusercontent.com");
+
 
     }
 
@@ -1260,34 +1272,38 @@ public class StudyActivity extends AppCompatActivity {
             //Call Api Update card
 
             Log.i(TAG, "Q:" + params[0]);
-//            if (dataServiceApi == null) {
-//                //Define dataServiceApi
-//                DataServiceApi.Builder builder = new DataServiceApi.Builder(AndroidHttp.newCompatibleTransport(), new GsonFactory(),
-//                        null)
-////                        .setRootUrl("http://lazeebee-977.appspot.com/_ah/api/explorer")
-////                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-////                            @Override
-////                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-////                                abstractGoogleClientRequest.setDisableGZipContent(true);
-////                            }
-////                        })
-//                ;
-//                dataServiceApi = builder.build();
-//            }
-            ConnectGdatabase connectGdatabase = new ConnectGdatabase();
+            credential.setSelectedAccountName("nguyenhue@itpro.vn");
+            if (dataServiceApi == null) {
+                //Define dataServiceApi
+                DataServiceApi.Builder builder = new DataServiceApi.Builder(AndroidHttp.newCompatibleTransport(), new GsonFactory(),
+                        new HttpRequestInitializer() {
+                            public void initialize(HttpRequest httpRequest) {
+                            }
+                        })
+                        //.setRootUrl("http://lazeebee-977.appspot.com/_ah/api")
+                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                            @Override
+                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                abstractGoogleClientRequest.setDisableGZipContent(true);
+                            }
+                        })
+                        .setApplicationName("Lazzybee");
+                dataServiceApi = builder.build();
+            }
+            // ConnectGdatabase connectGdatabase = new ConnectGdatabase();
             try {
                 //Get voca in Server
-                Voca voca = connectGdatabase._getGdatabase_byQ("multitude");
-//                Voca voca = dataServiceApi.getVocaByQ(params[0]).execute();
+                // Voca voca = connectGdatabase._getGdatabase_byQ("multitude");
+                Voca voca = dataServiceApi.getVocaByQ(params[0]).execute();
                 currentCard.setAnswers(voca.getA());
                 return currentCard;
 
 
             } catch (Exception e) {
-                Log.e(TAG, "Error getVoca:" + e.getMessage());
+                    Log.e(TAG, "Error getVoca:" + e.getMessage());
+                e.printStackTrace();
                 return null;
             }
-
         }
 
         @Override

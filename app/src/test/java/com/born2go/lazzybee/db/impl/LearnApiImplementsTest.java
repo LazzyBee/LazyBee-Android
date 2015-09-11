@@ -76,7 +76,7 @@ public class LearnApiImplementsTest {
         card.setFactor(2000);
         card.setLevel(5);
         card.setRev_count(200);
-        LazzyBeeShare.getAnswerHTMLwithPackage(card, "menaing","","",false);
+      // LazzyBeeShare.getAnswerHTMLwithPackage(card, "menaing","","",false);
 
         //System.out.println("Card html:" + );
     }
