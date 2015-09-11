@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -221,6 +222,9 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
 
         lbSettingLimitName.setText(message);
         txtLimit.setText(String.valueOf(value));
+        txtLimit.setFocusableInTouchMode(true);
+        txtLimit.setFocusable(true);
+        txtLimit.requestFocus();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
@@ -298,6 +302,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                 });
             }
         });
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         dialog.show();
     }
