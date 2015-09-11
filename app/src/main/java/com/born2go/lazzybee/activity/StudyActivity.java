@@ -1,11 +1,13 @@
 package com.born2go.lazzybee.activity;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -86,6 +88,8 @@ public class StudyActivity extends AppCompatActivity {
 
     ViewPager mViewPager;
     SlidingTabLayout mSlidingTabLayout;
+
+    boolean answerDisplay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,6 +275,7 @@ public class StudyActivity extends AppCompatActivity {
 
 
     }
+
     public void onlbTipHelpClick(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_lazzybee_website)));
         startActivity(browserIntent);
@@ -337,8 +342,25 @@ public class StudyActivity extends AppCompatActivity {
                 //_showDialogDeleteCard();
                 _deleteCard();
                 return true;
+            case R.id.action_update:
+
+                //define function update card form server
+                _updateCardFormServer();
+
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _updateCardFormServer() {
+        //Get currren card question
+        String question = currentCard.getQuestion();
+        Log.i(TAG, "_updateCardFormServer\t Card question:" + currentCard.getQuestion());
+
+        //Call Api Update Card
+        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer();
+        updateContenCardFormServer.execute(question);
+
     }
 
 //    private void _showDialogDeleteCard() {
@@ -643,6 +665,9 @@ public class StudyActivity extends AppCompatActivity {
     }
 
     public void onbtnShowAnswerClick(View view) {
+        //Set flag Display State
+        answerDisplay = false;
+
         _showAnswer();
         //_displayCardByType(1);
     }
@@ -1014,9 +1039,13 @@ public class StudyActivity extends AppCompatActivity {
     }
 
     private void _showBtnAnswer() {
+        //Set flag Display State
+        answerDisplay = false;
+
         //show btnShowAnswer and hide btnAgain0
         btnShowAnswer.setVisibility(View.VISIBLE);
         mLayoutButton.setVisibility(View.GONE);
+
 
     }
 
@@ -1198,6 +1227,46 @@ public class StudyActivity extends AppCompatActivity {
             // Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
         }
 
+    }
+
+    public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
+
+        private ProgressDialog dialog;
+
+        public UpdateContenCardFormServer() {
+            dialog=new ProgressDialog(context);
+        }
+
+        protected void onPreExecute() {
+            //set up dialog
+            this.dialog.setMessage("Loading...");
+            this.dialog.show();
+        }
+
+        @Override
+        protected Card doInBackground(String... params) {
+            //TODO Call Api Update card
+            return currentCard;
+        }
+
+        @Override
+        protected void onPostExecute(Card card) {
+            super.onPostExecute(card);
+            //Dismis dialog
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            //Update Success reload data
+            if (answerDisplay) {
+                //Load answer
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), card.getQueue());
+            } else {
+                //Load question
+                _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
+            }
+            Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
