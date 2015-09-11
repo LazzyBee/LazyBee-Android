@@ -65,7 +65,7 @@ public class DataServiceApi extends com.google.api.client.googleapis.services.js
    *
    * @since 1.7
    */
-  public static final String DEFAULT_SERVICE_PATH = "dataServiceApi/v1/";
+  public static final String DEFAULT_SERVICE_PATH = "dataServiceApi/v1.1/";
 
   /**
    * The default encoded base URL of the service. This is determined when the library is generated
