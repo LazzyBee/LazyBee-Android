@@ -12,8 +12,15 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!-- Permission to use AlarmManager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
+
+    <meta-data android:name="com.google.android.gms.analytics.globalConfigResource"
+        android:resource="@xml/global_tracker" />
+
+
     <application
         android:name=".LazzyBeeApplication"
         android:allowBackup="true"
@@ -137,7 +144,13 @@
             android:name=".utils.MyAlarmService"
             android:enabled="true" />
 
-        <receiver android:name=".utils.MyReceiver" />
+
+        <receiver android:name=".utils.MyReceiver"/>
+
+        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
