@@ -21,9 +21,10 @@ public class CardSched {
 
     protected static final int SECONDS_PERDAY = 86400;
 
-    private static final int[] FACTOR_ADDITION_VALUES = { -300, -150, 0, 150 };
-    private static final double BONUS_EASY = 1.4;
-    private static final int MIN_FACTOR = 1300;
+    private static final int[] FACTOR_ADDITION_VALUES = { 0, -150, 0, 150 };
+    private static final double BONUS_EASY  = 1.4;
+    private static final int MIN_FACTOR     = 1300;
+    private static final int FORGET_FINE    = 300;
 
     public CardSched(){
     }
@@ -144,6 +145,12 @@ public class CardSched {
 
         long current = Utils.intNow();
 
+        //Sep 08, 2015: Now we decrease for EASE_AGAIN only when it from review queue
+        if ((card.getQueue() == Card.QUEUE_REV2) && ease == EASE_AGAIN)
+            card.setFactor(card.getFactor() - FORGET_FINE);
+        else
+            card.setFactor(Math.max(MIN_FACTOR, card.getFactor() + FACTOR_ADDITION_VALUES[ease]));
+
         if (nextIvl < SECONDS_PERDAY) {
             /*User forget card or just learnt
             * We don't re-count 'due', because app will put it back to learnt queue
@@ -157,6 +164,5 @@ public class CardSched {
             card.setDue(current + nextIvl);
             card.setLast_ivl(_nextIntervalByDays(card, ease));
         }
-        card.setFactor(Math.max(MIN_FACTOR, card.getFactor() + FACTOR_ADDITION_VALUES[ease]));
     }
 }
