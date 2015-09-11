@@ -36,7 +36,10 @@ import com.born2go.lazzybee.LazzyBeeApplication;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
@@ -90,13 +93,14 @@ public class StudyActivity extends AppCompatActivity {
     SlidingTabLayout mSlidingTabLayout;
 
     boolean answerDisplay = false;
+    ConnectGdatabase connectGdatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
         context = this;
-
+        _initLazzyBeeApi();
         _initActonBar();
         _initDatabase();
         _trackerApplication();
@@ -110,6 +114,12 @@ public class StudyActivity extends AppCompatActivity {
         _initAdView();
 
         _setUpStudy();
+    }
+
+    private void _initLazzyBeeApi() {
+//        GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(this,
+//                "server:client_id:1090254847247-hhq28qf96obdjm7c7pgr2qo2mt2o842l.apps.googleusercontent.com");
+
     }
 
     private void _setUpStudy() {
@@ -1232,21 +1242,52 @@ public class StudyActivity extends AppCompatActivity {
     public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
 
         private ProgressDialog dialog;
+        DataServiceApi dataServiceApi;
+        private String TAG = "UpdateContenCard";
 
         public UpdateContenCardFormServer() {
-            dialog=new ProgressDialog(context);
+            this.dialog = new ProgressDialog(context);
+
         }
 
         protected void onPreExecute() {
-            //set up dialog
             this.dialog.setMessage("Loading...");
             this.dialog.show();
         }
 
         @Override
         protected Card doInBackground(String... params) {
-            //TODO Call Api Update card
-            return currentCard;
+            //Call Api Update card
+
+            Log.i(TAG, "Q:" + params[0]);
+//            if (dataServiceApi == null) {
+//                //Define dataServiceApi
+//                DataServiceApi.Builder builder = new DataServiceApi.Builder(AndroidHttp.newCompatibleTransport(), new GsonFactory(),
+//                        null)
+////                        .setRootUrl("http://lazeebee-977.appspot.com/_ah/api/explorer")
+////                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+////                            @Override
+////                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+////                                abstractGoogleClientRequest.setDisableGZipContent(true);
+////                            }
+////                        })
+//                ;
+//                dataServiceApi = builder.build();
+//            }
+            ConnectGdatabase connectGdatabase = new ConnectGdatabase();
+            try {
+                //Get voca in Server
+                Voca voca = connectGdatabase._getGdatabase_byQ("multitude");
+//                Voca voca = dataServiceApi.getVocaByQ(params[0]).execute();
+                currentCard.setAnswers(voca.getA());
+                return currentCard;
+
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error getVoca:" + e.getMessage());
+                return null;
+            }
+
         }
 
         @Override
@@ -1256,16 +1297,20 @@ public class StudyActivity extends AppCompatActivity {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
+            if (card != null) {
+                //Update Success reload data
+                if (answerDisplay) {
+                    //Load answer
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), card.getQueue());
+                } else {
+                    //Load question
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
+                }
 
-            //Update Success reload data
-            if (answerDisplay) {
-                //Load answer
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), card.getQueue());
+                Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
             } else {
-                //Load question
-                _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
+                Toast.makeText(context, "Update card error", Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
         }
     }
 
