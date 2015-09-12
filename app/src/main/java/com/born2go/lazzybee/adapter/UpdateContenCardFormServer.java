@@ -13,21 +13,12 @@ import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 /**
  * Created by Hue on 9/12/2015.
  */
-public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
+public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
 
     private static final String TAG = "UpdateContenCard";
     private ProgressDialog dialog;
     private LearnApiImplements learnApiImplements;
     public AsyncResponse delegate=null;
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
-    private Card card;
 
     public UpdateContenCardFormServer(Context context) {
         dialog = new ProgressDialog(context);
@@ -41,16 +32,19 @@ public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
     }
 
     @Override
-    protected Card doInBackground(String... params) {
+    protected Card doInBackground(Card... params) {
         //Call Api Update card
         Log.i(TAG, "Q:" + params[0]);
         ConnectGdatabase connectGdatabase = new ConnectGdatabase();
         try {
             //Get voca in Server
-            Voca voca = connectGdatabase._getGdatabase_byQ(params[0]);
+            Voca voca = connectGdatabase._getGdatabase_byQ(params[0].getQuestion());
             Card card = new Card();
+            card.setId(params[0].getId());
             card.setQuestion(voca.getQ());
+            card.setLevel(Integer.valueOf(voca.getLevel()));
             card.setAnswers(voca.getA());
+            card.setPackage(voca.getPackages());
             return card;
 
         } catch (Exception e) {
@@ -68,9 +62,8 @@ public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
             dialog.dismiss();
         }
         //Update Card form DB
-        learnApiImplements._updateCard(card);
+        learnApiImplements._updateCardFormServer(card);
 
-        setCard(card);
         delegate.processFinish(card);
     }
     public interface AsyncResponse {

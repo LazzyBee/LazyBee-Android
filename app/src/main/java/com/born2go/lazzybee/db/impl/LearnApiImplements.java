@@ -791,7 +791,6 @@ public class LearnApiImplements implements LearnApi {
         if (card.getFactor() != 0)
             values.put(KEY_FACTOR, card.getFactor());
 
-
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{cardId});
@@ -1086,5 +1085,23 @@ public class LearnApiImplements implements LearnApi {
     @Override
     public void _exportDateBaseFile() {
         dataBaseHelper._exportDatabase();
+    }
+
+    public void  _updateCardFormServer(Card card){
+        //Define cardId
+        String cardId = String.valueOf(card.getId());
+
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        //set value for Card update
+        ContentValues values = new ContentValues();
+        values.put(KEY_QUESTION, card.getQuestion());
+        values.put(KEY_ANSWERS, card.getAnswers());
+        values.put(KEY_LEVEL, card.getLevel());
+        values.put(KEY_PACKAGES, card.getPackage());
+
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{cardId});
+        Log.i(TAG, "Card id:" + cardId + ",update_result : " + update_result);
     }
 }

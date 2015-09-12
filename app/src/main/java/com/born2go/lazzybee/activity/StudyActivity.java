@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -367,13 +366,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     private void _updateCardFormServer() {
-        //Get currren card question
-        String question = currentCard.getQuestion();
-        Log.i(TAG, "_updateCardFormServer\t Card question:" + currentCard.getQuestion());
-
         //Call Api Update Card
         UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
-        AsyncTask<String, Void, Card> asyncTask = updateContenCardFormServer.execute(question);
+        updateContenCardFormServer.execute(currentCard);
         updateContenCardFormServer.delegate = this;
     }
 
@@ -1262,5 +1257,17 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     }
 
+    private void _stopTextToSpeech() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            Log.d(TAG, "TTS Destroyed");
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        _stopTextToSpeech();
+        super.onDestroy();
+    }
 }

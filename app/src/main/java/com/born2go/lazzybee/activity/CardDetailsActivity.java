@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -15,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,7 +141,7 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
             card = learnApiImplements._getCardByID(cardId);
 
         UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
-        AsyncTask<String, Void, Card> asyncTask=    updateContenCardFormServer.execute(card.getQuestion());
+        updateContenCardFormServer.execute(card);
         updateContenCardFormServer.delegate=this;
 
 
@@ -383,6 +383,18 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        _stopTextToSpeech();
+        super.onDestroy();
 
+    }
 
+    private void _stopTextToSpeech() {
+        if(textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            Log.d(TAG, "TTS Destroyed");
+        }
+    }
 }
