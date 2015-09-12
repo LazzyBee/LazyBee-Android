@@ -1,11 +1,9 @@
 package com.born2go.lazzybee.activity;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -16,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +26,8 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
+import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class CardDetailsActivity extends AppCompatActivity {
+public class CardDetailsActivity extends AppCompatActivity implements AsyncResponse{
 
 
     private static final String TAG = "CardDetailsActivity";
@@ -139,8 +140,10 @@ public class CardDetailsActivity extends AppCompatActivity {
         if (card == null)
             card = learnApiImplements._getCardByID(cardId);
 
-        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer();
-        updateContenCardFormServer.execute(card.getQuestion());
+        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
+        updateContenCardFormServer.execute(card);
+        updateContenCardFormServer.delegate=this;
+
 
     }
 
@@ -194,6 +197,24 @@ public class CardDetailsActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void processFinish(Card card) {
+        if (card != null) {
+            //Update Success reload data
+            this.card.setAnswers(card.getAnswers());
+
+            //Update Success reload data
+            //Set Adapter
+            PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, this.card);
+            mViewPager.setAdapter(packageCardPageAdapter);
+            mSlidingTabLayout.setViewPager(mViewPager);
+
+            Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Update card error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     class PackageCardPageAdapter extends PagerAdapter {
@@ -287,14 +308,8 @@ public class CardDetailsActivity extends AppCompatActivity {
                 public void playQuestion() {
                     //get text to Speak
                     String toSpeak = card.getQuestion();
-
-                    //Toast Text Speak
-                    //Toast.makeText(this.getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
-
                     //Speak text
                     _speakText(toSpeak);
-
-                    //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }, "question");
             mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
@@ -357,7 +372,7 @@ public class CardDetailsActivity extends AppCompatActivity {
     }
 
     private void _initTextToSpeech() {
-        //Todo:init TextToSpeech
+        //init TextToSpeech
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -368,43 +383,18 @@ public class CardDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        _stopTextToSpeech();
+        super.onDestroy();
 
-    public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
+    }
 
-        private ProgressDialog dialog;
-
-        public UpdateContenCardFormServer() {
-            dialog = new ProgressDialog(context);
-        }
-
-        protected void onPreExecute() {
-            //set up dialog
-            this.dialog.setMessage("Loading...");
-            this.dialog.show();
-        }
-
-        @Override
-        protected Card doInBackground(String... params) {
-            //TODO Call Api Update card
-            Card card = new Card();
-            return card;
-        }
-
-        @Override
-        protected void onPostExecute(Card card) {
-            super.onPostExecute(card);
-            //Dismis dialog
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            //Todo reset viewPage
-            //Update Success reload data
-            //Set Adapter
-//            PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
-//            mViewPager.setAdapter(packageCardPageAdapter);
-//            mSlidingTabLayout.setViewPager(mViewPager);
-
-            Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+    private void _stopTextToSpeech() {
+        if(textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            Log.d(TAG, "TTS Destroyed");
         }
     }
 }

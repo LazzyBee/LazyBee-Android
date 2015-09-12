@@ -1,13 +1,11 @@
 package com.born2go.lazzybee.activity;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -34,27 +32,20 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.LazzyBeeApplication;
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
+import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.gson.GsonFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -62,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class StudyActivity extends AppCompatActivity {
+public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     private static final String TAG = "StudyActivity";
     private Context context;
@@ -222,7 +213,7 @@ public class StudyActivity extends AppCompatActivity {
     }
 
     private void _trackerApplication() {
-        LazzyBeeApplication lazzyBeeApplication= (LazzyBeeApplication) getApplication();
+        LazzyBeeApplication lazzyBeeApplication = (LazzyBeeApplication) getApplication();
         //mTracker = lazzyBeeApplication.getTracker(LazzyBeeApplication.TrackerName.APP_TRACKER);
         mTracker = lazzyBeeApplication.getDefaultTracker();
 
@@ -375,14 +366,10 @@ public class StudyActivity extends AppCompatActivity {
     }
 
     private void _updateCardFormServer() {
-        //Get currren card question
-        String question = currentCard.getQuestion();
-        Log.i(TAG, "_updateCardFormServer\t Card question:" + currentCard.getQuestion());
-
         //Call Api Update Card
-        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer();
-        updateContenCardFormServer.execute(question);
-
+        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
+        updateContenCardFormServer.execute(currentCard);
+        updateContenCardFormServer.delegate = this;
     }
 
 //    private void _showDialogDeleteCard() {
@@ -689,7 +676,6 @@ public class StudyActivity extends AppCompatActivity {
     public void onbtnShowAnswerClick(View view) {
         //Set flag Display State
         answerDisplay = false;
-
         _showAnswer();
         //_displayCardByType(1);
     }
@@ -1095,6 +1081,26 @@ public class StudyActivity extends AppCompatActivity {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
+    @Override
+    public void processFinish(Card card) {
+        //Display Card
+        if (card != null) {
+            this.currentCard.setAnswers(card.getAnswers());
+            //Update Success reload data
+            if (answerDisplay) {
+                //Load answer
+                _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
+            } else {
+                //Load question
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card.getQuestion()), card.getQueue());
+            }
+
+            Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Update card error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     class StudyCardPageAdapter extends PagerAdapter {
         Card card;
         List<String> packages;
@@ -1251,83 +1257,17 @@ public class StudyActivity extends AppCompatActivity {
 
     }
 
-    public class UpdateContenCardFormServer extends AsyncTask<String, Void, Card> {
-
-        private ProgressDialog dialog;
-        DataServiceApi dataServiceApi;
-        private String TAG = "UpdateContenCard";
-
-        public UpdateContenCardFormServer() {
-            this.dialog = new ProgressDialog(context);
-
-        }
-
-        protected void onPreExecute() {
-            this.dialog.setMessage("Loading...");
-            this.dialog.show();
-        }
-
-        @Override
-        protected Card doInBackground(String... params) {
-            //Call Api Update card
-
-            Log.i(TAG, "Q:" + params[0]);
-            credential.setSelectedAccountName("nguyenhue@itpro.vn");
-            if (dataServiceApi == null) {
-                //Define dataServiceApi
-                DataServiceApi.Builder builder = new DataServiceApi.Builder(AndroidHttp.newCompatibleTransport(), new GsonFactory(),
-                        new HttpRequestInitializer() {
-                            public void initialize(HttpRequest httpRequest) {
-                            }
-                        })
-                        //.setRootUrl("http://lazeebee-977.appspot.com/_ah/api")
-                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                            @Override
-                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                                abstractGoogleClientRequest.setDisableGZipContent(true);
-                            }
-                        })
-                        .setApplicationName("Lazzybee");
-                dataServiceApi = builder.build();
-            }
-            // ConnectGdatabase connectGdatabase = new ConnectGdatabase();
-            try {
-                //Get voca in Server
-                // Voca voca = connectGdatabase._getGdatabase_byQ("multitude");
-                Voca voca = dataServiceApi.getVocaByQ(params[0]).execute();
-                currentCard.setAnswers(voca.getA());
-                return currentCard;
-
-
-            } catch (Exception e) {
-                    Log.e(TAG, "Error getVoca:" + e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Card card) {
-            super.onPostExecute(card);
-            //Dismis dialog
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            if (card != null) {
-                //Update Success reload data
-                if (answerDisplay) {
-                    //Load answer
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), card.getQueue());
-                } else {
-                    //Load question
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
-                }
-
-                Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Update card error", Toast.LENGTH_SHORT).show();
-            }
+    private void _stopTextToSpeech() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            Log.d(TAG, "TTS Destroyed");
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        _stopTextToSpeech();
+        super.onDestroy();
+    }
 }
