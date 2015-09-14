@@ -4,7 +4,7 @@
     <string name="EASE_EASY">Dễ</string>
     <string name="EASE_GOOD">Tốt</string>
     <string name="EASE_HARD">Khó</string>
-    <string name="action_delete_card">Xóa thẻ</string>
+    <string name="action_delete_card">Bỏ qua</string>
     <string name="action_logout">Đăng xuất</string>
     <string name="action_search">Tìm kiếm</string>
     <string name="action_settings">Cài đặt</string>

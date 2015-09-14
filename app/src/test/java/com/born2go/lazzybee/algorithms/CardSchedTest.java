@@ -20,12 +20,18 @@ import java.lang.System;
 public class CardSchedTest extends CardSched{
     CardSched scheduler;
     Card cardLast_ivl3days;
+    Card cardLast_ivl23days;
 
     @Before
     public void setUp() throws Exception {
         scheduler = new CardSched();
         cardLast_ivl3days = new Card();
         cardLast_ivl3days.setLast_ivl(3);
+        cardLast_ivl3days.setFactor(2500);
+
+        cardLast_ivl23days = new Card();
+        cardLast_ivl23days.setLast_ivl(23);
+        cardLast_ivl23days.setFactor(2500);
     }
 
     @Test
@@ -44,10 +50,16 @@ public class CardSchedTest extends CardSched{
     }
     @Test
     public void test_nextIntervalStr(){
+        System.out.println("===========Card 3 days: Next interval string=============");
         System.out.println("Button AGAIN: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_AGAIN));
         System.out.println("Button HARD: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_HARD));
         System.out.println("Button GOOD: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_GOOD));
         System.out.println("Button EASY: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_EASY));
+        System.out.println("===========Card 23 days: Next interval string=============");
+        System.out.println("Button AGAIN: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_AGAIN));
+        System.out.println("Button HARD: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_HARD));
+        System.out.println("Button GOOD: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_GOOD));
+        System.out.println("Button EASY: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_EASY));
     }
 
     @Test

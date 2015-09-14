@@ -53,11 +53,11 @@ public class CardSched {
             if (day <= 30)
                 str = Math.round(day) + " day";
             else {
-                double month = day / 30;
-                str = month + " month";
+                double month = (double) day / 30;
+                str = String.format("%.1f", month) + " month";
                 if (month > 12) {
                     double year = day / 365;
-                    str = year + " year";
+                    str = String.format("%.1f",year) + " year";
                 }
             }
         }
