@@ -669,7 +669,6 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 Log.e("SYNC getUpdate", "security error", se);
             }
             _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
-            // Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
             return null;
         }
 

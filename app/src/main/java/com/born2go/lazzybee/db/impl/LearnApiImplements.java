@@ -658,7 +658,7 @@ public class LearnApiImplements implements LearnApi {
 
         if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
 
             cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
 
@@ -1067,7 +1067,7 @@ public class LearnApiImplements implements LearnApi {
 
     public List<Card> _getListCarDue(int limit) {
         String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " LIMIT " + limit;
+                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
         return _getListCardQueryString(select_list_card_by_queue);
     }
 
@@ -1087,7 +1087,7 @@ public class LearnApiImplements implements LearnApi {
         dataBaseHelper._exportDatabase();
     }
 
-    public void  _updateCardFormServer(Card card){
+    public void _updateCardFormServer(Card card) {
         //Define cardId
         String cardId = String.valueOf(card.getId());
 
