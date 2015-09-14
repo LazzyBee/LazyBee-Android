@@ -160,7 +160,7 @@ public class LazzyBeeShare {
                         "<body onload='question.playQuestion()'>\n" +
                         "<div style='width:100%'>\n" +
                         "<div style='float:left;width:90%;text-align: center;'>\n" +
-                        "<strong style='font-size:"+context.getResources().getDimension(R.dimen.study_question_size)+"pt'>" + question + "</strong>\n" +
+                        "<strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>" + question + "</strong>\n" +
                         "</div>\n" +
                         "<div style='float:left;width:10%'>\n" +
                         "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
@@ -168,11 +168,9 @@ public class LazzyBeeShare {
                         "</div>\n" +
                         "</body>\n" +
                         "</html>";
-        Log.v(TAG, html);
+        //Log.v(TAG, html);
         return html;
     }
-
-
 
 
     public static String _getValueFromKey(String answer, String key) {
@@ -243,7 +241,6 @@ public class LazzyBeeShare {
             JSONObject packagesObj = answerObj.getJSONObject("packages");
             System.out.print("\npackagesObj.length():" + packagesObj.length());
             if (packagesObj.length() > 0) {
-                System.out.print("\n Ok");
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
                 meaning = commonObj.getString("meaning");
                 explain = commonObj.getString("explain");
@@ -251,13 +248,11 @@ public class LazzyBeeShare {
             } else {
                 _example = EMPTY;
                 _explain = EMPTY;
-                System.out.print("\n not Ok");
+                Log.e(TAG, "getAnswerHTMLwithPackage E:Passing JSON ERROR");
             }
 
         } catch (Exception e) {
-            //System.out.print("Error 2:" + e.getMessage() + "\n");
             e.printStackTrace();
-            //return e.getMessage();
         }
 
         if (!explain.isEmpty()) {
@@ -327,7 +322,7 @@ public class LazzyBeeShare {
                     "</html>\n";
         }
         html += debug;
-        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        //Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
 
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());
@@ -347,9 +342,9 @@ public class LazzyBeeShare {
         }
     }
 
-       /*
-    *Java Scrip Object Question
-    * */
+    /*
+ *Java Scrip Object Question
+ * */
     public static class JsObjectQuestion {
         @JavascriptInterface
         public String toString() {
@@ -378,7 +373,6 @@ public class LazzyBeeShare {
         }
 
     }
-
 
 
 }

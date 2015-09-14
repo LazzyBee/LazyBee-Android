@@ -658,7 +658,7 @@ public class LearnApiImplements implements LearnApi {
 
         if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue;
+            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
 
             cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
 
@@ -1004,16 +1004,45 @@ public class LearnApiImplements implements LearnApi {
         return cardIds;
     }
 
-    public void _addCardIdToQueueList(String cardId) {
+    public void _addCardIdToQueueList(Card card) {
         if (_checkListTodayExit() < 0) {
             _getRandomCard(_getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
         }
         String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
         List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
         //Add cardId
-        cardIDs.add(cardId);
+        cardIDs.add(String.valueOf(card.getId()));
         //Update queue list
         _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
+
+        //Update Queue Card from DB
+        card.setQueue(Card.QUEUE_NEW_CRAM0);
+
+        String cardId = String.valueOf(card.getId());
+
+        //Define SQLiteDatabase
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        //Define SQLiteDatabase
+        ContentValues values = new ContentValues();
+
+        //set value for card
+        values.put(KEY_QUEUE, card.getQueue());
+
+        if (card.getDue() != 0)
+            values.put(KEY_DUE, card.getDue());
+        if (card.getLast_ivl() != 0)
+            values.put(KEY_LAT_IVL, card.getLast_ivl());
+        if (card.getRev_count() != 0)
+            values.put(KEY_REV_COUNT, card.getRev_count());
+        if (card.getFactor() != 0)
+            values.put(KEY_FACTOR, card.getFactor());
+
+        //Update query
+        db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{cardId});
+
+
 
     }
 
@@ -1067,7 +1096,7 @@ public class LearnApiImplements implements LearnApi {
 
     public List<Card> _getListCarDue(int limit) {
         String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " LIMIT " + limit;
+                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
         return _getListCardQueryString(select_list_card_by_queue);
     }
 
@@ -1087,7 +1116,7 @@ public class LearnApiImplements implements LearnApi {
         dataBaseHelper._exportDatabase();
     }
 
-    public void  _updateCardFormServer(Card card){
+    public void _updateCardFormServer(Card card) {
         //Define cardId
         String cardId = String.valueOf(card.getId());
 

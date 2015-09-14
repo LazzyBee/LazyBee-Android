@@ -18,7 +18,7 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
     private static final String TAG = "UpdateContenCard";
     private ProgressDialog dialog;
     private LearnApiImplements learnApiImplements;
-    public AsyncResponse delegate=null;
+    public AsyncResponse delegate = null;
 
     public UpdateContenCardFormServer(Context context) {
         dialog = new ProgressDialog(context);
@@ -45,6 +45,11 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
             card.setLevel(Integer.valueOf(voca.getLevel()));
             card.setAnswers(voca.getA());
             card.setPackage(voca.getPackages());
+            card.setLast_ivl(params[0].getLast_ivl());
+            card.setFactor(params[0].getFactor());
+            card.setRev_count(params[0].getRev_count());
+            card.setDue(params[0].getDue());
+            card.setQueue(params[0].getQueue());
             return card;
 
         } catch (Exception e) {
@@ -66,6 +71,7 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
 
         delegate.processFinish(card);
     }
+
     public interface AsyncResponse {
         void processFinish(Card card);
     }

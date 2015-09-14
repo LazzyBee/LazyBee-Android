@@ -185,6 +185,7 @@
     <string name="dialog_title_export_database">Export database</string>
     <string name="url_lazzybee_website" translatable="false">http://www.lazzybee.com</string>
     <string name="action_update_card">Update word</string>
+    <string name="action_back_before_card">Back before card</string>
 
 
     <string-array name="settings">
