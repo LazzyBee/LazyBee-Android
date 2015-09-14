@@ -161,7 +161,7 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // TODO:Update Queue_list in system table
-                learnApiImplements._addCardIdToQueueList(cardId);
+                learnApiImplements._addCardIdToQueueList(card);
 
             }
         });

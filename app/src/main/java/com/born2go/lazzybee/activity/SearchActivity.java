@@ -281,7 +281,7 @@ public class SearchActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // TODO:Update Queue_list in system table
-                dataBaseHelper._addCardIdToQueueList(String.valueOf(card.getId()));
+                dataBaseHelper._addCardIdToQueueList(card);
                 Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                 ADD_TO_LEARN = 1;
             }
