@@ -82,6 +82,10 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     //Current Card
     Card currentCard = new Card();
+
+    //Define before card
+    Card beforeCard = new Card();
+
     //init position
     int position = 0;
     int position_again = 0;
@@ -93,6 +97,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     boolean answerDisplay = false;
     ConnectGdatabase connectGdatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,15 +184,15 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
             final int list_card_again_in_today_size = againList.size();
             //set total vocabilary
-            lbCountAgain.setText("" + list_card_again_in_today_size);
+            lbCountAgain.setText(String.valueOf(list_card_again_in_today_size));
             lbCountAgain.setTag(list_card_again_in_today_size);
 
             int list_card_new_size = todayList.size();
-            lbCountNew.setText("" + list_card_new_size);
+            lbCountNew.setText(String.valueOf(list_card_new_size));
             lbCountNew.setTag(list_card_new_size);
 
 
-            lbCountDue.setText("" + dueList.size());
+            lbCountDue.setText(String.valueOf(dueList.size()));
             lbCountDue.setTag(dueList.size());
         } else {
             Log.i(TAG, "_completeLean");
@@ -224,8 +229,10 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     private void _completeLean() {
+        Log.i(TAG, "----_completeLean----");
         setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000, new Intent());
         onBackPressed();
+        Log.i(TAG, "---------END---------");
 
     }
 
@@ -361,8 +368,52 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                 _updateCardFormServer();
 
                 return true;
+            case R.id.action_back_before_card:
+
+                _backToBeforeCard();
+
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _backToBeforeCard() {
+        if (beforeCard != null) {
+            //Define before queue
+            int beforeQueue = beforeCard.getQueue();
+
+            if (beforeQueue == Card.QUEUE_NEW_CRAM0) {
+                //set Count new
+                //lbCountNew.setText(String.valueOf(todayList.size() + 1));
+                Log.i(TAG, "_backToBeforeCard()\t  Card.QUEUE_NEW_CRAM0");
+            } else if (beforeQueue == Card.QUEUE_REV2) {
+                //set Count due
+                //  lbCountDue.setText(String.valueOf(dueList.size() + 1));
+                Log.i(TAG, "_backToBeforeCard()\t  Card.QUEUE_REV2");
+            } else if (beforeQueue == Card.QUEUE_LNR1) {
+                //Check contains and remove in agianList
+//                if (againList.contains(beforeCard)) {
+//                    //remove current Card
+//                    againList.remove(beforeCard);
+//                }
+//                lbCountAgain.setText(String.valueOf(againList.size() + 1));
+                Log.i(TAG, "_backToBeforeCard()\t  Card.QUEUE_LNR1");
+            }
+
+            //set curent card = before card
+            currentCard = beforeCard;
+
+            //Show btnShowAnswer
+            _showBtnAnswer();
+
+            //dataBaseHelper._updateCard(currentCard);
+
+            //Display before card
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), currentCard.getQueue());
+        } else {
+            Toast.makeText(context, R.string.action_back_before_card, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void _updateCardFormServer() {
@@ -406,6 +457,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     boolean done_card = false;
 
     private void _deleteCard() {
+
         if (btnShowAnswer.getVisibility() == View.GONE) {
             btnShowAnswer.setVisibility(View.VISIBLE);
             mLayoutButton.setVisibility(View.GONE);
@@ -418,18 +470,18 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             //reset new card count
             todayList.remove(currentCard);
             int countNew = todayList.size();
-            lbCountNew.setText("" + countNew);
+            lbCountNew.setText(String.valueOf(countNew));
         } else if (currentQueue == Card.QUEUE_LNR1) {
             //reset new card again
             againList.remove(currentCard);
             int countAgain = againList.size();
-            lbCountAgain.setText("" + countAgain);
+            lbCountAgain.setText(String.valueOf(countAgain));
 
         } else if (currentQueue == Card.QUEUE_REV2) {
             //reset new card due
             dueList.remove(currentCard);
             int countDue = dueList.size();
-            lbCountDue.setText("" + countDue);
+            lbCountDue.setText(String.valueOf(countDue));
         } else {
             todayList.remove(currentCard);
             againList.remove(currentCard);
@@ -437,6 +489,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         }
         Log.i(TAG, "_deleteCard question:" + currentCard.getQuestion() + ",currentQueue:" + currentCard.getQueue());
         currentCard.setQueue(Card.QUEUE_DONE_2);
+
+        //Set before card
+        beforeCard = null;
 
         dataBaseHelper._updateCard(currentCard);
         currentCard.setQueue(currentQueue);
@@ -675,9 +730,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     public void onbtnShowAnswerClick(View view) {
         //Set flag Display State
-        answerDisplay = false;
+        answerDisplay = true;
         _showAnswer();
-        //_displayCardByType(1);
+
     }
 
     private void _displayCardByType(int showType) {
@@ -689,37 +744,37 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     public void onbtnAgainClick(View view) {
         _showBtnAnswer();
         _answerAgainCard();
-        //_displayCardByType(0);
+
     }
 
     public void onbtnHardClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_HARD);
-        // _displayCardByType(0);
+
     }
 
     public void onbtnGoodClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_GOOD);
-        //_displayCardByType(0);
     }
 
     public void onbtnEasyClick(View view) {
         _showBtnAnswer();
         _answerDueCard(Card.EASE_EASY);
-        // _displayCardByType(0);
     }
 
     private void _showAnswer() {
         //hide btnShowAnswer and show mLayoutButton
         btnShowAnswer.setVisibility(View.GONE);
         mLayoutButton.setVisibility(View.VISIBLE);
-
         try {
-            //get card
+            //beforeCard = null;
+
+            //Define get card
             Card card = currentCard;
-            Card card1 = dataBaseHelper._getCardByID("" + card.getId());
-            Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + card1.getQueue());
+
+//            //Card card1 = dataBaseHelper._getCardByID(String.valueOf(card.getId()));
+//            Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + card.getQueue());
             //Show answer question
 
             //Load Answer
@@ -741,13 +796,20 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     private void _answerAgainCard() {
         Log.i(TAG, "----------------_answerAgainCard----------------");
-        final int curren_time = (int) (new Date().getTime() / 1000);/*curent time*/
+
+        //Define curent time by second
+        final int curren_time = (int) (new Date().getTime() / 1000);
+
         int currentQueue = currentCard.getQueue();//Get current Queue
         Log.i(TAG, "_answerAgainCard:\tCurrrent Card Queue:"
                 + currentQueue + ",question:" + currentCard.getQuestion());
-        //_checkContainsAndRemove(againList);
+
+        //set beforeCard
+        beforeCard = currentCard;
+
         if (currentQueue < Card.QUEUE_NEW_CRAM0) {//Something's wrong???
-            Log.i(TAG, "_answerAgainCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
+            Log.i(TAG, "_answerAgainCard:" +
+                    "\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
             return;
         }
 
@@ -763,18 +825,28 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             lbCountNew.setText(String.valueOf(countNew));
         }
 
+
         //We remove object, not index, cuz the object may be from other list
         againList.remove(currentCard);
+
         cardSched.answerCard(currentCard, Card.EASE_AGAIN);
+
+        //Set due =current time + 60 second
         currentCard.setDue(curren_time + 60);
+
         //Now add to againList, don't care it is readd or add new
         againList.add(currentCard);
 
         int countAgain = againList.size();
-        lbCountAgain.setText("" + countAgain);
+        lbCountAgain.setText(String.valueOf(countAgain));
 
+        //Update card to DB
         dataBaseHelper._updateCard(currentCard);
 
+        //set queue beforeCard == currentQueue
+        beforeCard.setQueue(currentQueue);
+        //Log.i(TAG, "_answerDueCard beforeCard: Queue=" + beforeCard.getQueue() + "
+        // currentQueue:" + currentQueue);
         try {
             if (currentQueue == Card.QUEUE_NEW_CRAM0) {
                 Log.i(TAG, "_answerAgainCard:Card.QUEUE_NEW_CRAM0");
@@ -803,69 +875,76 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
      * get next card
      */
     private void _answerDueCard(int easy) {
+        Log.i(TAG, "----------------_answerDueCard:" + easy + "----------------");
         int currentQueue = currentCard.getQueue();//Get current Queue
-
         Log.i(TAG, "_answerDueCard:Currrent Card Queue:" + currentQueue);
-        if (currentQueue >= Card.QUEUE_NEW_CRAM0) {
-            //Check Contains and Remove
-            _checkContainsAndRemove(cardListAddDueToDay);
 
-            //TODO:Reset count list again,new,due
+        //Set before _beforeCard
+        beforeCard = currentCard;
+
+        //Check Contains and Remove
+        _checkContainsAndRemove(cardListAddDueToDay);
+
+
+        if (currentQueue < Card.QUEUE_NEW_CRAM0) {//Something's wrong???
+            Log.i(TAG, "_answerDueCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
+            return;
+        }
+
+        //Reset count list again,new,due
+        if (currentQueue == Card.QUEUE_NEW_CRAM0) {
+            //reset new card count
+            todayList.remove(currentCard);
+            int countNew = todayList.size();
+            Log.i(TAG, "_answerDueCard:Curren new count:" + countNew);
+            lbCountNew.setText("" + countNew);
+        } else if (currentQueue == Card.QUEUE_LNR1) {
+            //reset new card again
+            int countAgain = againList.size() - 1;
+            lbCountAgain.setText("" + countAgain);
+            againList.remove(currentCard);
+        } else if (currentQueue == Card.QUEUE_REV2) {
+            //reset new card due
+            int countDue = dueList.size() - 1;
+            lbCountDue.setText(String.valueOf(countDue));
+            dueList.remove(currentCard);
+
+        }
+        //Set queue,due using cardShed
+        cardSched.answerCard(currentCard, easy);
+
+        //set queue beforeCard == currentQueue
+        beforeCard.setQueue(currentQueue);
+        //Log.i(TAG, "_answerDueCard beforeCard: Queue=" + beforeCard.getQueue() + "currentQueue:" + currentQueue);
+
+        //Add currentCard to DueList
+        cardListAddDueToDay.add(currentCard);
+
+        //update card form DB
+        dataBaseHelper._updateCard(currentCard);
+
+        //get next card by currentQueue
+        try {
+//            if (position <= todayList.size()) {
             if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-                //reset new card count
-                todayList.remove(currentCard);
-                int countNew = todayList.size();
-                Log.i(TAG, "_answerDueCard:Curren new count:" + countNew);
-                lbCountNew.setText("" + countNew);
+                Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
+                _nextAgainCard();
+
             }
             if (currentQueue == Card.QUEUE_LNR1) {
-                //reset new card again
-                int countAgain = againList.size() - 1;
-                lbCountAgain.setText("" + countAgain);
-                againList.remove(currentCard);
+                Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
+                _nextDueCard();
+
             }
             if (currentQueue == Card.QUEUE_REV2) {
-                //reset new card due
-                int countDue = dueList.size() - 1;
-                lbCountDue.setText("" + countDue);
-                dueList.remove(currentCard);
-
+                Log.i(TAG, "_answerDueCard:Card.QUEUE_REV2");
+                _nextNewCard();
             }
-
-
-            //TODO:Set queue,due using cardShed
-            cardSched.answerCard(currentCard, easy);
-            // dueList.add(currentCard);
-            cardListAddDueToDay.add(currentCard);
-
-            //TODO:update card
-            dataBaseHelper._updateCard(currentCard);
-
-            //Todo:get next card by currentQueue
-            try {
-//            if (position <= todayList.size()) {
-                if (currentQueue == Card.QUEUE_NEW_CRAM0) {
-                    Log.i(TAG, "_answerDueCard:Card.QUEUE_NEW_CRAM0");
-                    _nextAgainCard();
-
-                }
-                if (currentQueue == Card.QUEUE_LNR1) {
-                    Log.i(TAG, "_answerDueCard:Card.QUEUE_LNR1");
-                    _nextDueCard();
-
-                }
-                if (currentQueue == Card.QUEUE_REV2) {
-                    Log.i(TAG, "_answerDueCard:Card.QUEUE_REV2");
-                    _nextNewCard();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            Log.i(TAG, "_answerDueCard:Queue<Card.QUEUE_NEW_CRAM0");
-            _nextAgainCard();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        Log.i(TAG, "-----------------------END-----------------------------");
+
     }
 
     private void _addJavascriptInterfaceQuestionAndAnswer() {
@@ -907,7 +986,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     private void _checkContainsAndRemove(List<Card> cardLis) {
-        if (dueList.contains(currentCard)) {
+        if (cardLis.contains(currentCard)) {
             Log.i(TAG, "Card Contains cardList");
             //remove current Card
             cardLis.remove(currentCard);
@@ -920,13 +999,15 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     private void _nextNewCard() {
+        Log.i(TAG, "---------_nextNewCard--------");
         Log.d(TAG, "Curent new card:" + currentCard.toString());
         if (todayList.size() > 0) {
             position = todayList.size() - 1;
-
             //get next card again
             Log.i(TAG, "_nextNewCard Position=" + position + " today:" + todayList.size());
             currentCard = todayList.get(0);
+
+            //Display question
             _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_NEW_CRAM0);
         } else if (againList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Again card");
@@ -938,12 +1019,12 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             Log.i(TAG, "_nextNewCard:_completeLean");
             _completeLean();
         }
+        Log.i(TAG, "--------------END------------");
     }
 
 
     private void _nextDueCard() {
-        Log.d(TAG, "_nextDueCard:Current Card:" + currentCard.toString());
-
+        Log.i(TAG, "---------_nextDueCard--------");
         if (dueList.size() > 0) {//Check dueList.size()>0
 
             currentCard = dueList.get(0);
@@ -952,7 +1033,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
 
-            //TODO:Display next card
+            //Display next card
             _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2);
 
         } else if (todayList.size() > 0) {
@@ -971,6 +1052,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             Log.i(TAG, "_nextDueCard:Erorr:" + e.getMessage());
             _completeLean();
         }
+        Log.i(TAG, "--------------END------------");
 
 
     }
@@ -979,11 +1061,12 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     boolean flag_one = true;
 
     private void _nextAgainCard() {
+        Log.i(TAG, "---------_nextAgainCard--------");
         if (againList.size() > 0) {//Check againList.size()>0
             try {
                 currentCard = againList.get(0);
 
-                //get current time and du card
+                //Define current time and due card by second
                 int current_time = (int) (new Date().getTime() / 1000);
                 int due = (int) currentCard.getDue();
 
@@ -1010,6 +1093,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             Log.i(TAG, "_nextAgainCard:Next card is new card");
             _nextNewCard();
         }
+        Log.i(TAG, "--------------END--------------");
 
     }
 
@@ -1041,6 +1125,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
         } else if (queue == 10) {
         }
+
         //Set Data
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
@@ -1054,8 +1139,8 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         btnShowAnswer.setVisibility(View.VISIBLE);
         mLayoutButton.setVisibility(View.GONE);
 
-
     }
+
 
     /**
      * Speak text theo version andorid
