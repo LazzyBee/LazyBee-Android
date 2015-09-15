@@ -25,6 +25,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.DataInputStream;
@@ -57,8 +58,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     public RecyclerViewSettingListAdapter(Context context, List<String> settings) {
         this.context = context;
         this.settings = settings;
-        this.learnApiImplements = new LearnApiImplements(context);
-        this.databaseUpgrade = new DatabaseUpgrade(context);
+        this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
     }
 
     @Override
@@ -613,7 +614,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 learnApiImplements._insertOrUpdateCard(card);
             }
             //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
-            databaseUpgrade.close();
+            //databaseUpgrade.close();
             Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());

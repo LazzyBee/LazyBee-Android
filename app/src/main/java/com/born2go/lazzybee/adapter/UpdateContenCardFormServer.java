@@ -9,6 +9,7 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 /**
  * Created by Hue on 9/12/2015.
@@ -22,7 +23,7 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
 
     public UpdateContenCardFormServer(Context context) {
         dialog = new ProgressDialog(context);
-        learnApiImplements = new LearnApiImplements(context);
+        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
     }
 
     protected void onPreExecute() {

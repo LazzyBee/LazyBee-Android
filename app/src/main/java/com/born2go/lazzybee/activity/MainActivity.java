@@ -50,6 +50,7 @@ import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.MyReceiver;
 import com.google.android.gms.ads.AdListener;
@@ -531,8 +532,8 @@ public class MainActivity extends AppCompatActivity
      * Init Sql
      */
     private void _initSQlIte() {
-        myDbHelper = new DataBaseHelper(context);
-        databaseUpgrade = new DatabaseUpgrade(context);
+        myDbHelper = LazzyBeeSingleton.dataBaseHelper;
+        databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         try {
             myDbHelper._createDataBase();
         } catch (IOException ioe) {
@@ -541,7 +542,7 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
 
         }
-        dataBaseHelper = new LearnApiImplements(context);
+        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
     }
 
 
