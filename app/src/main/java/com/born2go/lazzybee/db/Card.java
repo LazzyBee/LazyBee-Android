@@ -28,9 +28,9 @@ public class Card {
     String user_note;/*Anything user can note about this word*/
 
     /*Static variables for queue value in database*/
-    public static int QUEUE_NEW_CRAM0 = 0;
-    public static int QUEUE_LNR1 = 1;
-    public static int QUEUE_REV2 = 2;
+    public static final int QUEUE_NEW_CRAM0 = 0;
+    public static final int QUEUE_LNR1 = 1;
+    public static final int QUEUE_REV2 = 2;
     public static int QUEUE_DAY_LRN3 = 3;// Don't know what to do
     public static int QUEUE_SUSPENDED_1 = -1;
     public static int QUEUE_DONE_2 = -2;
