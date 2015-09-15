@@ -247,5 +247,7 @@
     </string-array>
 
     <string name="SHOWCASE_ID" translatable="false">1001</string>
+    <string name="message_error_back_before_card" translatable="false">Error back before card</string>
+    <string name="number_row_updated">%d row updated</string>
 
 </resources>

@@ -417,8 +417,8 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                     lbCountAgain.setText(String.valueOf(againList.size()));
 
                     //setDue and set Lat_itv to default =0
-                    beforeCard.setDue(0l);
-                    beforeCard.setLast_ivl(0);
+//                    beforeCard.setDue(0l);
+//                    beforeCard.setLast_ivl(0);
 
                     //Define clone todayList
                     List<Card> cloneTodayList = new ArrayList<Card>(todayList);
@@ -519,12 +519,12 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
                 _showBtnAnswer();
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), currentCard.getQueue());
-            } else {
-                Log.i(TAG, "_backToBeforeCard()\t Erorr Update Card");
             }
+            Log.i(TAG, "_backToBeforeCard()\t" + getString(R.string.number_row_updated, results_num));
+            Toast.makeText(context, getString(R.string.number_row_updated, results_num), Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(context, R.string.action_back_before_card, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.message_error_back_before_card, Toast.LENGTH_SHORT).show();
         }
 
         //Hide btnBackBeforeCard
@@ -540,40 +540,11 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         updateContenCardFormServer.delegate = this;
     }
 
-//    private void _showDialogDeleteCard() {
-
-
-//        // Instantiate an AlertDialog.Builder with its constructor
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-//
-//        // Chain together various setter methods to set the dialog characteristics
-//        builder.setMessage(getString(R.string.dialog_message_delete_card, currentCard.getQuestion()))
-//                .setTitle(R.string.dialog_title_delete_card);
-//
-//        // Add the buttons
-//        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                // User cancelled the dialog
-//                dialog.cancel();
-//            }
-//        });
-//        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                //Update Queue_list in system table
-//
-//            }
-//        });
-//        // Get the AlertDialog from create()
-//        AlertDialog dialog = builder.create();
-//
-//        dialog.show();
-
-//    }
-
 
     boolean done_card = false;
 
     private void _deleteCard() {
+        Log.i(TAG, "-------------------deleteCard-------------------");
         if (btnShowAnswer.getVisibility() == View.GONE) {
             btnShowAnswer.setVisibility(View.VISIBLE);
             mLayoutButton.setVisibility(View.GONE);
@@ -629,14 +600,17 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
         Log.i(TAG, "_deleteCard before Update question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
         int update = dataBaseHelper._updateCard(currentCard);
+
         if (update >= 1) {
             Log.i(TAG, "_deleteCard After Update question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
+
             currentCard.setQueue(currentQueue);
-            Toast.makeText(context, "Delete Ok", Toast.LENGTH_SHORT).show();
             _nextCard(currentQueue);
-        } else {
-            Toast.makeText(context, "Not Delete code:" + update, Toast.LENGTH_SHORT).show();
         }
+
+        Toast.makeText(context, getString(R.string.number_row_updated, update), Toast.LENGTH_SHORT).show();
+
+        Log.i(TAG, "-----------------------END----------------------");
     }
 
 
