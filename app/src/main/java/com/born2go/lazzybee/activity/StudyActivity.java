@@ -64,6 +64,7 @@ import java.util.Locale;
 public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     private static final String TAG = "StudyActivity";
+    private DataLayer mDataLayer;
     private Context context;
 
     boolean learn_more;
@@ -235,12 +236,12 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         //mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         Log.i(TAG, "Trying to use TagManager");
-        DataLayer mDataLayer = TagManager.getInstance(this).getDataLayer();
-        mDataLayer.push("Lazzybee Universal Analytics", DataLayer.mapOf("screenName", "StudyActivity"));
+        mDataLayer = TagManager.getInstance(this).getDataLayer();
+        //mDataLayer.push(DataLayer.mapOf("event", "openScreen", "screenName", TAG));
+        mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", TAG));
 
-
-        Log.i(TAG, "Get config from TagManager: adv_urls? " +
-                ContainerHolderSingleton.getContainerHolder().getContainer().getString("adv_urls"));
+        Log.i(TAG, "Get config from TagManager: adv_enable? " +
+                ContainerHolderSingleton.getContainerHolder().getContainer().getString("adv_enable"));
     }
 
     private void _completeLean() {
