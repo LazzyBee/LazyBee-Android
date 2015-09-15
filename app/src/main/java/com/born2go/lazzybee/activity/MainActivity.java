@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity
     // Used to track if notification is active in the task bar
     boolean isNotificActive = false;
 
+    TextView lbReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper._get100Card();
         _initInterstitialAd();
 
-       // _initShowcaseLazzyBee();
+        // _initShowcaseLazzyBee();
 
 
     }
@@ -441,6 +442,10 @@ public class MainActivity extends AppCompatActivity
 
         mLine = (LinearLayout) findViewById(R.id.mLine);
 
+        lbReview = (TextView) findViewById(R.id.lbReview);
+        int learnCount = dataBaseHelper._getListCardLearned().size();
+
+        lbReview.setText(getString(R.string.review) + Html.fromHtml("<a style='background-color:red;color:white'>(" + learnCount + ")</a>"));
 
         TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
         lbTipHelp.setText("****************************" + getString(R.string.url_lazzybee_website) + "****************************");
