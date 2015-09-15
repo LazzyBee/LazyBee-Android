@@ -38,6 +38,10 @@ import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
+
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
@@ -45,6 +49,10 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+
+import java.io.IOException;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +64,7 @@ import java.util.Locale;
 public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     private static final String TAG = "StudyActivity";
+    private DataLayer mDataLayer;
     private Context context;
 
     boolean learn_more;
@@ -220,12 +229,19 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     private void _trackerApplication() {
         LazzyBeeApplication lazzyBeeApplication = (LazzyBeeApplication) getApplication();
         //mTracker = lazzyBeeApplication.getTracker(LazzyBeeApplication.TrackerName.APP_TRACKER);
-        mTracker = lazzyBeeApplication.getDefaultTracker();
+        //mTracker = lazzyBeeApplication.getDefaultTracker();
 
-        Log.i(TAG, "Setting screen name: " + TAG);
-        mTracker.setScreenName("Image~" + TAG);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        //Log.i(TAG, "Setting screen name: " + TAG);
+        //mTracker.setScreenName("Image~" + TAG);
+        //mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
+        Log.i(TAG, "Trying to use TagManager");
+        mDataLayer = TagManager.getInstance(this).getDataLayer();
+        //mDataLayer.push(DataLayer.mapOf("event", "openScreen", "screenName", TAG));
+        mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", TAG));
+
+        Log.i(TAG, "Get config from TagManager: adv_enable? " +
+                ContainerHolderSingleton.getContainerHolder().getContainer().getString("adv_enable"));
     }
 
     private void _completeLean() {

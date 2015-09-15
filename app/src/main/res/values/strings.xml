@@ -173,6 +173,9 @@
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
 
     <string name="tracking_ID" translatable="false">UA-67194143-2</string>
+    <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
+    <string name="gtag_container_load_error">Failed to load container</string>
+
     <string name="notificaion_message">Study word english now!</string>
     <string name="local_service_started" translatable="false">no</string>
 
