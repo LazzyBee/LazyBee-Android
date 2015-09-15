@@ -76,6 +76,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface, ConnectionCallbacks, OnConnectionFailedListener {
@@ -99,6 +103,9 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawerLayout;
 
     CardView mCardViewStudy;
+    CardView mCardViewReView;
+    CardView mCardViewLearnMore;
+    CardView mCardViewCustomStudy;
 
     TextView lbNameCourse;
 
@@ -169,7 +176,39 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper._get100Card();
         _initInterstitialAd();
 
+        _initShowcaseLazzyBee();
 
+
+    }
+
+    private void _initShowcaseLazzyBee() {
+        String SHOWCASE_ID = getString(R.string.SHOWCASE_ID);
+        new MaterialShowcaseView.Builder(this)
+                .setTarget(mCardViewStudy)
+                .setDismissText("GOT IT")
+                .setContentText("This is start study")
+                        //.setDelay(withDelay) // optional but starting animations immediately in onCreate can make them choppy
+                .singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
+                .show();
+
+        // sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(mCardViewReView,
+                "This is goto review card", "GOT IT");
+
+        sequence.addSequenceItem(mCardViewLearnMore,
+                "This is learn more", "GOT IT");
+
+        sequence.addSequenceItem(mCardViewCustomStudy,
+                "This is custom study", "GOT IT");
+
+        sequence.start();
     }
 
     private void _initInterstitialAd() {
@@ -249,7 +288,7 @@ public class MainActivity extends AppCompatActivity
 //            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, alertIntent, 0);
 //
 //            // set() schedules an alarm
-          //  alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alertTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alertTime, AlarmManager.INTERVAL_DAY, pendingIntent);
 
         }
 
@@ -380,12 +419,16 @@ public class MainActivity extends AppCompatActivity
             lbDueToday.setText(Html.fromHtml(dueToday));
         }
         lbTotalsCount.setText(String.valueOf(allCount));
-        lbTotalNewCount.setText(String.valueOf((allCount - learnCount)));
+        lbTotalNewCount.setText(String.valueOf(learnCount));
 
     }
 
     private void _intInterfaceView() {
+        //Define Card View
         mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
+        mCardViewReView = (CardView) findViewById(R.id.mCardViewReView);
+        mCardViewLearnMore = (CardView) findViewById(R.id.mCardViewLearnMore);
+        mCardViewCustomStudy = (CardView) findViewById(R.id.mCardViewCustomStudy);
 
         lbNameCourse = (TextView) findViewById(R.id.lbNameCourse);
 
@@ -398,6 +441,7 @@ public class MainActivity extends AppCompatActivity
         lbTotalsCount = (TextView) findViewById(R.id.lbTotalsCount2);
 
         mLine = (LinearLayout) findViewById(R.id.mLine);
+
 
         TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
         lbTipHelp.setText("****************************" + getString(R.string.url_lazzybee_website) + "****************************");
@@ -417,6 +461,7 @@ public class MainActivity extends AppCompatActivity
         //state0 chua hoc song
         //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
         //state2 hoc xong het rui
+        int learnerdCount = dataBaseHelper._getListCardLearned().size();
         if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study0)) {
             //state0 chua hoc song
             mCardViewStudy.setVisibility(View.VISIBLE);
@@ -431,8 +476,9 @@ public class MainActivity extends AppCompatActivity
             mCongratulations.setVisibility(View.VISIBLE);
             mLine.setVisibility(View.VISIBLE);
 
-        } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study2)) {
-            //state2 hoc xong het rui
+        } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study2)
+                || learnerdCount == 0) {
+            //state2 hoc xong het rui & hoc het card rui
             mCardViewStudy.setVisibility(View.GONE);
             mDue.setVisibility(View.GONE);
             mCongratulations.setVisibility(View.VISIBLE);
@@ -984,15 +1030,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
+        int learnerdCount = dataBaseHelper._getListCardLearned().size();
+        if (learnerdCount == 0) {
+            Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
+        } else {
+        }
         _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
     }
 
     private void _gotoStudy(int type) {
-        //goto_study_type0 study
-        //goto_study_type1 learnmore
+        //goto_study_code0 study
+        //goto_study_code1 learnmore
+
+        Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+            //this.startActivityForResult(intent, RESULT_OK);
 
         } else if (type == getResources().getInteger(R.integer.goto_study_code1)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
@@ -1000,8 +1054,10 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
             String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
             dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
-            _setUpNotification();
+            // _setUpNotification();
         }
+
+
     }
 
 
@@ -1019,13 +1075,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onLearnMoreClick(View view) {
-        int finish = _checkCompleteLearn();
-        Log.i(TAG, "Complet code:" + finish);
-        if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            _learnMore();
+        int learnerdCount = dataBaseHelper._getListCardLearned().size();
+        if (learnerdCount == 0) {
+            Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+            int finish = _checkCompleteLearn();
+            Log.i(TAG, "Complet code:" + finish);
+            if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+                _learnMore();
+            } else {
+                Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
     private void _learnMore() {
