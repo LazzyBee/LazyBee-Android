@@ -246,4 +246,6 @@
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
     </string-array>
 
+    <string name="SHOWCASE_ID" translatable="false">1001</string>
+
 </resources>

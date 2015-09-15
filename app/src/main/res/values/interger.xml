@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="visibility_state_study0">0</integer>
-    <!--//state0 chua hoc song-->
-    <integer name="visibility_state_study1">1</integer>
-    <!--//state1 hoc xon mot luot va van con tu de hoc(trong ngay)-->
-    <integer name="visibility_state_study2">2</integer>
-    <!--//state2 hoc xong het rui-->
+    <integer name="visibility_state_study0">0</integer><!--state0 chua hoc song-->
+    <integer name="visibility_state_study1">1</integer><!--tate1 hoc xon mot luot va van con tu de hoc(trong ngay)-->
+    <integer name="visibility_state_study2">2</integer><!--state2 hoc xong het rui-->
+    <integer name="visibility_state_study3">3</integer><!--state3 hoc het card rui-->
 
     <integer name="goto_study_code0">0</integer>
     <integer name="goto_study_code1">1</integer>
