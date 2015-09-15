@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity
 
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
-        int learnCount = dataBaseHelper._getListCardLearned().size();
+        int nolearnCount = dataBaseHelper._getListCardNoLearne().size();
 
         Log.i(TAG, "-------------------------------END-------------------------------------\n");
 
@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity
             lbDueToday.setText(Html.fromHtml(dueToday));
         }
         lbTotalsCount.setText(String.valueOf(allCount));
-        lbTotalNewCount.setText(String.valueOf(learnCount));
+        lbTotalNewCount.setText(String.valueOf(nolearnCount));
 
     }
 
@@ -460,7 +460,7 @@ public class MainActivity extends AppCompatActivity
         //state0 chua hoc song
         //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
         //state2 hoc xong het rui
-        int learnerdCount = dataBaseHelper._getListCardLearned().size();
+        int learnerdCount = dataBaseHelper._getListCardNoLearne().size();
         if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study0)) {
             //state0 chua hoc song
             mCardViewStudy.setVisibility(View.VISIBLE);
@@ -1031,7 +1031,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        int learnerdCount = dataBaseHelper._getListCardLearned().size();
+        int learnerdCount = dataBaseHelper._getListCardNoLearne().size();
         if (learnerdCount == 0) {
             Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
         } else {
@@ -1076,7 +1076,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onLearnMoreClick(View view) {
-        int learnerdCount = dataBaseHelper._getListCardLearned().size();
+        int learnerdCount = dataBaseHelper._getListCardNoLearne().size();
         if (learnerdCount == 0) {
             Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
         } else {
