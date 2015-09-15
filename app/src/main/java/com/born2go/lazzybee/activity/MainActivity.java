@@ -165,9 +165,7 @@ public class MainActivity extends AppCompatActivity
 
         _initSettingApplication();
         setContentView(R.layout.activity_main);
-        //sp = PreferenceManager.getDefaultSharedPreferences(context);
-//        toolbar = (Toolbar) findViewById(R.id.action_bar_main);
-//        setSupportActionBar(toolbar);
+
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
@@ -177,7 +175,7 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper._get100Card();
         _initInterstitialAd();
 
-        _initShowcaseLazzyBee();
+       // _initShowcaseLazzyBee();
 
 
     }
@@ -498,7 +496,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _initToolBar() {
-        _initNavigationDrawerFragment(null);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        _initNavigationDrawerFragment(toolbar);
     }
 
 
