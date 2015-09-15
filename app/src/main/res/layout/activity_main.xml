@@ -279,7 +279,8 @@
                     android:layout_marginRight="3dp"
                     android:layout_weight="1"
                     android:background="@color/white"
-                    android:onClick="_onbtnReviewOnClick">
+                    android:onClick="_onbtnReviewOnClick"
+                    android:id="@+id/mCardViewReView">
 
                     <Button
                         android:id="@+id/btnReview"
@@ -312,7 +313,8 @@
                     android:layout_marginLeft="3dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:onClick="_onLearnMoreClick">
+                    android:onClick="_onLearnMoreClick"
+                    android:id="@+id/mCardViewLearnMore">
 
                     <Button
                         android:id="@+id/btnCustomStudy"
@@ -334,7 +336,8 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/teal_500"
                         android:padding="10dp"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:id="@+id/mCardViewLearnMore" />
                 </android.support.v7.widget.CardView>
             </LinearLayout>
 

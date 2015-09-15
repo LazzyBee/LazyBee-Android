@@ -34,7 +34,7 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
     @Override
     protected Card doInBackground(Card... params) {
         //Call Api Update card
-        Log.i(TAG, "Q:" + params[0]);
+        Log.i(TAG, "Question:" + params[0].getQuestion());
         ConnectGdatabase connectGdatabase = new ConnectGdatabase();
         try {
             //Get voca in Server

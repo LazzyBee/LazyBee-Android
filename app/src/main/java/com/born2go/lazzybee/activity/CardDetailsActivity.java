@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class CardDetailsActivity extends AppCompatActivity implements AsyncResponse{
+public class CardDetailsActivity extends AppCompatActivity implements AsyncResponse {
 
 
     private static final String TAG = "CardDetailsActivity";
@@ -142,7 +142,7 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
 
         UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
         updateContenCardFormServer.execute(card);
-        updateContenCardFormServer.delegate=this;
+        updateContenCardFormServer.delegate = this;
 
 
     }
@@ -160,8 +160,9 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // TODO:Update Queue_list in system table
+                //Update Queue_list in system table
                 learnApiImplements._addCardIdToQueueList(card);
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -391,7 +392,7 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
     }
 
     private void _stopTextToSpeech() {
-        if(textToSpeech != null) {
+        if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
             Log.d(TAG, "TTS Destroyed");

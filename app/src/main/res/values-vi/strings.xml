@@ -166,4 +166,5 @@
     <string name="setting_reset_to_default">Thiết lập mặc định</string>
     <string name="action_update_card">Cập nhật thẻ</string>
     <string name="action_back_before_card">Back before card</string>
+    <string name="number_row_updated">%d row updated</string>
 </resources>

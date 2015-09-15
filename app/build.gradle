@@ -55,4 +55,6 @@ dependencies {
     compile ('com.google.http-client:google-http-client-gson:1.17.0-rc') {
         exclude module: 'httpclient'
     }
+
+    compile 'com.github.deano2390:MaterialShowcaseView:1.0.5'
 }

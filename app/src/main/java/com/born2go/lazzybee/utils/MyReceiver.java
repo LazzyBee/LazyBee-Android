@@ -99,7 +99,8 @@ public class MyReceiver extends BroadcastReceiver {
         // Builds a notification
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_drawer)
+                        .setSmallIcon(R.drawable.ic_logo_green)
+
                         .setContentTitle(msg)
                         .setTicker(msgAlert)
                         .setContentText(msgText);
