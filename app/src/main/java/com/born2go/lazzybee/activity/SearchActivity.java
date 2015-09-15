@@ -24,6 +24,7 @@ import com.born2go.lazzybee.adapter.RecyclerViewSearchResultListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
@@ -45,10 +46,10 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         context = this;
+
         //init DB SQLIte
-        dataBaseHelper = new LearnApiImplements(this.getApplicationContext());
+        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
 
         query = getIntent().getStringExtra(QUERY_TEXT);
 

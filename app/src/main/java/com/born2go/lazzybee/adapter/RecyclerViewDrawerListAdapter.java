@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     public RecyclerViewDrawerListAdapter(Context context, List<String> objectList) {
         this.objectList = objectList;
         this.context = context;
-        learnApiImplements=new LearnApiImplements(context);
+        learnApiImplements= LazzyBeeSingleton.learnApiImplements;
     }
 
     @Override

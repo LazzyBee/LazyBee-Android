@@ -1,7 +1,9 @@
 package com.born2go.lazzybee;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
@@ -17,7 +19,7 @@ public class LazzyBeeApplication extends Application {
 
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
-     *
+     * <p/>
      * A single tracker is usually enough for most purposes. In case you do need multiple trackers,
      * storing them all in Application object helps ensure that they are created only once per
      * application instance.
@@ -31,20 +33,20 @@ public class LazzyBeeApplication extends Application {
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
 
-
     public LazzyBeeApplication() {
         super();
     }
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
+     *
      * @return tracker
      */
     synchronized public Tracker getDefaultTracker() {
         if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
-             //To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            //To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
             mTracker = analytics.newTracker(PROPERTY_ID);//R.xml.global_tracker);
         }
         return mTracker;
@@ -62,4 +64,19 @@ public class LazzyBeeApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //Initialize the initLazzyBeeSingleton
+        initLazzyBeeSingleton(this);
+    }
+
+
+
+    protected void initLazzyBeeSingleton(Context context) {
+        // Initialize the instance of TextToSpeechSingleton
+        LazzyBeeSingleton.initInstance(context);
+    }
+
 }

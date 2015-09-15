@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
     public RecyclerViewCustomStudyAdapter(Context context, List<String> customStudys, Dialog dialog, FragmentDialogCustomStudy.DialogCustomStudyInferface studyInferface) {
         this.context = context;
         this.customStudys = customStudys;
-        this.learnApiImplements = new LearnApiImplements(context);
+        this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.main = dialog;
         this.studyInferface = studyInferface;
     }
