@@ -784,7 +784,7 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "_updateCard: queue:" + card.getQueue());
         if (card.getDue() != 0)
             values.put(KEY_DUE, card.getDue());
-        if (card.getLast_ivl() != 0)
+        if (card.getLast_ivl() >= 0)
             values.put(KEY_LAT_IVL, card.getLast_ivl());
         if (card.getRev_count() != 0)
             values.put(KEY_REV_COUNT, card.getRev_count());

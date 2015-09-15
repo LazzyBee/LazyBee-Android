@@ -109,6 +109,8 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
     boolean answerDisplay = false;
     ConnectGdatabase connectGdatabase;
 
+    MenuItem btnBackBeforeCard;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -325,6 +327,8 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
+        btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
+        btnBackBeforeCard.setVisible(false);
 //        searchView.setSearchableInfo(
 //                searchManager.getSearchableInfo(getComponentName()));
         //***setOnQueryTextListener***
@@ -363,6 +367,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
         switch (id) {
 
             case android.R.id.home:
@@ -411,8 +416,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                     }
                     lbCountAgain.setText(String.valueOf(againList.size()));
 
-                    //setDue =0
+                    //setDue and set Lat_itv to default =0
                     beforeCard.setDue(0l);
+                    beforeCard.setLast_ivl(0);
 
                     //Define clone todayList
                     List<Card> cloneTodayList = new ArrayList<Card>(todayList);
@@ -507,7 +513,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                 if (beforeQueue == Card.QUEUE_NEW_CRAM0)
                     //Update form queueList In DB
                     dataBaseHelper._addCardIdToQueueList(beforeCard);
-                
+
                 Log.i(TAG, "_backToBeforeCard()\t currentCardquestion:" + currentCard.getQuestion() +
                         "\t queue:" + currentCard.getQueue() + " due:" + currentCard.getDue());
 
@@ -520,6 +526,10 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         } else {
             Toast.makeText(context, R.string.action_back_before_card, Toast.LENGTH_SHORT).show();
         }
+
+        //Hide btnBackBeforeCard
+        btnBackBeforeCard.setVisible(false);
+
         Log.i(TAG, "------------------END-------------------");
     }
 
@@ -795,8 +805,10 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         Card card = dataBaseHelper._getCardByID(String.valueOf(currentCard.getId()));
 
         //setBeforeCard=current card;
-        //setBeforeCard();
         setBeforeCard(card);
+
+        //Show item BackBeroreCard when answer
+        btnBackBeforeCard.setVisible(true);
 
         //Check Contains and Remove
         _checkContainsAndRemove(cardListAddDueToDay);
