@@ -14,7 +14,7 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 /**
  * Created by Hue on 9/12/2015.
  */
-public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
+public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
 
     private static final String TAG = "UpdateContenCard";
     private ProgressDialog dialog;
@@ -22,7 +22,7 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
     public AsyncResponse delegate = null;
     private ConnectGdatabase connectGdatabase;
 
-    public UpdateContenCardFormServer(Context context) {
+    public GetCardFormServerByQuestion(Context context) {
         dialog = new ProgressDialog(context);
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
