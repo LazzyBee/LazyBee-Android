@@ -147,7 +147,7 @@
             android:enabled="true" />
 
 
-        <receiver android:name=".utils.MyReceiver" />
+        <receiver android:name=".utils.NotificationReceiver" />
 
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"

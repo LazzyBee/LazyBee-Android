@@ -16,10 +16,10 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 /**
  * Created by Hue on 9/4/2015.
  */
-public class MyReceiver extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
 
 
-    private static final String TAG = "MyReceiver";
+    private static final String TAG = "NotificationReceiver";
 //    private static int MID = 0;
 //    int[] hour;
 
@@ -35,13 +35,13 @@ public class MyReceiver extends BroadcastReceiver {
 //        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 //        boolean start = false;
 //        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-//            Log.i("MyReceiver", "Services name:" + service.service.getClassName() + ",My Services:" + MyAlarmService.class.getName());
+//            Log.i("NotificationReceiver", "Services name:" + service.service.getClassName() + ",My Services:" + MyAlarmService.class.getName());
 //            if (!MyAlarmService.class.getName().equals(service.service.getClassName())) {
 //                start = true;
 //            }
 //        }
 //        if (start) {
-//            Log.i("MyReceiver", "Service not start!");
+//            Log.i("NotificationReceiver", "Service not start!");
 //        }
 
 //        int setNotiCode = intent.getIntExtra(LazzyBeeShare.INIT_NOTIFICATION, 0);
