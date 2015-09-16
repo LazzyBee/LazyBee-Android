@@ -11,10 +11,16 @@
         android:src="@drawable/ic_banner"
         android:background="@color/white" />
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_600"></LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mRecyclerViewDrawerList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white" />
+        android:background="@color/grey_900" />
 
 </LinearLayout>
