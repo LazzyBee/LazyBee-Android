@@ -818,7 +818,7 @@ public class LearnApiImplements implements LearnApi {
 
         int todayCount = _checkListTodayExit();
         int againCount = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
-        int noLearn = _getListCardLearned().size();
+        int noLearn = _getListCardNoLearne().size();
         int total_learn_per_day = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
         int limitToday = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
