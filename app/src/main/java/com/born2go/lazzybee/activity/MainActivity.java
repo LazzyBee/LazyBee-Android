@@ -2,7 +2,6 @@ package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -19,7 +18,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -297,7 +295,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "Alert " + i + ",time:" + alertTime);
 
                 //set notificaion by time
-                scheduleNotification(i, getNotification(getString(R.string.notificaion_message), alertTime), alertTime);
+                scheduleNotification(i, alertTime);
             }
         } else {
             Log.i(TAG, "Qua gio set  Notification");
@@ -308,23 +306,15 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "---------END-------");
     }
 
-    private void scheduleNotification(int i, Notification notification, long time) {
-        Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+
+    private void scheduleNotification(int i, long time) {
+        Intent notificationIntent = new Intent(MainActivity.this, NotificationReceiver.class);
         notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, i);
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_WHEN, time);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, i, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-    }
-
-    private Notification getNotification(String content, Long alertTime) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_logo_green)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText(content).setWhen(alertTime);
-        return mBuilder.build();
     }
 
 //    private void UnregisterAlarmBroadcast() {
