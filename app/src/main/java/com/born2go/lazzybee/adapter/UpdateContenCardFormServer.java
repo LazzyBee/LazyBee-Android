@@ -38,20 +38,31 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
         Log.i(TAG, "Question:" + params[0].getQuestion());
         ConnectGdatabase connectGdatabase = new ConnectGdatabase();
         try {
+            //Define q
+            String q=params[0].getQuestion();
+
             //Get voca in Server
-            Voca voca = connectGdatabase._getGdatabase_byQ(params[0].getQuestion());
-            Card card = new Card();
-            card.setId(params[0].getId());
-            card.setQuestion(voca.getQ());
-            card.setLevel(Integer.valueOf(voca.getLevel()));
-            card.setAnswers(voca.getA());
-            card.setPackage(voca.getPackages());
-            card.setLast_ivl(params[0].getLast_ivl());
-            card.setFactor(params[0].getFactor());
-            card.setRev_count(params[0].getRev_count());
-            card.setDue(params[0].getDue());
-            card.setQueue(params[0].getQueue());
-            return card;
+            Voca voca = connectGdatabase._getGdatabase_byQ( q.replaceAll("\\s+","") /*Remove remove special characters*/);
+            if (voca != null) {
+                Log.i(TAG, "voca:\t Q:" + voca.getQ() + ",level:" + voca.getLevel() + ",package:" + voca.getPackages());
+                Card card = new Card();
+                card.setId(params[0].getId());
+
+                card.setQuestion(params[0].getQuestion());
+                card.setLevel(Integer.valueOf(params[0].getLevel()));
+                card.setAnswers(voca.getA());
+                card.setPackage(voca.getPackages());
+                card.setLast_ivl(params[0].getLast_ivl());
+                card.setFactor(params[0].getFactor());
+                card.setRev_count(params[0].getRev_count());
+                card.setDue(params[0].getDue());
+                card.setQueue(params[0].getQueue());
+                return card;
+
+            } else {
+                Log.i(TAG, "get voca null");
+                return null;
+            }
 
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
@@ -67,8 +78,10 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        //Update Card form DB
-        learnApiImplements._updateCardFormServer(card);
+        if (card != null) {
+            //Update Card form DB
+            learnApiImplements._updateCardFormServer(card);
+        }
 
         delegate.processFinish(card);
     }

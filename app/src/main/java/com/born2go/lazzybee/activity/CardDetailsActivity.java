@@ -33,6 +33,8 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -91,7 +93,18 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
 
         mSlidingTabLayout.setViewPager(mViewPager);
 
+        _initAdView();
 
+
+    }
+    private void _initAdView() {
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
