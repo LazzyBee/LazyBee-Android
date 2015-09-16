@@ -295,7 +295,9 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
         String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
         int index;
-        if (sp.equals(context.getString(R.string.speech_rate_very_slow_value))) {
+        if (sp == null) {
+            index = 2;
+        } else if (sp.equals(context.getString(R.string.speech_rate_very_slow_value))) {
             index = 0;
         } else if (sp.equals(context.getString(R.string.speech_rate_slow_value))) {
             index = 1;
@@ -305,7 +307,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             index = 3;
         } else if (sp.equals(context.getString(R.string.speech_rate_very_fast_value))) {
             index = 4;
-        } else {
+        } else  {
             index = 2;
         }
 
