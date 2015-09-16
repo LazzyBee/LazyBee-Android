@@ -876,6 +876,12 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Card> _getListCardLearned() {
+        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue >= 1";
+        List<Card> cardList = _getListCardQueryString(query);
+        return cardList;
+    }
+
+    public List<Card> _getListCardNoLearne() {
         String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = 0";
         List<Card> cardList = _getListCardQueryString(query);
         return cardList;

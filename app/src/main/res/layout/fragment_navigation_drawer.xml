@@ -4,10 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:id="@+id/imageView2"
+        android:src="@drawable/ic_banner"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_600"></LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mRecyclerViewDrawerList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_900" />
 
 </LinearLayout>
