@@ -609,7 +609,8 @@ public class MainActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         switch (position) {
             case LazzyBeeShare.DRAWER_ABOUT_INDEX:
-                Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+                _gotoAbout();
                 break;
             case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
                 //_gotoAddCourse();
@@ -629,6 +630,12 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+    }
+
+    private void _gotoAbout() {
+        Intent intent = new Intent(context, AboutActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
     }
 
     private void _gotoAddCourse() {

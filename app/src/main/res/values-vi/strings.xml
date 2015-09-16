@@ -150,6 +150,7 @@
         <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
+        <item>@string/drawer_about</item>
     </string-array>
 
     <string-array name="speech_rate">

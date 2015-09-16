@@ -234,6 +234,7 @@
         <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
+        <item>@string/drawer_about</item>
     </string-array>
 
     <string-array name="speech_rate">
@@ -252,5 +253,7 @@
     <string name="SHOWCASE_ID" translatable="false">11</string>
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>
+    <string name="drawer_about" translatable="false">About</string>
+    <string name="title_activity_about">AboutActivity</string>
 
 </resources>

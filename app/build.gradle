@@ -58,7 +58,5 @@ dependencies {
 
     compile 'com.github.deano2390:MaterialShowcaseView:1.0.5'
 
-    compile('com.mikepenz:materialdrawer:4.0.8@aar') {
-        transitive = true
-    }
+
 }
