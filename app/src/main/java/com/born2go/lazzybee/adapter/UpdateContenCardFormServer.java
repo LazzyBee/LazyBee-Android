@@ -20,10 +20,12 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
     private ProgressDialog dialog;
     private LearnApiImplements learnApiImplements;
     public AsyncResponse delegate = null;
+    private ConnectGdatabase connectGdatabase;
 
     public UpdateContenCardFormServer(Context context) {
         dialog = new ProgressDialog(context);
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        connectGdatabase = LazzyBeeSingleton.connectGdatabase;
     }
 
     protected void onPreExecute() {
@@ -36,13 +38,13 @@ public class UpdateContenCardFormServer extends AsyncTask<Card, Void, Card> {
     protected Card doInBackground(Card... params) {
         //Call Api Update card
         Log.i(TAG, "Question:" + params[0].getQuestion());
-        ConnectGdatabase connectGdatabase = new ConnectGdatabase();
+
         try {
             //Define q
-            String q=params[0].getQuestion();
+            String q = params[0].getQuestion();
 
             //Get voca in Server
-            Voca voca = connectGdatabase._getGdatabase_byQ( q.replaceAll("\\s+","") /*Remove remove special characters*/);
+            Voca voca = connectGdatabase._getGdatabase_byQ(q.replaceAll("\\s+", "") /*Remove remove special characters*/);
             if (voca != null) {
                 Log.i(TAG, "voca:\t Q:" + voca.getQ() + ",level:" + voca.getLevel() + ",package:" + voca.getPackages());
                 Card card = new Card();
