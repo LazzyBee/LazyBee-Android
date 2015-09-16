@@ -2,6 +2,7 @@ package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -18,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -52,7 +54,7 @@ import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.utils.MyReceiver;
+import com.born2go.lazzybee.utils.NotificationReceiver;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -74,6 +76,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -143,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 
     InterstitialAd mInterstitialAd;
 
-    int[] hour;
+    ArrayList<Integer> hours;
 
     // Allows us to notify the user that something happened in the background
     NotificationManager notificationManager;
@@ -253,45 +257,74 @@ public class MainActivity extends AppCompatActivity
 //                .build();
     }
 
-    private static int MID = 0;
-
     private void _setUpNotification() {
+        Log.i(TAG, "---------setUpNotification-------");
+        //Check currentTime
+        Calendar currentCalendar = Calendar.getInstance();
+        int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
 
-//        for (int i = 0; i < hour.length; i++) {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(Calendar.HOUR_OF_DAY, hour[0]);
-//            calendar.set(Calendar.MINUTE, 0);
-//            calendar.set(Calendar.SECOND, 0);
-//            calendar.set(Calendar.AM_PM,Calendar.PM);
-//            Intent intent1 = new Intent(MainActivity.this, MyReceiver.class);
-//            intent1.putExtra(LazzyBeeShare.INIT_NOTIFICATION, 0);
-//            intent1.putExtra(LazzyBeeShare.NOTIFICATION_WHEN, calendar.getTimeInMillis());
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,pendingIntent);
-//
-//        }
+        //Define clone hours
+        List<Integer> cloneHours = new ArrayList<Integer>();
 
-        for (int i = 0; i < hour.length; i++) {
-            // Define a time
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(Calendar.HOUR_OF_DAY, hour[i]);
-//            calendar.set(Calendar.MINUTE, 0);
-//            calendar.set(Calendar.SECOND, 0);
-//            calendar.set(Calendar.AM_PM, Calendar.PM);
-//            Long alertTime = calendar.getTimeInMillis();
-//
-//            // Define our intention of executing AlertReceiver
-//            Intent alertIntent = new Intent(this, MyReceiver.class);
-//            alertIntent.putExtra(LazzyBeeShare.INIT_NOTIFICATION, i);
-//
-//            // Define pendingintent
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, alertIntent, 0);
-//
-//            // set() schedules an alarm
-//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alertTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+//        Remove
+        Log.i(TAG, "setUpNotification currentHour:" + currentHour);
+        Log.i(TAG, "setUpNotification hours:" + hours.toString());
+        for (int i = 0; i < hours.size(); i++) {
+            int hour = hours.get(i);
+            if (!(currentHour >= hour)) {
+                cloneHours.add(hour);
+            }
 
         }
 
+        Log.i(TAG, "setUpNotification cloneHours:" + cloneHours.toString());
+        //Define count
+        int count = cloneHours.size();
+
+        if (count >= 1) {
+            //Set notification by hours
+            for (int i = 0; i < cloneHours.size(); i++) {
+                // Define a time
+                Calendar calendar = Calendar.getInstance();
+                //calendar.add(Calendar.DATE, 1);
+                calendar.set(Calendar.HOUR_OF_DAY, cloneHours.get(i));
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+
+                //
+                Long alertTime = calendar.getTimeInMillis();
+                //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Alert " + i + ",time:" + alertTime);
+
+                //set notificaion by time
+                scheduleNotification(i, getNotification(getString(R.string.notificaion_message), alertTime), alertTime);
+            }
+        } else {
+            Log.i(TAG, "Qua gio set  Notification");
+            Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
+        }
+
+
+        Log.i(TAG, "---------END-------");
+    }
+
+    private void scheduleNotification(int i, Notification notification, long time) {
+        Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, i);
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+    }
+
+    private Notification getNotification(String content, Long alertTime) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_logo_green)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(content).setWhen(alertTime);
+        return mBuilder.build();
     }
 
 //    private void UnregisterAlarmBroadcast() {
@@ -300,7 +333,11 @@ public class MainActivity extends AppCompatActivity
 //    }
 
     private void _initSettingApplication() {
-        hour = getResources().getIntArray(R.array.notification_hours);
+        int[] hour = getResources().getIntArray(R.array.notification_hours);
+        hours = new ArrayList<Integer>();
+        for (int i = 0; i < hour.length; i++) {
+            hours.add(hour[i]);
+        }
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -396,14 +433,11 @@ public class MainActivity extends AppCompatActivity
 
     private void _cancelNotification() {
         notificationManager.cancelAll();
-        for (int i = 0; i < hour.length; i++) {
-            Intent intent = new Intent(this, MyReceiver.class);
+        for (int i = 0; i < hours.size(); i++) {
+            Intent intent = new Intent(this, NotificationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             alarmManager.cancel(pendingIntent);
         }
-        // If the notification is still active close it
-        //notificationManager.cancel(notifID);
-
     }
 
     private void _getCountCard() {
