@@ -129,6 +129,7 @@
         <item>@string/setting_language</item>
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
+        <item>@string/setting_update_db_form_query</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>

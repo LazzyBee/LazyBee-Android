@@ -1178,4 +1178,17 @@ public class LearnApiImplements implements LearnApi {
 
         return update_result;
     }
+
+    public int executeQuery(String query) {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        try {
+            db.execSQL(query);
+            return 1;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+
+
+    }
 }

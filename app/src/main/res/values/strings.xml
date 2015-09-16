@@ -213,6 +213,7 @@
         <item>@string/setting_language</item>
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
+        <item>@string/setting_update_db_form_query</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>
@@ -255,5 +256,7 @@
     <string name="number_row_updated">%d row updated</string>
     <string name="drawer_about" translatable="false">About</string>
     <string name="title_activity_about">AboutActivity</string>
+    <string name="setting_update_db_form_query" translatable="false">Update by Query</string>
+    <string name="action_query" translatable="false">Query</string>
 
 </resources>
