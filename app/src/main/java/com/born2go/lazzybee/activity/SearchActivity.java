@@ -20,16 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.adapter.RecyclerViewSearchResultListAdapter;
 import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query";
@@ -41,6 +44,7 @@ public class SearchActivity extends AppCompatActivity {
     private Context context;
     String query;
     private int ADD_TO_LEARN = 0;
+    ConnectGdatabase connectGdatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class SearchActivity extends AppCompatActivity {
 
         //init DB SQLIte
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
+
+        connectGdatabase = LazzyBeeSingleton.connectGdatabase;
 
         query = getIntent().getStringExtra(QUERY_TEXT);
 
@@ -193,18 +199,30 @@ public class SearchActivity extends AppCompatActivity {
         //use the query to search
         Log.i(TAG, "query:" + query);
         List<Card> cardList = dataBaseHelper._searchCard(query);
+
         int result_count = cardList.size();
         Log.i(TAG, "Search result_count:" + result_count);
 
         //set count
-        lbResultCount.setText(result_count + " " + getString(R.string.result));
+        lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
 
-        //Check result_count==0 search in server
-        if (result_count == 0) {
-            //Search in server
+        if (result_count > 0) {
+            //Init Adapter
+            setAdapterListCard(cardList);
+        } else if (result_count == 0) {//Check result_count==0 search in server
+            //Define Card
+            Card card = new Card();
+            card.setQuestion(query);
+            //Call Search in server
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            getCardFormServerByQuestion.execute(card);
+            getCardFormServerByQuestion.delegate = this;
         }
 
-        //Init Adapter
+
+    }
+
+    private void setAdapterListCard(List<Card> cardList) {
         RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
@@ -301,5 +319,19 @@ public class SearchActivity extends AppCompatActivity {
             setResult(RESULT_OK, new Intent());
         super.onBackPressed();
 
+    }
+
+    @Override
+    public void processFinish(Card card) {
+        List<Card> cardList = new ArrayList<Card>();
+        int result_count = 0;
+        if (card != null) {
+            cardList.add(card);
+            result_count = cardList.size();
+            setAdapterListCard(cardList);
+        } else {
+            Log.i(TAG, getString(R.string.not_found));
+        }
+        lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
     }
 }

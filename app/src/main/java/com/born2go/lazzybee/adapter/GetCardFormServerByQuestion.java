@@ -16,10 +16,10 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
  */
 public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
 
-    private static final String TAG = "UpdateContenCard";
+    private static final String TAG = "GetCardFormServer";
     private ProgressDialog dialog;
     private LearnApiImplements learnApiImplements;
-    public AsyncResponse delegate = null;
+    public GetCardFormServerByQuestionResponse delegate = null;
     private ConnectGdatabase connectGdatabase;
 
     public GetCardFormServerByQuestion(Context context) {
@@ -80,15 +80,10 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        if (card != null) {
-            //Update Card form DB
-            learnApiImplements._updateCardFormServer(card);
-        }
-
         delegate.processFinish(card);
     }
 
-    public interface AsyncResponse {
+    public interface GetCardFormServerByQuestionResponse {
         void processFinish(Card card);
     }
 }

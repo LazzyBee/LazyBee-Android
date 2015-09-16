@@ -32,8 +32,8 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.LazzyBeeApplication;
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
@@ -57,7 +57,7 @@ import java.util.List;
 
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 
-public class StudyActivity extends AppCompatActivity implements AsyncResponse {
+public class StudyActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyActivity";
     private DataLayer mDataLayer;
@@ -535,9 +535,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     private void _updateCardFormServer() {
         //Call Api Update Card
-        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
-        updateContenCardFormServer.execute(currentCard);
-        updateContenCardFormServer.delegate = this;
+        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+        getCardFormServerByQuestion.execute(currentCard);
+        getCardFormServerByQuestion.delegate = this;
     }
 
 
@@ -1097,6 +1097,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                 //Load question
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card.getQuestion()), card.getQueue());
             }
+
+            //Update Card form DB
+            dataBaseHelper._updateCardFormServer(card);
 
             Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
         } else {

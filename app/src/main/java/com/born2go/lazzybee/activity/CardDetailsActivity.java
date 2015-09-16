@@ -26,8 +26,8 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class CardDetailsActivity extends AppCompatActivity implements AsyncResponse {
+public class CardDetailsActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
 
 
     private static final String TAG = "CardDetailsActivity";
@@ -150,9 +150,9 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
         if (card == null)
             card = learnApiImplements._getCardByID(cardId);
 
-        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
-        updateContenCardFormServer.execute(card);
-        updateContenCardFormServer.delegate = this;
+        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+        getCardFormServerByQuestion.execute(card);
+        getCardFormServerByQuestion.delegate = this;
 
 
     }
@@ -221,6 +221,9 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
             PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, this.card);
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
+
+            //Update Card form DB
+            learnApiImplements._updateCardFormServer(card);
 
             Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
         } else {
