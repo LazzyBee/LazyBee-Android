@@ -25,6 +25,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.DataInputStream;
@@ -54,11 +55,14 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
     private static final int TYPE_SETTING_ABOUT = 5;
 
-    public RecyclerViewSettingListAdapter(Context context, List<String> settings) {
+    private RecyclerView mRecyclerViewSettings;
+
+    public RecyclerViewSettingListAdapter(Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
         this.context = context;
         this.settings = settings;
-        this.learnApiImplements = new LearnApiImplements(context);
-        this.databaseUpgrade = new DatabaseUpgrade(context);
+        this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
+        this.mRecyclerViewSettings = mRecyclerViewSettings;
     }
 
     @Override
@@ -120,7 +124,10 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             } else if (setting.equals(context.getString(R.string.setting_about))) {
 
             } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
-                _showDialogChangeSpeechRate(mCardView);
+
+                lbLimit.setVisibility(View.VISIBLE);
+                _showDialogChangeSpeechRate(mCardView, lbLimit);
+
             } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                 lbLimit.setVisibility(View.GONE);
                 _resetCache(mCardView);
@@ -233,34 +240,35 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         });
     }
 
-    private void _showDialogChangeSpeechRate(RelativeLayout mCardView) {
+    private void _showDialogChangeSpeechRate(RelativeLayout mCardView, final TextView lbLimit) {
+        final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
+        String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+        int index;
+        if (sp.equals(context.getString(R.string.speech_rate_very_slow_value))) {
+            index = 0;
+        } else if (sp.equals(context.getString(R.string.speech_rate_slow_value))) {
+            index = 1;
+        } else if (sp.equals(context.getString(R.string.speech_rate_normal_value))) {
+            index = 2;
+        } else if (sp.equals(context.getString(R.string.speech_rate_fast_value))) {
+            index = 3;
+        } else if (sp.equals(context.getString(R.string.speech_rate_very_fast_value))) {
+            index = 4;
+        } else {
+            index = 2;
+        }
+
+        lbLimit.setText(items[index]);
+        final int finalIndex = index;
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
                 builder.setTitle(context.getString(R.string.dialog_title_change_speech_rate));
-                final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
-                String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
-                int index = 0;
-                if (sp == null) {
-                    index = 2;
-                } else {
 
-                    if (sp.equals(context.getString(R.string.speech_rate_very_slow_value))) {
-                        index = 0;
-                    } else if (sp.equals(context.getString(R.string.speech_rate_slow_value))) {
-                        index = 1;
-                    } else if (sp.equals(context.getString(R.string.speech_rate_normal_value))) {
-                        index = 2;
-                    } else if (sp.equals(context.getString(R.string.speech_rate_fast_value))) {
-                        index = 3;
-                    } else if (sp.equals(context.getString(R.string.speech_rate_very_fast_value))) {
-                        index = 4;
-                    }
 
-                }
-                builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+                builder.setSingleChoiceItems(items, finalIndex, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         float speechRate = 1.0f;
                         if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
@@ -276,6 +284,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                         }
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
                         dialog.cancel();
+                        _reloadRecylerView();
                     }
                 });
                 // Get the AlertDialog from create()
@@ -286,6 +295,10 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
             }
         });
+    }
+
+    private void _reloadRecylerView() {
+        mRecyclerViewSettings.setAdapter(this);
     }
 
     private void getSettingLimitOrUpdate(View mCardView, TextView lbLimit, final String key, String limit) {
@@ -613,7 +626,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 learnApiImplements._insertOrUpdateCard(card);
             }
             //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
-            databaseUpgrade.close();
+            //databaseUpgrade.close();
             Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());

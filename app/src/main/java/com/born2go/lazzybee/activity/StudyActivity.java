@@ -38,28 +38,22 @@ import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
-
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-
-import java.io.IOException;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 
@@ -270,7 +264,7 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
      * Init db sqlite
      */
     private void _initDatabase() {
-        dataBaseHelper = new LearnApiImplements(this);
+        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
     }
 
     private void _initTextToSpeech() {
@@ -278,18 +272,8 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
         float speech = 1.0f;
         if (sp != null)
             speech = Float.valueOf(sp);
-
-        //Todo:init TextToSpeech
-        final float finalSpeech = speech;
-        textToSpeech = new TextToSpeech(this.getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
-                    textToSpeech.setSpeechRate(finalSpeech);
-                }
-            }
-        });
+        textToSpeech = LazzyBeeSingleton.textToSpeech;
+        textToSpeech.setSpeechRate(speech);
 
 
     }
@@ -1276,17 +1260,10 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     }
 
-    private void _stopTextToSpeech() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-            textToSpeech.shutdown();
-            Log.d(TAG, "TTS Destroyed");
-        }
-    }
+
 
     @Override
     protected void onDestroy() {
-        _stopTextToSpeech();
         super.onDestroy();
     }
 }

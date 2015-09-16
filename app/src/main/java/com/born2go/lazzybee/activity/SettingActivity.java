@@ -51,7 +51,7 @@ public class SettingActivity extends AppCompatActivity {
         final List<String> settings = Arrays.asList(context.getResources().getStringArray(R.array.settings));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
-        RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(mRecyclerViewSettings.getContext(), settings);
+        RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(mRecyclerViewSettings.getContext(), settings,mRecyclerViewSettings);
 
         mRecyclerViewSettings.setLayoutManager(gridLayoutManager);
         mRecyclerViewSettings.setAdapter(recyclerViewSettingListAdapter);

@@ -18,6 +18,7 @@ import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class FragmentReviewToday extends Fragment {
         context=getActivity();
 
         //init DB SQLIte
-        LearnApiImplements dataBaseHelper = new LearnApiImplements(getActivity().getApplicationContext());
+        LearnApiImplements dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
 
         //Init RecyclerView and Layout Manager
         RecyclerView mRecyclerViewReviewTodayList = (RecyclerView) view.findViewById(R.id.mRecyclerViewReviewTodayList);

@@ -25,7 +25,9 @@
         <item name="android:popupBackground">@android:color/holo_green_light</item>
     </style>
 
-    <style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown"></style>
+    <style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown">
+
+    </style>
 
     <style name="ThemeCardDetails" parent="Theme.AppCompat.NoActionBar">
 

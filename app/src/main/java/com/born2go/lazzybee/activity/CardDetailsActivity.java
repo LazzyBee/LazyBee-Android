@@ -30,13 +30,13 @@ import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
 import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class CardDetailsActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -65,20 +65,17 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = this;
-        _initTextToSpeech();
+
         cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
-        learnApiImplements = new LearnApiImplements(context);
-//        if (savedInstanceState == null) {
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
-//            Bundle bundle = new Bundle();
-//            bundle.putString(LazzyBeeShare.CARDID, cardId);
-//            fragment.setArguments(bundle);
-//            transaction.replace(R.id.sample_content_fragment, fragment);
-//            transaction.commit();
-//        }
+
+        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+
+        _initTextToSpeech();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Card card = learnApiImplements._getCardByID(cardId);
+
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -291,7 +288,7 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
             _addJavascriptInterfaceQuestionAndAnswer();
 
 
-            String answer = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packages.get(position), true);
+            String answer = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packages.get(position), false);
 
             // Log.i(TAG, answer);
 
@@ -374,19 +371,17 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
 
     private void _initTextToSpeech() {
         //init TextToSpeech
-        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.UK);
-                }
-            }
-        });
+        String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+        float speech = 1.0f;
+        if (sp != null)
+            speech = Float.valueOf(sp);
+        textToSpeech = LazzyBeeSingleton.textToSpeech;
+        textToSpeech.setSpeechRate(speech);
     }
 
     @Override
     protected void onDestroy() {
-        _stopTextToSpeech();
+        //_stopTextToSpeech();
         super.onDestroy();
 
     }
