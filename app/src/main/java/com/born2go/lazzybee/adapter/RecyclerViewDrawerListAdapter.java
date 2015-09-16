@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
@@ -36,7 +37,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     public RecyclerViewDrawerListAdapter(Context context, List<String> objectList) {
         this.objectList = objectList;
         this.context = context;
-        learnApiImplements= LazzyBeeSingleton.learnApiImplements;
+        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
     }
 
     @Override
@@ -51,9 +52,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         } else if (viewType == TYPE_TITLE_COURSE) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer, parent, false);
         } else if (viewType == TYPE_SETTING) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         } else if (viewType == TYPE_ABOUT) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         } else if (viewType == TYPE_LINES) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_lines, parent, false);
         }
@@ -72,10 +73,10 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
             int allCount = learnApiImplements._getAllListCard().size();
 
-            lbNameCourse.setText(String.valueOf( objectList.get(position)));
+            lbNameCourse.setText(String.valueOf(objectList.get(position)));
             lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
 
-            lbCount.setText(context.getString(R.string.setting_limit_card_number,allCount));
+            lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
 
         } else if (holder.viewType == TYPE_ADD_COURCE) {
 
@@ -87,10 +88,12 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             lbDrawerName.setTextSize(15f);
             lbDrawerName.setTextColor(context.getResources().getColor(R.color.grey_300));
         } else if (holder.viewType == TYPE_SETTING) {
-            TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
-            lbDrawerName.setText(context.getString(R.string.action_settings));
+//            TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
+//            lbDrawerName.setText(context.getString(R.string.action_settings));
         } else if (holder.viewType == TYPE_ABOUT) {
-            TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
+            ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+            mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
+            TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
             lbDrawerName.setText(context.getString(R.string.setting_about));
         }
 
@@ -107,7 +110,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             return TYPE_USER;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_setting)))
             return TYPE_SETTING;
-        else if (objectList.get(position).equals(LazzyBeeShare.DRAWER_ABOUT))
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_about)))
             return TYPE_ABOUT;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_line)))
             return TYPE_LINES;

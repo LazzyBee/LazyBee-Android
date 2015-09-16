@@ -2,25 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.born2go.lazzybee"
     android:versionCode="5"
-    android:versionName="1.1.3">
+    android:versionName="1.1.3" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- Permission to use AlarmManager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-
     <meta-data
         android:name="com.google.android.gms.analytics.globalConfigResource"
         android:resource="@xml/global_tracker" />
-
 
     <application
         android:name=".LazzyBeeApplication"
@@ -28,7 +24,7 @@
         android:icon="@drawable/ic_logo_green"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -37,9 +33,10 @@
             android:name=".activity.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreen">
+            android:theme="@style/SplashScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -47,7 +44,7 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBar">
+            android:theme="@style/ThemeNoActionBar" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".activity.SearchActivity" />
@@ -55,12 +52,12 @@
         <activity
             android:name=".activity.NotificationReceiver"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.StudyActivity"
             android:label="@string/title_activity_study"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBar">
+            android:theme="@style/ThemeNoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -71,9 +68,10 @@
         <activity
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_search"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -84,7 +82,7 @@
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_seating"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -92,7 +90,7 @@
         <activity
             android:name=".activity.ReviewCardActivity"
             android:label="@string/title_activity_review_card"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -100,7 +98,7 @@
         <activity
             android:name=".activity.AddCourseActivity"
             android:label="@string/title_activity_add_course"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -109,7 +107,7 @@
             android:name=".activity.CardDetailsActivity"
             android:label="@string/title_activity_card_details"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeCardDetails">
+            android:theme="@style/ThemeCardDetails" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.ReviewCardActivity" />
@@ -142,16 +140,15 @@
             android:value="@string/fb_app_id" />
 
         <activity android:name="com.facebook.LoginActivity" />
+
         <service
             android:name=".utils.MyAlarmService"
             android:enabled="true" />
 
-
         <receiver android:name=".utils.NotificationReceiver" />
-
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true">
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
@@ -162,17 +159,23 @@
             android:enabled="true"
             android:exported="false" />
 
-       <!--  Add preview activity. -->
+        <!-- Add preview activity. -->
         <activity
             android:name="com.google.android.gms.tagmanager.PreviewActivity"
             android:label="@string/app_name"
-            android:noHistory="true">  <!-- optional, removes the previewActivity from the activity stack. -->
+            android:noHistory="true" > <!-- optional, removes the previewActivity from the activity stack. -->
             <intent-filter>
                 <data android:scheme="tagmanager.c.com.born2go.lazzybee" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/title_activity_about" >
         </activity>
     </application>
 

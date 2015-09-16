@@ -209,11 +209,15 @@
         <item>@string/setting_auto_check_update</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
         <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_debug_info</item>
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
+        <item>@string/setting_update_db_form_query</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>
     </string-array>
@@ -234,6 +238,7 @@
         <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
+        <item>@string/drawer_about</item>
     </string-array>
 
     <string-array name="speech_rate">
@@ -252,5 +257,9 @@
     <string name="SHOWCASE_ID" translatable="false">11</string>
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>
+    <string name="drawer_about" translatable="false">About</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="setting_update_db_form_query" translatable="false">Update by Query</string>
+    <string name="action_query" translatable="false">Query</string>
 
 </resources>

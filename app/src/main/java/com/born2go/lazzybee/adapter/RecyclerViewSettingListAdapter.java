@@ -103,7 +103,8 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             lbLimit.setVisibility(View.GONE);
             lbSettingName.setTextSize(15f);
             lbSettingName.setTextColor(context.getResources().getColor(R.color.teal_200));
-        } else if (holder.viewType == TYPE_SETTING_NAME) {
+        } else if (holder.viewType == TYPE_SETTING_NAME) {//TODO:TYPE_SETTING_NAME
+
             lbSettingName.setText(settings.get(position));
             mSwitch.setVisibility(View.GONE);
             lbLimit.setVisibility(View.GONE);
@@ -134,6 +135,9 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             } else if (setting.equals(context.getString(R.string.setting_export_database))) {
                 lbLimit.setVisibility(View.GONE);
                 _exportDatabases(mCardView);
+            } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
+
+                _showDialogExecuteQueue(mCardView);
             }
 
 
@@ -171,6 +175,53 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         }
 
 
+    }
+
+    private void _showDialogExecuteQueue(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Define dialogExecuteEuery
+                LayoutInflater li = LayoutInflater.from(context);
+                View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+                builder.setView(dialogExecuteEuery);
+
+                //Define txtQuery
+                final EditText txtQuery = (EditText) dialogExecuteEuery.findViewById(R.id.txtQuery);
+
+                // Add the buttons
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.cancel();
+                    }
+                });
+                builder.setPositiveButton(R.string.action_query, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String query = txtQuery.getText().toString();
+                        if (query != null || query.length() > 1) {
+                            int result = learnApiImplements.executeQuery(query);
+                            if (result == 1) {
+                                Toast.makeText(context, "Execute Ok", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Execute Error", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            //Toast.makeText(context, "Null", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                // Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+            }
+        });
     }
 
     private void _exportDatabases(RelativeLayout mCardView) {
@@ -507,12 +558,15 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
+                || setting.equals(context.getString(R.string.setting_update_db_form_query))
                 || setting.equals(context.getString(R.string.setting_speech_rate)))
             return TYPE_SETTING_NAME;
+
         else if (setting.equals(context.getString(R.string.setting_notification))
                 || setting.equals(context.getString(R.string.setting_auto_check_update))
                 || setting.equals(context.getString(R.string.setting_debug_info)))
             return TYPE_SETTING_SWITCH;
+
         else if (setting.equals(context.getString(R.string.setting_today_review_card_limit)))
 
             return TYPE_SETTING_NAME_WITH_DESCRIPTION;
