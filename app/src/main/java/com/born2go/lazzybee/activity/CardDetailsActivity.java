@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -97,6 +98,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
 
     }
+
     private void _initAdView() {
         AdView mAdView = (AdView) findViewById(R.id.adView);
 
@@ -226,6 +228,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             learnApiImplements._updateCardFormServer(card);
 
             Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+            //set Result code for updated List card
+            setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
         } else {
             Toast.makeText(context, "Update card error", Toast.LENGTH_SHORT).show();
         }

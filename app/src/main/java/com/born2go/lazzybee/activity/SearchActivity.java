@@ -35,16 +35,17 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "SearchActivity";
-    public static final String QUERY_TEXT = "query";
+    public static final String QUERY_TEXT = "query_text";
     TextView txtSearch;
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
     SearchView search;
     private Context context;
-    String query;
+    String query_text;
     private int ADD_TO_LEARN = 0;
     ConnectGdatabase connectGdatabase;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
 
-        query = getIntent().getStringExtra(QUERY_TEXT);
+        query_text = getIntent().getStringExtra(QUERY_TEXT);
 
         search = (SearchView) findViewById(R.id.search);
 
@@ -74,7 +75,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
                 Card card = (Card) lbQuestion.getTag();
-                String cardID = "" + card.getId();
+                String cardID = String.valueOf(card.getId());
                 _gotoCardDetail(cardID);
 
             }
@@ -89,7 +90,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 _optionList(card);
             }
         });
-        _search(query);
+        _search(query_text);
         handleIntent(getIntent());
 
         //Set data and add Touch Listener
@@ -118,10 +119,9 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                // TODO Auto-generated method stub
-
-                Toast.makeText(getBaseContext(), String.valueOf(hasFocus),
-                        Toast.LENGTH_SHORT).show();
+                //query_text = String.valueOf(hasFocus);
+//                Toast.makeText(getBaseContext(), String.valueOf(hasFocus),
+//                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -130,8 +130,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // TODO Auto-generated method stub
-
+                query_text = query_text;
                 Toast.makeText(getBaseContext(), query,
                         Toast.LENGTH_SHORT).show();
                 _search(query);
@@ -140,8 +139,6 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // TODO Auto-generated method stub
-
                 //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -179,7 +176,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         Intent intent = new Intent(this, CardDetailsActivity.class);
         intent.putExtra(LazzyBeeShare.CARDID, cardId);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivityForResult(intent, RESULT_OK);
+        this.startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
     @Override
@@ -188,16 +185,15 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     }
 
     private void handleIntent(Intent intent) {
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            _search(query);
+            query_text = intent.getStringExtra(SearchManager.QUERY);
+            _search(query_text);
         }
     }
 
     private void _search(String query) {
-        //use the query to search
-        Log.i(TAG, "query:" + query);
+        //use the query_text to search
+        Log.i(TAG, "query_text:" + query);
         List<Card> cardList = dataBaseHelper._searchCard(query);
 
         int result_count = cardList.size();
@@ -241,7 +237,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 } else if (items[item] == getString(R.string.action_delete_card)) {
                     _doneCard(card);
                 }
-                _search(query);
+                _search(query_text);
                 dialog.cancel();
             }
         });
@@ -315,8 +311,6 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     public void onBackPressed() {
         if (ADD_TO_LEARN == 1)
             setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
-        else
-            setResult(RESULT_OK, new Intent());
         super.onBackPressed();
 
     }
@@ -333,5 +327,16 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             Log.i(TAG, getString(R.string.not_found));
         }
         lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+        if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
+            //Reload data
+            Log.i(TAG, QUERY_TEXT + ":" + query_text);
+            _search(query_text);
+        }
     }
 }
