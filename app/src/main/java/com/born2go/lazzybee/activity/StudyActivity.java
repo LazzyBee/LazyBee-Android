@@ -55,6 +55,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 
 public class StudyActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
@@ -114,6 +117,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     MenuItem btnBackBeforeCard;
 
+    CardView mCountStudy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +138,62 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         _initAdView();
 
         _setUpStudy();
+
+        _initShowcaseInitStudy();
+
     }
+
+    private void _initShowcaseInitStudy() {
+        String SHOWCASE_ID = getString(R.string.SHOWCASE_INIT_STUDY_ID);
+        // sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(lbCountNew,
+                "This is count new", "GOT IT");
+
+        sequence.addSequenceItem(lbCountAgain,
+                "This is count again", "GOT IT");
+
+        sequence.addSequenceItem(lbCountDue,
+                "This is count review", "GOT IT");
+
+        sequence.addSequenceItem(btnShowAnswer,
+                "This is show answer", "GOT IT");
+
+
+        sequence.start();
+    }
+
+    private void _initShowcaseShowAnswer() {
+        String SHOWCASE_ID = getString(R.string.SHOWCASE_STUDY_ID);
+        // sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setConfig(config);
+        sequence.addSequenceItem(btnAgain0,
+                "Học từ lại ngay", "GOT IT");
+
+        sequence.addSequenceItem(btnHard1,
+                "Khó,học lại sau 1 ngày", "GOT IT");
+
+        sequence.addSequenceItem(btnGood2,
+                "Tốt,học lại sau 2 ngày", "GOT IT");
+
+        sequence.addSequenceItem(btnEasy3,
+                "Đễ,học lại sau 3 ngày", "GOT IT");
+
+
+        sequence.start();
+    }
+
 
     GoogleAccountCredential credential;
 
@@ -295,6 +354,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         lbCountNew = (TextView) findViewById(R.id.lbCountTotalVocabulary);
         lbCountAgain = (TextView) findViewById(R.id.lbCountAgainInday);
         lbCountDue = (TextView) findViewById(R.id.lbAgainDue);
+
+        mCountStudy = (CardView) findViewById(R.id.mCountStudy);
 
 //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -710,6 +771,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //Set flag Display State
         answerDisplay = true;
         _showAnswer();
+        _initShowcaseShowAnswer();
 
     }
 
@@ -1269,7 +1331,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         }
 
     }
-
 
 
     @Override
