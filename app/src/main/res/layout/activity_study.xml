@@ -50,9 +50,9 @@
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
             android:layout_marginTop="@dimen/cardview_study_margin_top"
-            android:id="@+id/">
+            >
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="horizontal">
@@ -64,33 +64,34 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="5dp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/card_new_color" />
+                    android:textColor="@color/card_new_color"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/lbCountAgainInday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="51dp"
-                    android:layout_marginRight="5dp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/card_again_color" />
+                    android:textColor="@color/card_again_color"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/lbAgainDue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="86dp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/card_due_color" />
+                    android:textColor="@color/card_due_color"
+                    android:layout_gravity="center_vertical" />
 
-            </RelativeLayout>
+            </LinearLayout>
         </android.support.v7.widget.CardView>
         <!--WebView-->
 
