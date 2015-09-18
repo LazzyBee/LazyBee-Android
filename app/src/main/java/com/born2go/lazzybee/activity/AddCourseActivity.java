@@ -33,7 +33,13 @@ public class AddCourseActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == android.R.id.home) {
+            finish();
+            onBackPressed();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
 }

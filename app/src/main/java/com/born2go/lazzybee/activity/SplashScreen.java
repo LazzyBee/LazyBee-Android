@@ -25,6 +25,7 @@ public class SplashScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash_screen);
 
         TagManager tagManager = TagManager.getInstance(this);
@@ -44,14 +45,15 @@ public class SplashScreen extends Activity {
         pending.setResultCallback(new ResultCallback<ContainerHolder>() {
             @Override
             public void onResult(ContainerHolder containerHolder) {
+
+                //
                 ContainerHolderSingleton.setContainerHolder(containerHolder);
                 Container container = containerHolder.getContainer();
                 if (!containerHolder.getStatus().isSuccess()) {
                     Log.e("LazzyBee", "failure loading container for GTag");
                     displayErrorToUser(R.string.gtag_container_load_error);
                     //return;
-                }
-                else {
+                } else {
                     ContainerHolderSingleton.setContainerHolder(containerHolder);
                     ContainerLoadedCallback.registerCallbacksForContainer(container);
                     containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
@@ -78,16 +80,18 @@ public class SplashScreen extends Activity {
 //        }, SPLASH_TIME_OUT);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-        startMainActivity();
+        //startMainActivity();
     }
 
     private void startMainActivity() {
         // Start your app main activity
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
         startActivity(i);
+        this.finish();
     }
 
     /**
