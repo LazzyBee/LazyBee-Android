@@ -38,34 +38,55 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
     protected Card doInBackground(Card... params) {
         //Call Api Update card
         Log.i(TAG, "Question:" + params[0].getQuestion());
+        //Define q
+        String q = params[0].getQuestion();
 
-        try {
-            //Define q
-            String q = params[0].getQuestion();
+        Log.i(TAG, "q:" + q + ",gId:" + params[0].getgId());
 
-            //Get voca in Server
-            Voca voca = connectGdatabase._getGdatabase_byQ(q.replaceAll("\\s+", "") /*Remove remove special characters*/);
+        //Voca voca = connectGdatabase._getGdatabase_byQ(q.replaceAll("\\s+", "") /*Remove remove special characters*/);
+
+        //Get voca in Server
+        Voca voca = connectGdatabase._getGdatabase_byQ(q);
+        if (voca != null) {
+            Log.i(TAG, "get voca by question:" + q);
+            return defineCardbyVoca(params[0], voca);
+        } else if (params[0].getgId() > 0) {
+            Log.i(TAG, "get voca by gID:" + params[0].getgId());
+            //get voca by gID
+            voca = connectGdatabase._getGdatabase_byID(params[0].getgId());
             if (voca != null) {
-                Log.i(TAG, "voca:\t Q:" + voca.getQ() + ",level:" + voca.getLevel() + ",package:" + voca.getPackages());
-                Card card = new Card();
-                card.setId(params[0].getId());
-
-                card.setQuestion(params[0].getQuestion());
-                card.setLevel(Integer.valueOf(params[0].getLevel()));
-                card.setAnswers(voca.getA());
-                card.setPackage(voca.getPackages());
-                card.setLast_ivl(params[0].getLast_ivl());
-                card.setFactor(params[0].getFactor());
-                card.setRev_count(params[0].getRev_count());
-                card.setDue(params[0].getDue());
-                card.setQueue(params[0].getQueue());
-                return card;
-
+                return defineCardbyVoca(params[0], voca);
             } else {
-                Log.i(TAG, "get voca null");
                 return null;
             }
+        } else {
+            Log.i(TAG, "get voca null");
+            return null;
+        }
 
+
+    }
+
+    private Card defineCardbyVoca(Card _card, Voca voca) {
+        try {
+            Log.i(TAG, "voca:\t Q:" + voca.getQ() + ",level:" + voca.getLevel() + ",package:" + voca.getPackages());
+            Card card = new Card();
+
+            card.setgId(voca.getGid());
+            card.setQuestion(voca.getQ());
+            card.setAnswers(voca.getA());
+            card.setPackage(voca.getPackages());
+            card.setLevel(Integer.valueOf(voca.getLevel()));
+
+
+            card.setId(_card.getId());
+            card.setLast_ivl(_card.getLast_ivl());
+            card.setFactor(_card.getFactor());
+            card.setRev_count(_card.getRev_count());
+            card.setDue(_card.getDue());
+            card.setQueue(_card.getQueue());
+
+            return card;
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
             e.printStackTrace();
