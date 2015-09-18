@@ -134,6 +134,12 @@ public class LearnApiImplements implements LearnApi {
                     card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                     card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
+                    if (cursor.getString(CARD_INDEX_GID) != null) {
+                        card.setgId(cursor.getLong(CARD_INDEX_GID));
+                    } else {
+                        card.setgId(0);
+                    }
+
                     //Log.i(TAG, card.toString());
                     //System.out.print(card.toString());
 
@@ -750,6 +756,11 @@ public class LearnApiImplements implements LearnApi {
                     card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
                     card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
+                    if (cursor.getString(CARD_INDEX_GID) != null) {
+                        card.setgId(cursor.getInt(CARD_INDEX_GID));
+                    } else {
+                        card.setgId(0);
+                    }
 
                     datas.add(card);
 
