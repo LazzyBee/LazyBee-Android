@@ -79,7 +79,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
             // mCardView.setRadius(0f);
             lbLimit.setVisibility(View.GONE);
             lbSettingName.setTextSize(15f);
-            lbSettingName.setTextColor(context.getResources().getColor(R.color.teal_500));
+            lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimary));
         } else if (holder.viewType == TYPE_SETTING_NAME) {
             lbSettingName.setText(customStudys.get(position));
             // mCardView.setRadius(0f);

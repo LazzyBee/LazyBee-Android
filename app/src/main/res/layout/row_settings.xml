@@ -47,7 +47,7 @@
                 android:text="0"
                 android:id="@+id/lbLimit"
                 android:layout_alignEnd="@+id/mSwitch"
-                android:textColor="@color/teal_500"
+                android:textColor="@color/colorPrimary"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_alignTop="@+id/lbSettingName"
