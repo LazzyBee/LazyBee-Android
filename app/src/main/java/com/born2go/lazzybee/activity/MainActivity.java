@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper._get100Card();
         _initInterstitialAd();
 
-         _initShowcaseLazzyBee();
+        _initShowcaseLazzyBee();
 
 
     }
@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity
                 .addTestDevice(getResources().getStringArray(R.array.devices)[0])
                 .addTestDevice(getResources().getStringArray(R.array.devices)[1])
                 .build();
+
         mInterstitialAd.loadAd(adRequest);
     }
 
@@ -455,8 +456,8 @@ public class MainActivity extends AppCompatActivity
         mCardViewCustomStudy = (CardView) findViewById(R.id.mCardViewCustomStudy);
 
         lbNameCourse = (TextView) findViewById(R.id.lbNameCourse);
-        lbStudy= (TextView) findViewById(R.id.lbStudy);
-        lbCustomStudy= (TextView) findViewById(R.id.lbCustomStudy);
+        lbStudy = (TextView) findViewById(R.id.lbStudy);
+        lbCustomStudy = (TextView) findViewById(R.id.lbCustomStudy);
 
         mDue = (RelativeLayout) findViewById(R.id.mDue);
         mCongratulations = (RelativeLayout) findViewById(R.id.mCongratulations);
@@ -1083,7 +1084,11 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
+
+            //set Slide ac
+//            overridePendingTransition(R.anim.slide_right, 0);
             //this.startActivityForResult(intent, RESULT_OK);
 
         } else if (type == getResources().getInteger(R.integer.goto_study_code1)) {
@@ -1182,18 +1187,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
+        super.onBackPressed();
+        Log.i(TAG, "Back Press");
         //
         //int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
         //Log.i(TAG, "backStackcount:" + backStackcount);
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        int init = sp.getInt(LazzyBeeShare.INIT_NOTIFICATION, 2);
-        Log.i(TAG, "_initInterstitialAd noti:" + init);
-        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
-        Log.i(TAG, "b _initInterstitialAd noti:" + init);
-        _startNotificationServices();
-        //this.finish();
+//        SharedPreferences sp = PreferenceManager
+//                .getDefaultSharedPreferences(this);
+//        int init = sp.getInt(LazzyBeeShare.INIT_NOTIFICATION, 2);
+//        Log.i(TAG, "_initInterstitialAd noti:" + init);
+//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
+//        Log.i(TAG, "b _initInterstitialAd noti:" + init);
+//        _startNotificationServices();
+        this.finish();
         System.exit(0);
     }
 
@@ -1317,10 +1323,10 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause()");
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
-        _startNotificationServices();
+//        SharedPreferences sp = PreferenceManager
+//                .getDefaultSharedPreferences(this);
+//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
+//        _startNotificationServices();
     }
 
     private void _startNotificationServices() {
