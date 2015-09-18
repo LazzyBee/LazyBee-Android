@@ -43,8 +43,19 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
     @Override
     public void gotoCardDetails(String cardId) {
         Intent intent = new Intent(this, CardDetailsActivity.class);
-        intent.putExtra(LazzyBeeShare.CARDID,cardId);
+        intent.putExtra(LazzyBeeShare.CARDID, cardId);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Updated Card reload activity
+        if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
+            //reload activity
+            finish();
+            startActivity(getIntent());
+        }
     }
 }

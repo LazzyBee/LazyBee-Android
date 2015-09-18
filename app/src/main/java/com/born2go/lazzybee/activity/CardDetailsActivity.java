@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -26,8 +27,8 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -40,7 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class CardDetailsActivity extends AppCompatActivity implements AsyncResponse {
+public class CardDetailsActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
 
 
     private static final String TAG = "CardDetailsActivity";
@@ -97,6 +98,7 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
 
 
     }
+
     private void _initAdView() {
         AdView mAdView = (AdView) findViewById(R.id.adView);
 
@@ -150,9 +152,9 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
         if (card == null)
             card = learnApiImplements._getCardByID(cardId);
 
-        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
-        updateContenCardFormServer.execute(card);
-        updateContenCardFormServer.delegate = this;
+        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+        getCardFormServerByQuestion.execute(card);
+        getCardFormServerByQuestion.delegate = this;
 
 
     }
@@ -222,7 +224,12 @@ public class CardDetailsActivity extends AppCompatActivity implements AsyncRespo
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
 
+            //Update Card form DB
+            learnApiImplements._updateCardFormServer(card);
+
             Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
+            //set Result code for updated List card
+            setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
         } else {
             Toast.makeText(context, "Update card error", Toast.LENGTH_SHORT).show();
         }

@@ -9,7 +9,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/add_course"
         android:id="@+id/textView2"
-        android:textColor="@color/teal_500"
+        android:textColor="@color/colorPrimary"
         android:layout_centerVertical="true"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="16dp" />

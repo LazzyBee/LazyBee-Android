@@ -2,13 +2,13 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/teal_500</item>
-        <item name="colorPrimaryDark">@color/teal_200</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/grey_300</item>
     </style>
 
     <style name="SplashScreen" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimaryDark">@color/teal_500</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="windowActionBar">false</item>
     </style>
 
@@ -34,8 +34,8 @@
     </style>
 
     <style name="ThemeNoActionBar" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/teal_500</item>
-        <item name="colorPrimaryDark">@color/teal_200</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/grey_300</item>
         <item name="windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/white</item>

@@ -32,8 +32,8 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.LazzyBeeApplication;
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer;
-import com.born2go.lazzybee.adapter.UpdateContenCardFormServer.AsyncResponse;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
+import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
@@ -57,7 +57,7 @@ import java.util.List;
 
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 
-public class StudyActivity extends AppCompatActivity implements AsyncResponse {
+public class StudyActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyActivity";
     private DataLayer mDataLayer;
@@ -408,12 +408,16 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                     Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_NEW_CRAM0");
 
                     //Remove beforecard in againlist
+//                    if(againList.contains(beforeCard)){
+//                        againList.remove(beforeCard);
+//                    }
                     for (Card card : againList) {
                         if (card.getId() == beforeCard.getId()) {
                             againList.remove(card);
                             break;
                         }
                     }
+
                     lbCountAgain.setText(String.valueOf(againList.size()));
 
                     //setDue and set Lat_itv to default =0
@@ -422,17 +426,17 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
                     //Define clone todayList
                     List<Card> cloneTodayList = new ArrayList<Card>(todayList);
-                    int todayCount = cloneTodayList.size();
+                    int clonetodayCount = cloneTodayList.size();
 
                     //Clear Data
                     todayList.clear();
 
                     //Readd card to new card
-                    if (todayCount == 0) {
+                    if (clonetodayCount == 0) {
                         todayList.add(beforeCard);
                     } else {
                         todayList.add(0, beforeCard);
-                        for (int i = 0; i < todayCount; i++) {
+                        for (int i = 0; i < clonetodayCount; i++) {
                             todayList.add(i + 1, cloneTodayList.get(i));
                         }
                     }
@@ -446,6 +450,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                     Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_LNR1");
 
                     //Remove beforecard in againlist
+//                    if(againList.contains(beforeCard)){
+//                        againList.remove(beforeCard);
+//                    }
                     for (Card card : againList) {
                         if (card.getId() == beforeCard.getId()) {
                             againList.remove(card);
@@ -535,9 +542,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
 
     private void _updateCardFormServer() {
         //Call Api Update Card
-        UpdateContenCardFormServer updateContenCardFormServer = new UpdateContenCardFormServer(context);
-        updateContenCardFormServer.execute(currentCard);
-        updateContenCardFormServer.delegate = this;
+        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+        getCardFormServerByQuestion.execute(currentCard);
+        getCardFormServerByQuestion.delegate = this;
     }
 
 
@@ -1097,6 +1104,9 @@ public class StudyActivity extends AppCompatActivity implements AsyncResponse {
                 //Load question
                 _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card.getQuestion()), card.getQueue());
             }
+
+            //Update Card form DB
+            dataBaseHelper._updateCardFormServer(card);
 
             Toast.makeText(context, "Update card ok", Toast.LENGTH_SHORT).show();
         } else {
