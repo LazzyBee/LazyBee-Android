@@ -49,7 +49,8 @@
             android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginTop="@dimen/cardview_study_margin_top">
+            android:layout_marginTop="@dimen/cardview_study_margin_top"
+            android:id="@+id/">
 
             <RelativeLayout
                 android:layout_width="match_parent"
