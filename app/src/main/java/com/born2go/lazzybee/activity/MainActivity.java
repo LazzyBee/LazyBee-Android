@@ -80,7 +80,6 @@ import java.util.List;
 import java.util.Locale;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
@@ -178,21 +177,13 @@ public class MainActivity extends AppCompatActivity
         dataBaseHelper._get100Card();
         _initInterstitialAd();
 
-        // _initShowcaseLazzyBee();
+         _initShowcaseLazzyBee();
 
 
     }
 
     private void _initShowcaseLazzyBee() {
-        String SHOWCASE_ID = getString(R.string.SHOWCASE_ID);
-        new MaterialShowcaseView.Builder(this)
-                .setTarget(mCardViewStudy)
-                .setDismissText("GOT IT")
-                .setContentText("This is start study")
-                        //.setDelay(withDelay) // optional but starting animations immediately in onCreate can make them choppy
-                .singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
-                .show();
-
+        String SHOWCASE_ID = getString(R.string.SHOWCASE_MAIN_ID);
         // sequence example
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // half second between each showcase view
@@ -200,6 +191,8 @@ public class MainActivity extends AppCompatActivity
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 
         sequence.setConfig(config);
+        sequence.addSequenceItem(mCardViewStudy,
+                "This is start study", "GOT IT");
 
         sequence.addSequenceItem(mCardViewReView,
                 "This is goto review card", "GOT IT");
