@@ -408,12 +408,16 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_NEW_CRAM0");
 
                     //Remove beforecard in againlist
+//                    if(againList.contains(beforeCard)){
+//                        againList.remove(beforeCard);
+//                    }
                     for (Card card : againList) {
                         if (card.getId() == beforeCard.getId()) {
                             againList.remove(card);
                             break;
                         }
                     }
+
                     lbCountAgain.setText(String.valueOf(againList.size()));
 
                     //setDue and set Lat_itv to default =0
@@ -422,17 +426,17 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                     //Define clone todayList
                     List<Card> cloneTodayList = new ArrayList<Card>(todayList);
-                    int todayCount = cloneTodayList.size();
+                    int clonetodayCount = cloneTodayList.size();
 
                     //Clear Data
                     todayList.clear();
 
                     //Readd card to new card
-                    if (todayCount == 0) {
+                    if (clonetodayCount == 0) {
                         todayList.add(beforeCard);
                     } else {
                         todayList.add(0, beforeCard);
-                        for (int i = 0; i < todayCount; i++) {
+                        for (int i = 0; i < clonetodayCount; i++) {
                             todayList.add(i + 1, cloneTodayList.get(i));
                         }
                     }
@@ -446,6 +450,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_LNR1");
 
                     //Remove beforecard in againlist
+//                    if(againList.contains(beforeCard)){
+//                        againList.remove(beforeCard);
+//                    }
                     for (Card card : againList) {
                         if (card.getId() == beforeCard.getId()) {
                             againList.remove(card);
