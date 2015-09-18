@@ -29,14 +29,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:padding="3dp">
-
-            <RelativeLayout
+            android:padding="3dp"
+            android:layout_marginTop="20dp">
+            <android.support.v7.widget.CardView
+                android:id="@+id/view"
                 android:layout_width="fill_parent"
-                android:layout_height="25dp"
-                android:layout_gravity="left|top"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="10dp">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:cardElevation="@dimen/setting_card_view_elevation"
+                android:layout_marginBottom="5dp"
+                android:background="#AEB404"
+                app:cardBackgroundColor="#AEB404"
+                android:onClick="onlbTipHelpClick">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="45dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:background="#AEB404">-->
 
                 <TextView
 
@@ -46,20 +57,22 @@
                     android:scrollHorizontally="true"
                     android:scrollbars="horizontal"
                     android:singleLine="true"
+                    android:padding="10dp"
                     android:cursorVisible="false"
+                    android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:focusableInTouchMode="true"
                     android:marqueeRepeatLimit ="marquee_forever"
-                    android:background="#AEB404"
                     android:textColor="#ffffff"
                     android:textSize="18sp"
+                    android:onClick="onlbTipHelpClick"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:onClick="onlbTipHelpClick"
-                    />
-            </RelativeLayout>
+                    android:background="#AEB404" />
+            <!--</RelativeLayout>-->
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/view"
@@ -68,7 +81,9 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                app:cardElevation="@dimen/setting_card_view_elevation">
+                app:cardElevation="@dimen/setting_card_view_elevation"
+                app:cardBackgroundColor="@color/teal_500"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,128 +113,139 @@
                     </RelativeLayout>
 
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayout"
-                        android:layout_width="180dp"
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingBottom="20dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="20dp">
+                        android:background="@color/white">
 
                         <RelativeLayout
-                            android:id="@+id/mDue"
-                            android:layout_width="173dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal">
+                            android:id="@+id/relativeLayout"
+                            android:layout_width="180dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:paddingBottom="20dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="20dp"
+                            android:background="@color/white">
+
+                            <RelativeLayout
+                                android:id="@+id/mDue"
+                                android:layout_width="173dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal">
+
+                                <TextView
+                                    android:id="@+id/textView4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentTop="true"
+                                    android:text="@string/due_today"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:textColor="@color/teal_500" />
+
+                                <TextView
+                                    android:id="@+id/lbDueToday2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="00 00 00"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:textColor="#000000"
+                                    android:layout_alignParentBottom="false"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true" />
+
+
+                            </RelativeLayout>
 
                             <TextView
-                                android:id="@+id/textView4"
+                                android:id="@+id/textView17"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:text="@string/due_today"
+                                android:layout_alignParentStart="true"
+                                android:text="@string/total_new_learn"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="@color/teal_500"
+                                android:layout_below="@+id/mDue" />
+
+                            <TextView
+                                android:id="@+id/textView18"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignStart="@+id/textView17"
+                                android:layout_below="@+id/textView17"
+                                android:text="@string/total_cards"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:textColor="@color/teal_500" />
 
                             <TextView
-                                android:id="@+id/lbDueToday2"
+                                android:id="@+id/lbTotalNewCount2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="00 00 00"
+                                android:text="300"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="#000000"
-                                android:layout_alignParentBottom="false"
+                                android:textColor="@color/teal_500"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_below="@+id/mDue" />
+
+                            <TextView
+                                android:id="@+id/lbTotalsCount2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="400"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="@color/teal_500"
+                                android:layout_below="@+id/textView17"
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentEnd="true" />
-
-
                         </RelativeLayout>
 
-                        <TextView
-                            android:id="@+id/textView17"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:text="@string/total_new_learn"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/teal_500"
-                            android:layout_below="@+id/mDue" />
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/teal_500"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:id="@+id/mLine"
+                            android:visibility="gone"></LinearLayout>
 
-                        <TextView
-                            android:id="@+id/textView18"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignStart="@+id/textView17"
-                            android:layout_below="@+id/textView17"
-                            android:text="@string/total_cards"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/teal_500" />
+                        <RelativeLayout
+                            android:id="@+id/mCongratulations"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:padding="16dp"
+                            android:visibility="visible"
+                            android:background="@color/white">
 
-                        <TextView
-                            android:id="@+id/lbTotalNewCount2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="300"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/teal_500"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_below="@+id/mDue" />
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:text="@string/congratulations"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/teal_500" />
 
-                        <TextView
-                            android:id="@+id/lbTotalsCount2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="400"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/teal_500"
-                            android:layout_below="@+id/textView17"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true" />
-                    </RelativeLayout>
+                            <TextView
+                                android:id="@+id/textView3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textView"
+                                android:layout_centerHorizontal="true"
+                                android:text="@string/message_congratulations"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="@color/grey_600" />
+                        </RelativeLayout>
+                    </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/teal_500"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:id="@+id/mLine"
-                        android:visibility="gone"></LinearLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/mCongratulations"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="16dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"
-                            android:text="@string/congratulations"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/teal_500" />
-
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textView"
-                            android:layout_centerHorizontal="true"
-                            android:text="@string/message_congratulations"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/grey_600" />
-                    </RelativeLayout>
 
                     <!--<LinearLayout-->
                     <!--android:orientation="vertical"-->
@@ -244,14 +270,14 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/mCardViewStudy"
+                android:onClick="_onBtnStudyOnClick"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:autoText="false"
-                android:onClick="_onBtnStudyOnClick"
                 android:background="@color/teal_500"
                 android:nestedScrollingEnabled="false"
                 app:cardBackgroundColor="@color/teal_500"
@@ -273,7 +299,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
@@ -353,7 +379,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:nestedScrollingEnabled="false">
 
                 <RelativeLayout
