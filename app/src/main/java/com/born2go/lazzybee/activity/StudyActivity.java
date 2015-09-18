@@ -221,27 +221,36 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //if (newCount > 0)
         //  todayList = dataBaseHelper._getRandomCard(newCount);
         if (dueCount == 0) {
-            Log.i(TAG, "onCreate()  dueCount == 0");
+            Log.i(TAG, "_setUpStudy()  dueCount == 0");
         } else {
-            Log.i(TAG, "onCreate()  dueCount != 0");
+
+            Log.i(TAG, "_setUpStudy()  dueCount != 0");
+
             if (dueCount < total_learn_per_day) {
-                Log.i(TAG, "onCreate()  dueCount < total_learn_per_day");
+
+                Log.i(TAG, "_setUpStudy()  dueCount < total_learn_per_day");
+
                 if (total_learn_per_day - dueCount < limit_today) {
-                    Log.i(TAG, "onCreate()  total_learn_per_day - dueCount < limit_today");
+
+                    Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount < limit_today");
                     limit_today = total_learn_per_day - dueCount;
+
                 } else if (total_learn_per_day - dueCount > limit_today) {
-                    Log.i(TAG, "onCreate()  total_learn_per_day - dueCount > limit_today");
+
+                    Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount > limit_today");
                 }
             } else if (dueCount >= total_learn_per_day) {
-                Log.i(TAG, "onCreate()  dueCount >= total_learn_per_day");
+
+                Log.i(TAG, "_setUpStudy()  dueCount >= total_learn_per_day");
                 limit_today = 0;
             }
-        }
-        if (dueCount > 0)
             learn_more = false;
+        }
 
+        //Define todayList
         todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
 
+        //Define count card
         int againCount = againList.size();
         int todayCount = todayList.size();
 
@@ -249,26 +258,24 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         Log.i(TAG, "todayCount:" + todayCount);
         Log.i(TAG, "dueCount:" + dueCount + ",limit:" + dueCount + ",today:" + todayCount);
 
-        //set data
+        //Define check_learn
+        //check_learn==true Study
+        //check_learn==false Complete Study
         boolean check_learn = againCount > 0 || dueCount > 0 || todayCount > 0;
 
         Log.i(TAG, "check_learn:" + (check_learn));
+
         if (check_learn) {
-//        if (todayCount > 0) {
-            _setDataforWebView();
-
-            final int list_card_again_in_today_size = againList.size();
-            //set total vocabilary
-            lbCountAgain.setText(String.valueOf(list_card_again_in_today_size));
-            lbCountAgain.setTag(list_card_again_in_today_size);
-
-            int list_card_new_size = todayList.size();
-            lbCountNew.setText(String.valueOf(list_card_new_size));
-            lbCountNew.setTag(list_card_new_size);
-
-
-            lbCountDue.setText(String.valueOf(dueList.size()));
-            lbCountDue.setTag(dueList.size());
+            _showFirstCard();
+            //set again count
+            lbCountAgain.setText(String.valueOf(againCount));
+            lbCountAgain.setTag(againCount);
+            //set new Count
+            lbCountNew.setText(String.valueOf(todayCount));
+            lbCountNew.setTag(todayCount);
+            //set Due Count
+            lbCountDue.setText(String.valueOf(dueCount));
+            lbCountDue.setTag(dueCount);
         } else {
             Log.i(TAG, "_completeLean");
             _completeLean();
@@ -706,62 +713,22 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
      * <p/>
      * Define JavaScrip to Speek Text.
      */
-    private void _setDataforWebView() {
+    private void _showFirstCard() {
         //Setting webview
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
 
-        //Load one card to show
-        try {
-            if (againList.size() > 0) {
-                Log.i(TAG, "Load first again card ");
-                //currentCard = againList.get(position_again);
-                currentCard = againList.get(0);
-                //get current time and du card
-                int current_time = (int) (new Date().getTime() / 1000);
-                int due = (int) currentCard.getDue();
-
-                Log.i(TAG, "_setDataforWebView:" + current_time + ":" + due);
-                if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
-                    Log.i(TAG, "_setDataforWebView:Next card is again card 2");
-
-                    lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                    lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                    lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                    //Display next card
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
-                } else {
-                    Log.i(TAG, "_setDataforWebView:Next card is due card 1");
-                    _nextDueCard();
-                }
-
-            } else if (dueList.size() > 0) {
-                Log.i(TAG, "Load first duecard ");
-                //currentCard = dueList.get(position_due);
-                currentCard = dueList.get(0);
-
-                lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-            } else if (todayList.size() > 0) {
-                Log.i(TAG, "Load first new card ");
-                currentCard = todayList.get(position);
-
-                lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-                lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        //Load first card
+        if (againList.size() > 0) {
+            //Load first card is Again card
+            _nextAgainCard();
+        } else if (dueList.size() > 0) {
+            //Load first card is Due card
+            _nextDueCard();
+        } else if (todayList.size() > 0) {
+            //Load first card is new card
+            _nextNewCard();
         }
-
-        //Showtime
-//        StudyCardPageAdapter studyCardPageAdapter = new StudyCardPageAdapter(context, currentCard, 0);
-//        mViewPager.setAdapter(studyCardPageAdapter);
-//        mSlidingTabLayout.setViewPager(mViewPager);
-
 
         //Inject native handle to web element
         _addJavascriptInterfaceQuestionAndAnswer();
@@ -1336,5 +1303,12 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //
+//        overridePendingTransition(R.anim.slide_left, 0);
     }
 }
