@@ -90,7 +90,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:background="@color/teal_500"
+                android:background="@color/colorPrimary"
 
                 android:text="Study"
                 android:textColor="#ffffffff" />
@@ -111,7 +111,7 @@
                 android:layout_weight="1"
                 android:onClick="_onbtnReviewOnClick"
                 android:text="@string/review"
-                android:textColor="@color/teal_500" />
+                android:textColor="@color/colorPrimary" />
 
 
             <Button
@@ -121,7 +121,7 @@
                 android:layout_weight="0.5"
                 android:onClick="_onCustomStudyOnClick"
                 android:text="@string/learn_more"
-                android:textColor="@color/teal_500" />
+                android:textColor="@color/colorPrimary" />
 
         </LinearLayout>
 

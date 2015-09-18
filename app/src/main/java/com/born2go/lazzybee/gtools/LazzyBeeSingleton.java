@@ -5,6 +5,7 @@ import android.speech.tts.TextToSpeech;
 
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
+import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 
 import java.util.Locale;
@@ -19,7 +20,7 @@ public class LazzyBeeSingleton {
     public static DataBaseHelper dataBaseHelper;
     public static DatabaseUpgrade databaseUpgrade;
     public static TextToSpeech textToSpeech;
-
+    public static ConnectGdatabase connectGdatabase;
     public LazzyBeeSingleton(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
         databaseUpgrade = new DatabaseUpgrade(context);
@@ -32,6 +33,7 @@ public class LazzyBeeSingleton {
                 }
             }
         });
+        connectGdatabase = new ConnectGdatabase();
     }
 
     public static void initInstance(Context context) {

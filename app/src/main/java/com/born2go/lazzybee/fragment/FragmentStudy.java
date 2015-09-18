@@ -302,7 +302,7 @@ public class FragmentStudy extends Fragment {
                 currentCard = againList.get(position_again);
 
                 lbCountDue.setBackgroundResource(R.color.white);
-                lbCountAgain.setBackgroundResource(R.color.teal_200);
+                lbCountAgain.setBackgroundResource(R.color.colorPrimaryDark);
                 lbCountNew.setBackgroundResource(R.color.white);
             } else if (dueList.size() > 0) {
                 //Todo: get next Card
@@ -310,7 +310,7 @@ public class FragmentStudy extends Fragment {
                 currentCard = dueList.get(position_due);
 
 
-                lbCountDue.setBackgroundResource(R.color.teal_200);
+                lbCountDue.setBackgroundResource(R.color.colorPrimaryDark);
                 lbCountAgain.setBackgroundResource(R.color.white);
                 lbCountNew.setBackgroundResource(R.color.white);
             } else if (todayList.size() > 0) {
@@ -320,7 +320,7 @@ public class FragmentStudy extends Fragment {
 
                 lbCountDue.setBackgroundResource(R.color.white);
                 lbCountAgain.setBackgroundResource(R.color.white);
-                lbCountNew.setBackgroundResource(R.color.teal_200);
+                lbCountNew.setBackgroundResource(R.color.colorPrimaryDark);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -683,7 +683,7 @@ public class FragmentStudy extends Fragment {
                 //set BackBackground color
                 lbCountDue.setBackgroundResource(R.color.white);
                 lbCountAgain.setBackgroundResource(R.color.white);
-                lbCountNew.setBackgroundResource(R.color.teal_200);
+                lbCountNew.setBackgroundResource(R.color.colorPrimaryDark);
 
 
                 //TODO:Display next card
@@ -706,7 +706,7 @@ public class FragmentStudy extends Fragment {
             position_due = (dueList.size() - 1);
             currentCard = dueList.get(position_due);
 
-            lbCountDue.setBackgroundResource(R.color.teal_200);
+            lbCountDue.setBackgroundResource(R.color.colorPrimaryDark);
             lbCountAgain.setBackgroundResource(R.color.white);
             lbCountNew.setBackgroundResource(R.color.white);
 
@@ -740,7 +740,7 @@ public class FragmentStudy extends Fragment {
                     Log.i(TAG, "_nextAgainCard:Next card is again card 1");
 
                     lbCountDue.setBackgroundResource(R.color.white);
-                    lbCountAgain.setBackgroundResource(R.color.teal_200);
+                    lbCountAgain.setBackgroundResource(R.color.colorPrimaryDark);
                     lbCountNew.setBackgroundResource(R.color.white);
 
                     //TODO:Display next card
@@ -766,7 +766,7 @@ public class FragmentStudy extends Fragment {
                         Log.i(TAG, "_nextAgainCard:Next card is again card 2");
 
                         lbCountDue.setBackgroundResource(R.color.white);
-                        lbCountAgain.setBackgroundResource(R.color.teal_200);
+                        lbCountAgain.setBackgroundResource(R.color.colorPrimaryDark);
                         lbCountNew.setBackgroundResource(R.color.white);
 
                         //TODO:Display next card

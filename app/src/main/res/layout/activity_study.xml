@@ -24,7 +24,7 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_500"
+        android:background="@color/colorPrimary"
         android:elevation="2dp"
         android:visibility="gone" />
 
@@ -178,7 +178,7 @@
                     android:id="@+id/btnShowAnswer"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="@color/material_deep_teal_500"
+                    android:background="@color/colorPrimary"
                     android:onClick="onbtnShowAnswerClick"
                     android:text="@string/show_answer"
                     android:visibility="visible" />
@@ -200,7 +200,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
-                        android:background="@color/teal_500"
+                        android:background="@color/colorPrimary"
                         android:onClick="onbtnAgainClick"
                         android:paddingRight="5dp"
                         android:text="@string/EASE_AGAIN" />
@@ -211,7 +211,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
-                        android:background="@color/material_deep_teal_500"
+                        android:background="@color/colorPrimary"
                         android:onClick="onbtnHardClick"
                         android:paddingRight="5dp"
                         android:text="@string/EASE_HARD" />
@@ -222,7 +222,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
-                        android:background="@color/material_deep_teal_500"
+                        android:background="@color/colorPrimary"
                         android:onClick="onbtnGoodClick"
                         android:text="@string/EASE_GOOD" />
 
@@ -231,7 +231,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="0.3"
-                        android:background="@color/material_deep_teal_500"
+                        android:background="@color/colorPrimary"
                         android:onClick="onbtnEasyClick"
                         android:text="@string/EASE_EASY" />
 

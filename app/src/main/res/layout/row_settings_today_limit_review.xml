@@ -41,7 +41,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="0"
                 android:id="@+id/lbLimit"
-                android:textColor="@color/teal_500"
+                android:textColor="@color/colorPrimary"
                 android:layout_marginRight="16dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"

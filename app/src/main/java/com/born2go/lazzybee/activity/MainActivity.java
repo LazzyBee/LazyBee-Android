@@ -949,7 +949,7 @@ public class MainActivity extends AppCompatActivity
 
 
     /**
-     * Goto FragemenSearch with query
+     * Goto FragemenSearch with query_text
      */
     private void _gotoSeach(String query) {
         Intent intent = new Intent(this, SearchActivity.class);
