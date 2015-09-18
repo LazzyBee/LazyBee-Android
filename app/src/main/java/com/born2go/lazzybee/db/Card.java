@@ -6,7 +6,7 @@ package com.born2go.lazzybee.db;
 public class Card {
 
     int id;
-    int gId;/*"global unique id */
+    long gId;/*"global unique id */
 
     String question;
     String answers;
@@ -94,11 +94,11 @@ public class Card {
         this.status = status;
     }
 
-    public int getgId() {
+    public long getgId() {
         return gId;
     }
 
-    public void setgId(int gId) {
+    public void setgId(long gId) {
         this.gId = gId;
     }
 
