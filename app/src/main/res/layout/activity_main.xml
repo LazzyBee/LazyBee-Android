@@ -282,18 +282,25 @@
                 android:nestedScrollingEnabled="false"
                 app:cardBackgroundColor="@color/colorPrimary"
                 app:cardElevation="@dimen/setting_card_view_elevation">
+                <RelativeLayout
 
-                <TextView
-                    android:id="@+id/textView10"
                     android:layout_width="fill_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/lbStudy"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
-                    android:gravity="center"
                     android:padding="16dp"
                     android:text="@string/study"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_centerHorizontal="true" />
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
+
+
 
 
             <LinearLayout
@@ -390,7 +397,7 @@
                     android:onClick="_onCustomStudyOnClick">
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/lbCustomStudy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -405,8 +412,8 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_action_settings"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/textView9"
-                        android:layout_toStartOf="@+id/textView9" />
+                        android:layout_toLeftOf="@+id/lbCustomStudy"
+                        android:layout_toStartOf="@+id/lbCustomStudy" />
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>

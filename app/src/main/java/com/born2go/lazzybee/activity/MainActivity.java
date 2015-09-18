@@ -157,6 +157,10 @@ public class MainActivity extends AppCompatActivity
 
     TextView lbReview;
 
+    TextView lbStudy;
+
+    TextView lbCustomStudy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,13 +198,16 @@ public class MainActivity extends AppCompatActivity
         sequence.addSequenceItem(mCardViewStudy,
                 "This is start study", "GOT IT");
 
+        sequence.addSequenceItem(lbDueToday,
+                "This is my Due", "GOT IT");
+
         sequence.addSequenceItem(mCardViewReView,
                 "This is goto review card", "GOT IT");
 
         sequence.addSequenceItem(mCardViewLearnMore,
                 "This is learn more", "GOT IT");
 
-        sequence.addSequenceItem(mCardViewCustomStudy,
+        sequence.addSequenceItem(lbCustomStudy,
                 "This is custom study", "GOT IT");
 
         sequence.start();
@@ -448,7 +455,8 @@ public class MainActivity extends AppCompatActivity
         mCardViewCustomStudy = (CardView) findViewById(R.id.mCardViewCustomStudy);
 
         lbNameCourse = (TextView) findViewById(R.id.lbNameCourse);
-
+        lbStudy= (TextView) findViewById(R.id.lbStudy);
+        lbCustomStudy= (TextView) findViewById(R.id.lbCustomStudy);
 
         mDue = (RelativeLayout) findViewById(R.id.mDue);
         mCongratulations = (RelativeLayout) findViewById(R.id.mCongratulations);
