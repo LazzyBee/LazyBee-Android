@@ -62,6 +62,7 @@ public class SettingActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_setting, menu);
+
         return true;
     }
 
@@ -72,6 +73,12 @@ public class SettingActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == android.R.id.home) {
+            finish();
+            onBackPressed();
+            return true;
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -80,4 +87,9 @@ public class SettingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
