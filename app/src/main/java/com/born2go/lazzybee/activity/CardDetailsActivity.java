@@ -60,6 +60,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     WebView mWebViewLeadDetails;
     TextToSpeech textToSpeech;
 
+    MenuItem itemFavorite;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Card card = learnApiImplements._getCardByID(cardId);
+        card = learnApiImplements._getCardByID(cardId);
 
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -119,6 +121,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+        itemFavorite = menu.findItem(R.id.action_favorite);
         return true;
     }
 
@@ -143,8 +146,51 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 //
                 _updateCardFormServer();
                 return true;
+            case R.id.action_share:
+                _shareCard();
+                return true;
+            case R.id.action_favorite:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    setIconFavoriteGreater21();
+                } else {
+                    setIconFavoriteUnder20();
+                }
+                Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _shareCard() {
+        if (card.getQuestion() == null)
+            card = learnApiImplements._getCardByID(cardId);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "http://www.lazzybee.com/library/#dictionary/" + card.getQuestion());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setIconFavoriteGreater21() {
+        if (itemFavorite.getIcon().equals(getDrawable(R.drawable.ic_action_important))) {
+            itemFavorite.setIcon(getDrawable(R.drawable.ic_action_not_important));
+
+        } else if (itemFavorite.getIcon().equals(getDrawable(R.drawable.ic_action_not_important))) {
+            itemFavorite.setIcon(getDrawable(R.drawable.ic_action_important));
+
+        }
+    }
+
+    private void setIconFavoriteUnder20() {
+        if (itemFavorite.getIcon().equals(context.getResources().getDrawable(R.drawable.ic_action_important))) {
+            itemFavorite.setIcon(context.getResources().getDrawable(R.drawable.ic_action_not_important));
+
+        } else if (itemFavorite.getIcon().equals(context.getResources().getDrawable(R.drawable.ic_action_not_important))) {
+            itemFavorite.setIcon(context.getResources().getDrawable(R.drawable.ic_action_important));
+
+        }
     }
 
     private void _updateCardFormServer() {
