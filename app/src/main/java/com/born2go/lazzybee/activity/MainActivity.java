@@ -8,13 +8,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -1101,6 +1099,7 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+
     }
 
 
@@ -1208,13 +1207,11 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            //(resultCode);
             _checkCompleteLearn();
             _getCountCard();
-
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            _checkCompleteLearnbyResultCode(resultCode);
+            _checkCompleteLearn();
             _getCountCard();
         }
 //        if (requestCode == 1) {
@@ -1259,13 +1256,13 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        _checkCompleteLearn();
-//        if (fragmentDialogCustomStudy != null)
-//            fragmentDialogCustomStudy.dismiss();
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).commit();
-        _stopNotificationServices();
+//        _checkCompleteLearn();
+////        if (fragmentDialogCustomStudy != null)
+////            fragmentDialogCustomStudy.dismiss();
+//        SharedPreferences sp = PreferenceManager
+//                .getDefaultSharedPreferences(this);
+//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).commit();
+//        _stopNotificationServices();
 
     }
 
