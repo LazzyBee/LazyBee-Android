@@ -164,6 +164,8 @@ public class MainActivity extends AppCompatActivity
 
     int complete = 0;
 
+    TextView txtMessageCongratulation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -406,11 +408,11 @@ public class MainActivity extends AppCompatActivity
             //state0 chua hoc song
             //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
             //state2 hoc xong het rui
-            if (check==-1){
+            if (check == -1) {
                 //ngay moi rui
                 Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
                 visibility = getResources().getInteger(R.integer.visibility_state_study0);
-            }else {
+            } else {
                 check = check + countDue;
                 Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
                 if (check > 0) {
@@ -456,15 +458,19 @@ public class MainActivity extends AppCompatActivity
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
         countCardNoLearn = dataBaseHelper._getListCardNoLearne().size();
-
+        int learnCount = dataBaseHelper._getListCardLearned().size();
         Log.i(TAG, "-------------------------------END-------------------------------------\n");
 
         if (dueToday != null) {
             lbDueToday.setText(Html.fromHtml(dueToday));
         }
+        String reviewText = "<font color=" + context.getResources().getColor(R.color.teal_500) + "> " + getString(R.string.review) + "</font>" +
+                "<font color=" + context.getResources().getColor(R.color.red_500) + ">(" + learnCount + ")</font>";
+        Log.i(TAG, "_getCountCard \t  reviewText:" + reviewText);
+        lbReview.setText(Html.fromHtml(reviewText));
+
         lbTotalsCount.setText(String.valueOf(allCount));
         lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
-
 
     }
 
@@ -489,9 +495,8 @@ public class MainActivity extends AppCompatActivity
         mLine = (LinearLayout) findViewById(R.id.mLine);
 
         lbReview = (TextView) findViewById(R.id.lbReview);
-        int learnCount = dataBaseHelper._getListCardLearned().size();
 
-        lbReview.setText(getString(R.string.review) + Html.fromHtml("<a style='background-color:red;color:white'>(" + learnCount + ")</a>"));
+        txtMessageCongratulation = (TextView) findViewById(R.id.txtMessageCongratulation);
 
         TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
         lbTipHelp.setText("****************************" + getString(R.string.url_lazzybee_website) + "****************************");
@@ -511,7 +516,12 @@ public class MainActivity extends AppCompatActivity
         //state0 chua hoc song
         //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
         //state2 hoc xong het rui
-        int learnerdCount = dataBaseHelper._getListCardNoLearne().size();
+
+        //Define message congratilation
+        String messgage_congratilation = getString(R.string.message_congratulations,
+                "<b><u>" + getString(R.string.learn_more) + "</u></b>",
+                "<b><u>" + getString(R.string.learned) + "</u></b>");
+
         if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study0)) {
             //state0 chua hoc song
             mCardViewStudy.setVisibility(View.VISIBLE);
@@ -524,26 +534,24 @@ public class MainActivity extends AppCompatActivity
             mDue.setVisibility(View.VISIBLE);
             mCardViewStudy.setVisibility(View.VISIBLE);
             mCongratulations.setVisibility(View.VISIBLE);
+
+            //set message continue
+            messgage_congratilation = getString(R.string.message_congratulations_continue,
+                    "<b><u>" + getString(R.string.study) + "</u></b>");
+
             mLine.setVisibility(View.VISIBLE);
 
         } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study2)
-                || learnerdCount == 0) {
+                || countCardNoLearn == 0) {
             //state2 hoc xong het rui & hoc het card rui
             mCardViewStudy.setVisibility(View.GONE);
             mDue.setVisibility(View.GONE);
             mCongratulations.setVisibility(View.VISIBLE);
             mLine.setVisibility(View.VISIBLE);
         }
+        Log.i(TAG, "_visibilityCount \t message_congratulations:" + messgage_congratilation);
+        txtMessageCongratulation.setText(Html.fromHtml(messgage_congratilation));
 
-//        if (visibility) {
-//            mDue.setVisibility(View.VISIBLE);
-//            mCongratulations.setVisibility(View.GONE);
-//            mLine.setVisibility(View.GONE);
-//        } else {
-//            mDue.setVisibility(View.GONE);
-//            mCongratulations.setVisibility(View.VISIBLE);
-//            mLine.setVisibility(View.VISIBLE);
-//        }
     }
 
     private void _initToolBar() {
@@ -1239,7 +1247,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
 
 
     @Override

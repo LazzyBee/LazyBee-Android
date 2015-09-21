@@ -134,7 +134,8 @@
     <string name="message_total_card_review">Total card review:</string>
 
     <string name="my_course">My Course</string>
-    <string name="message_congratulations">Click <b><u>Learn More</u></b> to learn more and click <b><u>Review</u></b> to view learned cards</string>
+    <string name="message_congratulations">Click %s to learn more and click $s to view learned cards</string>
+    <string name="message_congratulations_continue">Click %s to study</string>
 
     <string name="drawer_user" translatable="false">user</string>
     <string name="drawer_title_course" translatable="false">title_course</string>
@@ -174,7 +175,7 @@
 
     <string name="tracking_ID" translatable="false">UA-67194143-2</string>
     <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
-    <string name="gtag_container_load_error">Failed to load container</string>
+    <string name="gtag_container_load_error" translatable="false">Failed to load container</string>
 
     <string name="notificaion_message">Study word english now!</string>
     <string name="local_service_started" translatable="false">no</string>
