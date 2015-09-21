@@ -10,7 +10,7 @@
     <dimen name="cardview_study_margin_left">1dp</dimen>
     <dimen name="cardview_study_margin_right">1dp</dimen>
     <dimen name="cardview_study_margin_top">1dp</dimen>
-    <dimen name="cardview_study_margin_bottom">0dp</dimen>
+    <dimen name="cardview_study_margin_bottom">1dp</dimen>
     <dimen name="study_question_size">30px</dimen>
 
     <dimen name="setting_card_view_elevation">0dp</dimen>

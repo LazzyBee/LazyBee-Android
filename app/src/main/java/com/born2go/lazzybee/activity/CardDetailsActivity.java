@@ -192,7 +192,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     @Override
     public void onBackPressed() {
+
         super.onBackPressed();
+        finish();
     }
 
     /**

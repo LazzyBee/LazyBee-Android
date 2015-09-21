@@ -311,6 +311,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     public void onBackPressed() {
         if (ADD_TO_LEARN == 1)
             setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
+
+        finish();
         super.onBackPressed();
 
     }
