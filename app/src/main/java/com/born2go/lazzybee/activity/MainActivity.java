@@ -159,6 +159,11 @@ public class MainActivity extends AppCompatActivity
 
     TextView lbCustomStudy;
 
+
+    int countCardNoLearn = 0;
+
+    int complete = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,7 +178,10 @@ public class MainActivity extends AppCompatActivity
         _initToolBar();
         _intInterfaceView();
         _getCountCard();
-        _checkCompleteLearn();
+
+        //Check complete Learn
+        complete = _checkCompleteLearn();
+
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
@@ -385,37 +393,50 @@ public class MainActivity extends AppCompatActivity
         if (value != null) {
             complete = Integer.valueOf(value);
         }
-        Log.i(TAG, "_checkCompleteLearn:\t complete code:" + check);
+        Log.i(TAG, "_checkCompleteLearn:\t complete code:" + complete);
+        Log.i(TAG, "_checkCompleteLearn:\t check code:" + check);
         int visibility = getResources().getInteger(R.integer.visibility_state_study0);
         //complete=0 chua hoc xong
-        //complete=CODE_COMPLETE_STUDY_RESULTS_1000 hoc song mot lươt
+        //complete>0
         if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             //check > 0 hoc xong rui nhung van con card
             //check = 0 hoc het card rui
             //check < 0 chua hoc xong
+
             //state0 chua hoc song
             //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
             //state2 hoc xong het rui
-            check = check + countDue;
-            Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
-            if (check > 0) {
-                //inday finish Lession van cho hoc tiep
-                visibility = getResources().getInteger(R.integer.visibility_state_study1);
-                Log.i(TAG, "_checkCompleteLearn:\t hoc xong rui nhung van con card");
-            } else if (check == 0) {
-                //hoc het card rui
-                Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui");
-                visibility = getResources().getInteger(R.integer.visibility_state_study2);
-            } else {
-                //chua hoc xong
+            if (check==-1){
+                //ngay moi rui
                 Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
                 visibility = getResources().getInteger(R.integer.visibility_state_study0);
+            }else {
+                check = check + countDue;
+                Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
+                if (check > 0) {
+                    //inday finish Lession van cho hoc tiep
+                    visibility = getResources().getInteger(R.integer.visibility_state_study1);
+                    Log.i(TAG, "_checkCompleteLearn:\t hoc xong rui nhung van con card");
+                } else if (check == 0) {
+                    //hoc het card rui
+                    Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui 1");
+                    visibility = getResources().getInteger(R.integer.visibility_state_study2);
+                } else {
+                    //chua hoc xong
+                    Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
+                    visibility = getResources().getInteger(R.integer.visibility_state_study0);
+                }
             }
         } else if (complete == 0) {
-            //Chua hoc xong
+            //chua hoc xong
             Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong 2");
             visibility = getResources().getInteger(R.integer.visibility_state_study0);
         }
+//        else {
+//            //hoc het card rui
+//            Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui 2");
+//            visibility = getResources().getInteger(R.integer.visibility_state_study2);
+//        }
         _visibilityCount(visibility);
         return complete;
     }
@@ -434,7 +455,7 @@ public class MainActivity extends AppCompatActivity
 
         String dueToday = dataBaseHelper._getStringDueToday();
         int allCount = dataBaseHelper._getAllListCard().size();
-        int nolearnCount = dataBaseHelper._getListCardNoLearne().size();
+        countCardNoLearn = dataBaseHelper._getListCardNoLearne().size();
 
         Log.i(TAG, "-------------------------------END-------------------------------------\n");
 
@@ -442,7 +463,8 @@ public class MainActivity extends AppCompatActivity
             lbDueToday.setText(Html.fromHtml(dueToday));
         }
         lbTotalsCount.setText(String.valueOf(allCount));
-        lbTotalNewCount.setText(String.valueOf(nolearnCount));
+        lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
+
 
     }
 
@@ -1067,12 +1089,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        int learnerdCount = dataBaseHelper._getListCardNoLearne().size();
-        if (learnerdCount == 0) {
+        if (countCardNoLearn == 0) {
             Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
-        } else {
         }
+
         _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+
     }
 
     private void _gotoStudy(int type) {
@@ -1099,7 +1121,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
     }
 
 
@@ -1117,13 +1138,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onLearnMoreClick(View view) {
-        int learnerdCount = dataBaseHelper._getListCardNoLearne().size();
-        if (learnerdCount == 0) {
+        if (countCardNoLearn == 0) {
             Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
         } else {
-            int finish = _checkCompleteLearn();
-            Log.i(TAG, "Complet code:" + finish);
-            if (finish == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            // int finish = _checkCompleteLearn();
+            Log.i(TAG, "Complete code:" + complete);
+            if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
                 _learnMore();
             } else {
                 Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
@@ -1144,7 +1164,6 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                //_checkCompleteLearn(0);
                 if (mInterstitialAd.isLoaded()) {
                     Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
                     mInterstitialAd.show();
@@ -1206,64 +1225,27 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            _checkCompleteLearn();
-            _getCountCard();
-        }
-        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            _checkCompleteLearn();
-            _getCountCard();
-        }
-//        if (requestCode == 1) {
-//            _getCountCard();
-//        }
-        if (fragmentDialogCustomStudy != null) {
-            //fragmentDialogCustomStudy.dismiss();
-        }
-//        if (!gitkitClient.handleActivityResult(requestCode, resultCode, intent)) {
-//            super.onActivityResult(requestCode, resultCode, intent);
-//        }
 
-//        if (requestCode == RC_SIGN_IN) {
-//            if (resultCode != RESULT_OK) {
-//                mSignInClicked = false;
-//            }
-//
-//            mIntentInProgress = false;
-//
-//            if (!mGoogleApiClient.isConnecting()) {
-//            }
-//                mGoogleApiClient.connect();
-//        }
-    }
+        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 ||
+                requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+            if (resultCode == 1 || resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000
+                    || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+                complete = _checkCompleteLearn();
+                _getCountCard();
 
-    private void _checkCompleteLearnbyResultCode(int resultCode) {
-        if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 || resultCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            //Complete
-            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-            dataBaseHelper._insertOrUpdateToSystemTable(value, value);
-            // _visibilityCount(false, visibility);
-        } else {
-            String value = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-            dataBaseHelper._insertOrUpdateToSystemTable(value, String.valueOf(1));
-            // _visibilityCount(true, visibility);
-
-
+            } else {
+                complete = _checkCompleteLearn();
+                _getCountCard();
+            }
         }
     }
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-//        _checkCompleteLearn();
-////        if (fragmentDialogCustomStudy != null)
-////            fragmentDialogCustomStudy.dismiss();
-//        SharedPreferences sp = PreferenceManager
-//                .getDefaultSharedPreferences(this);
-//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 2).commit();
-//        _stopNotificationServices();
-
     }
 
 

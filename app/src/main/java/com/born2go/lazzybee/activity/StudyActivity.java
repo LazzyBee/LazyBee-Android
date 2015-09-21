@@ -118,6 +118,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     MenuItem btnBackBeforeCard;
 
     CardView mCountStudy;
+    int completeStudy = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,7 +321,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _completeLean() {
         Log.i(TAG, "----_completeLean----");
         setBeforeCard(null);
-        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000, new Intent());
+        completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
         onBackPressed();
         Log.i(TAG, "---------END---------");
 
@@ -1308,7 +1309,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //
-//        overridePendingTransition(R.anim.slide_left, 0);
+
+        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
+        setResult(completeStudy, new Intent(this, MainActivity.class));
+        finish();
+
     }
 }
