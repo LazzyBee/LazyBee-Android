@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources >
     <string name="EASE_AGAIN">Học lại</string>
     <string name="EASE_EASY">Dễ</string>
     <string name="EASE_GOOD">Tốt</string>
@@ -81,7 +81,10 @@
     <string name="setting_debug_info">Thông tin lỗi</string>
     <string name="setting_language">Ngôn ngữ</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
-    <string name="message_congratulations">Bấm vào <b><u>Học thêm</u></b> để học tiếp,bấm vào <b><u>Đã học</u></b> để xem lại thẻ đã học</string>
+
+    <string name="message_congratulations" formatted="false">Bấm vào %s để học tiếp,bấm vào %s để xem lại thẻ đã học</string>
+    <string name="message_congratulations_continue" formatted="false">Bấm %s để học tiếp</string>
+
     <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
     <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>
     <string name="under_construction">Under construction</string>
@@ -171,4 +174,6 @@
     <string name="action_update_card">Cập nhật thẻ</string>
     <string name="action_back_before_card">Back before card</string>
     <string name="number_row_updated">%d row updated</string>
+
+    <string name="action_share">Chia sẻ</string>
 </resources>

@@ -118,6 +118,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     MenuItem btnBackBeforeCard;
 
     CardView mCountStudy;
+    int completeStudy = 0;
+
+    MenuItem itemFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,7 +323,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _completeLean() {
         Log.i(TAG, "----_completeLean----");
         setBeforeCard(null);
-        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000, new Intent());
+        completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
         onBackPressed();
         Log.i(TAG, "---------END---------");
 
@@ -364,6 +367,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         mCountStudy = (CardView) findViewById(R.id.mCountStudy);
 
+
 //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
@@ -397,6 +401,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 (SearchView) menu.findItem(R.id.search).getActionView();
         btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
         btnBackBeforeCard.setVisible(false);
+
+        itemFavorite = menu.findItem(R.id.action_favorite);
 //        searchView.setSearchableInfo(
 //                searchManager.getSearchableInfo(getComponentName()));
         //***setOnQueryTextListener***
@@ -419,6 +425,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 return false;
             }
         });
+
+
         return true;
     }
 
@@ -459,9 +467,36 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 _backToBeforeCard();
 
                 return true;
+            case R.id.action_share:
+                _shareCard();
+                return true;
+            case R.id.action_favorite:
+                //set icon
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    LazzyBeeShare.setMenuIconFavoriteGreater21(itemFavorite, context);
+                } else {
+                    LazzyBeeShare.setMenuIconFavoriteUnder20(itemFavorite, context);
+                }
+
+//                int statusFavrite = 0;
+//                if (itemFavorite.getTitle().equals(getString(R.string.action_not_favorite))) {
+//                    statusFavrite = 1;
+//                }
+//                currentCard.setStatus(statusFavrite);
+//                dataBaseHelper._updateCard(currentCard);
+                //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _shareCard() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "http://www.lazzybee.com/library/#dictionary/" + currentCard.getQuestion());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     private void _backToBeforeCard() {
@@ -1308,7 +1343,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //
-//        overridePendingTransition(R.anim.slide_left, 0);
+
+        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
+        setResult(completeStudy, new Intent(this, MainActivity.class));
+        finish();
+
     }
 }
