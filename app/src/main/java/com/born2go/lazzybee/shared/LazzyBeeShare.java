@@ -1,8 +1,11 @@
 package com.born2go.lazzybee.shared;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 
 import com.born2go.lazzybee.R;
@@ -372,6 +375,37 @@ public class LazzyBeeShare {
             return "example";
         }
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setMenuIconFavoriteGreater21(MenuItem item, Context context) {
+        if (item.getTitle().toString().equals(context.getString(R.string.action_not_favorite))) {
+            item.setTitle(context.getString(R.string.action_favorite));
+            item.setIcon(context.getResources().getDrawable(R.drawable.ic_action_important));
+        } else {
+            item.setTitle(context.getString(R.string.action_not_favorite));
+            item.setIcon(context.getDrawable(R.drawable.ic_action_important));
+        }
+    }
+
+    public static void setMenuIconFavoriteUnder20(MenuItem item, Context context) {
+
+//        Log.i(TAG, "setMenuIconFavoriteUnder20 \t " + item.getIcon() + ":"
+//                        + context.getResources().getDrawable(R.drawable.ic_action_not_important) + ":"
+//                        + context.getResources().getDrawable(R.drawable.ic_action_important)
+//        );
+        if (item.getTitle().toString().equals(context.getString(R.string.action_not_favorite))) {
+            item.setIcon(context.getResources().getDrawable(R.drawable.ic_action_important));
+            item.setTitle(context.getString(R.string.action_favorite));
+        } else {
+            item.setTitle(context.getString(R.string.action_not_favorite));
+            item.setIcon(context.getResources().getDrawable(R.drawable.ic_action_not_important));
+        }
+//        if (item.getIcon() == (context.getResources().getDrawable(R.drawable.ic_action_not_important))) {
+//
+//        } else /*if (item.getIcon().equals(context.getResources().getDrawable(R.drawable.ic_action_not_important)))*/ {
+//
+//        }
     }
 
 

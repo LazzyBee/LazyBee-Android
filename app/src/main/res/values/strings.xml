@@ -265,7 +265,8 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="setting_update_db_form_query" translatable="false">Update by Query</string>
     <string name="action_query" translatable="false">Query</string>
-    <string name="action_favorite">Favorite</string>
+    <string name="action_favorite" translatable="false">Favorite</string>
+    <string name="action_not_favorite" translatable="false">No favorite</string>
     <string name="action_share">Share</string>
 
 </resources>

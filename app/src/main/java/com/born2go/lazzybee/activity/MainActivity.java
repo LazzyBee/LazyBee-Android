@@ -1253,6 +1253,10 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+
+        //re check complete learn
+        _checkCompleteLearn();
+        _getCountCard();
     }
 
 

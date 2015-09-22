@@ -123,7 +123,13 @@ public class LearnApiImplements implements LearnApi {
                     card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
                     card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
-                    card.setStatus(0);
+
+                    if (cursor.getString(CARD_INDEX_STATUS) != null) {
+                        card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
+                    } else {
+                        card.setStatus(0);
+                    }
+
                     card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
                     card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
@@ -745,7 +751,12 @@ public class LearnApiImplements implements LearnApi {
                     card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
                     card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
-                    card.setStatus(0);
+                    if (cursor.getString(CARD_INDEX_STATUS) != null) {
+                        card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
+                    } else {
+                        card.setStatus(0);
+                    }
+
                     card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
                     card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
@@ -801,6 +812,8 @@ public class LearnApiImplements implements LearnApi {
             values.put(KEY_REV_COUNT, card.getRev_count());
         if (card.getFactor() != 0)
             values.put(KEY_FACTOR, card.getFactor());
+        if (card.getStatus() != 0)
+            values.put(KEY_STATUS, card.getStatus());
 
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",

@@ -3,18 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.born2go.lazzybee.activity.StudyActivity">
 
-    <item
-        android:id="@+id/action_back_before_card"
-        android:icon="@drawable/ic_action_undo"
-        android:title="@string/action_back_before_card"
-        app:showAsAction="ifRoom|withText"
-        />
+
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search_white"
         android:title="@string/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="withText|ifRoom" />
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_back_before_card"
+        android:icon="@drawable/ic_action_undo"
+        android:title="@string/action_back_before_card"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_action_not_important"
+        android:title="@string/action_not_favorite"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/action_share"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_update"
