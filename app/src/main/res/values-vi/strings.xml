@@ -49,6 +49,7 @@
     <string name="language">Ngôn ngữ</string>
     <string name="add_to">Thêm vào</string>
     <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
+    <string name="dialog_message_delete_card_done">Bỏ qua thành công!</string>
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
     <string name="lang_english">Tiếng anh</string>
@@ -82,7 +83,7 @@
     <string name="setting_language">Ngôn ngữ</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
 
-    <string name="message_congratulations" formatted="false">Bấm vào %s để học tiếp,bấm vào %s để xem lại thẻ đã học</string>
+    <string name="message_congratulations" formatted="false">Bấm vào %1s để học tiếp,bấm vào %2s để xem lại thẻ đã học</string>
     <string name="message_congratulations_continue" formatted="false">Bấm %s để học tiếp</string>
 
     <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
@@ -176,4 +177,11 @@
     <string name="number_row_updated">%d row updated</string>
 
     <string name="action_share">Chia sẻ</string>
+    <string name="message_update_card_successful">Cập nhật thẻ thành công!</string>
+    <string name="message_update_card_fails">Cập nhật thẻ thất bại!</string>
+    <string name="message_no_new_card">Đã hết từ mới để học!</string>
+
+    <string name="mesage_update_database_successful">Cập nhật cơ sở dữ liệu thành công!</string>
+    <string name="mesage_update_database_fails">Cập nhật cơ sở dữ liệu thất bại!</string>
+    <string name="message_add_favorite_card_done">Thêm %s vào Yêu thích</string>
 </resources>

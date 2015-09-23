@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/grey_300"
     android:orientation="vertical"
-    tools:context="com.born2go.lazzybee.activity.StudyActivity">
+    tools:context="com.born2go.lazzybee.activity.StudyActivity"
+    android:id="@+id/container">
     <!--<fragment-->
     <!--android:layout_width="fill_parent"-->
     <!--android:layout_height="fill_parent"-->

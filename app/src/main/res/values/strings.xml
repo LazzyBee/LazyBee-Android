@@ -73,6 +73,7 @@
     <!--Dialog Done card-->
     <string name="dialog_title_delete_card">Delete card</string>
     <string name="dialog_message_delete_card">Are you sure to delete card %s!</string>
+    <string name="dialog_message_delete_card_done">Delete card successful!</string>
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
@@ -134,7 +135,7 @@
     <string name="message_total_card_review">Total card review:</string>
 
     <string name="my_course">My Course</string>
-    <string name="message_congratulations">Click %s to learn more and click $s to view learned cards</string>
+    <string name="message_congratulations">Click %1s to learn more and click $2s to view learned cards</string>
     <string name="message_congratulations_continue">Click %s to study</string>
 
     <string name="drawer_user" translatable="false">user</string>
@@ -166,6 +167,7 @@
     <string name="speech_rate_very_fast_value" translatable="false">1.3</string>
 
     <string name="update_database_sucsessfuly" translatable="false">Update database sucsessfuly</string>
+
     <string name="setting_all_right" translatable="false">@string/setting_about_message</string>
 
     <string name="setting_reset_cache">Reset Cache</string>
@@ -268,5 +270,14 @@
     <string name="action_favorite" translatable="false">Favorite</string>
     <string name="action_not_favorite" translatable="false">No favorite</string>
     <string name="action_share">Share</string>
+
+    <string name="message_update_card_successful" >Update card successful!</string>
+    <string name="message_update_card_fails" >Update card fails!</string>
+
+    <string name="message_no_new_card">No new card</string>
+
+    <string name="mesage_update_database_successful">Update database successful!</string>
+    <string name="mesage_update_database_fails">Update database fails!</string>
+    <string name="message_add_favorite_card_done">Add %s to Favorite</string>
 
 </resources>
