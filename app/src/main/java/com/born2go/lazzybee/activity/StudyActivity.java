@@ -116,6 +116,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     MenuItem itemFavorite;
 
+    CardView mCardViewHelpandAdMod;
+
+    LinearLayout mShowAnswer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,16 +155,19 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         sequence.setConfig(config);
 
         sequence.addSequenceItem(lbCountNew,
-                "This is count new", "GOT IT");
+                getString(R.string.showcase_message_new_count), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(lbCountAgain,
-                "This is count again", "GOT IT");
+                getString(R.string.showcase_message_again_count), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(lbCountDue,
-                "This is count review", "GOT IT");
+                getString(R.string.showcase_message_reivew_count), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(btnShowAnswer,
-                "This is show answer", "GOT IT");
+                getString(R.string.showcase_message_button_show_answer), getString(R.string.showcase_message_got_it));
+
+        sequence.addSequenceItem(mCardViewHelpandAdMod,
+                getString(R.string.showcase_message_help_panel), getString(R.string.showcase_message_got_it));
 
 
         sequence.start();
@@ -176,16 +183,16 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         sequence.setConfig(config);
         sequence.addSequenceItem(btnAgain0,
-                "Học từ lại ngay", "GOT IT");
+                getString(R.string.showcase_message_button_again0), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(btnHard1,
-                "Khó,học lại sau 1 ngày", "GOT IT");
+                getString(R.string.showcase_message_button_hard1), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(btnGood2,
-                "Tốt,học lại sau 2 ngày", "GOT IT");
+                getString(R.string.showcase_message_button_good2), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(btnEasy3,
-                "Đễ,học lại sau 3 ngày", "GOT IT");
+                getString(R.string.showcase_message_button_easy3), getString(R.string.showcase_message_got_it));
 
 
         sequence.start();
@@ -352,6 +359,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         mWebViewLeadDetails = (WebView) findViewById(R.id.mWebViewLeadDetaisl);
 
         //init button
+        mShowAnswer = (LinearLayout) findViewById(R.id.mShowAnswer);
 
         btnShowAnswer = (Button) findViewById(R.id.btnShowAnswer);
         mLayoutButton = (LinearLayout) findViewById(R.id.mLayoutButton);
@@ -368,6 +376,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         mCountStudy = (CardView) findViewById(R.id.mCountStudy);
 
+        mCardViewHelpandAdMod = (CardView) findViewById(R.id.mCardViewHelpandAdMod);
 
 //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -679,6 +688,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _deleteCard() {
         Log.i(TAG, "-------------------deleteCard-------------------");
         if (btnShowAnswer.getVisibility() == View.GONE) {
+            mShowAnswer.setVisibility(View.VISIBLE);
             btnShowAnswer.setVisibility(View.VISIBLE);
             mLayoutButton.setVisibility(View.GONE);
         }
@@ -846,6 +856,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     private void _showAnswer() {
         //hide btnShowAnswer and show mLayoutButton
+        mShowAnswer.setVisibility(View.GONE);
         btnShowAnswer.setVisibility(View.GONE);
         mLayoutButton.setVisibility(View.VISIBLE);
         try {
@@ -1152,6 +1163,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         answerDisplay = false;
 
         //show btnShowAnswer and hide btnAgain0
+        mShowAnswer.setVisibility(View.VISIBLE);
         btnShowAnswer.setVisibility(View.VISIBLE);
         mLayoutButton.setVisibility(View.GONE);
 

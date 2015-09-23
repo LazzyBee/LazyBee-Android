@@ -259,9 +259,9 @@
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
     </string-array>
 
-    <string name="SHOWCASE_MAIN_ID" translatable="false">26</string>
-    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">27</string>
-    <string name="SHOWCASE_STUDY_ID" translatable="false">28</string>
+    <string name="SHOWCASE_MAIN_ID" translatable="false">29</string>
+    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">30</string>
+    <string name="SHOWCASE_STUDY_ID" translatable="false">31</string>
 
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>
@@ -283,5 +283,23 @@
     <string name="message_add_favorite_card_done">Add %s to Favorite</string>
 
     <string name="drawer_dictionary">Dictionary</string>
+
+    <string name="showcase_message_button_again0">Again,Study word after 10 minute</string>
+    <string name="showcase_message_button_hard1">Hard,Study word after 1 day</string>
+    <string name="showcase_message_button_good2">Good,Study word after 2 day</string>
+    <string name="showcase_message_button_easy3">Easy,Study word after 2 day</string>
+    <string name="showcase_message_got_it">Got it!</string>
+    <string name="showcase_message_button_show_answer">This is Show Answer</string>
+    <string name="showcase_message_new_count">This is new count</string>
+    <string name="showcase_message_again_count">This is again count</string>
+    <string name="showcase_message_reivew_count">This is review count</string>
+
+    <string name="showcase_message_help_panel">This is help study</string>
+    <string name="showcase_message_start_study">Touch to Start Study</string>
+    <string name="showcase_message_my_due">This is my taget</string>
+    <string name="showcase_message_gotoReview">Touch to my Review word</string>
+    <string name="showcase_message_learn_more">Touch to Learn more</string>
+    <string name="showcase_message_custom_study">Touch to Custom Study</string>
+
 
 </resources>

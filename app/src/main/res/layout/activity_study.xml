@@ -126,7 +126,8 @@
             android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginTop="@dimen/cardview_study_margin_top">
+            android:layout_marginTop="@dimen/cardview_study_margin_top"
+            android:id="@+id/mCardViewHelpandAdMod">
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
@@ -179,14 +180,24 @@
                 android:layout_height="70dp"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnShowAnswer"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="match_parent"
                     android:background="@color/colorPrimary"
-                    android:onClick="onbtnShowAnswerClick"
-                    android:text="@string/show_answer"
-                    android:visibility="visible" />
+                    android:id="@+id/mShowAnswer"
+                    android:onClick="onbtnShowAnswerClick">
+
+                    <Button
+                        android:id="@+id/btnShowAnswer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@color/colorPrimary"
+                        android:onClick="onbtnShowAnswerClick"
+                        android:text="@string/show_answer"
+                        android:visibility="visible"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/mLayoutButton"

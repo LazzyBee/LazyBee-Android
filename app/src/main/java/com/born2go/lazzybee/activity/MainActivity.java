@@ -206,19 +206,19 @@ public class MainActivity extends AppCompatActivity
 
         sequence.setConfig(config);
         sequence.addSequenceItem(mCardViewStudy,
-                "This is start study", "GOT IT");
+                getString(R.string.showcase_message_start_study), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(lbDueToday,
-                "This is my Due", "GOT IT");
+                getString(R.string.showcase_message_my_due), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(mCardViewReView,
-                "This is goto review card", "GOT IT");
+                getString(R.string.showcase_message_gotoReview), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(mCardViewLearnMore,
-                "This is learn more", "GOT IT");
+                getString(R.string.showcase_message_learn_more), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(lbCustomStudy,
-                "This is custom study", "GOT IT");
+                getString(R.string.showcase_message_custom_study), getString(R.string.showcase_message_got_it));
 
         sequence.start();
     }

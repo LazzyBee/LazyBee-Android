@@ -186,4 +186,23 @@
     <string name="mesage_update_database_successful">Cập nhật cơ sở dữ liệu thành công!</string>
     <string name="mesage_update_database_fails">Cập nhật cơ sở dữ liệu thất bại!</string>
     <string name="message_add_favorite_card_done">Thêm %s vào Yêu thích</string>
+
+    <string name="showcase_message_button_again0">Học lại,Học từ lại ngay sau 10 phút</string>
+    <string name="showcase_message_button_hard1">Khó,Học từ lại ngay sau 1 ngày</string>
+    <string name="showcase_message_button_good2">Tốt,Học từ lại ngay sau 3 ngày</string>
+    <string name="showcase_message_button_easy3">Dễ,Học từ lại ngay sau 3 ngày</string>
+    <string name="showcase_message_got_it">Hiểu rồi!</string>
+    <string name="showcase_message_button_show_answer">Đây là hiện câu trả lời</string>
+    <string name="showcase_message_new_count">Đây là số các từ chưa học</string>
+    <string name="showcase_message_again_count">Đây là số các từ học lại</string>
+    <string name="showcase_message_reivew_count">Đây là số các từ đã học</string>
+
+    <string name="showcase_message_help_panel">Đây là bảng hỗ trợ học</string>
+
+    <string name="showcase_message_start_study">Bấm vào đây để Học</string>
+    <string name="showcase_message_my_due">Đây là mục tiêu của bạn</string>
+    <string name="showcase_message_gotoReview">Bấm vào đây để xem các thẻ đã học</string>
+    <string name="showcase_message_learn_more">Bấm vào đây để Học thêm</string>
+    <string name="showcase_message_custom_study">Bấm vào đây để thiết lập cách học</string>
+
 </resources>
