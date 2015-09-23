@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -107,8 +106,54 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                     }
                 });
 
+            } else if (setting.equals(context.getString(R.string.setting_my_level))) {
+                getLevelandShowDialogChangeLevel(mCardView, lbLimit);
             }
         }
+    }
+
+    private void getLevelandShowDialogChangeLevel(RelativeLayout mCardView, TextView lbLimit) {
+
+        String strlevel = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+        int level = 0;
+        if (strlevel != null) {
+            level = Integer.valueOf(strlevel);
+        }
+
+        //Set text Level
+        if (level == 0) {
+            lbLimit.setText(context.getString(R.string.setting_message_default));
+        } else {
+            lbLimit.setText(String.valueOf(level));
+        }
+
+        //handel oncllick
+        final int finalLevel = level;
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _showDialogSelectLevel(finalLevel);
+            }
+        });
+    }
+
+    private void _showDialogSelectLevel(int finalLevel) {
+        final String[] strlevels = {context.getString(R.string.setting_message_default), "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
+
+
+        builder.setSingleChoiceItems(strlevels, finalLevel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(item));
+                dialog.cancel();
+                studyInferface._finishCustomStudy();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     private void _showConfirmResetToDefauls() {
@@ -121,14 +166,14 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(context, R.string.setting_reset_to_default, Toast.LENGTH_SHORT).show();
+
                 //KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT
                 //KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT
                 //KEY_SETTING_TODAY_NEW_CARD_LIMIT
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
-
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(LazzyBeeShare.DEFAULT_MY_LEVEL));
                 studyInferface._finishCustomStudy();
             }
         });
@@ -157,6 +202,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_reset_to_default))
+                || setting.equals(context.getString(R.string.setting_my_level))
                 || setting.equals(context.getString(R.string.setting_max_learn_more_per_day)))
             return TYPE_SETTING_NAME;
         else
@@ -293,7 +339,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 lbEror.setText(erorr_message);
                             } else {
                                 learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                               // main.hide();
+                                // main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 3");
                                 studyInferface._finishCustomStudy();

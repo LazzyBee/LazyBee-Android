@@ -582,12 +582,12 @@ public class LearnApiImplements implements LearnApi {
 
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         try {
-            //Todo query for cursor
+            //query for cursor
             Cursor cursor = db.rawQuery(selectValueByKey, null);
             if (cursor.moveToFirst()) {
                 if (cursor.getCount() > 0)
                     do {
-                        //TODO:get data from sqlite
+                        //get data from sqlite
                         String value = cursor.getString(0);
                         queue_List_value = value;
                     } while (cursor.moveToNext());

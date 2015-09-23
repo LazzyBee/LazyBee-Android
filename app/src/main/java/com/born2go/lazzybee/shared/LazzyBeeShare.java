@@ -44,6 +44,7 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_DEBUG_INFOR = "debug_infor";
     public static final String KEY_SETTING_NOTIFICTION = "notification";
     public static final String KEY_SETTING_SPEECH_RATE = "speech_rate";
+    public static final String KEY_SETTING_MY_LEVEL = "my_level";
 
 
     public static final String DRAWER_USER = "user";
@@ -71,6 +72,7 @@ public class LazzyBeeShare {
     public static final String NOTIFICATION_WHEN = "when";
 
 
+
     private static boolean DEBUG = true;
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
@@ -91,9 +93,11 @@ public class LazzyBeeShare {
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
+
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
     public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
+    public static final int DEFAULT_MY_LEVEL = 0;
 
     public static final String DOWNLOAD = "Download";
 
