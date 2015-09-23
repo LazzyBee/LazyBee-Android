@@ -67,16 +67,21 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
         View view = holder.view;
         if (holder.viewType == TYPE_COURSE) {
-//            Course course = (Course) objectList.get(position);
             TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
             TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
-
-            int allCount = learnApiImplements._getAllListCard().size();
-
             lbNameCourse.setText(String.valueOf(objectList.get(position)));
-            lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+            if (objectList.get(position).equals("English Word")) {
+                lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+                int allCount = learnApiImplements._getAllListCard().size();
 
-            lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
+                lbNameCourse.setText(String.valueOf(objectList.get(position)));
+                lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+
+                lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
+            } else if (objectList.get(position).equals(context.getString(R.string.drawer_dictionary))) {
+                lbCount.setVisibility(View.GONE);
+            }
+
 
         } else if (holder.viewType == TYPE_ADD_COURCE) {
 
@@ -102,7 +107,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemViewType(int position) {
-        if (objectList.get(position).equals("English Word"))
+        if (objectList.get(position).equals("English Word") ||
+                objectList.get(position).equals(context.getString(R.string.drawer_dictionary)))
             return TYPE_COURSE;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_title_course)))
             return TYPE_TITLE_COURSE;

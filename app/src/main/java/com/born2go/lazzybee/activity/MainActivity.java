@@ -649,12 +649,19 @@ public class MainActivity extends AppCompatActivity
                 break;
             case LazzyBeeShare.DRAWER_COURSE_INDEX:
                 break;
+            case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
+                _gotoDictionary();
+                break;
             default:
                 break;
 
 
         }
 
+    }
+
+    private void _gotoDictionary() {
+        _gotoSeach("gotoDictionary");
     }
 
     private void _gotoAbout() {

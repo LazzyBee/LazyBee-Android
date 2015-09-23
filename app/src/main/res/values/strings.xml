@@ -238,6 +238,8 @@
         <!--<item>@string/drawer_user</item>-->
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
+        <item>@string/drawer_line</item>
+        <item>@string/drawer_dictionary</item>
         <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
@@ -279,5 +281,7 @@
     <string name="mesage_update_database_successful">Update database successful!</string>
     <string name="mesage_update_database_fails">Update database fails!</string>
     <string name="message_add_favorite_card_done">Add %s to Favorite</string>
+
+    <string name="drawer_dictionary">Dictionary</string>
 
 </resources>

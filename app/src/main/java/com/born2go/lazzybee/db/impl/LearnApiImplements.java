@@ -183,13 +183,15 @@ public class LearnApiImplements implements LearnApi {
 //                + " ORDER BY (CASE WHEN " +
 //                " question = '" + query + "' THEN 1 WHEN " +
 //                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
-        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
-                + " ORDER BY " + KEY_QUESTION;
-
-        //Todo:Seach card
-        List<Card> datas = _getListCardQueryString(likeQuery);
-
-        return datas;
+        if (query.equals("gotoDictionary")) {
+            return _getAllListCard();
+        } else {
+            String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
+                    + " ORDER BY " + KEY_QUESTION;
+            //Seach card
+            List<Card> datas = _getListCardQueryString(likeQuery);
+            return datas;
+        }
     }
 
     /**
