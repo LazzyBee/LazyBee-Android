@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     GoogleApiClient mGoogleApiClient;
 
+    boolean appPause = false;
+
     /**
      * A flag indicating that a PendingIntent is in progress and prevents us
      * from starting further intents.
@@ -167,6 +169,7 @@ public class MainActivity extends AppCompatActivity
     TextView txtMessageCongratulation;
 
     FrameLayout container;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -479,7 +482,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _intInterfaceView() {
-        container= (FrameLayout) findViewById(R.id.container);
+        container = (FrameLayout) findViewById(R.id.container);
         //Define Card View
         mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
         mCardViewReView = (CardView) findViewById(R.id.mCardViewReView);
@@ -1007,6 +1010,9 @@ public class MainActivity extends AppCompatActivity
         //fragmentDialogCustomStudy.
         fragmentDialogCustomStudy.setCustomStudyAdapter();
         _getCountCard();
+        //Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
+        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
+                .show();
 
     }
 
@@ -1188,7 +1194,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 if (mInterstitialAd.isLoaded()) {
-                   // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
                     mInterstitialAd.show();
 
                 } else {
@@ -1268,10 +1274,11 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-
-        //re check complete learn
-        _checkCompleteLearn();
-        _getCountCard();
+        if (appPause) {
+            //re check complete learn
+            _checkCompleteLearn();
+            _getCountCard();
+        }
     }
 
 
@@ -1328,6 +1335,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause()");
+        appPause = true;
 //        SharedPreferences sp = PreferenceManager
 //                .getDefaultSharedPreferences(this);
 //        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
