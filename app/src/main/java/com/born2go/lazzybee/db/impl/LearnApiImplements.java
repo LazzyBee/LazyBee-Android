@@ -931,11 +931,12 @@ public class LearnApiImplements implements LearnApi {
         String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
         if (value != null) {
             try {
+                //Define jsonObj by value
                 JSONObject jsonObject = new JSONObject(value);
                 int count = jsonObject.getInt(KEY_COUNT_JSON);
-
+                //Check count < today new card limit ->init
                 if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                    Log.i(TAG, "_get100Card: New 100 Card");
+                    Log.i(TAG, "_get100Card:Init New 100 Card");
                     return _initPreFetchNewCardList();
                 } else {
                     Log.i(TAG, "_get100Card:" + count);
@@ -1007,13 +1008,13 @@ public class LearnApiImplements implements LearnApi {
         String value = _getValueFromSystemByKey(key);
         if (value == null) {
             if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
-                //TODO: Learn more
+                //Learn more
                 return LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                //TODO: New
+                //New
                 return LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-                //TODO: Total
+                //Total
                 return LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
             } else {
                 return 0;
