@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,8 +64,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.identitytoolkit.GitkitClient;
-import com.google.identitytoolkit.GitkitUser;
-import com.google.identitytoolkit.IdToken;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     GoogleApiClient mGoogleApiClient;
 
+    boolean appPause = false;
+
     /**
      * A flag indicating that a PendingIntent is in progress and prevents us
      * from starting further intents.
@@ -166,6 +168,8 @@ public class MainActivity extends AppCompatActivity
 
     TextView txtMessageCongratulation;
 
+    FrameLayout container;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +191,7 @@ public class MainActivity extends AppCompatActivity
         _initGoogleApiClient();
 
         dataBaseHelper._get100Card();
+
         _initInterstitialAd();
 
         _initShowcaseLazzyBee();
@@ -204,19 +209,19 @@ public class MainActivity extends AppCompatActivity
 
         sequence.setConfig(config);
         sequence.addSequenceItem(mCardViewStudy,
-                "This is start study", "GOT IT");
+                getString(R.string.showcase_message_start_study), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(lbDueToday,
-                "This is my Due", "GOT IT");
+                getString(R.string.showcase_message_my_due), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(mCardViewReView,
-                "This is goto review card", "GOT IT");
+                getString(R.string.showcase_message_gotoReview), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(mCardViewLearnMore,
-                "This is learn more", "GOT IT");
+                getString(R.string.showcase_message_learn_more), getString(R.string.showcase_message_got_it));
 
         sequence.addSequenceItem(lbCustomStudy,
-                "This is custom study", "GOT IT");
+                getString(R.string.showcase_message_custom_study), getString(R.string.showcase_message_got_it));
 
         sequence.start();
     }
@@ -308,7 +313,7 @@ public class MainActivity extends AppCompatActivity
             }
         } else {
             Log.i(TAG, "Qua gio set  Notification");
-            Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -338,9 +343,10 @@ public class MainActivity extends AppCompatActivity
             hours.add(hour[i]);
         }
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         _changeLanguage();
+
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
@@ -387,6 +393,7 @@ public class MainActivity extends AppCompatActivity
         int complete = 0;
         int check = dataBaseHelper._checkListTodayExit();
         int total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+
         if (totalLearnCard != null)
             total = Integer.valueOf(totalLearnCard);
 
@@ -475,6 +482,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _intInterfaceView() {
+        container = (FrameLayout) findViewById(R.id.container);
         //Define Card View
         mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
         mCardViewReView = (CardView) findViewById(R.id.mCardViewReView);
@@ -565,17 +573,17 @@ public class MainActivity extends AppCompatActivity
      * Check login
      */
     private void _checkLogin() {
-        gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
-            @Override
-            public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
-                Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onSignInFailed() {
-                Toast.makeText(context, "Sign in failed", Toast.LENGTH_LONG).show();
-            }
-        }).build();
+//        gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
+//            @Override
+//            public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
+//                Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onSignInFailed() {
+//                Toast.makeText(context, "Sign in failed", Toast.LENGTH_LONG).show();
+//            }
+//        }).build();
 
     }
 
@@ -640,9 +648,12 @@ public class MainActivity extends AppCompatActivity
                 _gotoSetting();
                 break;
             case LazzyBeeShare.DRAWER_USER_INDEX:
-                Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
                 break;
             case LazzyBeeShare.DRAWER_COURSE_INDEX:
+                break;
+            case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
+                _gotoDictionary();
                 break;
             default:
                 break;
@@ -650,6 +661,10 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+    }
+
+    private void _gotoDictionary() {
+        _gotoSeach("gotoDictionary");
     }
 
     private void _gotoAbout() {
@@ -734,18 +749,16 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    // TODO Auto-generated method stub
 
-                    Toast.makeText(getBaseContext(), query,
-                            Toast.LENGTH_SHORT).show();
+
+//                    Toast.makeText(getBaseContext(), query,
+//                            Toast.LENGTH_SHORT).show();
                     _gotoSeach(query);
                     return false;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    // TODO Auto-generated method stub
-
                     //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -830,8 +843,11 @@ public class MainActivity extends AppCompatActivity
     private void _checkUpdate() {
         //Check vesion form server
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+
         int update_local_version = databaseUpgrade._getVersionDB();
         int _clientVesion;
+
+        //Check version
         if (db_v == null) {
             _clientVesion = 0;
         } else {
@@ -852,7 +868,7 @@ public class MainActivity extends AppCompatActivity
                 _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
             } else {
                 Log.i(TAG, "_checkUpdate():" + R.string.updated);
-                Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -994,6 +1010,9 @@ public class MainActivity extends AppCompatActivity
         //fragmentDialogCustomStudy.
         fragmentDialogCustomStudy.setCustomStudyAdapter();
         _getCountCard();
+        //Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
+        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
+                .show();
 
     }
 
@@ -1098,9 +1117,8 @@ public class MainActivity extends AppCompatActivity
 
     public void _onBtnStudyOnClick(View view) {
         if (countCardNoLearn == 0) {
-            Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         }
-
         _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
 
     }
@@ -1109,7 +1127,8 @@ public class MainActivity extends AppCompatActivity
         //goto_study_code0 study
         //goto_study_code1 learnmore
 
-        Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
+
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -1147,14 +1166,16 @@ public class MainActivity extends AppCompatActivity
 
     public void _onLearnMoreClick(View view) {
         if (countCardNoLearn == 0) {
-            Toast.makeText(context, "Ban da hoc het tu moi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         } else {
             // int finish = _checkCompleteLearn();
             Log.i(TAG, "Complete code:" + complete);
             if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
                 _learnMore();
             } else {
-                Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+                Snackbar.make(container, getString(R.string.message_you_not_complete), Snackbar.LENGTH_LONG)
+                        .show();
+                //Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -1173,7 +1194,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 if (mInterstitialAd.isLoaded()) {
-                    Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
                     mInterstitialAd.show();
 
                 } else {
@@ -1200,7 +1221,7 @@ public class MainActivity extends AppCompatActivity
 //    }
 
     public void _onbtnReviewOnClick(View view) {
-        Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
         _gotoReviewToday();
     }
 
@@ -1253,10 +1274,11 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-
-        //re check complete learn
-        _checkCompleteLearn();
-        _getCountCard();
+        if (appPause) {
+            //re check complete learn
+            _checkCompleteLearn();
+            _getCountCard();
+        }
     }
 
 
@@ -1313,6 +1335,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause()");
+        appPause = true;
 //        SharedPreferences sp = PreferenceManager
 //                .getDefaultSharedPreferences(this);
 //        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();

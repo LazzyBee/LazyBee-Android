@@ -2,6 +2,7 @@ package com.born2go.lazzybee.shared;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
 import android.util.Log;
@@ -43,6 +44,7 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_DEBUG_INFOR = "debug_infor";
     public static final String KEY_SETTING_NOTIFICTION = "notification";
     public static final String KEY_SETTING_SPEECH_RATE = "speech_rate";
+    public static final String KEY_SETTING_MY_LEVEL = "my_level";
 
 
     public static final String DRAWER_USER = "user";
@@ -60,12 +62,15 @@ public class LazzyBeeShare {
     public static final int DRAWER_USER_INDEX = 3;
     public static final int DRAWER_COURSE_INDEX = 4;
 
+    public static final int DRAWER_DICTIONARY_INDEX = 5;
+
     public static final int CODE_COMPLETE_STUDY_RESULTS_1000 = 1000;
     public static final int CODE_SEARCH_RESULT = 1001;
     public static final String NOTIFICATION_MESSAGE = "n_message";
     public static final String NOTIFICATION_INDEX = "index";
     public static final String INIT_NOTIFICATION = "init_notification";
     public static final String NOTIFICATION_WHEN = "when";
+
 
 
     private static boolean DEBUG = true;
@@ -88,9 +93,11 @@ public class LazzyBeeShare {
     public static String mime = "text/html";
     public static String encoding = "utf-8";
     public static String ASSETS = "file:///android_asset/";
+
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
     public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
+    public static final int DEFAULT_MY_LEVEL = 0;
 
     public static final String DOWNLOAD = "Download";
 
@@ -345,6 +352,11 @@ public class LazzyBeeShare {
         }
     }
 
+    public static String getTextColor(int color, String string) {
+        String message = "<font color=" + color + ">" + string + "</font>";
+        return message;
+    }
+
     /*
  *Java Scrip Object Question
  * */
@@ -381,7 +393,7 @@ public class LazzyBeeShare {
     public static void setMenuIconFavoriteGreater21(MenuItem item, Context context) {
         if (item.getTitle().toString().equals(context.getString(R.string.action_not_favorite))) {
             item.setTitle(context.getString(R.string.action_favorite));
-            item.setIcon(context.getResources().getDrawable(R.drawable.ic_action_important));
+            item.setIcon(context.getDrawable(R.drawable.ic_action_important));
         } else {
             item.setTitle(context.getString(R.string.action_not_favorite));
             item.setIcon(context.getDrawable(R.drawable.ic_action_important));
@@ -389,11 +401,6 @@ public class LazzyBeeShare {
     }
 
     public static void setMenuIconFavoriteUnder20(MenuItem item, Context context) {
-
-//        Log.i(TAG, "setMenuIconFavoriteUnder20 \t " + item.getIcon() + ":"
-//                        + context.getResources().getDrawable(R.drawable.ic_action_not_important) + ":"
-//                        + context.getResources().getDrawable(R.drawable.ic_action_important)
-//        );
         if (item.getTitle().toString().equals(context.getString(R.string.action_not_favorite))) {
             item.setIcon(context.getResources().getDrawable(R.drawable.ic_action_important));
             item.setTitle(context.getString(R.string.action_favorite));
@@ -401,11 +408,24 @@ public class LazzyBeeShare {
             item.setTitle(context.getString(R.string.action_not_favorite));
             item.setIcon(context.getResources().getDrawable(R.drawable.ic_action_not_important));
         }
-//        if (item.getIcon() == (context.getResources().getDrawable(R.drawable.ic_action_not_important))) {
-//
-//        } else /*if (item.getIcon().equals(context.getResources().getDrawable(R.drawable.ic_action_not_important)))*/ {
-//
-//        }
+
+    }
+
+    public static Drawable getDraweble(Context context,int id){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return getDrawableGreater21(context, id);
+        } else {
+            return getDrawableUnder20(context, id);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static Drawable getDrawableGreater21(Context context, int id){
+        return context.getDrawable(id);
+    }
+
+    private static Drawable getDrawableUnder20(Context context, int id){
+        return context.getResources().getDrawable(id);
     }
 
 

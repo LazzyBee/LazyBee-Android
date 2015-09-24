@@ -183,13 +183,15 @@ public class LearnApiImplements implements LearnApi {
 //                + " ORDER BY (CASE WHEN " +
 //                " question = '" + query + "' THEN 1 WHEN " +
 //                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
-        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
-                + " ORDER BY " + KEY_QUESTION;
-
-        //Todo:Seach card
-        List<Card> datas = _getListCardQueryString(likeQuery);
-
-        return datas;
+        if (query.equals("gotoDictionary")) {
+            return _getAllListCard();
+        } else {
+            String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
+                    + " ORDER BY " + KEY_QUESTION;
+            //Seach card
+            List<Card> datas = _getListCardQueryString(likeQuery);
+            return datas;
+        }
     }
 
     /**
@@ -580,12 +582,12 @@ public class LearnApiImplements implements LearnApi {
 
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         try {
-            //Todo query for cursor
+            //query for cursor
             Cursor cursor = db.rawQuery(selectValueByKey, null);
             if (cursor.moveToFirst()) {
                 if (cursor.getCount() > 0)
                     do {
-                        //TODO:get data from sqlite
+                        //get data from sqlite
                         String value = cursor.getString(0);
                         queue_List_value = value;
                     } while (cursor.moveToNext());
@@ -931,11 +933,12 @@ public class LearnApiImplements implements LearnApi {
         String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
         if (value != null) {
             try {
+                //Define jsonObj by value
                 JSONObject jsonObject = new JSONObject(value);
                 int count = jsonObject.getInt(KEY_COUNT_JSON);
-
+                //Check count < today new card limit ->init
                 if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                    Log.i(TAG, "_get100Card: New 100 Card");
+                    Log.i(TAG, "_get100Card:Init New 100 Card");
                     return _initPreFetchNewCardList();
                 } else {
                     Log.i(TAG, "_get100Card:" + count);
@@ -1007,13 +1010,13 @@ public class LearnApiImplements implements LearnApi {
         String value = _getValueFromSystemByKey(key);
         if (value == null) {
             if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
-                //TODO: Learn more
+                //Learn more
                 return LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                //TODO: New
+                //New
                 return LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY;
             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-                //TODO: Total
+                //Total
                 return LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
             } else {
                 return 0;

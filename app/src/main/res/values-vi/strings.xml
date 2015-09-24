@@ -49,6 +49,7 @@
     <string name="language">Ngôn ngữ</string>
     <string name="add_to">Thêm vào</string>
     <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
+    <string name="dialog_message_delete_card_done">Bỏ qua thành công!</string>
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
     <string name="lang_english">Tiếng anh</string>
@@ -82,7 +83,7 @@
     <string name="setting_language">Ngôn ngữ</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
 
-    <string name="message_congratulations" formatted="false">Bấm vào %s để học tiếp,bấm vào %s để xem lại thẻ đã học</string>
+    <string name="message_congratulations" formatted="false">Bấm vào %1s để học tiếp,bấm vào %2s để xem lại thẻ đã học</string>
     <string name="message_congratulations_continue" formatted="false">Bấm %s để học tiếp</string>
 
     <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
@@ -143,6 +144,7 @@
     <string-array name="custom_study">
         <item>@string/custom_study</item>
         <item>@string/setting_lines</item>
+        <item>@string/setting_my_level</item>
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_max_learn_more_per_day</item>
@@ -153,6 +155,8 @@
         <!--<item>@string/drawer_user</item>-->
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
+        <item>@string/drawer_line</item>
+        <item>@string/drawer_dictionary</item>
         <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
@@ -176,4 +180,34 @@
     <string name="number_row_updated">%d row updated</string>
 
     <string name="action_share">Chia sẻ</string>
+    <string name="message_update_card_successful">Cập nhật thẻ thành công!</string>
+    <string name="message_update_card_fails">Cập nhật thẻ thất bại!</string>
+    <string name="message_no_new_card">Đã hết từ mới để học!</string>
+
+    <string name="mesage_update_database_successful">Cập nhật cơ sở dữ liệu thành công!</string>
+    <string name="mesage_update_database_fails">Cập nhật cơ sở dữ liệu thất bại!</string>
+    <string name="message_add_favorite_card_done">Thêm %s vào Yêu thích</string>
+
+    <string name="showcase_message_button_again0">Học lại,Học từ lại ngay sau 10 phút</string>
+    <string name="showcase_message_button_hard1">Khó,Học từ lại ngay sau 1 ngày</string>
+    <string name="showcase_message_button_good2">Tốt,Học từ lại ngay sau 3 ngày</string>
+    <string name="showcase_message_button_easy3">Dễ,Học từ lại ngay sau 3 ngày</string>
+    <string name="showcase_message_got_it">Hiểu rồi!</string>
+    <string name="showcase_message_button_show_answer">Đây là hiện câu trả lời</string>
+    <string name="showcase_message_new_count">Đây là số các từ chưa học</string>
+    <string name="showcase_message_again_count">Đây là số các từ học lại</string>
+    <string name="showcase_message_reivew_count">Đây là số các từ đã học</string>
+
+    <string name="showcase_message_help_panel">Đây là bảng hỗ trợ học</string>
+
+    <string name="showcase_message_start_study">Bấm vào đây để Học</string>
+    <string name="showcase_message_my_due">Đây là mục tiêu của bạn</string>
+    <string name="showcase_message_gotoReview">Bấm vào đây để xem các thẻ đã học</string>
+    <string name="showcase_message_learn_more">Bấm vào đây để Học thêm</string>
+    <string name="showcase_message_custom_study">Bấm vào đây để thiết lập cách học</string>
+    <string name="setting_my_level">Cấp độ của bạn</string>
+    <string name="setting_message_default">Mặc định</string>
+    <string name="dialog_title_change_my_level">Thay đổi cấp độ</string>
+    <string name="message_custom_setting_successful">Thay đổi thành công</string>
+
 </resources>

@@ -136,6 +136,8 @@ public class NavigationDrawerFragment extends Fragment {
                     selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
                 } else if (o.equals(getString(R.string.drawer_about))) {
                     selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
+                }else if (o.equals(getString(R.string.drawer_dictionary))) {
+                        selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
                 } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
                     selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
                 }else if(o instanceof Course){

@@ -1,12 +1,10 @@
 package com.born2go.lazzybee.adapter;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -28,20 +26,13 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
  * Created by Hue on 8/21/2015.
  */
 
-public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder> {
+public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder> implements DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse {
     private static final String TAG = "SettingListAdapter";
     Context context;
     List<String> settings;
@@ -307,7 +298,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             index = 3;
         } else if (sp.equals(context.getString(R.string.speech_rate_very_fast_value))) {
             index = 4;
-        } else  {
+        } else {
             index = 2;
         }
 
@@ -581,6 +572,20 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             return -1;
     }
 
+    @Override
+    public void processFinish(int code) {
+        if (code == 1) {
+            //Dowload and update Complete
+            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_successful), Snackbar.LENGTH_LONG)
+                    .show();
+        } else {
+            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_fails), Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
+    }
+
+
     public class RecyclerViewSettingListAdapterViewHolder extends RecyclerView.ViewHolder {
         private View view;
         private int viewType;
@@ -669,13 +674,15 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void _downloadFile() {
-        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
-        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+//        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
+//        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context);
+        downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
     }
 
     private void _updateDB(int type) {
         try {
-
             databaseUpgrade.copyDataBase(type);
             List<Card> cards = databaseUpgrade._getAllCard();
             for (Card card : cards) {
@@ -683,70 +690,11 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
             }
             //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
             //databaseUpgrade.close();
-            Toast.makeText(context, R.string.update_database_sucsessfuly, Toast.LENGTH_SHORT);
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
         }
 
 
-    }
-
-    class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
-        Context context;
-        ProgressDialog progressDialog;
-
-        public DownloadFileUpdateDatabaseTask(Context context) {
-            this.context = context;
-            progressDialog = new ProgressDialog(context);
-
-        }
-
-        protected void onPreExecute() {
-            this.progressDialog.setMessage("Loading...");
-            this.progressDialog.setCancelable(false);
-            this.progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-
-                URL u = new URL(params[0]);
-
-                File sdCard_dir = Environment.getExternalStorageDirectory();
-                File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
-                //dlDir.mkdirs();
-                InputStream is = u.openStream();
-
-                DataInputStream dis = new DataInputStream(is);
-
-                byte[] buffer = new byte[1024];
-                int length;
-
-                FileOutputStream fos = new FileOutputStream(file);
-                while ((length = dis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
-                fos.close();
-                Log.e("Download file update:", "Complete");
-            } catch (MalformedURLException mue) {
-                Log.e("SYNC getUpdate", "malformed url error", mue);
-            } catch (IOException ioe) {
-                Log.e("SYNC getUpdate", "io error", ioe);
-            } catch (SecurityException se) {
-                Log.e("SYNC getUpdate", "security error", se);
-            }
-            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (this.progressDialog.isShowing()) {
-                this.progressDialog.dismiss();
-            }
-        }
     }
 }
