@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewCustomStudyAdapter;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public class FragmentDialogCustomStudy extends DialogFragment {
 
         settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study));
 
-        learnApiImplements = new LearnApiImplements(context);
+        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         //getDialog().setTitle(getString(R.string.custom_study));
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
