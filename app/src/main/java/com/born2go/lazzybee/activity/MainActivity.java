@@ -78,6 +78,7 @@ import java.util.List;
 import java.util.Locale;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
@@ -203,25 +204,59 @@ public class MainActivity extends AppCompatActivity
         String SHOWCASE_ID = getString(R.string.SHOWCASE_MAIN_ID);
         // sequence example
         ShowcaseConfig config = new ShowcaseConfig();
+
         config.setDelay(500); // half second between each showcase view
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 
+        MaterialShowcaseView showcaseStartActivity = new MaterialShowcaseView.Builder(this)
+                .setTarget(lbStudy)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_start_study))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_gotoReview = new MaterialShowcaseView.Builder(this)
+                .setTarget(mCardViewReView)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_gotoReview))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_my_due = new MaterialShowcaseView.Builder(this)
+                .setTarget(lbDueToday)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_my_due))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_learn_more = new MaterialShowcaseView.Builder(this)
+                .setTarget(mCardViewLearnMore)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_learn_more))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_custom_study = new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCustomStudy)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_custom_study))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+
+
         sequence.setConfig(config);
-        sequence.addSequenceItem(mCardViewStudy,
-                getString(R.string.showcase_message_start_study), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcaseStartActivity);
 
-        sequence.addSequenceItem(lbDueToday,
-                getString(R.string.showcase_message_my_due), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_my_due);
 
-        sequence.addSequenceItem(mCardViewReView,
-                getString(R.string.showcase_message_gotoReview), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_gotoReview);
 
-        sequence.addSequenceItem(mCardViewLearnMore,
-                getString(R.string.showcase_message_learn_more), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_learn_more);
 
-        sequence.addSequenceItem(lbCustomStudy,
-                getString(R.string.showcase_message_custom_study), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_custom_study);
+
 
         sequence.start();
     }

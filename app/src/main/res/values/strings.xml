@@ -260,9 +260,9 @@
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
     </string-array>
 
-    <string name="SHOWCASE_MAIN_ID" translatable="false">29</string>
-    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">30</string>
-    <string name="SHOWCASE_STUDY_ID" translatable="false">31</string>
+    <string name="SHOWCASE_MAIN_ID" translatable="false">45</string>
+    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">40</string>
+    <string name="SHOWCASE_STUDY_ID" translatable="false">41</string>
 
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>

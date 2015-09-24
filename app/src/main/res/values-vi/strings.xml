@@ -192,7 +192,7 @@
     <string name="showcase_message_button_hard1">Khó,Học từ lại ngay sau 1 ngày</string>
     <string name="showcase_message_button_good2">Tốt,Học từ lại ngay sau 3 ngày</string>
     <string name="showcase_message_button_easy3">Dễ,Học từ lại ngay sau 3 ngày</string>
-    <string name="showcase_message_got_it">Hiểu rồi!</string>
+    <string name="showcase_message_got_it">Bỏ qua!</string>
     <string name="showcase_message_button_show_answer">Đây là hiện câu trả lời</string>
     <string name="showcase_message_new_count">Đây là số các từ chưa học</string>
     <string name="showcase_message_again_count">Đây là số các từ học lại</string>

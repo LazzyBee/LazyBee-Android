@@ -28,6 +28,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
@@ -69,7 +71,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     LearnApiImplements dataBaseHelper;
     TextToSpeech textToSpeech;
     WebView mWebViewLeadDetails;
-    Button btnShowAnswer;
+    TextView btnShowAnswer;
     LinearLayout mLayoutButton;
     Button btnAgain0, btnHard1, btnGood2, btnEasy3;
 
@@ -118,7 +120,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     CardView mCardViewHelpandAdMod;
 
-    LinearLayout mShowAnswer;
+    RelativeLayout mShowAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,22 +154,54 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 
+        MaterialShowcaseView showcase_lbCountNew= new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCountNew)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_new_count))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_lbCountAgain= new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCountAgain)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_again_count))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_lbCountDue= new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCountDue)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_reivew_count))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnShowAnswer= new MaterialShowcaseView.Builder(this)
+                .setTarget(btnShowAnswer)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_show_answer))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_mCardViewHelpandAdMod= new MaterialShowcaseView.Builder(this)
+                .setTarget(mCardViewHelpandAdMod)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_help_panel))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+
+
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(lbCountNew,
-                getString(R.string.showcase_message_new_count), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_lbCountNew);
 
-        sequence.addSequenceItem(lbCountAgain,
-                getString(R.string.showcase_message_again_count), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_lbCountAgain);
 
-        sequence.addSequenceItem(lbCountDue,
-                getString(R.string.showcase_message_reivew_count), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_lbCountDue);
 
-        sequence.addSequenceItem(btnShowAnswer,
-                getString(R.string.showcase_message_button_show_answer), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnShowAnswer);
 
-        sequence.addSequenceItem(mCardViewHelpandAdMod,
-                getString(R.string.showcase_message_help_panel), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_mCardViewHelpandAdMod);
 
 
         sequence.start();
@@ -180,19 +214,43 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         config.setDelay(500); // half second between each showcase view
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-
+        MaterialShowcaseView showcase_btnAgain0= new MaterialShowcaseView.Builder(this)
+                .setTarget(btnAgain0)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_again0))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnHard1= new MaterialShowcaseView.Builder(this)
+                .setTarget(btnHard1)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_hard1))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnGood2= new MaterialShowcaseView.Builder(this)
+                .setTarget(btnGood2)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_good2))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnEasy3= new MaterialShowcaseView.Builder(this)
+                .setTarget(btnEasy3)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_easy3))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
         sequence.setConfig(config);
-        sequence.addSequenceItem(btnAgain0,
-                getString(R.string.showcase_message_button_again0), getString(R.string.showcase_message_got_it));
 
-        sequence.addSequenceItem(btnHard1,
-                getString(R.string.showcase_message_button_hard1), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnAgain0);
 
-        sequence.addSequenceItem(btnGood2,
-                getString(R.string.showcase_message_button_good2), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnHard1);
 
-        sequence.addSequenceItem(btnEasy3,
-                getString(R.string.showcase_message_button_easy3), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnGood2);
+
+        sequence.addSequenceItem(showcase_btnEasy3);
 
 
         sequence.start();
@@ -359,9 +417,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         mWebViewLeadDetails = (WebView) findViewById(R.id.mWebViewLeadDetaisl);
 
         //init button
-        mShowAnswer = (LinearLayout) findViewById(R.id.mShowAnswer);
+        mShowAnswer = (RelativeLayout) findViewById(R.id.mShowAnswer);
 
-        btnShowAnswer = (Button) findViewById(R.id.btnShowAnswer);
+        btnShowAnswer = (TextView) findViewById(R.id.btnShowAnswer);
         mLayoutButton = (LinearLayout) findViewById(R.id.mLayoutButton);
 
         btnAgain0 = (Button) findViewById(R.id.btnAgain0);
