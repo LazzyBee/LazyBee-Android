@@ -227,14 +227,14 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         // Instantiate an AlertDialog.Builder with its constructor
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(card.getQuestion());
-        final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_delete_card)};
+        final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
                 String action = LazzyBeeShare.EMPTY;
                 if (items[item] == getString(R.string.action_add_to_learn)) {
                     _addCardToQueue(card);
-                } else if (items[item] == getString(R.string.action_delete_card)) {
+                } else if (items[item] == getString(R.string.action_learnt)) {
                     _doneCard(card);
                 }
                 _search(query_text);

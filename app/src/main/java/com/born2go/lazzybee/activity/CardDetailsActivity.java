@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -27,6 +25,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
@@ -212,12 +211,12 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         card.setStatus(statusFavrite);
         learnApiImplements._updateCard(card);
 
-        Snackbar.make(container, Html.fromHtml(
-                        LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                                , getString(R.string.message_add_favorite_card_done, card.getQuestion()))),
-                Snackbar.LENGTH_SHORT)
-                .show();
-        //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+//        Snackbar.make(container, Html.fromHtml(
+//                        LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                                , getString(R.string.message_add_favorite_card_done, card.getQuestion()))),
+//                Snackbar.LENGTH_SHORT)
+//                .show();
+        Toast.makeText(context, getString(R.string.message_add_favorite_card_done, card.getQuestion()), Toast.LENGTH_SHORT).show();
     }
 
     private void _updateCardFormServer() {
@@ -247,11 +246,11 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             public void onClick(DialogInterface dialog, int id) {
                 //Update Queue_list in system table
                 learnApiImplements._addCardIdToQueueList(card);
-                Snackbar.make(container,
-                        Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                                , getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()))), Snackbar.LENGTH_SHORT)
-                        .show();
-                //Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+//                Snackbar.make(container,
+//                        Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                                , getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()))), Snackbar.LENGTH_SHORT)
+//                        .show();
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -306,20 +305,20 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             //Update Card form DB
             learnApiImplements._updateCardFormServer(card);
 
-            Snackbar.make(container,
-                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                            , getString(R.string.message_update_card_successful))), Snackbar.LENGTH_SHORT)
-                    .show();
-            //Toast.makeText(context, getString(R.string.dialog_message_update_card_successful), Toast.LENGTH_SHORT).show();
+//            Snackbar.make(container,
+//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                            , getString(R.string.message_update_card_successful))), Snackbar.LENGTH_SHORT)
+//                    .show();
+            Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
 
             //set Result code for updated List card
             setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
         } else {
-            Snackbar.make(container,
-                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                            , getString(R.string.message_update_card_fails))), Snackbar.LENGTH_SHORT)
-                    .show();
-            //Toast.makeText(context, getString(R.string.dialog_message_update_card_fails), Toast.LENGTH_SHORT).show();
+//            Snackbar.make(container,
+//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                            , getString(R.string.message_update_card_fails))), Snackbar.LENGTH_SHORT)
+//                    .show();
+            Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -433,6 +432,7 @@ public class MainActivity extends AppCompatActivity
             total = Integer.valueOf(totalLearnCard);
 
         int countDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total).size();
+        int countAgain = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0).size();
 
         if (value != null) {
             complete = Integer.valueOf(value);
@@ -455,7 +455,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
                 visibility = getResources().getInteger(R.integer.visibility_state_study0);
             } else {
-                check = check + countDue;
+                check = check + countDue + countAgain;
                 Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
                 if (check > 0) {
                     //inday finish Lession van cho hoc tiep
@@ -1045,9 +1045,9 @@ public class MainActivity extends AppCompatActivity
         //fragmentDialogCustomStudy.
         fragmentDialogCustomStudy.setCustomStudyAdapter();
         _getCountCard();
-        //Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
-        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
-                .show();
+        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
+//        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
+//                .show();
 
     }
 
@@ -1208,9 +1208,9 @@ public class MainActivity extends AppCompatActivity
             if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
                 _learnMore();
             } else {
-                Snackbar.make(container, getString(R.string.message_you_not_complete), Snackbar.LENGTH_LONG)
-                        .show();
-                //Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+//                Snackbar.make(container, getString(R.string.message_you_not_complete), Snackbar.LENGTH_LONG)
+//                        .show();
+                Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -1296,7 +1296,6 @@ public class MainActivity extends AppCompatActivity
                     || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
                 complete = _checkCompleteLearn();
                 _getCountCard();
-
             } else {
                 complete = _checkCompleteLearn();
                 _getCountCard();

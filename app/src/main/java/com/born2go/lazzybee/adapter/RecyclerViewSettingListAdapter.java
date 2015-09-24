@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -576,11 +575,13 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     public void processFinish(int code) {
         if (code == 1) {
             //Dowload and update Complete
-            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_successful), Snackbar.LENGTH_LONG)
-                    .show();
+//            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_successful), Snackbar.LENGTH_LONG)
+//                    .show();
+            Toast.makeText(context,context.getString(R.string.mesage_update_database_successful),Toast.LENGTH_SHORT).show();
         } else {
-            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_fails), Snackbar.LENGTH_LONG)
-                    .show();
+//            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_fails), Snackbar.LENGTH_LONG)
+//                    .show();
+            Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
         }
 
     }
