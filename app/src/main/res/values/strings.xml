@@ -139,7 +139,7 @@
     <string name="message_total_card_review">Total card review:</string>
 
     <string name="my_course">My Course</string>
-    <string name="message_congratulations">Click %1s to learn more and click $2s to view learned cards</string>
+    <string name="message_congratulations" formatted="false">Click %1s to learn more and click %2s to view learned cards</string>
     <string name="message_congratulations_continue">Click %s to study</string>
 
     <string name="drawer_user" translatable="false">user</string>
@@ -153,8 +153,7 @@
     <string name="notificaion_title">%1$s %2$s</string>
     <string name="message_hellp_study">Tip/help panel(under construction)</string>
     <string name="setting_speech_rate">Speech Rate</string>
-    <string name="setting_speech_rate_slider" translatable="false">
-        SpeechSlider</string>
+    <string name="setting_speech_rate_slider" translatable="false">SpeechSlider</string>
     <string name="action_change_speech_rate">Speech rate</string>
 
     <string name="speech_rate_very_slow">Very Slow</string>
@@ -264,9 +263,9 @@
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
     </string-array>
 
-    <string name="SHOWCASE_MAIN_ID" translatable="false">45</string>
-    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">40</string>
-    <string name="SHOWCASE_STUDY_ID" translatable="false">41</string>
+    <string name="SHOWCASE_MAIN_ID" translatable="false">50</string>
+    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">47</string>
+    <string name="SHOWCASE_STUDY_ID" translatable="false">48</string>
 
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>
@@ -309,7 +308,7 @@
     <string name="setting_message_default">Default</string>
     <string name="dialog_title_change_my_level">Change my level</string>
 
-    <string name="message_custom_setting_successful">Custom setting_successful</string>
+    <string name="message_custom_setting_successful">Custom setting successful</string>
     <string name="message_ignore_card_sucessful">Ignore card sucessful</string>
 
 
