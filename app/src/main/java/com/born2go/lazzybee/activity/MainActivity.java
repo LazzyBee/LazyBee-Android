@@ -789,10 +789,6 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-
-
-//                    Toast.makeText(getBaseContext(), query,
-//                            Toast.LENGTH_SHORT).show();
                     _gotoSeach(query);
                     return false;
                 }
