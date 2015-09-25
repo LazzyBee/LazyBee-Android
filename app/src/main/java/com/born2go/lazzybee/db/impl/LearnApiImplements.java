@@ -985,7 +985,8 @@ public class LearnApiImplements implements LearnApi {
 
         Log.i(TAG, "_initPreFetchNewCardList: Card size=" + count);
 
-        if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
+//        if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
+        if (count < 0) {
             return -1;
         } else {
             try {

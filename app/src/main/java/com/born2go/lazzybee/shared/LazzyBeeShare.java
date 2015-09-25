@@ -72,7 +72,6 @@ public class LazzyBeeShare {
     public static final String NOTIFICATION_WHEN = "when";
 
 
-
     private static boolean DEBUG = true;
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
@@ -199,9 +198,9 @@ public class LazzyBeeShare {
 
             }
 
-
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "_getValueFromKey\tError:" + e.getMessage());
+            //e.printStackTrace();
         }
 
         return value;
@@ -411,7 +410,7 @@ public class LazzyBeeShare {
 
     }
 
-    public static Drawable getDraweble(Context context,int id){
+    public static Drawable getDraweble(Context context, int id) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return getDrawableGreater21(context, id);
         } else {
@@ -420,11 +419,11 @@ public class LazzyBeeShare {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static Drawable getDrawableGreater21(Context context, int id){
+    private static Drawable getDrawableGreater21(Context context, int id) {
         return context.getDrawable(id);
     }
 
-    private static Drawable getDrawableUnder20(Context context, int id){
+    private static Drawable getDrawableUnder20(Context context, int id) {
         return context.getResources().getDrawable(id);
     }
 
