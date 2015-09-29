@@ -849,10 +849,11 @@ public class LearnApiImplements implements LearnApi {
         int limitToday = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
         int dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day).size();
+
         if (todayCount == -2) {
             Log.i(TAG, "_getStringDueToday: todayCount == -2");
-            dueCount = 0;
-            againCount = 0;
+//            dueCount = 0;
+//            againCount = 0;
             if (limitToday > noLearn) {
                 todayCount = noLearn;
             } else {
@@ -869,17 +870,22 @@ public class LearnApiImplements implements LearnApi {
                 todayCount = limitToday;
             }
         }
+
         if (dueCount == 0) {
             Log.i(TAG, "_getStringDueToday:dueCount == 0");
         } else {
             if (dueCount < total_learn_per_day) {
                 if (total_learn_per_day - dueCount < limitToday) {
+
                     Log.i(TAG, "_getStringDueToday total_learn_per_day - dueCount < limit_today");
                     todayCount = total_learn_per_day - dueCount;
+
                 } else if (total_learn_per_day - dueCount > limitToday) {
+
                     Log.i(TAG, "_getStringDueToday  total_learn_per_day - dueCount > limit_today");
                 }
             } else if (dueCount >= total_learn_per_day) {
+
                 dueCount = total_learn_per_day;
                 todayCount = 0;
             }
