@@ -10,9 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,7 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,6 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
+import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
@@ -59,18 +58,10 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.identitytoolkit.GitkitClient;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -82,7 +73,11 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface, ConnectionCallbacks, OnConnectionFailedListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        FragmentDialogCustomStudy.DialogCustomStudyInferface,
+        ConnectionCallbacks, OnConnectionFailedListener
+        ,DownloadFileDatabaseResponse
+{
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
@@ -99,7 +94,6 @@ public class MainActivity extends AppCompatActivity
 
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
-    SearchView mSearchView;
     DrawerLayout drawerLayout;
 
     CardView mCardViewStudy;
@@ -118,28 +112,16 @@ public class MainActivity extends AppCompatActivity
     FragmentDialogCustomStudy fragmentDialogCustomStudy;
     LinearLayout mLine;
 
-    Button btnStudy;
+
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
 
-    private GitkitClient gitkitClient;
-    private PendingIntent pendingIntent;
-    GoogleApiClient mGoogleApiClient;
 
     boolean appPause = false;
 
-    /**
-     * A flag indicating that a PendingIntent is in progress and prevents us
-     * from starting further intents.
-     */
-    private boolean mIntentInProgress;
 
     private boolean mSignInClicked;
-    private static final int RC_SIGN_IN = 0;
 
-    private ConnectionResult mConnectionResult;
-    // Toolbar toolbar;
-    List<PendingIntent> intentArray;
     AlarmManager alarmManager;
 
     InterstitialAd mInterstitialAd;
@@ -149,11 +131,6 @@ public class MainActivity extends AppCompatActivity
     // Allows us to notify the user that something happened in the background
     NotificationManager notificationManager;
 
-    // Used to track notifications
-    int notifID = 0;
-
-    // Used to track if notification is active in the task bar
-    boolean isNotificActive = false;
 
     TextView lbReview;
 
@@ -238,7 +215,6 @@ public class MainActivity extends AppCompatActivity
                     .build();
             sequence.addSequenceItem(showcase_gotoReview);
         }
-
 
 
         if (mCardViewLearnMore.getVisibility() != View.GONE) {
@@ -370,10 +346,6 @@ public class MainActivity extends AppCompatActivity
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
-//    private void UnregisterAlarmBroadcast() {
-//        alarmManager.cancel(pendingIntent);
-//        getBaseContext().unregisterReceiver(myReceiver);
-//    }
 
     private void _initSettingApplication() {
         int[] hour = getResources().getIntArray(R.array.notification_hours);
@@ -851,30 +823,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Sign-in into google
-     */
-    private void signInWithGplus() {
-//        if (!mGoogleApiClient.isConnecting()) {
-//            mSignInClicked = true;
-//            resolveSignInError();
-//        }
-    }
 
-    /**
-     * Method to resolve any signin errors
-     */
-    private void resolveSignInError() {
-//        if (mConnectionResult.hasResolution()) {
-//            try {
-//                mIntentInProgress = true;
-//                mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
-//            } catch (IntentSender.SendIntentException e) {
-//                mIntentInProgress = false;
-//                mGoogleApiClient.connect();
-//            }
-//        }
-    }
 
     private void _checkUpdate() {
         //Check vesion form server
@@ -969,7 +918,7 @@ public class MainActivity extends AppCompatActivity
     private void _downloadFile() {
 
 
-        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
+        DownloadFileandUpdateDatabase downloadFileUpdateDatabaseTask = new DownloadFileandUpdateDatabase(context);
         downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
     }
 
@@ -988,12 +937,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void _login() {
-        //Toast.makeText(context, getString(R.string.action_login), Toast.LENGTH_SHORT).show();
-        gitkitClient.startSignIn();
-
-
-    }
 
 
     /**
@@ -1083,32 +1026,28 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if (!mIntentInProgress) {
-            // Store the ConnectionResult for later usage
-            mConnectionResult = result;
 
-            if (mSignInClicked) {
-                // The user has already clicked 'sign-in' so we attempt to
-                // resolve all
-                // errors until the user is signed in, or they cancel.
-                resolveSignInError();
-            }
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // mGoogleApiClient.connect();
-        _stopNotificationServices();
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        if (mGoogleApiClient.isConnected()) {
-//            mGoogleApiClient.disconnect();
-//        }
+    }
+
+    @Override
+    public void processFinish(int code) {
+        if (code == 1) {
+            //Dowload and update Complete
+            Toast.makeText(context,context.getString(R.string.mesage_update_database_successful),Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -1271,17 +1210,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.i(TAG, "Back Press");
-        //
-        //int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
-        //Log.i(TAG, "backStackcount:" + backStackcount);
-//        SharedPreferences sp = PreferenceManager
-//                .getDefaultSharedPreferences(this);
-//        int init = sp.getInt(LazzyBeeShare.INIT_NOTIFICATION, 2);
-//        Log.i(TAG, "_initInterstitialAd noti:" + init);
-//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
-//        Log.i(TAG, "b _initInterstitialAd noti:" + init);
-//        _startNotificationServices();
+        Log.i(TAG, "onBackPressed");
         this.finish();
         System.exit(0);
     }
@@ -1289,8 +1218,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
-
+        Log.i(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 ||
                 requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             if (resultCode == 1 || resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000
@@ -1319,51 +1247,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (!gitkitClient.handleIntent(intent)) {
-            super.onNewIntent(intent);
-        }
-    }
 
-    class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
-        Context context;
-
-        public DownloadFileUpdateDatabaseTask(Context context) {
-            this.context = context;
-
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-
-                URL u = new URL(params[0]);
-
-                File sdCard_dir = Environment.getExternalStorageDirectory();
-                File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
-                //dlDir.mkdirs();
-                InputStream is = u.openStream();
-
-                DataInputStream dis = new DataInputStream(is);
-
-                byte[] buffer = new byte[1024];
-                int length;
-
-                FileOutputStream fos = new FileOutputStream(file);
-                while ((length = dis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
-                fos.close();
-                Log.e("Download file update:", "Complete");
-                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
-            } catch (MalformedURLException mue) {
-                Log.e("SYNC getUpdate", "malformed url error", mue);
-            } catch (IOException ioe) {
-                Log.e("SYNC getUpdate", "io error", ioe);
-            } catch (SecurityException se) {
-                Log.e("SYNC getUpdate", "security error", se);
-            }
-            return null;
-        }
     }
 
     @Override
@@ -1371,25 +1255,10 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
-//        SharedPreferences sp = PreferenceManager
-//                .getDefaultSharedPreferences(this);
-//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
-//        _startNotificationServices();
-    }
-
-    private void _startNotificationServices() {
-//        Intent service1 = new Intent(context, MyAlarmService.class);
-//        context.startService(service1);
-    }
-
-    private void _stopNotificationServices() {
-//        Intent service1 = new Intent(context, MyAlarmService.class);
-//        context.stopService(service1);
     }
 
     @Override
     protected void onDestroy() {
-        // unregisterReceiver(myReceiver);
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     }

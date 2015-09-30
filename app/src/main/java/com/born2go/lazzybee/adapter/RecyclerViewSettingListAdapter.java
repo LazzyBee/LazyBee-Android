@@ -31,7 +31,9 @@ import java.util.List;
  * Created by Hue on 8/21/2015.
  */
 
-public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder> implements DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse {
+public class RecyclerViewSettingListAdapter extends
+        RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder>
+        implements DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse {
     private static final String TAG = "SettingListAdapter";
     Context context;
     List<String> settings;
