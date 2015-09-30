@@ -865,12 +865,12 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         ws.setJavaScriptEnabled(true);
 
         //Load first card
-        if (againList.size() > 0) {
-            //Load first card is Again card
-            _nextAgainCard();
-        } else if (dueList.size() > 0) {
+        if (dueList.size() > 0) {
             //Load first card is Due card
             _nextDueCard();
+        } else if (againList.size() > 0) {
+            //Load first card is Again card
+            _nextAgainCard();
         } else if (todayList.size() > 0) {
             //Load first card is new card
             _nextNewCard();
