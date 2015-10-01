@@ -1222,7 +1222,35 @@ public class LearnApiImplements implements LearnApi {
             ex.printStackTrace();
             return 0;
         }
+    }
 
 
+
+    public boolean _checkUpdateDataBase() {
+        boolean update = false;
+        int _dbVesion=0;
+        int _gdbVesion=0;
+
+        //get version in DB
+        String db_v = _getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        String g_db_v = _getValueFromSystemByKey(LazzyBeeShare.GAE_DB_VERSION);
+
+        //Check client DB
+        if (db_v != null) {
+            _dbVesion = Integer.valueOf(db_v);
+        }
+
+        //Check global DB
+        if (g_db_v != null) {
+            _gdbVesion = Integer.valueOf(g_db_v);
+        }
+
+        //
+        if (_gdbVesion > _dbVesion) {
+            Log.i(TAG, "Show confirm Update");
+            update = true;
+        }
+        Log.i(TAG,"dbVesion:"+_dbVesion+"\t gdbVesion:"+_gdbVesion);
+        return update;
     }
 }

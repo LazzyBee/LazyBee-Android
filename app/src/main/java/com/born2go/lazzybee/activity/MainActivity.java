@@ -60,6 +60,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,8 +78,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         FragmentDialogCustomStudy.DialogCustomStudyInferface,
         ConnectionCallbacks, OnConnectionFailedListener
-        ,DownloadFileDatabaseResponse
-{
+        , DownloadFileDatabaseResponse {
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
@@ -146,6 +147,8 @@ public class MainActivity extends AppCompatActivity
     TextView txtMessageCongratulation;
 
     FrameLayout container;
+
+    DataLayer lazzybeeTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -348,15 +351,19 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _initSettingApplication() {
+        lazzybeeTag = TagManager.getInstance(context).getDataLayer();
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        //Define hours
         int[] hour = getResources().getIntArray(R.array.notification_hours);
         hours = new ArrayList<Integer>();
         for (int i = 0; i < hour.length; i++) {
             hours.add(hour[i]);
         }
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         _changeLanguage();
+
 
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
@@ -824,44 +831,61 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private boolean _checkUpdate() {
+        //get GAE_DB_VERSION in Server
+        String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
 
-    private void _checkUpdate() {
-        //Check vesion form server
-        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        //put GAE_DB_VERSION to Client
+        dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version == null ? String.valueOf(0) : gae_db_version);
 
-        int update_local_version = databaseUpgrade._getVersionDB();
-        int _clientVesion;
-
-        //Check version
-        if (db_v == null) {
-            _clientVesion = 0;
+        if (dataBaseHelper._checkUpdateDataBase()) {
+            Log.i(TAG, "Co Update");
+            Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
+            _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+            return true;
         } else {
-            _clientVesion = Integer.valueOf(db_v);
+            Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Khong co Update");
+            return false;
         }
 
-        if (_clientVesion == 0) {
-            if (update_local_version == -1) {
-                Log.i(TAG, "_checkUpdate():update_local_version == -1");
-                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
-            }
-        } else {
-            if (update_local_version > _clientVesion) {
-                Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
-                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
-            } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
-                Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
-                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-            } else {
-                Log.i(TAG, "_checkUpdate():" + R.string.updated);
-                //Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
-            }
-
-        }
+//        //Check vesion form server
+//        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+//
+//        int update_local_version = databaseUpgrade._getVersionDB();
+//        int _clientVesion;
+//
+//        //Check version
+//        if (db_v == null) {
+//            _clientVesion = 0;
+//        } else {
+//            _clientVesion = Integer.valueOf(db_v);
+//        }
+//
+//        if (_clientVesion == 0) {
+//            if (update_local_version == -1) {
+//                Log.i(TAG, "_checkUpdate():update_local_version == -1");
+//                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+//            }
+//        } else {
+//            if (update_local_version > _clientVesion) {
+//                Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
+//                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+//            } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
+//                Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
+//                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+//            } else {
+//                Log.i(TAG, "_checkUpdate():" + R.string.updated);
+//                //Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
 
 
     }
 
     private void _showComfirmUpdateDatabase(final int type) {
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
         // Chain together various setter methods to set the dialog characteristics
@@ -916,10 +940,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
+        String base_url = (String) lazzybeeTag.get(LazzyBeeShare.BASE_URL_DB);
+        int version = 0;
 
+        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        if (db_v != null)
+            version = Integer.valueOf(db_v);
 
-        DownloadFileandUpdateDatabase downloadFileUpdateDatabaseTask = new DownloadFileandUpdateDatabase(context);
-        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        downloadFileandUpdateDatabase.execute(base_url + "/" + version);
+        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
     }
 
     private boolean _compareToVersion(int clientVesion) {
@@ -936,7 +967,6 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
 
 
     /**
@@ -1044,7 +1074,8 @@ public class MainActivity extends AppCompatActivity
     public void processFinish(int code) {
         if (code == 1) {
             //Dowload and update Complete
-            Toast.makeText(context,context.getString(R.string.mesage_update_database_successful),Toast.LENGTH_SHORT).show();
+            if (!_checkUpdate())
+                Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
         }
