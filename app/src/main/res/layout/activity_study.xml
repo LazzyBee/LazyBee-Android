@@ -127,7 +127,8 @@
             android:layout_marginLeft="@dimen/cardview_study_margin_left"
             android:layout_marginRight="@dimen/cardview_study_margin_right"
             android:layout_marginTop="@dimen/cardview_study_margin_top"
-            android:id="@+id/mCardViewHelpandAdMod">
+            android:id="@+id/mCardViewHelpandAdMod"
+            android:visibility="gone">
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"

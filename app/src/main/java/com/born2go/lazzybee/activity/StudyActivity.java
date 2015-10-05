@@ -203,7 +203,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         sequence.addSequenceItem(showcase_btnShowAnswer);
 
-        sequence.addSequenceItem(showcase_mCardViewHelpandAdMod);
+        //sequence.addSequenceItem(showcase_mCardViewHelpandAdMod);
 
 
         sequence.start();
