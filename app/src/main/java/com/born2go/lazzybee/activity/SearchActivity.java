@@ -45,7 +45,6 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     String query_text;
     private int ADD_TO_LEARN = 0;
     ConnectGdatabase connectGdatabase;
-    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +58,6 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
 
         query_text = getIntent().getStringExtra(QUERY_TEXT);
-
-        search = (SearchView) findViewById(R.id.search);
 
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
@@ -113,9 +110,10 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+        search = (SearchView) menu.findItem(R.id.search).getActionView();
+        search.setQuery(query_text, false);
+        search.setIconified(false);
+        search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -126,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         });
 
         //***setOnQueryTextListener***
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -227,14 +225,14 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         // Instantiate an AlertDialog.Builder with its constructor
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(card.getQuestion());
-        final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_delete_card)};
+        final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
                 String action = LazzyBeeShare.EMPTY;
                 if (items[item] == getString(R.string.action_add_to_learn)) {
                     _addCardToQueue(card);
-                } else if (items[item] == getString(R.string.action_delete_card)) {
+                } else if (items[item] == getString(R.string.action_learnt)) {
                     _doneCard(card);
                 }
                 _search(query_text);

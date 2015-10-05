@@ -34,16 +34,17 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
     Context context;
     ProgressDialog progressDialog;
-    DownloadFileDatabaseResponse downloadFileDatabaseResponse;
+    public DownloadFileDatabaseResponse downloadFileDatabaseResponse;
     LearnApiImplements learnApiImplements;
     DatabaseUpgrade databaseUpgrade;
+    int version;
 
-    public DownloadFileandUpdateDatabase(Context context) {
+    public DownloadFileandUpdateDatabase(Context context, int version) {
         this.context = context;
         progressDialog = new ProgressDialog(context);
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
-
+        this.version=version;
     }
 
     protected void onPreExecute() {
@@ -95,7 +96,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
-            //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.VERSION_SERVER));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(version));
             databaseUpgrade.close();
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());

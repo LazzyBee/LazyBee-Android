@@ -26,16 +26,20 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_action_share"
         android:title="@string/action_share"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_update"
         android:title="@string/action_update_card"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_detelte"
+        android:id="@+id/action_learnt"
         android:icon="@drawable/ic_action_discard"
-        android:title="@string/action_delete_card"
+        android:title="@string/action_learnt"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_ignore"
+        android:title="@string/action_ignore"
         app:showAsAction="never" />
 </menu>
 

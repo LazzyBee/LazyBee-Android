@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +24,8 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
 
 import java.util.List;
 
@@ -32,7 +33,9 @@ import java.util.List;
  * Created by Hue on 8/21/2015.
  */
 
-public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder> implements DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse {
+public class RecyclerViewSettingListAdapter extends
+        RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder>
+        implements DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse {
     private static final String TAG = "SettingListAdapter";
     Context context;
     List<String> settings;
@@ -45,6 +48,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
     private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
     private static final int TYPE_SETTING_ABOUT = 5;
+    DataLayer lazzybeeTag;
 
     private RecyclerView mRecyclerViewSettings;
 
@@ -54,6 +58,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         this.mRecyclerViewSettings = mRecyclerViewSettings;
+        this.lazzybeeTag = TagManager.getInstance(context).getDataLayer();
     }
 
     @Override
@@ -109,7 +114,7 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
 
             } else if (setting.equals(context.getString(R.string.setting_check_update))) {
                 lbLimit.setVisibility(View.GONE);
-                _checkUpdate(mCardView);
+                _onClickCheckUpdate(mCardView);
             } else if (setting.equals(context.getString(R.string.setting_language))) {
                 lbLimit.setVisibility(View.GONE);
                 changeLanguage(mCardView);
@@ -576,11 +581,14 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     public void processFinish(int code) {
         if (code == 1) {
             //Dowload and update Complete
-            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_successful), Snackbar.LENGTH_LONG)
-                    .show();
+//            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_successful), Snackbar.LENGTH_LONG)
+//                    .show();
+            if (!_checkUpdate())
+                Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
         } else {
-            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_fails), Snackbar.LENGTH_LONG)
-                    .show();
+//            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_fails), Snackbar.LENGTH_LONG)
+//                    .show();
+            Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -597,44 +605,67 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-    private void _checkUpdate(View mCardView) {
+    private void _onClickCheckUpdate(View mCardView) {
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Check vesion form server
-                String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-                int update_local_version = databaseUpgrade._getVersionDB();
-                int _clientVesion;
-                if (db_v == null) {
-                    _clientVesion = 0;
-                } else {
-                    _clientVesion = Integer.valueOf(db_v);
-                }
-                Log.i(TAG, _clientVesion + ":" + update_local_version);
 
-                if (_clientVesion == 0) {
-                    if (update_local_version == -1) {
-                        Log.i(TAG, "_checkUpdate():update_local_version == -1");
-                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-                    } else {
-                        Log.i(TAG, "_checkUpdate():update_local_version != -1");
-                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-                    }
-                } else {
-                    if (update_local_version > _clientVesion) {
-                        Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
-                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-                    } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
-                        Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
-                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-                    } else {
-                        Log.i(TAG, "_checkUpdate():" + R.string.updated);
-                        Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
-                    }
+                _checkUpdate();
 
-                }
+
+//                //Check vesion form server
+//                String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+//                int update_local_version = databaseUpgrade._getVersionDB();
+//                int _clientVesion;
+//                if (db_v == null) {
+//                    _clientVesion = 0;
+//                } else {
+//                    _clientVesion = Integer.valueOf(db_v);
+//                }
+//                Log.i(TAG, _clientVesion + ":" + update_local_version);
+//
+//                if (_clientVesion == 0) {
+//                    if (update_local_version == -1) {
+//                        Log.i(TAG, "_onClickCheckUpdate():update_local_version == -1");
+//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+//                    } else {
+//                        Log.i(TAG, "_onClickCheckUpdate():update_local_version != -1");
+//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+//                    }
+//                } else {
+//                    if (update_local_version > _clientVesion) {
+//                        Log.i(TAG, "_onClickCheckUpdate():update_local_version > _clientVesion");
+//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+//                    } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
+//                        Log.i(TAG, "_onClickCheckUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
+//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+//                    } else {
+//                        Log.i(TAG, "_onClickCheckUpdate():" + R.string.updated);
+//                        Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                }
             }
         });
+    }
+
+    private boolean _checkUpdate() {
+        //get GAE_DB_VERSION in Server
+        String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
+
+        //put GAE_DB_VERSION to Client
+        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version == null ? String.valueOf(0) : gae_db_version);
+
+        if (learnApiImplements._checkUpdateDataBase()) {
+            Log.i(TAG, "Co Update");
+            Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
+            _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+            return true;
+        } else {
+            Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Khong co Update");
+            return false;
+        }
     }
 
     private void _showComfirmUpdateDatabase(final int type) {
@@ -674,10 +705,16 @@ public class RecyclerViewSettingListAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void _downloadFile() {
+        String base_url = (String) lazzybeeTag.get(LazzyBeeShare.BASE_URL_DB);
+        int version = 0;
+
+        String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        if (db_v != null)
+            version = Integer.valueOf(db_v);
 //        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
 //        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context);
-        downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+        downloadFileandUpdateDatabase.execute(base_url + "" + version);
         downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
     }
 

@@ -13,6 +13,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +73,6 @@ public class LazzyBeeShare {
     public static final String NOTIFICATION_WHEN = "when";
 
 
-
     private static boolean DEBUG = true;
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
@@ -84,6 +84,7 @@ public class LazzyBeeShare {
     public static final String LANG_VI = "vi";
 
     public static final String DB_VERSION = "db_v";
+    public static final String GAE_DB_VERSION = "gae_db_version";
     public static final java.lang.String DB_UPDATE_NAME = "update.db";
     public static final int NO_DOWNLOAD_UPDATE = 0;
     public static final int DOWNLOAD_UPDATE = 1;
@@ -133,6 +134,7 @@ public class LazzyBeeShare {
     public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28";
 
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+    public static String BASE_URL_DB="base_url_db";
 
     /**
      * Init data demo List Course
@@ -199,9 +201,9 @@ public class LazzyBeeShare {
 
             }
 
-
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "_getValueFromKey\tError:" + e.getMessage());
+            //e.printStackTrace();
         }
 
         return value;
@@ -221,7 +223,7 @@ public class LazzyBeeShare {
 
         for (int i = 1; i < splitPackage.length; i++) {
             String pack = splitPackage[i];
-            System.out.println("-Package:" + pack);
+            //System.out.println("-Package:" + pack);
             packages.add(pack);
         }
 
@@ -229,7 +231,7 @@ public class LazzyBeeShare {
     }
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean onload) {
-        getDebugSetting(context);
+        getDebugSetting();
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -249,7 +251,7 @@ public class LazzyBeeShare {
             JSONObject answerObj = new JSONObject(card.getAnswers());
             pronoun = answerObj.getString("pronoun");
             JSONObject packagesObj = answerObj.getJSONObject("packages");
-            System.out.print("\npackagesObj.length():" + packagesObj.length());
+           // System.out.print("\npackagesObj.length():" + packagesObj.length());
             if (packagesObj.length() > 0) {
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
                 meaning = commonObj.getString("meaning");
@@ -340,8 +342,8 @@ public class LazzyBeeShare {
 
     }
 
-    private static void getDebugSetting(Context context) {
-        LearnApiImplements learnApiImplements = new LearnApiImplements(context);
+    private static void getDebugSetting() {
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_DEBUG_INFOR);
         if (value == null)
             DEBUG = false;
@@ -411,7 +413,7 @@ public class LazzyBeeShare {
 
     }
 
-    public static Drawable getDraweble(Context context,int id){
+    public static Drawable getDraweble(Context context, int id) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return getDrawableGreater21(context, id);
         } else {
@@ -420,11 +422,11 @@ public class LazzyBeeShare {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static Drawable getDrawableGreater21(Context context, int id){
+    private static Drawable getDrawableGreater21(Context context, int id) {
         return context.getDrawable(id);
     }
 
-    private static Drawable getDrawableUnder20(Context context, int id){
+    private static Drawable getDrawableUnder20(Context context, int id) {
         return context.getResources().getDrawable(id);
     }
 

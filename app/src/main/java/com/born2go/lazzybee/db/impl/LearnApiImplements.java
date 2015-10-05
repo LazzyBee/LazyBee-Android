@@ -849,10 +849,11 @@ public class LearnApiImplements implements LearnApi {
         int limitToday = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
         int dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day).size();
+
         if (todayCount == -2) {
             Log.i(TAG, "_getStringDueToday: todayCount == -2");
-            dueCount = 0;
-            againCount = 0;
+//            dueCount = 0;
+//            againCount = 0;
             if (limitToday > noLearn) {
                 todayCount = noLearn;
             } else {
@@ -869,17 +870,22 @@ public class LearnApiImplements implements LearnApi {
                 todayCount = limitToday;
             }
         }
+
         if (dueCount == 0) {
             Log.i(TAG, "_getStringDueToday:dueCount == 0");
         } else {
             if (dueCount < total_learn_per_day) {
                 if (total_learn_per_day - dueCount < limitToday) {
+
                     Log.i(TAG, "_getStringDueToday total_learn_per_day - dueCount < limit_today");
                     todayCount = total_learn_per_day - dueCount;
+
                 } else if (total_learn_per_day - dueCount > limitToday) {
+
                     Log.i(TAG, "_getStringDueToday  total_learn_per_day - dueCount > limit_today");
                 }
             } else if (dueCount >= total_learn_per_day) {
+
                 dueCount = total_learn_per_day;
                 todayCount = 0;
             }
@@ -985,7 +991,8 @@ public class LearnApiImplements implements LearnApi {
 
         Log.i(TAG, "_initPreFetchNewCardList: Card size=" + count);
 
-        if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
+//        if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
+        if (count < 0) {
             return -1;
         } else {
             try {
@@ -1215,7 +1222,35 @@ public class LearnApiImplements implements LearnApi {
             ex.printStackTrace();
             return 0;
         }
+    }
 
 
+
+    public boolean _checkUpdateDataBase() {
+        boolean update = false;
+        int _dbVesion=0;
+        int _gdbVesion=0;
+
+        //get version in DB
+        String db_v = _getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        String g_db_v = _getValueFromSystemByKey(LazzyBeeShare.GAE_DB_VERSION);
+
+        //Check client DB
+        if (db_v != null) {
+            _dbVesion = Integer.valueOf(db_v);
+        }
+
+        //Check global DB
+        if (g_db_v != null) {
+            _gdbVesion = Integer.valueOf(g_db_v);
+        }
+
+        //
+        if (_gdbVesion > _dbVesion) {
+            Log.i(TAG, "Show confirm Update");
+            update = true;
+        }
+        Log.i(TAG,"dbVesion:"+_dbVesion+"\t gdbVesion:"+_gdbVesion);
+        return update;
     }
 }

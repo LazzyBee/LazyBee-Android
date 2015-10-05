@@ -10,10 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,7 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -42,6 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
+import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
@@ -60,29 +58,27 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.identitytoolkit.GitkitClient;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentDialogCustomStudy.DialogCustomStudyInferface, ConnectionCallbacks, OnConnectionFailedListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        FragmentDialogCustomStudy.DialogCustomStudyInferface,
+        ConnectionCallbacks, OnConnectionFailedListener
+        , DownloadFileDatabaseResponse {
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
@@ -99,7 +95,6 @@ public class MainActivity extends AppCompatActivity
 
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
-    SearchView mSearchView;
     DrawerLayout drawerLayout;
 
     CardView mCardViewStudy;
@@ -118,28 +113,16 @@ public class MainActivity extends AppCompatActivity
     FragmentDialogCustomStudy fragmentDialogCustomStudy;
     LinearLayout mLine;
 
-    Button btnStudy;
+
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
 
-    private GitkitClient gitkitClient;
-    private PendingIntent pendingIntent;
-    GoogleApiClient mGoogleApiClient;
 
     boolean appPause = false;
 
-    /**
-     * A flag indicating that a PendingIntent is in progress and prevents us
-     * from starting further intents.
-     */
-    private boolean mIntentInProgress;
 
     private boolean mSignInClicked;
-    private static final int RC_SIGN_IN = 0;
 
-    private ConnectionResult mConnectionResult;
-    // Toolbar toolbar;
-    List<PendingIntent> intentArray;
     AlarmManager alarmManager;
 
     InterstitialAd mInterstitialAd;
@@ -149,11 +132,6 @@ public class MainActivity extends AppCompatActivity
     // Allows us to notify the user that something happened in the background
     NotificationManager notificationManager;
 
-    // Used to track notifications
-    int notifID = 0;
-
-    // Used to track if notification is active in the task bar
-    boolean isNotificActive = false;
 
     TextView lbReview;
 
@@ -169,6 +147,8 @@ public class MainActivity extends AppCompatActivity
     TextView txtMessageCongratulation;
 
     FrameLayout container;
+
+    DataLayer lazzybeeTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,26 +183,64 @@ public class MainActivity extends AppCompatActivity
         String SHOWCASE_ID = getString(R.string.SHOWCASE_MAIN_ID);
         // sequence example
         ShowcaseConfig config = new ShowcaseConfig();
+
         config.setDelay(500); // half second between each showcase view
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-
         sequence.setConfig(config);
-        sequence.addSequenceItem(mCardViewStudy,
-                getString(R.string.showcase_message_start_study), getString(R.string.showcase_message_got_it));
+        if (mCardViewStudy.getVisibility() != View.GONE) {
+            MaterialShowcaseView showcaseStartActivity = new MaterialShowcaseView.Builder(this)
+                    .setTarget(lbStudy)
+                    .setDismissText(getString(R.string.showcase_message_got_it))
+                    .setContentText(getString(R.string.showcase_message_start_study))
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .setDismissOnTouch(true)
+                    .build();
+            sequence.addSequenceItem(showcaseStartActivity);
+        }
+        if (mDue.getVisibility() != View.GONE) {
+            MaterialShowcaseView showcase_my_due = new MaterialShowcaseView.Builder(this)
+                    .setTarget(lbDueToday)
+                    .setDismissText(getString(R.string.showcase_message_got_it))
+                    .setContentText(getString(R.string.showcase_message_my_due))
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .setDismissOnTouch(true)
+                    .build();
+            sequence.addSequenceItem(showcase_my_due);
+        }
+        if (mCardViewReView.getVisibility() != View.GONE) {
+            MaterialShowcaseView showcase_gotoReview = new MaterialShowcaseView.Builder(this)
+                    .setTarget(mCardViewReView)
+                    .setDismissText(getString(R.string.showcase_message_got_it))
+                    .setContentText(getString(R.string.showcase_message_gotoReview))
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .setDismissOnTouch(true)
+                    .build();
+            sequence.addSequenceItem(showcase_gotoReview);
+        }
 
-        sequence.addSequenceItem(lbDueToday,
-                getString(R.string.showcase_message_my_due), getString(R.string.showcase_message_got_it));
 
-        sequence.addSequenceItem(mCardViewReView,
-                getString(R.string.showcase_message_gotoReview), getString(R.string.showcase_message_got_it));
+        if (mCardViewLearnMore.getVisibility() != View.GONE) {
+            MaterialShowcaseView showcase_learn_more = new MaterialShowcaseView.Builder(this)
+                    .setTarget(mCardViewLearnMore)
+                    .setDismissText(getString(R.string.showcase_message_got_it))
+                    .setContentText(getString(R.string.showcase_message_learn_more))
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .setDismissOnTouch(true)
+                    .build();
+            sequence.addSequenceItem(showcase_learn_more);
+        }
+        if (mCardViewCustomStudy.getVisibility() != View.GONE) {
+            MaterialShowcaseView showcase_custom_study = new MaterialShowcaseView.Builder(this)
+                    .setTarget(lbCustomStudy)
+                    .setDismissText(getString(R.string.showcase_message_got_it))
+                    .setContentText(getString(R.string.showcase_message_custom_study))
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .setDismissOnTouch(true)
+                    .build();
 
-        sequence.addSequenceItem(mCardViewLearnMore,
-                getString(R.string.showcase_message_learn_more), getString(R.string.showcase_message_got_it));
-
-        sequence.addSequenceItem(lbCustomStudy,
-                getString(R.string.showcase_message_custom_study), getString(R.string.showcase_message_got_it));
-
+            sequence.addSequenceItem(showcase_custom_study);
+        }
         sequence.start();
     }
 
@@ -331,21 +349,21 @@ public class MainActivity extends AppCompatActivity
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
-//    private void UnregisterAlarmBroadcast() {
-//        alarmManager.cancel(pendingIntent);
-//        getBaseContext().unregisterReceiver(myReceiver);
-//    }
 
     private void _initSettingApplication() {
+        lazzybeeTag = TagManager.getInstance(context).getDataLayer();
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        //Define hours
         int[] hour = getResources().getIntArray(R.array.notification_hours);
         hours = new ArrayList<Integer>();
         for (int i = 0; i < hour.length; i++) {
             hours.add(hour[i]);
         }
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         _changeLanguage();
+
 
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
@@ -398,6 +416,7 @@ public class MainActivity extends AppCompatActivity
             total = Integer.valueOf(totalLearnCard);
 
         int countDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total).size();
+        int countAgain = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0).size();
 
         if (value != null) {
             complete = Integer.valueOf(value);
@@ -420,7 +439,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
                 visibility = getResources().getInteger(R.integer.visibility_state_study0);
             } else {
-                check = check + countDue;
+                check = check + countDue + countAgain;
                 Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
                 if (check > 0) {
                     //inday finish Lession van cho hoc tiep
@@ -749,10 +768,6 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-
-
-//                    Toast.makeText(getBaseContext(), query,
-//                            Toast.LENGTH_SHORT).show();
                     _gotoSeach(query);
                     return false;
                 }
@@ -815,68 +830,62 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Sign-in into google
-     */
-    private void signInWithGplus() {
-//        if (!mGoogleApiClient.isConnecting()) {
-//            mSignInClicked = true;
-//            resolveSignInError();
-//        }
-    }
 
-    /**
-     * Method to resolve any signin errors
-     */
-    private void resolveSignInError() {
-//        if (mConnectionResult.hasResolution()) {
-//            try {
-//                mIntentInProgress = true;
-//                mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
-//            } catch (IntentSender.SendIntentException e) {
-//                mIntentInProgress = false;
-//                mGoogleApiClient.connect();
+    private boolean _checkUpdate() {
+        //get GAE_DB_VERSION in Server
+        String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
+
+        //put GAE_DB_VERSION to Client
+        dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version == null ? String.valueOf(0) : gae_db_version);
+
+        if (dataBaseHelper._checkUpdateDataBase()) {
+            Log.i(TAG, "Co Update");
+            Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
+            _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+            return true;
+        } else {
+            Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Khong co Update");
+            return false;
+        }
+
+//        //Check vesion form server
+//        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+//
+//        int update_local_version = databaseUpgrade._getVersionDB();
+//        int _clientVesion;
+//
+//        //Check version
+//        if (db_v == null) {
+//            _clientVesion = 0;
+//        } else {
+//            _clientVesion = Integer.valueOf(db_v);
+//        }
+//
+//        if (_clientVesion == 0) {
+//            if (update_local_version == -1) {
+//                Log.i(TAG, "_checkUpdate():update_local_version == -1");
+//                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
 //            }
+//        } else {
+//            if (update_local_version > _clientVesion) {
+//                Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
+//                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
+//            } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
+//                Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
+//                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+//            } else {
+//                Log.i(TAG, "_checkUpdate():" + R.string.updated);
+//                //Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+//            }
+//
 //        }
-    }
-
-    private void _checkUpdate() {
-        //Check vesion form server
-        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-
-        int update_local_version = databaseUpgrade._getVersionDB();
-        int _clientVesion;
-
-        //Check version
-        if (db_v == null) {
-            _clientVesion = 0;
-        } else {
-            _clientVesion = Integer.valueOf(db_v);
-        }
-
-        if (_clientVesion == 0) {
-            if (update_local_version == -1) {
-                Log.i(TAG, "_checkUpdate():update_local_version == -1");
-                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
-            }
-        } else {
-            if (update_local_version > _clientVesion) {
-                Log.i(TAG, "_checkUpdate():update_local_version > _clientVesion");
-                _showComfirmUpdateDatabase(LazzyBeeShare.NO_DOWNLOAD_UPDATE);
-            } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
-                Log.i(TAG, "_checkUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
-                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-            } else {
-                Log.i(TAG, "_checkUpdate():" + R.string.updated);
-                //Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
-            }
-
-        }
 
 
     }
 
     private void _showComfirmUpdateDatabase(final int type) {
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
 
         // Chain together various setter methods to set the dialog characteristics
@@ -931,10 +940,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
+        String base_url = (String) lazzybeeTag.get(LazzyBeeShare.BASE_URL_DB);
+        int version = 0;
 
+        String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+        if (db_v != null)
+            version = Integer.valueOf(db_v);
 
-        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
-        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        downloadFileandUpdateDatabase.execute(base_url + "/" + version);
+        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
     }
 
     private boolean _compareToVersion(int clientVesion) {
@@ -949,13 +965,6 @@ public class MainActivity extends AppCompatActivity
             else
                 return false;
         }
-
-    }
-
-    private void _login() {
-        //Toast.makeText(context, getString(R.string.action_login), Toast.LENGTH_SHORT).show();
-        gitkitClient.startSignIn();
-
 
     }
 
@@ -1010,9 +1019,9 @@ public class MainActivity extends AppCompatActivity
         //fragmentDialogCustomStudy.
         fragmentDialogCustomStudy.setCustomStudyAdapter();
         _getCountCard();
-        //Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
-        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
-                .show();
+        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
+//        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
+//                .show();
 
     }
 
@@ -1047,32 +1056,29 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if (!mIntentInProgress) {
-            // Store the ConnectionResult for later usage
-            mConnectionResult = result;
 
-            if (mSignInClicked) {
-                // The user has already clicked 'sign-in' so we attempt to
-                // resolve all
-                // errors until the user is signed in, or they cancel.
-                resolveSignInError();
-            }
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // mGoogleApiClient.connect();
-        _stopNotificationServices();
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        if (mGoogleApiClient.isConnected()) {
-//            mGoogleApiClient.disconnect();
-//        }
+    }
+
+    @Override
+    public void processFinish(int code) {
+        if (code == 1) {
+            //Dowload and update Complete
+            if (!_checkUpdate())
+                Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -1173,9 +1179,9 @@ public class MainActivity extends AppCompatActivity
             if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
                 _learnMore();
             } else {
-                Snackbar.make(container, getString(R.string.message_you_not_complete), Snackbar.LENGTH_LONG)
-                        .show();
-                //Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
+//                Snackbar.make(container, getString(R.string.message_you_not_complete), Snackbar.LENGTH_LONG)
+//                        .show();
+                Toast.makeText(context, R.string.message_you_not_complete, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -1235,17 +1241,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.i(TAG, "Back Press");
-        //
-        //int backStackcount = getSupportFragmentManager().getBackStackEntryCount();
-        //Log.i(TAG, "backStackcount:" + backStackcount);
-//        SharedPreferences sp = PreferenceManager
-//                .getDefaultSharedPreferences(this);
-//        int init = sp.getInt(LazzyBeeShare.INIT_NOTIFICATION, 2);
-//        Log.i(TAG, "_initInterstitialAd noti:" + init);
-//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
-//        Log.i(TAG, "b _initInterstitialAd noti:" + init);
-//        _startNotificationServices();
+        Log.i(TAG, "onBackPressed");
         this.finish();
         System.exit(0);
     }
@@ -1253,15 +1249,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
-
+        Log.i(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 ||
                 requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             if (resultCode == 1 || resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000
                     || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
                 complete = _checkCompleteLearn();
                 _getCountCard();
-
             } else {
                 complete = _checkCompleteLearn();
                 _getCountCard();
@@ -1284,51 +1278,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (!gitkitClient.handleIntent(intent)) {
-            super.onNewIntent(intent);
-        }
-    }
 
-    class DownloadFileUpdateDatabaseTask extends AsyncTask<String, Void, Void> {
-        Context context;
-
-        public DownloadFileUpdateDatabaseTask(Context context) {
-            this.context = context;
-
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-
-                URL u = new URL(params[0]);
-
-                File sdCard_dir = Environment.getExternalStorageDirectory();
-                File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
-                //dlDir.mkdirs();
-                InputStream is = u.openStream();
-
-                DataInputStream dis = new DataInputStream(is);
-
-                byte[] buffer = new byte[1024];
-                int length;
-
-                FileOutputStream fos = new FileOutputStream(file);
-                while ((length = dis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
-                fos.close();
-                Log.e("Download file update:", "Complete");
-                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
-            } catch (MalformedURLException mue) {
-                Log.e("SYNC getUpdate", "malformed url error", mue);
-            } catch (IOException ioe) {
-                Log.e("SYNC getUpdate", "io error", ioe);
-            } catch (SecurityException se) {
-                Log.e("SYNC getUpdate", "security error", se);
-            }
-            return null;
-        }
     }
 
     @Override
@@ -1336,25 +1286,10 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
-//        SharedPreferences sp = PreferenceManager
-//                .getDefaultSharedPreferences(this);
-//        sp.edit().putInt(LazzyBeeShare.INIT_NOTIFICATION, 1).commit();
-//        _startNotificationServices();
-    }
-
-    private void _startNotificationServices() {
-//        Intent service1 = new Intent(context, MyAlarmService.class);
-//        context.startService(service1);
-    }
-
-    private void _stopNotificationServices() {
-//        Intent service1 = new Intent(context, MyAlarmService.class);
-//        context.stopService(service1);
     }
 
     @Override
     protected void onDestroy() {
-        // unregisterReceiver(myReceiver);
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     }

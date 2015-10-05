@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +27,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
@@ -69,7 +70,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     LearnApiImplements dataBaseHelper;
     TextToSpeech textToSpeech;
     WebView mWebViewLeadDetails;
-    Button btnShowAnswer;
+    TextView btnShowAnswer;
     LinearLayout mLayoutButton;
     Button btnAgain0, btnHard1, btnGood2, btnEasy3;
 
@@ -118,7 +119,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     CardView mCardViewHelpandAdMod;
 
-    LinearLayout mShowAnswer;
+    RelativeLayout mShowAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,22 +153,54 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 
+        MaterialShowcaseView showcase_lbCountNew = new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCountNew)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_new_count))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_lbCountAgain = new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCountAgain)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_again_count))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_lbCountDue = new MaterialShowcaseView.Builder(this)
+                .setTarget(lbCountDue)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_reivew_count))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnShowAnswer = new MaterialShowcaseView.Builder(this)
+                .setTarget(btnShowAnswer)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_show_answer))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_mCardViewHelpandAdMod = new MaterialShowcaseView.Builder(this)
+                .setTarget(mCardViewHelpandAdMod)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_help_panel))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+
+
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(lbCountNew,
-                getString(R.string.showcase_message_new_count), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_lbCountNew);
 
-        sequence.addSequenceItem(lbCountAgain,
-                getString(R.string.showcase_message_again_count), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_lbCountAgain);
 
-        sequence.addSequenceItem(lbCountDue,
-                getString(R.string.showcase_message_reivew_count), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_lbCountDue);
 
-        sequence.addSequenceItem(btnShowAnswer,
-                getString(R.string.showcase_message_button_show_answer), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnShowAnswer);
 
-        sequence.addSequenceItem(mCardViewHelpandAdMod,
-                getString(R.string.showcase_message_help_panel), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_mCardViewHelpandAdMod);
 
 
         sequence.start();
@@ -180,19 +213,43 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         config.setDelay(500); // half second between each showcase view
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-
+        MaterialShowcaseView showcase_btnAgain0 = new MaterialShowcaseView.Builder(this)
+                .setTarget(btnAgain0)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_again0))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnHard1 = new MaterialShowcaseView.Builder(this)
+                .setTarget(btnHard1)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_hard1))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnGood2 = new MaterialShowcaseView.Builder(this)
+                .setTarget(btnGood2)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_good2))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView showcase_btnEasy3 = new MaterialShowcaseView.Builder(this)
+                .setTarget(btnEasy3)
+                .setDismissText(getString(R.string.showcase_message_got_it))
+                .setContentText(getString(R.string.showcase_message_button_easy3))
+                .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                .setDismissOnTouch(true)
+                .build();
         sequence.setConfig(config);
-        sequence.addSequenceItem(btnAgain0,
-                getString(R.string.showcase_message_button_again0), getString(R.string.showcase_message_got_it));
 
-        sequence.addSequenceItem(btnHard1,
-                getString(R.string.showcase_message_button_hard1), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnAgain0);
 
-        sequence.addSequenceItem(btnGood2,
-                getString(R.string.showcase_message_button_good2), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnHard1);
 
-        sequence.addSequenceItem(btnEasy3,
-                getString(R.string.showcase_message_button_easy3), getString(R.string.showcase_message_got_it));
+        sequence.addSequenceItem(showcase_btnGood2);
+
+        sequence.addSequenceItem(showcase_btnEasy3);
 
 
         sequence.start();
@@ -359,9 +416,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         mWebViewLeadDetails = (WebView) findViewById(R.id.mWebViewLeadDetaisl);
 
         //init button
-        mShowAnswer = (LinearLayout) findViewById(R.id.mShowAnswer);
+        mShowAnswer = (RelativeLayout) findViewById(R.id.mShowAnswer);
 
-        btnShowAnswer = (Button) findViewById(R.id.btnShowAnswer);
+        btnShowAnswer = (TextView) findViewById(R.id.btnShowAnswer);
         mLayoutButton = (LinearLayout) findViewById(R.id.mLayoutButton);
 
         btnAgain0 = (Button) findViewById(R.id.btnAgain0);
@@ -472,10 +529,13 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 // Home as up button is to navigate to Home-Activity not previous acitivity
                 super.onBackPressed();
                 return true;
-            case R.id.action_detelte:
-                Log.i(TAG, "_deleteCard question:" + currentCard.getQuestion());
-                //_showDialogDeleteCard();
-                _deleteCard();
+            case R.id.action_learnt:
+                Log.i(TAG, "_learntCard question:" + currentCard.getQuestion());
+                _learntorIgnoreCardbyQueue(Card.QUEUE_DONE_2);
+                return true;
+            case R.id.action_ignore:
+                Log.i(TAG, "Ignore question:" + currentCard.getQuestion());
+                _learntorIgnoreCardbyQueue(Card.QUEUE_SUSPENDED_1);
                 return true;
             case R.id.action_update:
 
@@ -515,12 +575,12 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         currentCard.setStatus(statusFavrite);
         dataBaseHelper._updateCard(currentCard);
 
-        Snackbar.make(container, Html.fromHtml(
-                        LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                                , getString(R.string.message_add_favorite_card_done, currentCard.getQuestion()))),
-                Snackbar.LENGTH_SHORT)
-                .show();
-        //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+//        Snackbar.make(container, Html.fromHtml(
+//                        LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                                , getString(R.string.message_add_favorite_card_done, currentCard.getQuestion()))),
+//                Snackbar.LENGTH_SHORT)
+//                .show();
+        //Toast.makeText(context, R.string.message_add_favorite_card_done, Toast.LENGTH_SHORT).show();
     }
 
     private void _shareCard() {
@@ -685,7 +745,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     boolean done_card = false;
 
-    private void _deleteCard() {
+    private void _learntorIgnoreCardbyQueue(int queue) {
         Log.i(TAG, "-------------------deleteCard-------------------");
         if (btnShowAnswer.getVisibility() == View.GONE) {
             mShowAnswer.setVisibility(View.VISIBLE);
@@ -696,11 +756,11 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //Define card form server
         Card card = dataBaseHelper._getCardByID(String.valueOf(currentCard.getId()));
         int currentQueue = card.getQueue();
-        Log.i(TAG, "_deleteCard currentQueue:" + currentQueue);
+        Log.i(TAG, "_learntorIgnoreCardbyQueue currentQueue:" + currentQueue);
 
         switch (currentQueue) {
             case Card.QUEUE_NEW_CRAM0:
-                Log.i(TAG, "_deleteCard QUEUE_NEW_CRAM0");
+                Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_NEW_CRAM0");
                 //reset new card count
                 boolean removeNew = todayList.remove(currentCard);
                 if (!removeNew) {
@@ -711,7 +771,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 lbCountNew.setText(String.valueOf(countNew));
                 break;
             case Card.QUEUE_LNR1:
-                Log.i(TAG, "_deleteCard QUEUE_LNR1");
+                Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_LNR1");
                 //reset new card again
                 boolean removeAgain = againList.remove(currentCard);
                 if (!removeAgain) {
@@ -722,7 +782,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 lbCountAgain.setText(String.valueOf(countAgain));
                 break;
             case Card.QUEUE_REV2:
-                Log.i(TAG, "_deleteCard QUEUE_REV2");
+                Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_REV2");
                 //reset new card due
                 boolean removeDue = dueList.remove(currentCard);
                 if (!removeDue) {
@@ -734,27 +794,32 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 break;
         }
 
-        Log.i(TAG, "_deleteCard question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
+        Log.i(TAG, "_learntorIgnoreCardbyQueue question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
 
         //Set before card
         beforeCard = null;
 
-        currentCard.setQueue(Card.QUEUE_DONE_2);
+        currentCard.setQueue(queue);
 
-        Log.i(TAG, "_deleteCard before Update question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
+        Log.i(TAG, "_learntorIgnoreCardbyQueue before Update question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
         int update = dataBaseHelper._updateCard(currentCard);
 
         if (update >= 1) {
-            Log.i(TAG, "_deleteCard After Update question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
+            Log.i(TAG, "_learntorIgnoreCardbyQueue After Update question:" + card.getQuestion() + ",currentQueue:" + card.getQueue());
 
             currentCard.setQueue(currentQueue);
             _nextCard(currentQueue);
         }
-
-        Snackbar.make(container, Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                , getString(R.string.dialog_message_delete_card_done))), Snackbar.LENGTH_SHORT)
-                .show();
-        //Toast.makeText(context, getString(R.string.number_row_updated, update), Toast.LENGTH_SHORT).show();
+        String message = getString(R.string.message_learnt_card_sucessful);
+        if (queue == Card.QUEUE_SUSPENDED_1) {
+            message = getString(R.string.message_ignore_card_sucessful);
+        }
+//        Snackbar.make(container, Html.fromHtml(
+//                LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                , message))
+//                , Snackbar.LENGTH_SHORT)
+//                .show();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
         Log.i(TAG, "-----------------------END----------------------");
     }
@@ -800,12 +865,12 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         ws.setJavaScriptEnabled(true);
 
         //Load first card
-        if (againList.size() > 0) {
-            //Load first card is Again card
-            _nextAgainCard();
-        } else if (dueList.size() > 0) {
+        if (dueList.size() > 0) {
             //Load first card is Due card
             _nextDueCard();
+        } else if (againList.size() > 0) {
+            //Load first card is Again card
+            _nextAgainCard();
         } else if (todayList.size() > 0) {
             //Load first card is new card
             _nextNewCard();
@@ -1211,18 +1276,18 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             //Update Card form DB
             dataBaseHelper._updateCardFormServer(card);
 
-            Snackbar.make(container,
-                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                            , getString(R.string.message_update_card_successful))), Snackbar.LENGTH_SHORT)
-                    .show();
-            //Toast.makeText(context, getString(R.string.dialog_message_update_card_successful), Toast.LENGTH_SHORT).show();
+//            Snackbar.make(container,
+//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                            , getString(R.string.message_update_card_successful))), Snackbar.LENGTH_SHORT)
+//                    .show();
+            Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
         } else {
 
-            Snackbar.make(container,
-                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-                            , getString(R.string.message_update_card_fails))), Snackbar.LENGTH_SHORT)
-                    .show();
-            //Toast.makeText(context, getString(R.string.dialog_message_update_card_fails), Toast.LENGTH_SHORT).show();
+//            Snackbar.make(container,
+//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
+//                            , getString(R.string.message_update_card_fails))), Snackbar.LENGTH_SHORT)
+//                    .show();
+            Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
         }
     }
 

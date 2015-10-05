@@ -32,8 +32,8 @@ public class Card {
     public static final int QUEUE_LNR1 = 1;
     public static final int QUEUE_REV2 = 2;
     public static int QUEUE_DAY_LRN3 = 3;// Don't know what to do
-    public static int QUEUE_SUSPENDED_1 = -1;
-    public static int QUEUE_DONE_2 = -2;
+    public static int QUEUE_SUSPENDED_1 = -1;//Ignore - Bo qua
+    public static int QUEUE_DONE_2 = -2;    //Learnt - Da biet
 
     public final static int EASE_AGAIN = 0;
     public final static int EASE_HARD = 1;

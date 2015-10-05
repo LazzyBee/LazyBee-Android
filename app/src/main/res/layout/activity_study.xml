@@ -180,24 +180,27 @@
                 android:layout_height="70dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <RelativeLayout
+
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimary"
                     android:id="@+id/mShowAnswer"
                     android:onClick="onbtnShowAnswerClick">
 
-                    <Button
+                    <TextView
                         android:id="@+id/btnShowAnswer"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:background="@color/colorPrimary"
+                        android:layout_height="wrap_content"
                         android:onClick="onbtnShowAnswerClick"
                         android:text="@string/show_answer"
-                        android:visibility="visible"
-                        android:layout_gravity="center_horizontal" />
-                </LinearLayout>
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/colorPrimary"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white"/>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/mLayoutButton"
