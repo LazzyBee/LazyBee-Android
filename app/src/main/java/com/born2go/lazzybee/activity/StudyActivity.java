@@ -3,6 +3,7 @@ package com.born2go.lazzybee.activity;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -11,7 +12,9 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -554,9 +557,41 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case R.id.action_favorite:
                 _addCardToFavorite();
                 return true;
+            case R.id.action_set_position_meaning:
+                _setPositionMeaning();
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _setPositionMeaning() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle(context.getString(R.string.title_change_position_meaning));
+        final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
+        int index = 0;
+        String value = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG);
+
+        if (value != null && value.equals(LazzyBeeShare.DOWN)) {
+            index = 1;
+        }
+
+
+        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                //Update position
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, items[item].toString());
+
+                //Reset Display card
+                _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard), 10);
+
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     private void _addCardToFavorite() {

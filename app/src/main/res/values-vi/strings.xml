@@ -215,5 +215,8 @@
     <string name="dialog_title_change_my_level">Thay đổi cấp độ</string>
     <string name="message_custom_setting_successful">Thay đổi thành công</string>
     <string name="message_ignore_card_sucessful">Bỏ qua thẻ thành công</string>
+    <string name="setting_position_meaning">Vị trí nghĩa</string>
+    <string name="position_meaning_up">Up</string>
+    <string name="title_change_position_meaning">Thay đổi vị trí ý nghĩa</string>
 
 </resources>

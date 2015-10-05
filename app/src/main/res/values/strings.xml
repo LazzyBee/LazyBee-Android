@@ -310,6 +310,10 @@
 
     <string name="message_custom_setting_successful">Custom setting successful</string>
     <string name="message_ignore_card_sucessful">Ignore card sucessful</string>
+    <string name="setting_position_meaning">Position Meaning</string>
+    <string name="position_meaning_up">Up</string>
+    <string name="position_meaning_down">Down</string>
+    <string name="title_change_position_meaning">Change Posiiton meaning</string>
 
 
 </resources>

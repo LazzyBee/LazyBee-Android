@@ -71,9 +71,11 @@ public class LazzyBeeShare {
     public static final String NOTIFICATION_INDEX = "index";
     public static final String INIT_NOTIFICATION = "init_notification";
     public static final String NOTIFICATION_WHEN = "when";
+    public static final String KEY_SETTING_POSITION_MEANIG = "position_meaning";
 
 
     private static boolean DEBUG = true;
+    private static boolean POSITION_MEANING = true;
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
     public static final String CARD_EXPLAIN = "explain";
@@ -90,6 +92,9 @@ public class LazzyBeeShare {
     public static final int DOWNLOAD_UPDATE = 1;
     public static final String ON = "on";
     public static final String OFF = "off";
+
+    public static final String UP = "Up";
+    public static final String DOWN = "Down";
 
     public static String mime = "text/html";
     public static String encoding = "utf-8";
@@ -134,7 +139,7 @@ public class LazzyBeeShare {
     public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28";
 
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-    public static String BASE_URL_DB="base_url_db";
+    public static String BASE_URL_DB = "base_url_db";
 
     /**
      * Init data demo List Course
@@ -232,6 +237,8 @@ public class LazzyBeeShare {
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean onload) {
         getDebugSetting();
+        getPositionMeaning();
+
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -251,7 +258,7 @@ public class LazzyBeeShare {
             JSONObject answerObj = new JSONObject(card.getAnswers());
             pronoun = answerObj.getString("pronoun");
             JSONObject packagesObj = answerObj.getJSONObject("packages");
-           // System.out.print("\npackagesObj.length():" + packagesObj.length());
+            // System.out.print("\npackagesObj.length():" + packagesObj.length());
             if (packagesObj.length() > 0) {
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
                 meaning = commonObj.getString("meaning");
@@ -273,6 +280,19 @@ public class LazzyBeeShare {
         if (!example.isEmpty()) {
             exampleTagA = "<p style=''><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
         }
+        String meaningUP;
+        String meaningDOWN;
+        if (!POSITION_MEANING) {
+            meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
+                    "<font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+                    "</div>";
+            meaningDOWN = EMPTY;
+        } else {
+            meaningUP = EMPTY;
+            meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
+                    "<font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+                    "</div>";
+        }
         html = "\n<html>\n" +
                 "<head>\n" +
                 "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
@@ -284,12 +304,13 @@ public class LazzyBeeShare {
                 "       <div style='float:left;width:90%;text-align: center;'>\n" +
                 "           <strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "'>" + card.getQuestion() + "</strong><br>\n" +
                 "           <font size='3'>" + pronoun + "</font><br>\n" +
-                "           <font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+//                "           <font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
                 "       </div>\n" +
-
                 "       <div style='float:left;width:10%'>\n" +
                 "           <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></a>\n" +
-                "       </div>\n" +
+                "       </div>\n"
+                + meaningUP +
+
 
                 "       <div style='width:90%'>\n" +
                 "       </div>\n" +
@@ -314,8 +335,8 @@ public class LazzyBeeShare {
                 "           <div style=\"float:right;width:10%;vertical-align: middle;\">\n " +
                 "               " + exampleTagA + "\n" +
                 "           </div>\n" +
-                "       </div>\n" +
-
+                "       </div>\n"
+                + meaningDOWN +
                 "   </div>\n";
 
         if (DEBUG) {
@@ -334,12 +355,24 @@ public class LazzyBeeShare {
                     "</html>\n";
         }
         html += debug;
-        //Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
 
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());
         return html;
 
+    }
+
+    private static void getPositionMeaning() {
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_POSITION_MEANIG);
+        if (value == null)
+            POSITION_MEANING = false;
+        else if (value.equals(UP)) {
+            POSITION_MEANING = false;
+        } else if (value.equals(DOWN)) {
+            POSITION_MEANING = true;
+        }
     }
 
     private static void getDebugSetting() {
