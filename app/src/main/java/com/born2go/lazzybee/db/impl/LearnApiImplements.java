@@ -158,7 +158,7 @@ public class LearnApiImplements implements LearnApi {
                         else
                             card.setL_vn(LazzyBeeShare.EMPTY);
                     } catch (Exception e) {
-
+                        Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
                     }
 
 

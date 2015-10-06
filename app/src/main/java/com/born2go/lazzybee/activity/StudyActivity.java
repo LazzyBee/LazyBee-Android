@@ -381,8 +381,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //mDataLayer.push(DataLayer.mapOf("event", "openScreen", "screenName", TAG));
         mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", TAG));
 
-        Log.i(TAG, "Get config from TagManager: adv_enable? " +
-                ContainerHolderSingleton.getContainerHolder().getContainer().getString("adv_enable"));
+        Log.i(TAG, "Get config from TagManager: ADV_ENABLE? " +
+                ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE));
     }
 
     private void _completeLean() {
