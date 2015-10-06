@@ -315,6 +315,7 @@
     <string name="position_meaning_down">Down</string>
     <string name="title_change_position_meaning">Change Posiiton meaning</string>
     <string name="message_download_database_fail">Download database fails</string>
+    <string name="action_goto_dictionary">Dictionary</string>
 
 
 </resources>

@@ -560,9 +560,22 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case R.id.action_set_position_meaning:
                 _setPositionMeaning();
                 return true;
+            case R.id.action_goto_dictionary:
+                _gotoDictionnary();
+                return true;
+
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void _gotoDictionnary() {
+
+        Intent intent = new Intent(this, CardDetailsActivity.class);
+        intent.putExtra(LazzyBeeShare.CARDID, String.valueOf(currentCard.getId()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+//        startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
     private void _setPositionMeaning() {
