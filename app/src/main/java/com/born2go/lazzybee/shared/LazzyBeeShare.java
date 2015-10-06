@@ -74,6 +74,7 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_POSITION_MEANIG = "position_meaning";
 
 
+
     private static boolean DEBUG = true;
     private static boolean POSITION_MEANING = true;
     public static final String CARD_MEANING = "meaning";
@@ -125,6 +126,8 @@ public class LazzyBeeShare {
     public static int CARD_INDEX_USER_NOTE = 14;
     public static int CARD_INDEX_LAST_IVL = 15;
     public static int CARD_INDEX_E_FACTOR = 16;
+    public static final int CARD_INDEX_L_EN = 17;
+    public static final int CARD_INDEX_L_VN = 18;
 
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
 

@@ -48,6 +48,7 @@ import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.NotificationReceiver;
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity
     FrameLayout container;
 
     DataLayer lazzybeeTag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -482,7 +484,7 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "--------------------------_getCountCard()------------------------------\n");
 
         String dueToday = dataBaseHelper._getStringDueToday();
-        int allCount = dataBaseHelper._getAllListCard().size();
+        int allCount = dataBaseHelper._getCountAllListCard();
         countCardNoLearn = dataBaseHelper._getListCardNoLearne().size();
         int learnCount = dataBaseHelper._getListCardLearned().size();
         Log.i(TAG, "-------------------------------END-------------------------------------\n");
@@ -832,11 +834,16 @@ public class MainActivity extends AppCompatActivity
 
 
     private boolean _checkUpdate() {
-        //get GAE_DB_VERSION in Server
-        String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
+        Log.i(TAG, "Trying to use TagManager");
+//        //get GAE_DB_VERSION in Server
+        //String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
+        String gae_db_version = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
+        Log.i(TAG, "gae_db_version=" + gae_db_version);
 
-        //put GAE_DB_VERSION to Client
-        dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version == null ? String.valueOf(0) : gae_db_version);
+
+//
+//        //put GAE_DB_VERSION to Client
+        dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, (gae_db_version == null || gae_db_version.isEmpty()) ? String.valueOf(0) : gae_db_version);
 
         if (dataBaseHelper._checkUpdateDataBase()) {
             Log.i(TAG, "Co Update");
@@ -940,17 +947,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        String base_url = (String) lazzybeeTag.get(LazzyBeeShare.BASE_URL_DB);
-        int version = 0;
-
+        String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        if (db_v != null)
+        int version = 0;
+        if (db_v != null) {
             version = Integer.valueOf(db_v);
+        }
+        String dbUpdateName = (version + 1) + ".db";
+        String download_url = base_url + dbUpdateName;
+        Log.i(TAG, "download_url=" + download_url);
 
-        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
-        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-        downloadFileandUpdateDatabase.execute(base_url + "/" + version);
-        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+        if (!base_url.isEmpty() || base_url != null) {
+
+            DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+
+            //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+            downloadFileandUpdateDatabase.execute(download_url);
+            downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+        } else {
+            Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean _compareToVersion(int clientVesion) {

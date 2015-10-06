@@ -218,5 +218,6 @@
     <string name="setting_position_meaning">Vị trí nghĩa</string>
     <string name="position_meaning_up">Up</string>
     <string name="title_change_position_meaning">Thay đổi vị trí ý nghĩa</string>
+    <string name="message_download_database_fail">Download database fails</string>
 
 </resources>

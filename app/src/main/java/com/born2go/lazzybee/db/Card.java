@@ -27,6 +27,10 @@ public class Card {
 
     String user_note;/*Anything user can note about this word*/
 
+    String l_vn;
+    String l_en;
+
+
     /*Static variables for queue value in database*/
     public static final int QUEUE_NEW_CRAM0 = 0;
     public static final int QUEUE_LNR1 = 1;
@@ -185,5 +189,21 @@ public class Card {
 
     public void setFactor(int factor) {
         this.factor = factor;
+    }
+
+    public String getL_vn() {
+        return l_vn;
+    }
+
+    public void setL_vn(String l_vn) {
+        this.l_vn = l_vn;
+    }
+
+    public String getL_en() {
+        return l_en;
+    }
+
+    public void setL_en(String l_en) {
+        this.l_en = l_en;
     }
 }

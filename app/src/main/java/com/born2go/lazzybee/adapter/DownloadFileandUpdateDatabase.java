@@ -44,7 +44,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
         progressDialog = new ProgressDialog(context);
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
-        this.version=version;
+        this.version = version;
     }
 
     protected void onPreExecute() {
@@ -91,7 +91,15 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
     private void _updateDB(int downloadUpdate) {
         try {
+            //Add 2 colum l_en and l_vn
+            int add_colum_L_EN = learnApiImplements.executeQuery("ALTER TABLE " + LearnApiImplements.TABLE_VOCABULARY + " ADD COLUMN " + LearnApiImplements.KEY_L_EN + " TEXT;");
+            int add_colum_L_VN = learnApiImplements.executeQuery("ALTER TABLE " + LearnApiImplements.TABLE_VOCABULARY + " ADD COLUMN " + LearnApiImplements.KEY_L_VN + " TEXT;");
+            Log.i(TAG, " ADD COLUMN " + LearnApiImplements.KEY_L_EN + "?" + ((add_colum_L_EN == 1) ? "TRUE" : "FALSE"));
+            Log.i(TAG, " ADD COLUMN " + LearnApiImplements.KEY_L_VN + "?" + ((add_colum_L_VN == 1) ? "TRUE" : "FALSE"));
+
+            //Copy db to my app
             databaseUpgrade.copyDataBase(downloadUpdate);
+
             List<Card> cards = databaseUpgrade._getAllCard();
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);

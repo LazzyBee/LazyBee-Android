@@ -72,7 +72,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             lbNameCourse.setText(String.valueOf(objectList.get(position)));
             if (objectList.get(position).equals("English Word")) {
                 lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
-                int allCount = learnApiImplements._getAllListCard().size();
+                int allCount = learnApiImplements._getCountAllListCard();
 
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
                 lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);

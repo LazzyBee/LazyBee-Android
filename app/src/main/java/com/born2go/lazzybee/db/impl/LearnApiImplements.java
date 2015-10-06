@@ -43,7 +43,7 @@ public class LearnApiImplements implements LearnApi {
 
     private static final String KEY_TAGS = "tags";
     //Table name
-    private static final String TABLE_VOCABULARY = "vocabulary";
+    public static final String TABLE_VOCABULARY = "vocabulary";
     private static final String TABLE_SYSTEM = "system";
     private static final String TAG = "LearnApiImplements";
     private static final int STATUS_CARD_LEARN_TODAY = 1;
@@ -58,6 +58,8 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_FACTOR = "e_factor";
     private static final String KEY_COUNT_JSON = "count";
     private static final String KEY_CARD_JSON = "card";
+    public static final String KEY_L_VN = "l_vn";
+    public static final String KEY_L_EN = "l_en";
 
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -145,6 +147,20 @@ public class LearnApiImplements implements LearnApi {
                     } else {
                         card.setgId(0);
                     }
+                    try {
+                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN) != null)
+                            card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
+                        else
+                            card.setL_en(LazzyBeeShare.EMPTY);
+
+                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN) != null)
+                            card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
+                        else
+                            card.setL_vn(LazzyBeeShare.EMPTY);
+                    } catch (Exception e) {
+
+                    }
+
 
                     //Log.i(TAG, card.toString());
                     //System.out.print(card.toString());
@@ -774,6 +790,20 @@ public class LearnApiImplements implements LearnApi {
                     } else {
                         card.setgId(0);
                     }
+                    try {
+                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN) != null)
+                            card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
+                        else
+                            card.setL_en(LazzyBeeShare.EMPTY);
+
+                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN) != null)
+                            card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
+                        else
+                            card.setL_vn(LazzyBeeShare.EMPTY);
+                    } catch (Exception e) {
+
+                    }
+
 
                     datas.add(card);
 
@@ -1098,7 +1128,7 @@ public class LearnApiImplements implements LearnApi {
     public void _insertOrUpdateCard(Card card) {
         // Log.i(TAG, "q: " + card.getQuestion());
         String cardId = String.valueOf(card.getId());
-        //TODO: Update staus card by id
+        //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -1107,6 +1137,8 @@ public class LearnApiImplements implements LearnApi {
         values.put(KEY_ANSWERS, card.getAnswers());
         values.put(KEY_LEVEL, card.getLevel());
         values.put(KEY_PACKAGES, card.getPackage());
+        values.put(KEY_L_EN, card.getL_en());
+        values.put(KEY_L_VN, card.getL_vn());
 //        db.replace(TABLE_VOCABULARY,null,values);
         //int id = (int) db.insertWithOnConflict(TABLE_VOCABULARY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         //if (id == -1) {
@@ -1225,22 +1257,34 @@ public class LearnApiImplements implements LearnApi {
     }
 
 
-
     public boolean _checkUpdateDataBase() {
         boolean update = false;
-        int _dbVesion=0;
-        int _gdbVesion=0;
+        int _dbVesion = 0;
+        int _gdbVesion = 0;
 
         //get version in DB
         String db_v = _getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
         String g_db_v = _getValueFromSystemByKey(LazzyBeeShare.GAE_DB_VERSION);
 
+        Log.i(TAG, "db_v:" + db_v + "\t g_db_v:" + g_db_v);
+
         //Check client DB
+//        if (db_v == null) {
+//
+//        } else {
+//
+//        }
         if (db_v != null) {
             _dbVesion = Integer.valueOf(db_v);
         }
 
         //Check global DB
+//        if (g_db_v == null) {
+//
+//        } else {
+//            _gdbVesion = Integer.valueOf(g_db_v);
+//        }
+
         if (g_db_v != null) {
             _gdbVesion = Integer.valueOf(g_db_v);
         }
@@ -1249,8 +1293,26 @@ public class LearnApiImplements implements LearnApi {
         if (_gdbVesion > _dbVesion) {
             Log.i(TAG, "Show confirm Update");
             update = true;
+            //Update gDB version
+            _insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, String.valueOf(_gdbVesion));
         }
-        Log.i(TAG,"dbVesion:"+_dbVesion+"\t gdbVesion:"+_gdbVesion);
+        Log.i(TAG, "dbVesion:" + _dbVesion + "\t gdbVesion:" + _gdbVesion);
         return update;
+    }
+
+    public int _getCountAllListCard() {
+        int count = 0;
+        String selectbyIDQuery = "SELECT  * FROM  sqlite_sequence";
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+
+        //query for cursor
+        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    count = cursor.getInt(1);
+                } while (cursor.moveToNext());
+        }
+        return count;
     }
 }
