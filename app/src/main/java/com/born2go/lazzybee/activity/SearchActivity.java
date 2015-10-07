@@ -72,8 +72,12 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
                 Card card = (Card) lbQuestion.getTag();
-                String cardID = String.valueOf(card.getId());
-                _gotoCardDetail(cardID);
+                if (card.getId() > 0) {
+                    String cardID = String.valueOf(card.getId());
+                    _gotoCardDetail(cardID);
+                } else {
+                    Log.w(TAG, "card.getId()==0");
+                }
 
             }
 
@@ -83,8 +87,13 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
                 //Cast tag lbQuestion to CardId
                 Card card = (Card) lbQuestion.getTag();
-                //String cardID = "" + card.getId();
-                _optionList(card);
+                String cardID = String.valueOf(card.getId());
+                if (card.getId() > 0) {
+                    _optionList(card);
+                } else {
+                    Log.w(TAG, "card.getId()==0");
+                }
+
             }
         });
         _search(query_text);
@@ -99,6 +108,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -228,8 +238,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                // Do something with the selection
-                String action = LazzyBeeShare.EMPTY;
+                //
                 if (items[item] == getString(R.string.action_add_to_learn)) {
                     _addCardToQueue(card);
                 } else if (items[item] == getString(R.string.action_learnt)) {
@@ -320,6 +329,10 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         List<Card> cardList = new ArrayList<Card>();
         int result_count = 0;
         if (card != null) {
+            if (card.getId() == 0) {
+                dataBaseHelper._insertOrUpdateCard(card);
+                card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
+            }
             cardList.add(card);
             result_count = cardList.size();
             setAdapterListCard(cardList);
