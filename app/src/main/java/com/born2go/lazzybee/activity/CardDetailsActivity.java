@@ -69,6 +69,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     CardView mCardViewAdv;
     CardView mCardViewViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +78,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         setSupportActionBar(toolbar);
         this.context = this;
 
-        mCardViewViewPager= (CardView) findViewById(R.id.mCardViewViewPager);
+        mCardViewViewPager = (CardView) findViewById(R.id.mCardViewViewPager);
 
         container = (LinearLayout) findViewById(R.id.container);
 
@@ -124,7 +125,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         //get value form task manager
         String adb_ennable = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE);
 
-        mCardViewAdv= (CardView) findViewById(R.id.mCardViewAdv);
+        mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
         AdView mAdView = (AdView) findViewById(R.id.adView);
         if (adb_ennable.equals(LazzyBeeShare.YES)) {
             AdRequest adRequest = new AdRequest.Builder()
@@ -320,6 +321,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         if (card != null) {
             //Update Success reload data
             this.card.setAnswers(card.getAnswers());
+            this.card.setL_vn(card.getL_vn());
+            this.card.setL_en(card.getL_en());
 
             //Update Success reload data
             //Set Adapter
@@ -355,7 +358,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
             this.context = context;
-            packages = Arrays.asList("EV", "VA");
+            packages = Arrays.asList("VIET-ANH", "ANH-ANH");
 //            if (card.getPackage() != null) {
 //                this.packages = LazzyBeeShare.getListPackageFormString(card.getPackage());
 //                if (packages.size() == 0) {
@@ -421,13 +424,15 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             //_addJavascriptInterfaceQuestionAndAnswer();
 
             //String displayHTML = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packages.get(position), false);
-            String displayHTML = LazzyBeeShare.EMPTY;
             // Log.i(TAG, "L_en:"+card.getL_en());
-            if (position == 0) {
+            String displayHTML;
+            if (position == 1) {
                 displayHTML = card.getL_en();
             } else {
                 displayHTML = card.getL_vn();
             }
+            if (displayHTML == null)
+                displayHTML = LazzyBeeShare.EMPTY;
 
             Log.i(TAG, displayHTML);
 
