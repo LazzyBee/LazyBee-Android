@@ -22,6 +22,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.DataLayer;
@@ -650,12 +651,6 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private boolean _checkUpdate() {
-        //get GAE_DB_VERSION in Server
-        String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
-
-        //put GAE_DB_VERSION to Client
-        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version == null ? String.valueOf(0) : gae_db_version);
-
         if (learnApiImplements._checkUpdateDataBase()) {
             Log.i(TAG, "Co Update");
             Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
@@ -705,17 +700,26 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _downloadFile() {
-        String base_url = (String) lazzybeeTag.get(LazzyBeeShare.BASE_URL_DB);
-        int version = 0;
-
+        String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
         String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        if (db_v != null)
+        int version = 0;
+        if (db_v != null) {
             version = Integer.valueOf(db_v);
-//        DownloadFileUpdateDatabaseTask downloadFileUpdateDatabaseTask = new DownloadFileUpdateDatabaseTask(context);
-//        downloadFileUpdateDatabaseTask.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
-        downloadFileandUpdateDatabase.execute(base_url + "" + version);
-        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+        }
+        String dbUpdateName = (version + 1) + ".db";
+        String download_url = base_url + dbUpdateName;
+        Log.i(TAG, "download_url=" + download_url);
+
+        if (!base_url.isEmpty() || base_url != null) {
+
+            DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+
+            //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+            downloadFileandUpdateDatabase.execute(download_url);
+            downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+        } else {
+            Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void _updateDB(int type) {
