@@ -61,7 +61,8 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             URL u = new URL(params[0]);
 
             File sdCard_dir = Environment.getExternalStorageDirectory();
-            File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
+            File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DB_UPDATE_NAME);
+            Log.i(TAG, "db path:" + file.getAbsolutePath());
             //dlDir.mkdirs();
             InputStream is = u.openStream();
 
@@ -91,12 +92,6 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
     private void _updateDB(int downloadUpdate) {
         try {
-            //Add 2 colum l_en and l_vn
-            int add_colum_L_EN = learnApiImplements.executeQuery("ALTER TABLE " + LearnApiImplements.TABLE_VOCABULARY + " ADD COLUMN " + LearnApiImplements.KEY_L_EN + " TEXT;");
-            int add_colum_L_VN = learnApiImplements.executeQuery("ALTER TABLE " + LearnApiImplements.TABLE_VOCABULARY + " ADD COLUMN " + LearnApiImplements.KEY_L_VN + " TEXT;");
-            Log.i(TAG, " ADD COLUMN " + LearnApiImplements.KEY_L_EN + "?" + ((add_colum_L_EN == 1) ? "TRUE" : "FALSE"));
-            Log.i(TAG, " ADD COLUMN " + LearnApiImplements.KEY_L_VN + "?" + ((add_colum_L_VN == 1) ? "TRUE" : "FALSE"));
-
             //Copy db to my app
             databaseUpgrade.copyDataBase(downloadUpdate);
 
@@ -104,8 +99,13 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
+            //Update version
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(version));
             databaseUpgrade.close();
+
+            //Delete database update.db
+            Log.i(TAG, "Delete database?" + context.deleteDatabase(DatabaseUpgrade.DB_NAME));
+
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
