@@ -44,7 +44,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
         progressDialog = new ProgressDialog(context);
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
-        this.version=version;
+        this.version = version;
     }
 
     protected void onPreExecute() {
@@ -61,7 +61,8 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             URL u = new URL(params[0]);
 
             File sdCard_dir = Environment.getExternalStorageDirectory();
-            File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD + "/" + LazzyBeeShare.DB_UPDATE_NAME);
+            File file = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DB_UPDATE_NAME);
+            Log.i(TAG, "db path:" + file.getAbsolutePath());
             //dlDir.mkdirs();
             InputStream is = u.openStream();
 
@@ -91,13 +92,20 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
     private void _updateDB(int downloadUpdate) {
         try {
+            //Copy db to my app
             databaseUpgrade.copyDataBase(downloadUpdate);
+
             List<Card> cards = databaseUpgrade._getAllCard();
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
+            //Update version
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(version));
             databaseUpgrade.close();
+
+            //Delete database update.db
+            Log.i(TAG, "Delete database?" + context.deleteDatabase(DatabaseUpgrade.DB_NAME));
+
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();

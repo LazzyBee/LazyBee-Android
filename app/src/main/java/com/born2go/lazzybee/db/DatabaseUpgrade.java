@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class DatabaseUpgrade extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseUpgrade";
-    private static String DB_NAME = "update.db";
+    public static String DB_NAME = "update.db";
     private static final String TABLE_SYSTEM = "system";
     public static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
 
@@ -83,6 +83,8 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
 
                     card.setPackage(cursor.getString(LazzyBeeShare.CARD_INDEX_PACKAGE));
                     card.setLevel(cursor.getInt(LazzyBeeShare.CARD_INDEX_LEVEL));
+                    card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
+                    card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
                     datas.add(card);
 
                 } while (cursor.moveToNext());
@@ -114,7 +116,7 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
             myInput = context.getAssets().open(DB_NAME);
         } else {
             File sdCard_dir = Environment.getExternalStorageDirectory();
-            File dlDir = new File(sdCard_dir.getAbsolutePath() + "/" + LazzyBeeShare.DOWNLOAD);
+            File dlDir = new File(sdCard_dir.getAbsolutePath());
             dlDir.mkdirs();
             source = new File(dlDir, DB_NAME);
             myInput = new FileInputStream(source);

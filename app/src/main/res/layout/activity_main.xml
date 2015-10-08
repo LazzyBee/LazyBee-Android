@@ -121,7 +121,7 @@
 
                         <RelativeLayout
                             android:id="@+id/relativeLayout"
-                            android:layout_width="180dp"
+                            android:layout_width="190dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
                             android:paddingBottom="20dp"
@@ -132,7 +132,7 @@
 
                             <RelativeLayout
                                 android:id="@+id/mDue"
-                                android:layout_width="173dp"
+                                android:layout_width="183dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal">
 

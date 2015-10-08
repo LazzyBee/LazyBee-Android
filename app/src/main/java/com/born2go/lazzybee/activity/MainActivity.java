@@ -8,7 +8,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,6 +47,7 @@ import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.NotificationReceiver;
@@ -61,13 +61,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
@@ -150,6 +147,7 @@ public class MainActivity extends AppCompatActivity
 
     DataLayer lazzybeeTag;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,8 +167,6 @@ public class MainActivity extends AppCompatActivity
         complete = _checkCompleteLearn();
 
         _initGoogleApiClient();
-
-        dataBaseHelper._get100Card();
 
         _initInterstitialAd();
 
@@ -351,7 +347,6 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _initSettingApplication() {
-        lazzybeeTag = TagManager.getInstance(context).getDataLayer();
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -361,9 +356,6 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < hour.length; i++) {
             hours.add(hour[i]);
         }
-
-        _changeLanguage();
-
 
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
@@ -389,20 +381,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void _changeLanguage() {
-        String lang = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
-        Log.i(TAG, "Lang:" + lang);
-        if (lang == null)
-            lang = LazzyBeeShare.LANG_VI;
-        String languageToLoad = lang; // your language
-
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-    }
 
     private int _checkCompleteLearn() {
         String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000));
@@ -415,8 +393,8 @@ public class MainActivity extends AppCompatActivity
         if (totalLearnCard != null)
             total = Integer.valueOf(totalLearnCard);
 
-        int countDue = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total).size();
-        int countAgain = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0).size();
+        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
+        int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
 
         if (value != null) {
             complete = Integer.valueOf(value);
@@ -479,13 +457,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _getCountCard() {
-        Log.i(TAG, "--------------------------_getCountCard()------------------------------\n");
+        Log.i(TAG, "--------------------------_getCountCard()------------------------------");
 
         String dueToday = dataBaseHelper._getStringDueToday();
-        int allCount = dataBaseHelper._getAllListCard().size();
-        countCardNoLearn = dataBaseHelper._getListCardNoLearne().size();
-        int learnCount = dataBaseHelper._getListCardLearned().size();
-        Log.i(TAG, "-------------------------------END-------------------------------------\n");
+        int allCount = dataBaseHelper._getCountAllListCard();
+        int learnCount = dataBaseHelper._getCountListCardLearned();
+        countCardNoLearn = allCount - learnCount;
 
         if (dueToday != null) {
             lbDueToday.setText(Html.fromHtml(dueToday));
@@ -497,6 +474,7 @@ public class MainActivity extends AppCompatActivity
 
         lbTotalsCount.setText(String.valueOf(allCount));
         lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
+        Log.i(TAG, "-------------------------_getCountCard() END----------------------------\n");
 
     }
 
@@ -620,15 +598,15 @@ public class MainActivity extends AppCompatActivity
     private void _initSQlIte() {
         myDbHelper = LazzyBeeSingleton.dataBaseHelper;
         databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
-        try {
-            myDbHelper._createDataBase();
-        } catch (IOException ioe) {
-            //throw new Error("Unable to create database");
-            //ioe.printStackTrace();
-            Log.e(TAG, "Unable to create database:" + ioe.getMessage());
-
-        }
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
+//        try {
+//            myDbHelper._createDataBase();
+//        } catch (IOException ioe) {
+//            //throw new Error("Unable to create database");
+//            //ioe.printStackTrace();
+//            Log.e(TAG, "Unable to create database:" + ioe.getMessage());
+//
+//        }
     }
 
 
@@ -832,12 +810,6 @@ public class MainActivity extends AppCompatActivity
 
 
     private boolean _checkUpdate() {
-        //get GAE_DB_VERSION in Server
-        String gae_db_version = (String) lazzybeeTag.get(LazzyBeeShare.GAE_DB_VERSION);
-
-        //put GAE_DB_VERSION to Client
-        dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version == null ? String.valueOf(0) : gae_db_version);
-
         if (dataBaseHelper._checkUpdateDataBase()) {
             Log.i(TAG, "Co Update");
             Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
@@ -940,17 +912,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        String base_url = (String) lazzybeeTag.get(LazzyBeeShare.BASE_URL_DB);
-        int version = 0;
-
+        String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        if (db_v != null)
+        int version = 0;
+        if (db_v != null) {
             version = Integer.valueOf(db_v);
+        }
+        String dbUpdateName = (version + 1) + ".db";
+        String download_url = base_url + dbUpdateName;
+        Log.i(TAG, "download_url=" + download_url);
 
-        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
-        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-        downloadFileandUpdateDatabase.execute(base_url + "/" + version);
-        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+        if (!base_url.isEmpty() || base_url != null) {
+
+            DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+
+            //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+            downloadFileandUpdateDatabase.execute(download_url);
+            downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+        } else {
+            Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean _compareToVersion(int clientVesion) {

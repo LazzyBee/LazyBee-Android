@@ -70,6 +70,8 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
     private Card defineCardbyVoca(Card _card, Voca voca) {
         try {
             Log.i(TAG, "voca:\t Q:" + voca.getQ() + ",level:" + voca.getLevel() + ",package:" + voca.getPackages());
+            Log.i(TAG, "LEN=:" + voca.getLEn());
+            Log.i(TAG, "LVN=:" + voca.getLVn());
             Card card = new Card();
 
             card.setgId(voca.getGid());
@@ -85,6 +87,10 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
             card.setRev_count(_card.getRev_count());
             card.setDue(_card.getDue());
             card.setQueue(_card.getQueue());
+
+            card.setL_en(voca.getLEn());
+            card.setL_vn(voca.getLVn());
+
 
             return card;
         } catch (Exception e) {
