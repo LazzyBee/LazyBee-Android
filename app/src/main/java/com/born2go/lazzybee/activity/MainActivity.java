@@ -1000,6 +1000,8 @@ public class MainActivity extends AppCompatActivity
         //fragmentDialogCustomStudy.
         fragmentDialogCustomStudy.setCustomStudyAdapter();
         _getCountCard();
+        int my_level = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+        dataBaseHelper._initPreFetchNewCardList(my_level);
         Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
 //        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
 //                .show();

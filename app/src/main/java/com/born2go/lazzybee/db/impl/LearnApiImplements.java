@@ -223,7 +223,7 @@ public class LearnApiImplements implements LearnApi {
         int checkListToday = _checkListTodayExit();
         if (checkListToday > -1 && !learnmore) {
 
-            //TODO: get data from sqlite
+            //get data from sqlite
             String value = _getValueFromSystemByKey(QUEUE_LIST);
             Log.i(TAG, QUEUE_LIST + ":" + value);
             List<Card> allCardLearn = _getListCardFromStringArray(value);
@@ -239,7 +239,16 @@ public class LearnApiImplements implements LearnApi {
             if (learnmore == true)
                 number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
 
-            int countNewCard = _get100Card();
+            String settingMyLevel = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+            int my_level = 0;
+            try {
+                if (settingMyLevel != null) {
+                    my_level = Integer.valueOf(my_level);
+
+                }
+            } catch (Exception e) {
+            }
+            int countNewCard = _get100Card(my_level);
             if (countNewCard > 0) {
                 //_getValueFromSystemByKey()
                 String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
@@ -912,7 +921,7 @@ public class LearnApiImplements implements LearnApi {
 
 
     @Override
-    public int _get100Card() {
+    public int _get100Card(int myLevel) {
         String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
         if (value != null) {
             try {
@@ -922,7 +931,7 @@ public class LearnApiImplements implements LearnApi {
                 //Check count < today new card limit ->init
                 if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
                     Log.i(TAG, "_get100Card:Init New 100 Card");
-                    return _initPreFetchNewCardList();
+                    return _initPreFetchNewCardList(myLevel);
                 } else {
                     Log.i(TAG, "_get100Card:" + count);
                     return count;
@@ -930,38 +939,56 @@ public class LearnApiImplements implements LearnApi {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                return _initPreFetchNewCardList();
+                return _initPreFetchNewCardList(myLevel);
             }
 
         } else {
-            return _initPreFetchNewCardList();
+            return _initPreFetchNewCardList(myLevel);
         }
     }
 
-    private int _initPreFetchNewCardList() {
+    public int _initPreFetchNewCardList(int myLevel) {
         List<String> cardIds = new ArrayList<String>();
-        WordEstimate wordEstimate = new WordEstimate();
-        int number[] = wordEstimate.getNumberWordEachLevel(0d);
+        Log.i(TAG, "my_level:" + myLevel);
+        if (myLevel > 0) {
+            int limit = 100;
+            String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
-        int target = 0;
-        for (int i = 1; i < number.length; i++) {
-            target += number[i];
-            if (target > 0) {
-                String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + target;
+            while (cardIds.size() < limit) {
+                limit = limit - cardIds.size();
+                myLevel++;
+                select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+                Log.i(TAG, "_initPreFetchNewCardList: Level " + myLevel +
+                        ", target = " + limit);
+                cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+            }
+        } else {
 
-                List<String> cardIdListbylevel = _getCardIDListQueryString(select_list_card_by_queue);
+            WordEstimate wordEstimate = new WordEstimate();
+            int number[] = wordEstimate.getNumberWordEachLevel(0d);
+            int target = 0;
+            for (int i = 1; i < number.length; i++) {
+                target += number[i];
+                if (target > 0) {
+                    String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                            " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + target;
 
-                int count = cardIdListbylevel.size();
-                Log.i(TAG, "_initPreFetchNewCardList: Level " + i + ": config = " + number[i] +
-                        ", target = " + target +
-                        ", real_count = " + count);
+                    List<String> cardIdListbylevel = _getCardIDListQueryString(select_list_card_by_queue);
 
-                cardIds.addAll(cardIdListbylevel);
+                    int count = cardIdListbylevel.size();
+                    Log.i(TAG, "_initPreFetchNewCardList: Level " + i + ": config = " + number[i] +
+                            ", target = " + target +
+                            ", real_count = " + count);
 
-                if (count < target) {
-                    target = target - count;
-                } else target = 0;
+                    cardIds.addAll(cardIdListbylevel);
+
+                    if (count < target) {
+                        target = target - count;
+                    } else target = 0;
+                }
             }
         }
         int count = cardIds.size();
@@ -1019,7 +1046,6 @@ public class LearnApiImplements implements LearnApi {
             if (cursor.getCount() > 0)
                 do {
                     String cardId = cursor.getString(0);
-
 
                     cardIds.add(cardId);
 
@@ -1304,5 +1330,14 @@ public class LearnApiImplements implements LearnApi {
         }
         Log.i(TAG, "_queryCount -Query:" + query + "\t" + "Result count:" + count);
         return count;
+    }
+
+    public int getSettingIntergerValuebyKey(String keySettingMyLevel) {
+        String settingMyLevel = _getValueFromSystemByKey(keySettingMyLevel);
+        if (settingMyLevel == null) {
+            return 0;
+        } else {
+            return Integer.valueOf(settingMyLevel);
+        }
     }
 }
