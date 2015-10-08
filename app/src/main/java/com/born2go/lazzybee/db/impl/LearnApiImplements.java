@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -116,56 +115,56 @@ public class LearnApiImplements implements LearnApi {
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 do {
-                    card = new Card();
-                    //get data from sqlite
-                    card.setId(cursor.getInt(CARD_INDEX_ID));
-
-                    card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
-                    card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
-                    card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
-                    card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
-
-
-                    if (cursor.getString(CARD_INDEX_STATUS) != null) {
-                        card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
-                    } else {
-                        card.setStatus(0);
-                    }
-
-                    card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
-                    card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
-                    card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
-                    card.setDue(cursor.getLong(CARD_INDEX_DUE));
-
-                    card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
-                    card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
-                    card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
-                    card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
-
-                    if (cursor.getString(CARD_INDEX_GID) != null) {
-                        card.setgId(cursor.getLong(CARD_INDEX_GID));
-                    } else {
-                        card.setgId(0);
-                    }
-                    try {
-                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN) != null)
-                            card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
-                        else
-                            card.setL_en(LazzyBeeShare.EMPTY);
-
-                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN) != null)
-                            card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
-                        else
-                            card.setL_vn(LazzyBeeShare.EMPTY);
-                    } catch (Exception e) {
-                        Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
-                    }
-
-
-                    //Log.i(TAG, card.toString());
-                    //System.out.print(card.toString());
-
+                    card = _defineCardbyCursor(cursor);
                 } while (cursor.moveToNext());
+        }
+        return card;
+    }
+
+    private Card _defineCardbyCursor(Cursor cursor) {
+        Card card = new Card();
+        //get data from sqlite
+        card.setId(cursor.getInt(CARD_INDEX_ID));
+
+        card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
+        card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
+        card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+        card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+
+
+        if (cursor.getString(CARD_INDEX_STATUS) != null) {
+            card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
+        } else {
+            card.setStatus(0);
+        }
+
+        card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+        card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+        card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+        card.setDue(cursor.getLong(CARD_INDEX_DUE));
+
+        card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+        card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+        card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+        card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+
+        if (cursor.getString(CARD_INDEX_GID) != null) {
+            card.setgId(cursor.getLong(CARD_INDEX_GID));
+        } else {
+            card.setgId(0);
+        }
+        try {
+            if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN) != null)
+                card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
+
+            if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN) != null)
+                card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
+
+        } catch (Exception e) {
+            Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
+            card.setL_vn(LazzyBeeShare.EMPTY);
+            card.setL_en(LazzyBeeShare.EMPTY);
+
         }
         return card;
     }
@@ -246,7 +245,7 @@ public class LearnApiImplements implements LearnApi {
                 String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
 
                 List<Card> cards = _getListCardFromStringArray(value);
-                Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
+                //Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
                 randomGenerator = new Random();
 
                 for (int i = 0; i < number; i++) {
@@ -254,7 +253,7 @@ public class LearnApiImplements implements LearnApi {
                     datas.add(cards.get(index));
                     cards.remove(cards.get(index));
                 }
-                Log.d(TAG, "_getRandomCard: cards toArray after remove:" + cards.toString());
+                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cards.size());
                 //remove
                 //cards.removeAll(datas);
                 _insertOrUpdatePreFetchNewCardList(cards);
@@ -454,7 +453,7 @@ public class LearnApiImplements implements LearnApi {
     @Override
     public int _updateQueueCard(String cardId, long queue) {
 
-        //TODO: Update staus card by id
+        //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -510,22 +509,10 @@ public class LearnApiImplements implements LearnApi {
         return datas;
     }
 
-    /**
-     * Update Status Card and Time Again Lean
-     */
-    public int updateStatusAndTimeAgainVocabulary(Card card) {
-        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_STATUS, card.getStatus());
-        return db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-                new String[]{String.valueOf(card.getId())});
-
-    }
-
 
     @Override
     public int _updateStatusCard(String cardId, int status) {
-        //TODO: Update staus card by id
+        //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -564,7 +551,7 @@ public class LearnApiImplements implements LearnApi {
             //TODO insert to system table
             SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
             long long_insert_results = db_insert.insert(TABLE_SYSTEM, null, values);
-            Log.i(TAG, "Insert Results:" + long_insert_results);
+            Log.i(TAG, "_insertOrUpdateToSystemTable\tInsert Results:" + long_insert_results);
             db_insert.close();
             return (int) long_insert_results;
         } else {
@@ -574,13 +561,14 @@ public class LearnApiImplements implements LearnApi {
             values.put(KEY_SYSTEM_VALUE, value);
             //TODO update to system table
             try {
-                int update_results = db_update.update(TABLE_SYSTEM, values, KEY_SYSTEM + " = ?",
+                int update_result = db_update.update(TABLE_SYSTEM, values, KEY_SYSTEM + " = ?",
                         new String[]{String.valueOf(key)});
-                Log.i(TAG, "update_results:" + update_results);
+                Log.i(TAG, "_insertOrUpdateToSystemTable\tUpdate:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
                 String valueUpdate = _getValueFromSystemByKey(key);
                 Log.i(TAG, "Update Key:" + key + " ,value:" + valueUpdate);
                 db_update.close();
-                return update_results;
+
+                return update_result;
             } catch (Exception e) {
                 e.printStackTrace();
                 return -1;
@@ -709,7 +697,7 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public int _updateCardQueueAndCardDue(String cardId, int queue, int due) {
-        //TODO: Update staus card by id
+        //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -720,34 +708,36 @@ public class LearnApiImplements implements LearnApi {
         //
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(cardId)});
-        Log.i(TAG, "Update Queue Card Complete: Update Result Code:" + update_result);
+
+        Log.i(TAG, "_updateCardQueueAndCardDue:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
+
         return update_result;
     }
 
-    private boolean _compreaToDate(Date card_due_date, Date now_date) {
-        try {
-            Date date_compateTo = inputFormat.parse(card_due_date.toString());
-            Date date_now = inputFormat.parse(now_date.toString());
-
-            //TODO: format date to string
-            String str_date_create_list_card_today_parse = outputFormat.format(date_compateTo);
-            String str_date_now = outputFormat.format(date_now);
-
-            //TODO: compareTo date learn vs now date
-            if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
-                //TODO: Equal then return true
-                Log.i(TAG, "date_compateTo is equal to date_now");
-
-                return true;
-            } else {
-                //TODO: Not equal then return false
-                return false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    private boolean _compreaToDate(Date card_due_date, Date now_date) {
+//        try {
+//            Date date_compateTo = inputFormat.parse(card_due_date.toString());
+//            Date date_now = inputFormat.parse(now_date.toString());
+//
+//            //TODO: format date to string
+//            String str_date_create_list_card_today_parse = outputFormat.format(date_compateTo);
+//            String str_date_now = outputFormat.format(date_now);
+//
+//            //TODO: compareTo date learn vs now date
+//            if (str_date_create_list_card_today_parse.compareTo(str_date_now) == 0) {
+//                //TODO: Equal then return true
+//                Log.i(TAG, "date_compateTo is equal to date_now");
+//
+//                return true;
+//            } else {
+//                //TODO: Not equal then return false
+//                return false;
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
 
     /**
@@ -761,50 +751,7 @@ public class LearnApiImplements implements LearnApi {
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0) {
                 do {
-                    Card card = new Card();
-                    card.setId(cursor.getInt(CARD_INDEX_ID));
-
-                    card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
-                    card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
-                    card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
-                    card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
-
-                    if (cursor.getString(CARD_INDEX_STATUS) != null) {
-                        card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
-                    } else {
-                        card.setStatus(0);
-                    }
-
-                    card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
-                    card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
-                    card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
-                    card.setDue(cursor.getLong(CARD_INDEX_DUE));
-
-                    card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
-                    card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
-                    card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
-                    card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
-
-                    if (cursor.getString(CARD_INDEX_GID) != null) {
-                        card.setgId(cursor.getInt(CARD_INDEX_GID));
-                    } else {
-                        card.setgId(0);
-                    }
-                    try {
-                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN) != null)
-                            card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
-                        else
-                            card.setL_en(LazzyBeeShare.EMPTY);
-
-                        if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN) != null)
-                            card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
-                        else
-                            card.setL_vn(LazzyBeeShare.EMPTY);
-                    } catch (Exception e) {
-
-                    }
-
-
+                    Card card = _defineCardbyCursor(cursor);
                     datas.add(card);
 
                 } while (cursor.moveToNext());
@@ -848,9 +795,11 @@ public class LearnApiImplements implements LearnApi {
             values.put(KEY_STATUS, card.getStatus());
 
         //
-        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-                new String[]{cardId});
-        Log.i(TAG, "_updateCard: Update Result Code:" + update_result);
+//        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+//                new String[]{cardId});
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
+                new String[]{card.getQuestion()});
+        Log.i(TAG, "_updateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
 
         //Update queue_list system table
         String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
@@ -873,12 +822,13 @@ public class LearnApiImplements implements LearnApi {
         String duetoday = LazzyBeeShare.EMPTY;
 
         int todayCount = _checkListTodayExit();
-        int againCount = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
-        int noLearn = _getListCardNoLearne().size();
+        int againCount = _getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+        int leared = _getCountListCardLearned();
+        int noLearn = _getCountAllListCard() - leared;
         int total_learn_per_day = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
         int limitToday = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
-        int dueCount = _getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day).size();
+        int dueCount = _getCountListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
 
         if (todayCount == -2) {
             Log.i(TAG, "_getStringDueToday: todayCount == -2");
@@ -930,39 +880,36 @@ public class LearnApiImplements implements LearnApi {
         return duetoday;
     }
 
+    public int _getCountListCardByQueue(int queue, int limit) {
+        String query = "";
+        if (queue == Card.QUEUE_LNR1) {
+            query = "SELECT  COUNT(id) FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
+        } else if (queue == Card.QUEUE_REV2) {
+            query = "SELECT  COUNT(id) FROM " + TABLE_VOCABULARY +
+                    " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
+        }
+        return _queryCount(query);
+    }
+
 
     public List<Card> _getAllListCard() {
-        String query = "SELECT  * FROM " + TABLE_VOCABULARY;
+        String query = "SELECT * FROM " + TABLE_VOCABULARY;
         List<Card> cardList = _getListCardQueryString(query);
         return cardList;
     }
 
     public List<Card> _getListCardLearned() {
-        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue >= 1";
+        String query = "SELECT * FROM " + TABLE_VOCABULARY + " where queue >= 1";
         List<Card> cardList = _getListCardQueryString(query);
         return cardList;
     }
 
     public List<Card> _getListCardNoLearne() {
-        String query = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = 0";
+        String query = "SELECT * FROM " + TABLE_VOCABULARY + " where queue = 0";
         List<Card> cardList = _getListCardQueryString(query);
         return cardList;
     }
 
-    public int _checkCompleteLearned() {
-        int today = _checkListTodayExit();
-        int again = _getListCardByQueue(Card.QUEUE_LNR1, 0).size();
-        int due = _getListCardByQueue(Card.QUEUE_REV2, LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY - today).size();
-        if (today > 0 || again > 0 || due > 0 || today == -1 || today == -2) {
-            Log.i(TAG, "_checkCompleteLearned:Not complete");
-            return 1;
-        } else {
-            Log.i(TAG, "_checkCompleteLearned:Complete");
-            return 0;
-        }
-
-
-    }
 
     @Override
     public int _get100Card() {
@@ -1096,7 +1043,7 @@ public class LearnApiImplements implements LearnApi {
         //Update Queue Card from DB
         card.setQueue(Card.QUEUE_NEW_CRAM0);
 
-        String cardId = String.valueOf(card.getId());
+        //String cardId = String.valueOf(card.getId());
 
         //Define SQLiteDatabase
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
@@ -1117,8 +1064,11 @@ public class LearnApiImplements implements LearnApi {
             values.put(KEY_FACTOR, card.getFactor());
 
         //Update query
-        db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-                new String[]{cardId});
+//        db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+//                new String[]{cardId});
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
+                new String[]{card.getQuestion()});
+        Log.i(TAG, "_addCardIdToQueueList:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         db.close();
 
 
@@ -1133,10 +1083,11 @@ public class LearnApiImplements implements LearnApi {
 
         ContentValues values = new ContentValues();
 
-        values.put(KEY_QUESTION, card.getQuestion());
+        //values.put(KEY_QUESTION, card.getQuestion());
         values.put(KEY_ANSWERS, card.getAnswers());
         values.put(KEY_LEVEL, card.getLevel());
         values.put(KEY_PACKAGES, card.getPackage());
+
         values.put(KEY_L_EN, card.getL_en());
         values.put(KEY_L_VN, card.getL_vn());
 //        db.replace(TABLE_VOCABULARY,null,values);
@@ -1148,9 +1099,11 @@ public class LearnApiImplements implements LearnApi {
 
         //db.in
         //
-        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-                new String[]{cardId});
-        Log.i(TAG, "Card id:" + cardId + ",update_result : " + update_result);
+//        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+//                new String[]{cardId});
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
+                new String[]{card.getQuestion()});
+        Log.i(TAG, "_insertOrUpdateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         if (update_result == 0) {
             db.insert(TABLE_VOCABULARY, null, values);
         }
@@ -1208,10 +1161,14 @@ public class LearnApiImplements implements LearnApi {
         values.put(KEY_ANSWERS, card.getAnswers());
         values.put(KEY_LEVEL, card.getLevel());
         values.put(KEY_PACKAGES, card.getPackage());
+        values.put(KEY_L_EN, card.getL_en());
+        values.put(KEY_L_VN, card.getL_vn());
 
-        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ? ",
-                new String[]{cardId});
-        Log.i(TAG, "Card id:" + cardId + ",update_result : " + update_result);
+//        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ? ",
+//                new String[]{cardId});
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ? ",
+                new String[]{card.getQuestion()});
+        Log.i(TAG, "_updateCardFormServer:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
     }
 
     public int _deleteCard(Card card) {
@@ -1301,18 +1258,51 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int _getCountAllListCard() {
-        int count = 0;
-        String selectbyIDQuery = "SELECT  * FROM  sqlite_sequence";
+        //String selectbyIDQuery = "SELECT  * FROM  sqlite_sequence";
+        String selectbyIDQuery = "SELECT COUNT(id) From vocabulary";
+        return _queryCount(selectbyIDQuery);
+    }
+
+    public int _getCountListCardNoLearn() {
+        String selectbyIDQuery = "SELECT COUNT(id) From vocabulary where queue = 0";
+        return _queryCount(selectbyIDQuery);
+    }
+
+    public int _getCountListCardLearned() {
+        String selectbyIDQuery = "SELECT COUNT(id) From vocabulary where queue > 0";
+        return _queryCount(selectbyIDQuery);
+    }
+
+    public int _getCardIDByQuestion(String question) {
+        int id = 0;
+        String selectbyQuestionQuery = "Select id from " + TABLE_VOCABULARY + " where vocabulary.question ='" + question + "'";
+        Log.i(TAG, "selectbyQuestionQuery=" + selectbyQuestionQuery);
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
         //query for cursor
-        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+        Cursor cursor = db.rawQuery(selectbyQuestionQuery, null);
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 do {
-                    count = cursor.getInt(1);
+                    id = cursor.getInt(0);
                 } while (cursor.moveToNext());
         }
+        return id;
+    }
+
+    public int _queryCount(String query) {
+        int count = 0;
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    count = cursor.getInt(0);
+                } while (cursor.moveToNext());
+        }
+        Log.i(TAG, "_queryCount -Query:" + query + "\t" + "Result count:" + count);
         return count;
     }
 }
