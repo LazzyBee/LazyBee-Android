@@ -52,61 +52,81 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         setContentView(R.layout.activity_search);
         context = this;
 
-        //init DB SQLIte
-        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
+        _initLazzyBeeSingleton();
 
-        connectGdatabase = LazzyBeeSingleton.connectGdatabase;
+        _initRecyclerViewSearchResults();
 
+        //get query text in Intent
         query_text = getIntent().getStringExtra(QUERY_TEXT);
 
+        //Search by text
+        _search(query_text);
+        handleIntent(getIntent());
+
+        //Show Home as Up
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
+
+    private void _initRecyclerViewSearchResults() {
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
         lbResultCount = (TextView) findViewById(R.id.lbResultCount);
+
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(this, mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-                //Cast tag lbQuestion to CardId
-                Card card = (Card) lbQuestion.getTag();
-                if (card.getId() > 0) {
-                    String cardID = String.valueOf(card.getId());
-                    _gotoCardDetail(cardID);
-                } else {
-                    Log.w(TAG, "card.getId()==0");
+                try {
+                    //Cast tag lbQuestion to CardId
+                    Card card = (Card) lbQuestion.getTag();
+                    if (card.getId() > 0) {
+                        String cardID = String.valueOf(card.getId());
+                        _gotoCardDetail(cardID);
+                    } else {
+                        Log.w(TAG, "card.getId()==0");
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
                 }
 
             }
 
             @Override
             public void onItemLongPress(View view, int position) {
-                Log.i(TAG, "Long Press");
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-                //Cast tag lbQuestion to CardId
-                Card card = (Card) lbQuestion.getTag();
-                String cardID = String.valueOf(card.getId());
-                if (card.getId() > 0) {
-                    _optionList(card);
-                } else {
-                    Log.w(TAG, "card.getId()==0");
+                try {
+                    //Cast tag lbQuestion to CardId
+                    Card card = (Card) lbQuestion.getTag();
+                    String cardID = String.valueOf(card.getId());
+                    if (card.getId() > 0) {
+                        _optionList(card);
+                    } else {
+                        Log.w(TAG, "card.getId()==0");
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
                 }
 
             }
         });
-        _search(query_text);
-        handleIntent(getIntent());
-
         //Set data and add Touch Listener
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
 
         mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
+    }
 
-        //Show Home as Up
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    private void _initLazzyBeeSingleton() {
+        //init DB SQLIte
+        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
 
+        connectGdatabase = LazzyBeeSingleton.connectGdatabase;
     }
 
 
@@ -202,25 +222,30 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     private void _search(String query) {
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
-        List<Card> cardList = dataBaseHelper._searchCard(query);
+        try {
+            List<Card> cardList = dataBaseHelper._searchCard(query);
 
-        int result_count = cardList.size();
-        Log.i(TAG, "Search result_count:" + result_count);
+            int result_count = cardList.size();
+            Log.i(TAG, "Search result_count:" + result_count);
 
-        //set count
-        lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+            //set count
+            lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
 
-        if (result_count > 0) {
-            //Init Adapter
-            setAdapterListCard(cardList);
-        } else if (result_count == 0) {//Check result_count==0 search in server
-            //Define Card
-            Card card = new Card();
-            card.setQuestion(query);
-            //Call Search in server
-            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-            getCardFormServerByQuestion.execute(card);
-            getCardFormServerByQuestion.delegate = this;
+            if (result_count > 0) {
+                //Init Adapter
+                setAdapterListCard(cardList);
+            } else if (result_count == 0) {//Check result_count==0 search in server
+                //Define Card
+                Card card = new Card();
+                card.setQuestion(query);
+                //Call Search in server
+                GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                getCardFormServerByQuestion.execute(card);
+                getCardFormServerByQuestion.delegate = this;
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
         }
 
 
@@ -272,7 +297,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         });
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // TODO:Update Queue_list in system table
+                //Update Queue_list in system table
                 card.setQueue(Card.QUEUE_DONE_2);
                 dataBaseHelper._updateCard(card);
                 String action = getString(R.string.done_card);
@@ -302,7 +327,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         });
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // TODO:Update Queue_list in system table
+                //Update Queue_list in system table
                 dataBaseHelper._addCardIdToQueueList(card);
                 Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                 ADD_TO_LEARN = 1;

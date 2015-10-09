@@ -138,7 +138,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void _showDialogSelectLevel(int finalLevel) {
-        final String[] strlevels = {context.getString(R.string.setting_message_default), "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        final String[] strlevels = {context.getString(R.string.setting_message_default), "1", "2", "3", "4", "5", "6"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 

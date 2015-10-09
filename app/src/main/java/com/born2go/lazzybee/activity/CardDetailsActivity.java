@@ -88,37 +88,38 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         _initTextToSpeech();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        card = learnApiImplements._getCardByID(cardId);
-        if (itemFavorite != null) {
-            //load favorite
-            if (card.getStatus() == 1) {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
-        }
-        // BEGIN_INCLUDE (setup_viewpager)
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
-//        mViewPager.setAdapter(new SamplePagerAdapter());
-        mViewPager.setAdapter(packageCardPageAdapter);
-        // END_INCLUDE (setup_viewpager)
-
-        // BEGIN_INCLUDE (setup_slidingtablayout)
-        // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
-        // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
-        mSlidingTabLayout.setViewPager(mViewPager);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        _displayCard();
 
         _initAdView();
 
 
+    }
+
+    private void _displayCard() {
+        try {
+            card = learnApiImplements._getCardByID(cardId);
+            if (itemFavorite != null) {
+                //load favorite
+                if (card.getStatus() == 1) {
+                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+                    itemFavorite.setTitle(context.getString(R.string.action_favorite));
+                } else {
+                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+                    itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+                }
+            }
+            PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
+            mViewPager.setAdapter(packageCardPageAdapter);
+            mSlidingTabLayout.setViewPager(mViewPager);
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 
     private void _initAdView() {
@@ -318,35 +319,32 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     @Override
     public void processFinish(Card card) {
-        if (card != null) {
-            //Update Success reload data
-            this.card.setAnswers(card.getAnswers());
-            this.card.setL_vn(card.getL_vn());
-            this.card.setL_en(card.getL_en());
+        try {
+            if (card != null) {
+                //Update Success reload data
+                this.card.setAnswers(card.getAnswers());
+                this.card.setL_vn(card.getL_vn());
+                this.card.setL_en(card.getL_en());
 
-            //Update Success reload data
-            //Set Adapter
-            PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, this.card);
-            mViewPager.setAdapter(packageCardPageAdapter);
-            mSlidingTabLayout.setViewPager(mViewPager);
+                //Update Success reload data
+                //Set Adapter
+                PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, this.card);
+                mViewPager.setAdapter(packageCardPageAdapter);
+                mSlidingTabLayout.setViewPager(mViewPager);
 
-            //Update Card form DB
-            learnApiImplements._updateCardFormServer(card);
+                //Update Card form DB
+                learnApiImplements._updateCardFormServer(card);
 
-//            Snackbar.make(container,
-//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-//                            , getString(R.string.message_update_card_successful))), Snackbar.LENGTH_SHORT)
-//                    .show();
-            Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
 
-            //set Result code for updated List card
-            setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
-        } else {
-//            Snackbar.make(container,
-//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-//                            , getString(R.string.message_update_card_fails))), Snackbar.LENGTH_SHORT)
-//                    .show();
-            Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
+                //set Result code for updated List card
+                setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
+            } else {
+                Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -358,15 +356,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
             this.context = context;
-            packages = Arrays.asList("VIET-ANH", "ANH-ANH");
-//            if (card.getPackage() != null) {
-//                this.packages = LazzyBeeShare.getListPackageFormString(card.getPackage());
-//                if (packages.size() == 0) {
-//                    this.packages = Arrays.asList("Common");
-//                }
-//            } else
-//                this.packages = Arrays.asList("Common");
-
+            packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en));
         }
 
 
@@ -421,22 +411,23 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
 
-            //_addJavascriptInterfaceQuestionAndAnswer();
+            try {
+                String displayHTML;
+                if (position == 1) {
+                    displayHTML = card.getL_en();
+                } else {
+                    displayHTML = card.getL_vn();
+                }
+                if (displayHTML == null)
+                    displayHTML = LazzyBeeShare.EMPTY;
 
-            //String displayHTML = LazzyBeeShare.getAnswerHTMLwithPackage(context, card, packages.get(position), false);
-            // Log.i(TAG, "L_en:"+card.getL_en());
-            String displayHTML;
-            if (position == 1) {
-                displayHTML = card.getL_en();
-            } else {
-                displayHTML = card.getL_vn();
+                Log.i(TAG, displayHTML);
+
+                mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+            } catch (Exception e) {
+                Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
             }
-            if (displayHTML == null)
-                displayHTML = LazzyBeeShare.EMPTY;
-
-            Log.i(TAG, displayHTML);
-
-            mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
 
             // Return the View
@@ -530,11 +521,4 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     }
 
-    private void _stopTextToSpeech() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-            textToSpeech.shutdown();
-            Log.d(TAG, "TTS Destroyed");
-        }
-    }
 }

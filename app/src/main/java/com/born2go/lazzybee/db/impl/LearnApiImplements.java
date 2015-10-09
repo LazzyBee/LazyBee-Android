@@ -105,18 +105,21 @@ public class LearnApiImplements implements LearnApi {
      */
     @Override
     public Card _getCardByID(String cardId) {
-        Card card = null;
+        Card card = new Card();
+        try {
+            String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
+            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
-        String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
-        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
-
-        //query for cursor
-        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    card = _defineCardbyCursor(cursor);
-                } while (cursor.moveToNext());
+            //query for cursor
+            Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0)
+                    do {
+                        card = _defineCardbyCursor(cursor);
+                    } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return card;
     }
@@ -623,7 +626,7 @@ public class LearnApiImplements implements LearnApi {
             for (int i = 0; i < listIdArray.length(); i++) {
                 String cardId = listIdArray.getString(i);
 
-                //TODO:get Card by id
+                //get Card by id
                 Card card = _getCardByID(cardId);
 
                 cardList.add(card);

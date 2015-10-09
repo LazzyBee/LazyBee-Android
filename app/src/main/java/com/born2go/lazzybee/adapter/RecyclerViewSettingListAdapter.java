@@ -93,84 +93,87 @@ public class RecyclerViewSettingListAdapter extends
         String setting = settings.get(position);
         final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
+        try {
+            if (holder.viewType == TYPE_TITLE) {
+                lbSettingName.setText(settings.get(position));
+                mSwitch.setVisibility(View.GONE);
+                lbLimit.setVisibility(View.GONE);
+                lbSettingName.setTextSize(15f);
+                lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            } else if (holder.viewType == TYPE_SETTING_NAME) {//TODO:TYPE_SETTING_NAME
 
-        if (holder.viewType == TYPE_TITLE) {
-            lbSettingName.setText(settings.get(position));
-            mSwitch.setVisibility(View.GONE);
-            lbLimit.setVisibility(View.GONE);
-            lbSettingName.setTextSize(15f);
-            lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
-        } else if (holder.viewType == TYPE_SETTING_NAME) {//TODO:TYPE_SETTING_NAME
+                lbSettingName.setText(settings.get(position));
+                mSwitch.setVisibility(View.GONE);
+                lbLimit.setVisibility(View.GONE);
+                if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
+                    String limit = learnApiImplements._getValueFromSystemByKey(setting);
+                    getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, limit);
 
-            lbSettingName.setText(settings.get(position));
-            mSwitch.setVisibility(View.GONE);
-            lbLimit.setVisibility(View.GONE);
-            if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
+                } else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
+                    String limit = learnApiImplements._getValueFromSystemByKey(setting);
+                    getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
+
+                } else if (setting.equals(context.getString(R.string.setting_check_update))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _onClickCheckUpdate(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_language))) {
+                    lbLimit.setVisibility(View.GONE);
+                    changeLanguage(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_about))) {
+
+                } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
+
+                    lbLimit.setVisibility(View.VISIBLE);
+                    _showDialogChangeSpeechRate(mCardView, lbLimit);
+
+                } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _resetCache(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_export_database))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _exportDatabases(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
+
+                    _showDialogExecuteQueue(mCardView);
+                }
+
+
+            } else if (holder.viewType == TYPE_SETTING_SWITCH) {
+                lbLimit.setVisibility(View.GONE);
+                lbSettingName.setText(settings.get(position));
+                if (setting.equals(context.getString(R.string.setting_auto_check_update))) {
+                    getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE);
+                } else if (setting.equals(context.getString(R.string.setting_debug_info))) {
+                    getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_DEBUG_INFOR);
+                } else if (setting.equals(context.getString(R.string.setting_notification))) {
+                    getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+                }
+            } else if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, limit);
+                lbSettingName.setText(setting);
+                TextView lbDescription = (TextView) view.findViewById(R.id.lbDescription);
+                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT, limit);
+                lbDescription.setText("");
+            } else if (holder.viewType == TYPE_SETTING_ABOUT) {
+                TextView lbAppVersion = (TextView) view.findViewById(R.id.lbAppVersion);
+                TextView lbDbVersion = (TextView) view.findViewById(R.id.lbDbVersion);
+                String versionName = "1";
+                try {
+                    versionName = context.getPackageManager()
+                            .getPackageInfo(context.getPackageName(), 0).versionName;
+                    lbAppVersion.setText("AppVersion:" + versionName);
+                    lbDbVersion.setText("DBVersion:3");
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    lbAppVersion.setText("AppVersion:" + versionName);
+                }
 
-            } else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
-                String limit = learnApiImplements._getValueFromSystemByKey(setting);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
 
-            } else if (setting.equals(context.getString(R.string.setting_check_update))) {
-                lbLimit.setVisibility(View.GONE);
-                _onClickCheckUpdate(mCardView);
-            } else if (setting.equals(context.getString(R.string.setting_language))) {
-                lbLimit.setVisibility(View.GONE);
-                changeLanguage(mCardView);
-            } else if (setting.equals(context.getString(R.string.setting_about))) {
-
-            } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
-
-                lbLimit.setVisibility(View.VISIBLE);
-                _showDialogChangeSpeechRate(mCardView, lbLimit);
-
-            } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
-                lbLimit.setVisibility(View.GONE);
-                _resetCache(mCardView);
-            } else if (setting.equals(context.getString(R.string.setting_export_database))) {
-                lbLimit.setVisibility(View.GONE);
-                _exportDatabases(mCardView);
-            } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
-
-                _showDialogExecuteQueue(mCardView);
             }
-
-
-        } else if (holder.viewType == TYPE_SETTING_SWITCH) {
-            lbLimit.setVisibility(View.GONE);
-            lbSettingName.setText(settings.get(position));
-            if (setting.equals(context.getString(R.string.setting_auto_check_update))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE);
-            } else if (setting.equals(context.getString(R.string.setting_debug_info))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_DEBUG_INFOR);
-            } else if (setting.equals(context.getString(R.string.setting_notification))) {
-                getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-            }
-        } else if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
-            String limit = learnApiImplements._getValueFromSystemByKey(setting);
-            lbSettingName.setText(setting);
-            TextView lbDescription = (TextView) view.findViewById(R.id.lbDescription);
-            getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT, limit);
-            lbDescription.setText("");
-        } else if (holder.viewType == TYPE_SETTING_ABOUT) {
-            TextView lbAppVersion = (TextView) view.findViewById(R.id.lbAppVersion);
-            TextView lbDbVersion = (TextView) view.findViewById(R.id.lbDbVersion);
-            String versionName = "1";
-            try {
-                versionName = context.getPackageManager()
-                        .getPackageInfo(context.getPackageName(), 0).versionName;
-                lbAppVersion.setText("AppVersion:" + versionName);
-                lbDbVersion.setText("DBVersion:3");
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-                lbAppVersion.setText("AppVersion:" + versionName);
-            }
-
-
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
         }
-
 
     }
 

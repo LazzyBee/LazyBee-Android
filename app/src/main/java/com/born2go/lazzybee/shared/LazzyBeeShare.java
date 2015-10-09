@@ -74,6 +74,7 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_POSITION_MEANIG = "position_meaning";
     public static final String YES = "yes";
     public static final String NO = "no";
+    public static final String LINK_CARD_IN_SERVER = "http://www.lazzybee.com/library/#dictionary/";
 
 
     private static boolean DEBUG = true;
@@ -144,7 +145,7 @@ public class LazzyBeeShare {
 
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
     public static String BASE_URL_DB = "base_url_db";
-    public static String ADV_ENABLE ="adv_enable";
+    public static String ADV_ENABLE = "adv_enable";
 
     /**
      * Init data demo List Course
