@@ -7,6 +7,8 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
 
 import java.util.Locale;
 
@@ -21,6 +23,8 @@ public class LazzyBeeSingleton {
     public static DatabaseUpgrade databaseUpgrade;
     public static TextToSpeech textToSpeech;
     public static ConnectGdatabase connectGdatabase;
+    public static DataLayer mDataLayer;
+
     public LazzyBeeSingleton(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
         databaseUpgrade = new DatabaseUpgrade(context);
@@ -34,6 +38,7 @@ public class LazzyBeeSingleton {
             }
         });
         connectGdatabase = new ConnectGdatabase();
+        mDataLayer = TagManager.getInstance(context).getDataLayer();
     }
 
     public static void initInstance(Context context) {
