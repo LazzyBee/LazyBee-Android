@@ -39,6 +39,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
 
     private static final String TAG = "CardDetailsActivity";
+    private static final Object GA_SCREEN = "aCardDetailsScreen";
 
     private Context context;
 
@@ -96,6 +98,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         _displayCard();
 
         _initAdView();
+
+        _trackerApplication();
 
 
     }
@@ -519,6 +523,16 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         //_stopTextToSpeech();
         super.onDestroy();
 
+    }
+
+    private void _trackerApplication() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 
 }

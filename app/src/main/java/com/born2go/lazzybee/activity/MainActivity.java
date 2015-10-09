@@ -60,6 +60,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
+    private static final Object GA_SCREEN = "aMainScreen";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -165,6 +167,8 @@ public class MainActivity extends AppCompatActivity
         _initInterstitialAd();
 
         _initShowcaseLazzyBee();
+
+        _trackerApplication();
 
 
     }
@@ -1270,6 +1274,16 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
+    }
+
+    private void _trackerApplication() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 
 }

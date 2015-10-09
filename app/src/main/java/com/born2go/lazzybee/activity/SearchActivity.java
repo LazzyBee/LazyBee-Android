@@ -28,6 +28,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
-    TextView txtSearch;
+    private static final Object GA_SCREEN = "aSearchScreen";
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
@@ -65,6 +66,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
         //Show Home as Up
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        _trackerApplication();
 
     }
 
@@ -375,6 +378,15 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             //Reload data
             Log.i(TAG, QUERY_TEXT + ":" + query_text);
             _search(query_text);
+        }
+    }
+    private void _trackerApplication() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 }

@@ -38,14 +38,12 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServe
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -379,12 +377,11 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         try {
             Log.i(TAG, "Trying to use TagManager");
-            mDataLayer = TagManager.getInstance(this).getDataLayer();
+            mDataLayer = LazzyBeeSingleton.mDataLayer;
             //mDataLayer.push(DataLayer.mapOf("event", "openScreen", "screenName", TAG));
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
-
-            Log.i(TAG, "Get config from TagManager: ADV_ENABLE? " +
-                    ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE));
+//            Log.i(TAG, "Get config from TagManager: ADV_ENABLE? " +
+//                    ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE));
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
