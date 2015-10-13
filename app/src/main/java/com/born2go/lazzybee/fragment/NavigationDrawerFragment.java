@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -253,7 +254,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Activity context) {
         super.onAttach(context);
         try {
             mCallbacks = (NavigationDrawerCallbacks) context;

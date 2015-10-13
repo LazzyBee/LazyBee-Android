@@ -101,6 +101,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
+            Log.i(TAG, "_insertOrUpdateCard:" + cards.size());
             //Update version
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(version));
             databaseUpgrade.close();

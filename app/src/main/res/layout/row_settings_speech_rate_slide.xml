@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="56dp">
-
-    <SeekBar
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/mSlideSpeechRate"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="1"
-        android:id="@+id/textView12"
-        android:textColor="@color/blue_500"
-        android:layout_above="@+id/mSlideSpeechRate"
-        android:layout_alignStart="@+id/mSlideSpeechRate" />
+        android:text="@string/setting_speech_rate"
+        android:id="@+id/textView3"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/grey_600"
+        android:layout_marginTop="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="5"
-        android:id="@+id/lbSeekVaueChange"
-        android:layout_alignTop="@+id/textView12"
-        android:layout_alignEnd="@+id/mSlideSpeechRate"
-        android:textColor="@color/red_500" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
 
-</RelativeLayout>
+        <SeekBar
+            android:id="@+id/mSlideSpeechRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/textView12"
+            android:layout_toLeftOf="@+id/lbSeekVaueChange"
+            android:layout_toStartOf="@+id/lbSeekVaueChange" />
+
+        <ImageView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_turtle_teal"
+            android:textColor="@color/blue_500"
+            android:layout_alignBottom="@+id/mSlideSpeechRate"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp" />
+
+        <ImageView
+            android:id="@+id/lbSeekVaueChange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_rabbit_teal"
+            android:textColor="@color/red_500"
+            android:layout_alignTop="@+id/mSlideSpeechRate"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

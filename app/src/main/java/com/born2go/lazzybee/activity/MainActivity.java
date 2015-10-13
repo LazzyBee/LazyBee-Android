@@ -45,7 +45,6 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
-import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -115,9 +114,7 @@ public class MainActivity extends AppCompatActivity
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
 
-
     boolean appPause = false;
-
 
     private boolean mSignInClicked;
 
@@ -274,52 +271,56 @@ public class MainActivity extends AppCompatActivity
 
     private void _setUpNotification() {
         Log.i(TAG, "---------setUpNotification-------");
-        //Check currentTime
-        Calendar currentCalendar = Calendar.getInstance();
-        int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
+        try {
+            //Check currentTime
+            Calendar currentCalendar = Calendar.getInstance();
+            int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
 
-        //Define clone hours
-        List<Integer> cloneHours = new ArrayList<Integer>();
+            //Define clone hours
+            List<Integer> cloneHours = new ArrayList<Integer>();
 
 //        Remove
-        Log.i(TAG, "setUpNotification currentHour:" + currentHour);
-        Log.i(TAG, "setUpNotification hours:" + hours.toString());
-        for (int i = 0; i < hours.size(); i++) {
-            int hour = hours.get(i);
-            if (!(currentHour >= hour)) {
-                cloneHours.add(hour);
+            Log.i(TAG, "setUpNotification currentHour:" + currentHour);
+            Log.i(TAG, "setUpNotification hours:" + hours.toString());
+            for (int i = 0; i < hours.size(); i++) {
+                int hour = hours.get(i);
+                if (!(currentHour >= hour)) {
+                    cloneHours.add(hour);
+                }
+
             }
 
+            Log.i(TAG, "setUpNotification cloneHours:" + cloneHours.toString());
+            //Define count
+            //int count = cloneHours.size();
+
+//        if (count >= 1) {
+//            //Set notification by hours
+//            for (int i = 0; i < 1; i++) {
+            // Define a time
+            Calendar calendar = Calendar.getInstance();
+            //calendar.add(Calendar.DATE, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, cloneHours.get(0));
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+
+            //
+            Long alertTime = calendar.getTimeInMillis();
+            //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Alert " + 0 + ",time:" + alertTime);
+
+            //set notificaion by time
+            scheduleNotification(0, alertTime);
+//            }
+//        } else {
+//            Log.i(TAG, "Qua gio set  Notification");
+//            //Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
+//        }
+
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
-
-        Log.i(TAG, "setUpNotification cloneHours:" + cloneHours.toString());
-        //Define count
-        int count = cloneHours.size();
-
-        if (count >= 1) {
-            //Set notification by hours
-            for (int i = 0; i < cloneHours.size(); i++) {
-                // Define a time
-                Calendar calendar = Calendar.getInstance();
-                //calendar.add(Calendar.DATE, 1);
-                calendar.set(Calendar.HOUR_OF_DAY, cloneHours.get(i));
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-
-                //
-                Long alertTime = calendar.getTimeInMillis();
-                //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "Alert " + i + ",time:" + alertTime);
-
-                //set notificaion by time
-                scheduleNotification(i, alertTime);
-            }
-        } else {
-            Log.i(TAG, "Qua gio set  Notification");
-            //Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
-        }
-
-
         Log.i(TAG, "---------END-------");
     }
 
@@ -437,11 +438,11 @@ public class MainActivity extends AppCompatActivity
 
     private void _cancelNotification() {
         notificationManager.cancelAll();
-        for (int i = 0; i < hours.size(); i++) {
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.cancel(pendingIntent);
-        }
+//        for (int i = 0; i < hours.size(); i++) {
+//        }
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void _getCountCard() {
@@ -913,7 +914,7 @@ public class MainActivity extends AppCompatActivity
     private void _downloadFile() {
         String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        int version = 0;
+        int version = LazzyBeeShare.DEFAULT_VERSION_DB;
         if (db_v != null) {
             version = Integer.valueOf(db_v);
         }
@@ -997,11 +998,11 @@ public class MainActivity extends AppCompatActivity
     public void _finishCustomStudy() {
         //fragmentDialogCustomStudy.dismiss();
         //fragmentDialogCustomStudy.
-        fragmentDialogCustomStudy.setCustomStudyAdapter();
-        _getCountCard();
-        int my_level = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-        dataBaseHelper._initPreFetchNewCardList(my_level);
-        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
+//        fragmentDialogCustomStudy.setCustomStudyAdapter();
+//        _getCountCard();
+//        int my_level = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+//        dataBaseHelper._initPreFetchNewCardList(my_level);
+//        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
 //        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
 //                .show();
 
@@ -1146,9 +1147,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogCustomStudy() {
-        FragmentManager fm = getSupportFragmentManager();
-        fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
-        fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
+//        FragmentManager fm = getSupportFragmentManager();
+//        fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
+//        fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
 
     }
 

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.io.File;
@@ -78,13 +79,13 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
                     Card card = new Card();
                     card.setId(cursor.getInt(0));
 
-                    card.setQuestion(cursor.getString(LazzyBeeShare.CARD_INDEX_QUESTION));
-                    card.setAnswers(cursor.getString(LazzyBeeShare.CARD_INDEX_ANSWER));
+                    card.setQuestion(cursor.getString(LearnApiImplements.CARD_INDEX_QUESTION));
+                    card.setAnswers(cursor.getString(LearnApiImplements.CARD_INDEX_ANSWER));
 
-                    card.setPackage(cursor.getString(LazzyBeeShare.CARD_INDEX_PACKAGE));
-                    card.setLevel(cursor.getInt(LazzyBeeShare.CARD_INDEX_LEVEL));
-                    card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
-                    card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
+                    card.setPackage(cursor.getString(LearnApiImplements.CARD_INDEX_PACKAGE));
+                    card.setLevel(cursor.getInt(LearnApiImplements.CARD_INDEX_LEVEL));
+                    card.setL_en(cursor.getString(LearnApiImplements.CARD_INDEX_L_EN));
+                    card.setL_vn(cursor.getString(LearnApiImplements.CARD_INDEX_L_VN));
                     datas.add(card);
 
                 } while (cursor.moveToNext());

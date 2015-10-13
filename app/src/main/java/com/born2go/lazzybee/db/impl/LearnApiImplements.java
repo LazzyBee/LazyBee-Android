@@ -80,22 +80,34 @@ public class LearnApiImplements implements LearnApi {
     }
 
     static int CARD_INDEX_ID = 0;
-    static int CARD_INDEX_QUESTION = 1;
-    static int CARD_INDEX_ANSWER = 2;
-    static int CARD_INDEX_CATRGORIES = 3;
-    static int CARD_INDEX_SUBCAT = 4;
-    static int CARD_INDEX_TAGS = 5;
-    static int CARD_INDEX_RELATED = 6;
-    static int CARD_INDEX_GID = 7;
-    static int CARD_INDEX_STATUS = 8;
-    static int CARD_INDEX_QUEUE = 9;
-    static int CARD_INDEX_PACKAGE = 10;
-    static int CARD_INDEX_LEVEL = 11;
-    static int CARD_INDEX_DUE = 12;
-    static int CARD_INDEX_REV_COUNT = 13;
-    static int CARD_INDEX_USER_NOTE = 14;
-    static int CARD_INDEX_LAST_IVL = 15;
-    static int CARD_INDEX_E_FACTOR = 16;
+    public static int CARD_INDEX_QUESTION = 1;
+    public static int CARD_INDEX_ANSWER = 2;
+    public static int CARD_INDEX_PACKAGE = 3;
+    public static int CARD_INDEX_QUEUE = 4;
+
+    public static int CARD_INDEX_LEVEL = 5;
+    public static int CARD_INDEX_CATRGORIES = 6;
+    public static int CARD_INDEX_SUBCAT = 7;
+    public static int CARD_INDEX_STATUS = 8;
+
+    public static int CARD_INDEX_DUE = 9;
+    public static int CARD_INDEX_REV_COUNT = 10;
+    public static int CARD_INDEX_USER_NOTE = 11;
+
+    public static int CARD_INDEX_LAST_IVL = 12;
+    public static int CARD_INDEX_E_FACTOR = 13;
+
+    public static int CARD_INDEX_GID = 14;
+
+    public static final int CARD_INDEX_L_VN = 15;
+    public static final int CARD_INDEX_L_EN = 16;
+
+    public static int CARD_INDEX_TAGS = 17;
+    public static int CARD_INDEX_RELATED = 18;
+
+    private String selectFull = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.category,vocabulary.subcats,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
+    private String selectDetails = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
+    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level";
 
 
     /**
@@ -107,7 +119,7 @@ public class LearnApiImplements implements LearnApi {
     public Card _getCardByID(String cardId) {
         Card card = new Card();
         try {
-            String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
+            String selectbyIDQuery = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
             SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
             //query for cursor
@@ -115,7 +127,7 @@ public class LearnApiImplements implements LearnApi {
             if (cursor.moveToFirst()) {
                 if (cursor.getCount() > 0)
                     do {
-                        card = _defineCardbyCursor(cursor);
+                        card = _defineCardbyCursor(cursor, 0);
                     } while (cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -124,50 +136,52 @@ public class LearnApiImplements implements LearnApi {
         return card;
     }
 
-    private Card _defineCardbyCursor(Cursor cursor) {
+    private Card _defineCardbyCursor(Cursor cursor, int type) {
         Card card = new Card();
         //get data from sqlite
         card.setId(cursor.getInt(CARD_INDEX_ID));
 
         card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
         card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
-        card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
-        card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
-
-
-        if (cursor.getString(CARD_INDEX_STATUS) != null) {
-            card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
-        } else {
-            card.setStatus(0);
-        }
-
         card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
         card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
         card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
-        card.setDue(cursor.getLong(CARD_INDEX_DUE));
+        if (type == 0) {
+            card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+            card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
-        card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
-        card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
-        card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
-        card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
-        if (cursor.getString(CARD_INDEX_GID) != null) {
-            card.setgId(cursor.getLong(CARD_INDEX_GID));
-        } else {
-            card.setgId(0);
-        }
-        try {
-            if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN) != null)
-                card.setL_en(cursor.getString(LazzyBeeShare.CARD_INDEX_L_EN));
+            if (cursor.getString(CARD_INDEX_STATUS) != null) {
+                card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
+            } else {
+                card.setStatus(0);
+            }
 
-            if (cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN) != null)
-                card.setL_vn(cursor.getString(LazzyBeeShare.CARD_INDEX_L_VN));
+            card.setDue(cursor.getLong(CARD_INDEX_DUE));
 
-        } catch (Exception e) {
-            Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
-            card.setL_vn(LazzyBeeShare.EMPTY);
-            card.setL_en(LazzyBeeShare.EMPTY);
+            card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+            card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+            card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+            card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
+            if (cursor.getString(CARD_INDEX_GID) != null) {
+                card.setgId(cursor.getLong(CARD_INDEX_GID));
+            } else {
+                card.setgId(0);
+            }
+            try {
+                if (cursor.getString(CARD_INDEX_L_EN) != null)
+                    card.setL_en(cursor.getString(CARD_INDEX_L_EN));
+
+                if (cursor.getString(CARD_INDEX_L_VN) != null)
+                    card.setL_vn(cursor.getString(CARD_INDEX_L_VN));
+
+            } catch (Exception e) {
+                Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
+                card.setL_vn(LazzyBeeShare.EMPTY);
+                card.setL_en(LazzyBeeShare.EMPTY);
+
+            }
         }
         return card;
     }
@@ -202,14 +216,20 @@ public class LearnApiImplements implements LearnApi {
 //                " question = '" + query + "' THEN 1 WHEN " +
 //                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
         if (query.equals("gotoDictionary")) {
-            return _getAllListCard();
+            return _getDictionary();
         } else {
-            String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
+            String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
                     + " ORDER BY " + KEY_QUESTION;
             //Seach card
-            List<Card> datas = _getListCardQueryString(likeQuery);
+            List<Card> datas = _getListCardQueryString(likeQuery,1);
             return datas;
         }
+    }
+
+    private List<Card> _getDictionary() {
+        String query = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY + " order by question";
+        List<Card> cardList = _getListCardQueryString(query, 1);
+        return cardList;
     }
 
     /**
@@ -516,8 +536,8 @@ public class LearnApiImplements implements LearnApi {
         String selectLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " LIMIT 5 ";
 
         //TODO query select List Card by status=learned
-        String selectListCardByStatus = "SELECT  * FROM " + TABLE_VOCABULARY + " where status = 1 ";
-        List<Card> datas = _getListCardQueryString(selectQuery);
+        String selectListCardByStatus = "SELECT  " + selectFull + " FROM " + TABLE_VOCABULARY + " where status = 1 ";
+        List<Card> datas = _getListCardQueryString(selectQuery,0);
         return datas;
     }
 
@@ -661,10 +681,10 @@ public class LearnApiImplements implements LearnApi {
     public List<Card> _getListCardByStatus(int status) {
 
         //Query select_list_card_by_status
-        String select_list_card_by_status = "SELECT  * FROM " + TABLE_VOCABULARY + " where status = " + status;
+        String select_list_card_by_status = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY + " where status = " + status;
 
         //Get card list by status
-        List cardListByStatus = _getListCardQueryString(select_list_card_by_status);
+        List cardListByStatus = _getListCardQueryString(select_list_card_by_status, 1);
         return cardListByStatus;
     }
 
@@ -688,9 +708,9 @@ public class LearnApiImplements implements LearnApi {
 
         if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
-            select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
+            select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
 
-            cardListByQueue = _getListCardQueryString(select_list_card_by_queue);
+            cardListByQueue = _getListCardQueryString(select_list_card_by_queue, 0);
 
         } else if (queue == Card.QUEUE_REV2) {
             cardListByQueue = _getListCarDue(limit);
@@ -755,7 +775,7 @@ public class LearnApiImplements implements LearnApi {
     /**
      *
      * */
-    private List<Card> _getListCardQueryString(String query) {
+    private List<Card> _getListCardQueryString(String query, int type) {
         List<Card> datas = new ArrayList<Card>();
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
@@ -763,7 +783,7 @@ public class LearnApiImplements implements LearnApi {
         if (cursor.moveToFirst()) {
             if (cursor.getCount() > 0) {
                 do {
-                    Card card = _defineCardbyCursor(cursor);
+                    Card card = _defineCardbyCursor(cursor, type);
                     datas.add(card);
 
                 } while (cursor.moveToNext());
@@ -905,22 +925,17 @@ public class LearnApiImplements implements LearnApi {
 
 
     public List<Card> _getAllListCard() {
-        String query = "SELECT * FROM " + TABLE_VOCABULARY;
-        List<Card> cardList = _getListCardQueryString(query);
+        String query = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY;
+        List<Card> cardList = _getListCardQueryString(query, 0);
         return cardList;
     }
 
     public List<Card> _getListCardLearned() {
-        String query = "SELECT * FROM " + TABLE_VOCABULARY + " where queue >= 1";
-        List<Card> cardList = _getListCardQueryString(query);
+        String query = "SELECT "+selectList+" FROM " + TABLE_VOCABULARY + " where queue >= 1";
+        List<Card> cardList = _getListCardQueryString(query, 1);
         return cardList;
     }
 
-    public List<Card> _getListCardNoLearne() {
-        String query = "SELECT * FROM " + TABLE_VOCABULARY + " where queue = 0";
-        List<Card> cardList = _getListCardQueryString(query);
-        return cardList;
-    }
 
 
     @Override
@@ -1137,6 +1152,7 @@ public class LearnApiImplements implements LearnApi {
             db.insert(TABLE_VOCABULARY, null, values);
         }
 
+
         //db.close();
 
     }
@@ -1157,9 +1173,9 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Card> _getListCarDue(int limit) {
-        String select_list_card_by_queue = "SELECT  * FROM " + TABLE_VOCABULARY +
+        String select_list_card_by_queue = "SELECT "+selectFull+" FROM " + TABLE_VOCABULARY +
                 " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
-        return _getListCardQueryString(select_list_card_by_queue);
+        return _getListCardQueryString(select_list_card_by_queue, 0);
     }
 
     public void cleanCache() {
@@ -1245,8 +1261,8 @@ public class LearnApiImplements implements LearnApi {
 
     public boolean _checkUpdateDataBase() {
         boolean update = false;
-        int _dbVesion = 0;
-        int _gdbVesion = 0;
+        int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
+        int _gdbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
 
         //get version in DB
         String db_v = _getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
@@ -1343,4 +1359,5 @@ public class LearnApiImplements implements LearnApi {
             return Integer.valueOf(settingMyLevel);
         }
     }
+
 }

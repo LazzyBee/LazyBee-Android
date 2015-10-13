@@ -47,7 +47,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_logo_green)
                         .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(context.getString(R.string.notificaion_message))
+                        .setContentText(context.getString(R.string.notification_message))
                         .setWhen(alertTime)
                         .setSound(alarmSound);
 

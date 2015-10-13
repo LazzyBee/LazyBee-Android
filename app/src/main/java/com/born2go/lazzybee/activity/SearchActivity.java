@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +63,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         query_text = getIntent().getStringExtra(QUERY_TEXT);
 
         //Search by text
-        _search(query_text);
+        // _search(query_text);
         handleIntent(getIntent());
 
         //Show Home as Up
@@ -95,7 +97,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                     }
                 } catch (Exception e) {
                     Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+                    Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
                 }
 
             }
@@ -114,7 +116,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                     }
                 } catch (Exception e) {
                     Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+                    Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
                 }
 
             }
@@ -144,27 +146,25 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search = (SearchView) menu.findItem(R.id.search).getActionView();
-        search.setQuery(query_text, false);
-        search.setIconified(false);
-        search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                //query_text = String.valueOf(hasFocus);
-//                Toast.makeText(getBaseContext(), String.valueOf(hasFocus),
-//                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        if (query_text.equals("gotoDictionary")) {
+            search.setQuery(LazzyBeeShare.EMPTY, false);
+            search.setIconified(true);
+            _search(query_text);
+        } else {
+            search.setQuery(query_text, false);
+            search.setIconified(false);
+        }
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         //***setOnQueryTextListener***
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                query_text = query_text;
                 Toast.makeText(getBaseContext(), query,
                         Toast.LENGTH_SHORT).show();
                 _search(query);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 return false;
             }
 
@@ -225,6 +225,9 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     private void _search(String query) {
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
+        if (query_text.equals("gotoDictionary")) {
+//
+        }
         try {
             List<Card> cardList = dataBaseHelper._searchCard(query);
 
@@ -248,7 +251,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             }
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
 
 
@@ -380,6 +383,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             _search(query_text);
         }
     }
+
     private void _trackerApplication() {
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;

@@ -1,9 +1,7 @@
 package com.born2go.lazzybee.activity;
 
-import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -11,9 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +43,6 @@ import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
@@ -556,9 +551,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case R.id.action_favorite:
                 _addCardToFavorite();
                 return true;
-            case R.id.action_set_position_meaning:
-                _setPositionMeaning();
-                return true;
             case R.id.action_goto_dictionary:
                 _gotoDictionnary();
                 return true;
@@ -577,34 +569,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 //        startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
-    private void _setPositionMeaning() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-        builder.setTitle(context.getString(R.string.title_change_position_meaning));
-        final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
-        int index = 0;
-        String value = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG);
 
-        if (value != null && value.equals(LazzyBeeShare.DOWN)) {
-            index = 1;
-        }
-
-
-        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                //Update position
-                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, items[item].toString());
-
-                //Reset Display card
-                _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard), 10);
-
-                dialog.cancel();
-            }
-        });
-        // Get the AlertDialog from create()
-        AlertDialog dialog = builder.create();
-
-        dialog.show();
-    }
 
     private void _addCardToFavorite() {
         try {
@@ -1104,7 +1069,13 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     }
 
     private void _addJavascriptInterfaceQuestionAndAnswer() {
+        String sp = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+        float speechRate = 1.0f;
+        if (sp!=null){
+            speechRate=Float.valueOf(sp);
+        }
         //addJavascriptInterface play question
+        final float finalSpeechRate = speechRate;
         mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
             @JavascriptInterface
             public void playQuestion() {
@@ -1112,7 +1083,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 String toSpeak = currentCard.getQuestion();
 
                 //Speak text
-                _speakText(toSpeak);
+                LazzyBeeShare._speakText(toSpeak, finalSpeechRate);
 
                 //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
@@ -1125,7 +1096,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
 
                 //Speak text
-                _speakText(toSpeech);
+                LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
             }
         }, "explain");
         mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
@@ -1136,7 +1107,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
 
                 //Speak text
-                _speakText(toSpeech);
+                LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
             }
         }, "example");
     }
@@ -1279,30 +1250,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     }
 
-
-    /**
-     * Speak text theo version andorid
-     */
-    public void _speakText(String toSpeak) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            _textToSpeechGreater21(toSpeak);
-        } else {
-            _textToSpeechUnder20(toSpeak);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private void _textToSpeechUnder20(String text) {
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, map);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void _textToSpeechGreater21(String text) {
-        String utteranceId = this.hashCode() + "";
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
-    }
 
     @Override
     public void processFinish(Card card) {

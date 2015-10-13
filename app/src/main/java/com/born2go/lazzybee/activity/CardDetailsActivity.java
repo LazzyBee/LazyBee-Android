@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
@@ -438,41 +437,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             return view;
         }
 
-        private void _addJavascriptInterfaceQuestionAndAnswer() {
-            // addJavascriptInterface play question
-            mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
-                @JavascriptInterface
-                public void playQuestion() {
-                    //get text to Speak
-                    String toSpeak = card.getQuestion();
-                    //Speak text
-                    _speakText(toSpeak);
-                }
-            }, "question");
-            mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
-                @JavascriptInterface
-                public void speechExplain() {
-                    //get answer json
-                    String answer = card.getAnswers();
-                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
 
-                    //Speak text
-                    _speakText(toSpeech);
-                }
-            }, "explain");
-            mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
-                @JavascriptInterface
-                public void speechExample() {
-                    //get answer json
-                    String answer = card.getAnswers();
-                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
-
-                    //Speak text
-                    _speakText(toSpeech);
-                }
-            }, "example");
-
-        }
 
         /**
          * Destroy the item from the {@link ViewPager}. In our case this is simply removing the
@@ -486,13 +451,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     }
 
-    public void _speakText(String toSpeak) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            _textToSpeechGreater21(toSpeak);
-        } else {
-            _textToSpeechUnder20(toSpeak);
-        }
-    }
+
 
 
     @SuppressWarnings("deprecation")

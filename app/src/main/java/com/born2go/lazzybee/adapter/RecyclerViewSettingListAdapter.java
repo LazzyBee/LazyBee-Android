@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,11 +15,14 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.activity.CustomStudySettingActivity;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -28,6 +32,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -49,6 +54,7 @@ public class RecyclerViewSettingListAdapter extends
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
     private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
     private static final int TYPE_SETTING_ABOUT = 5;
+    private static final int TYPE_SETTING_NOTIFICATION = 6;
     DataLayer lazzybeeTag;
 
     private RecyclerView mRecyclerViewSettings;
@@ -79,6 +85,8 @@ public class RecyclerViewSettingListAdapter extends
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_speech_rate_slide, parent, false); //Inflating the layout
         } else if (viewType == TYPE_SETTING_ABOUT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_about, parent, false); //Inflating the layout
+        } else if (viewType == TYPE_SETTING_NOTIFICATION) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_set_notification, parent, false); //Inflating the layout
         }
         RecyclerViewSettingListAdapterViewHolder recyclerViewSettingListAdapterViewHolder = new RecyclerViewSettingListAdapterViewHolder(view, viewType);
         return recyclerViewSettingListAdapterViewHolder;
@@ -121,12 +129,14 @@ public class RecyclerViewSettingListAdapter extends
                     changeLanguage(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_about))) {
 
-                } else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
-
-                    lbLimit.setVisibility(View.VISIBLE);
-                    _showDialogChangeSpeechRate(mCardView, lbLimit);
-
-                } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
+                }
+//                else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
+//
+//                    lbLimit.setVisibility(View.VISIBLE);
+//                    _showDialogChangeSpeechRate(mCardView, lbLimit);
+//
+//                }
+                else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                     lbLimit.setVisibility(View.GONE);
                     _resetCache(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_export_database))) {
@@ -135,6 +145,9 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
 
                     _showDialogExecuteQueue(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_custom_study))) {
+
+                    _gotoCustomStudySetting(mCardView);
                 }
 
 
@@ -145,9 +158,10 @@ public class RecyclerViewSettingListAdapter extends
                     getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE);
                 } else if (setting.equals(context.getString(R.string.setting_debug_info))) {
                     getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_DEBUG_INFOR);
-                } else if (setting.equals(context.getString(R.string.setting_notification))) {
-                    getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
                 }
+//                else if (setting.equals(context.getString(R.string.setting_notification))) {
+//                    getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+//                }
             } else if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
                 lbSettingName.setText(setting);
@@ -169,12 +183,183 @@ public class RecyclerViewSettingListAdapter extends
                 }
 
 
+            } else if (holder.viewType == TYPE_SETTING_NOTIFICATION) {
+                RelativeLayout mSetUpNotification = (RelativeLayout) view.findViewById(R.id.mSetUpNotification);
+                //getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+                getSettingNotificationAndUpdateWithSwitch(mCardView, mSetUpNotification);
+            } else if (holder.viewType == TYPE_SETTING_SPEECH_RATE_SLIDE) {
+                SeekBar mSlideSpeechRate = (SeekBar) view.findViewById(R.id.mSlideSpeechRate);
+                _handlerChangeSpeechRate(mSlideSpeechRate);
             }
         } catch (Exception e) {
             Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
 
+    }
+
+    private void _handlerChangeSpeechRate(SeekBar mSlideSpeechRate) {
+        final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
+        String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+        final int index;
+        if (sp == null) {
+            index = 8;
+        } else if (sp.equals(context.getString(R.string.speech_rate_very_slow_value))) {
+            index = 0;
+        } else if (sp.equals(context.getString(R.string.speech_rate_slow_value))) {
+            index = 4;
+        } else if (sp.equals(context.getString(R.string.speech_rate_normal_value))) {
+            index = 8;
+        } else if (sp.equals(context.getString(R.string.speech_rate_fast_value))) {
+            index = 12;
+        } else if (sp.equals(context.getString(R.string.speech_rate_very_fast_value))) {
+            index = 16;
+        } else {
+            index = 8;
+        }
+        mSlideSpeechRate.setMax(16);
+        mSlideSpeechRate.setProgress(index);
+
+//        float speechRate = 1.0f;
+//        if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
+//            speechRate = 0.7f;
+//        } else if (items[item].equals(context.getString(R.string.speech_rate_slow))) {
+//            speechRate = 0.9f;
+//        } else if (items[item].equals(context.getString(R.string.speech_rate_normal))) {
+//            speechRate = 1.0f;
+//        } else if (items[item].equals(context.getString(R.string.speech_rate_fast))) {
+//            speechRate = 1.1f;
+//        } else if (items[item].equals(context.getString(R.string.speech_rate_very_fast))) {
+//            speechRate = 1.3f;
+//        }
+//        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
+
+        mSlideSpeechRate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                progress = progresValue;
+                Log.i(TAG, "onChangeProgress process=" + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.i(TAG, "onStartTrackingTouch process=" + progress);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.i(TAG, "onStopTrackingTouch process=" + progress);
+                float speechRate = 1.0f;
+                if (progress <= 4) {
+                    speechRate = 0.7f;
+                } else if (progress > 0 && progress <= 4) {
+                    speechRate = 0.9f;
+                } else if (progress > 4 && progress <= 8) {
+                    speechRate = 1.0f;
+                } else if (progress > 8 && progress <= 12) {
+                    speechRate = 1.1f;
+                } else if (progress > 12 && progress <= 16) {
+                    speechRate = 1.3f;
+                }
+                LazzyBeeShare._speakText("Test changer speech rate", speechRate);
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
+
+
+            }
+        });
+    }
+
+    private void _gotoCustomStudySetting(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CustomStudySettingActivity.class);
+                context.startActivity(intent);
+
+            }
+        });
+    }
+
+    private void getSettingNotificationAndUpdateWithSwitch(RelativeLayout mCardView, final RelativeLayout mSetUpNotification) {
+        final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
+        final TextView txtTimeNotification = (TextView) mSetUpNotification.findViewById(R.id.txtTimeNotification);
+        String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+        String time = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TIME_NOTIFICATION);
+        if (value == null) {
+            mSwitch.setChecked(false);
+            mSetUpNotification.setVisibility(View.GONE);
+        } else if (value.equals(LazzyBeeShare.ON)) {
+            mSetUpNotification.setVisibility(View.GONE);
+            mSwitch.setChecked(true);
+        } else if (value.equals(LazzyBeeShare.OFF)) {
+            mSetUpNotification.setVisibility(View.GONE);
+            mSwitch.setChecked(false);
+        } else {
+            mSwitch.setChecked(false);
+            mSetUpNotification.setVisibility(View.GONE);
+        }
+        if (time == null) {
+            txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
+        } else {
+            txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
+        }
+
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String value;
+                if (isChecked) {
+                    value = LazzyBeeShare.ON;
+                    mSetUpNotification.setVisibility(View.GONE);
+                } else {
+                    value = LazzyBeeShare.OFF;
+                    mSetUpNotification.setVisibility(View.GONE);
+                }
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
+            }
+        });
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(context, R.string.setting_auto_check_update, Toast.LENGTH_SHORT).show();
+                String value;
+                if (!mSwitch.isChecked()) {
+                    mSwitch.setChecked(true);
+                    value = LazzyBeeShare.ON;
+                    mSetUpNotification.setVisibility(View.GONE);
+                } else {
+                    mSwitch.setChecked(false);
+                    value = LazzyBeeShare.OFF;
+                    mSetUpNotification.setVisibility(View.GONE);
+                }
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
+            }
+        });
+        mSetUpNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                final int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+
+                // Create a new instance of TimePickerDialog and return it
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, view.getCurrentHour() + ":" + view.getCurrentMinute()));
+
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_NOTIFICATION, view.getCurrentHour() + ":" + view.getCurrentMinute());
+                    }
+                }, hour, minute, true);
+                timePickerDialog.setTitle("Select Date");
+                timePickerDialog.show();
+
+            }
+        });
     }
 
     private void _showDialogExecuteQueue(RelativeLayout mCardView) {
@@ -439,10 +624,11 @@ public class RecyclerViewSettingListAdapter extends
                     if (lang.equals(LazzyBeeShare.LANG_VI)) {
                         index = 1;
                         //Log.i(TAG, "lang:" + lang + ",index:" + index);
+                    } else {
+                        index = 0;
                     }
-
                 } else {
-                    //Log.i(TAG, "lang null index:" + index);
+                    index = 1;
                 }
 
 
@@ -550,8 +736,12 @@ public class RecyclerViewSettingListAdapter extends
     @Override
     public int getItemViewType(int position) {
         String setting = settings.get(position);
+
         if (setting.equals(context.getString(R.string.setting_learn_title))
-                || setting.equals(context.getString(R.string.setting_update_title)))
+                || setting.equals(context.getString(R.string.setting_custom_study_title))
+                || setting.equals(context.getString(R.string.setting_update_title))
+                || setting.equals(context.getString(R.string.setting_speech_rate))
+                )
             return TYPE_TITLE;
         else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
@@ -560,13 +750,15 @@ public class RecyclerViewSettingListAdapter extends
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
+                || setting.equals(context.getString(R.string.setting_custom_study))
                 || setting.equals(context.getString(R.string.setting_update_db_form_query))
-                || setting.equals(context.getString(R.string.setting_speech_rate)))
+                )
             return TYPE_SETTING_NAME;
 
-        else if (setting.equals(context.getString(R.string.setting_notification))
-                || setting.equals(context.getString(R.string.setting_auto_check_update))
-                || setting.equals(context.getString(R.string.setting_debug_info)))
+        else if (setting.equals(context.getString(R.string.setting_auto_check_update))
+                || setting.equals(context.getString(R.string.setting_debug_info))
+            //|| setting.equals(context.getString(R.string.setting_notification))
+                )
             return TYPE_SETTING_SWITCH;
 
         else if (setting.equals(context.getString(R.string.setting_today_review_card_limit)))
@@ -577,6 +769,9 @@ public class RecyclerViewSettingListAdapter extends
         else if (setting.equals(context.getString(R.string.setting_about)))
 
             return TYPE_SETTING_ABOUT;
+        else if (setting.equals(context.getString(R.string.setting_notification)))
+
+            return TYPE_SETTING_NOTIFICATION;
         else
             return -1;
     }
@@ -656,11 +851,11 @@ public class RecyclerViewSettingListAdapter extends
     private boolean _checkUpdate() {
         if (learnApiImplements._checkUpdateDataBase()) {
             Log.i(TAG, "Co Update");
-            Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
             _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
             return true;
         } else {
-            Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Khong co Update");
             return false;
         }
@@ -705,7 +900,7 @@ public class RecyclerViewSettingListAdapter extends
     private void _downloadFile() {
         String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
         String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        int version = 0;
+        int version = LazzyBeeShare.DEFAULT_VERSION_DB;
         if (db_v != null) {
             version = Integer.valueOf(db_v);
         }
