@@ -950,27 +950,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Goto Fragment Profile
-     */
-    private void _gotoProfile() {
-        Toast.makeText(this, getString(R.string.action_profile), Toast.LENGTH_SHORT).show();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //intit fragmentProfile
-        FragmentProfile fragmentProfile = new FragmentProfile();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set profile_id
-        String profile_id = "";
-        bundle.putString(FragmentProfile.Profile_ID, profile_id);
-        //setArguments for fragmentProfile
-        fragmentProfile.setArguments(bundle);
-        //replace from container to fragmentProfile
-        fragmentTransaction.replace(R.id.container, fragmentProfile)
-                .addToBackStack(FragmentProfile.TAG).commit();
 
-    }
 
     /**
      * Goto setting

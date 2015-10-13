@@ -359,7 +359,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
             this.context = context;
-            packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en));
+            packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en), context.getString(R.string.dictionary_lazzybee));
         }
 
 
@@ -415,16 +415,22 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             ws.setJavaScriptEnabled(true);
 
             try {
-                String displayHTML;
-                if (position == 1) {
-                    displayHTML = card.getL_en();
-                } else {
-                    displayHTML = card.getL_vn();
+                String displayHTML = LazzyBeeShare.EMPTY;
+                switch (position) {
+                    case 0:
+                        //dic VN
+                        displayHTML = card.getL_vn();
+                        break;
+                    case 1:
+                        //dic ENG
+                        displayHTML = card.getL_en();
+                        break;
+                    case 2:
+                        //dic Lazzybee
+                        displayHTML = LazzyBeeShare.getAnswerHTML(context, card);
+                        break;
                 }
-                if (displayHTML == null)
-                    displayHTML = LazzyBeeShare.EMPTY;
-
-                Log.i(TAG, displayHTML);
+                Log.i(TAG, "Tab Dic:" + displayHTML);
 
                 mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             } catch (Exception e) {
@@ -438,7 +444,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
 
 
-
         /**
          * Destroy the item from the {@link ViewPager}. In our case this is simply removing the
          * {@link View}.
@@ -450,8 +455,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
 
     }
-
-
 
 
     @SuppressWarnings("deprecation")

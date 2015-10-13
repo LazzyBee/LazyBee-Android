@@ -325,8 +325,11 @@
     <string name="message_download_database_fail">Download database fails</string>
     <string name="action_goto_dictionary">Dictionary</string>
     <string name="an_error_occurred">An error occurred</string>
-    <string name="dictionary_vn_en">Vietnames-English</string>
-    <string name="dictionary_en_en">English-English</string>
+
+    <string name="dictionary_vn_en" translatable="false">VN-ENG</string>
+    <string name="dictionary_en_en" translatable="false">Eng-Eng</string>
+    <string name="dictionary_lazzybee" translatable="false">Lazzybee</string>
+
     <string name="setting_set_time_notification">Set Time Notification 8:0</string>
     <string name="title_activity_custom_study_setting">Custom Study</string>
     <string name="setting_custom_study">Custom Study</string>

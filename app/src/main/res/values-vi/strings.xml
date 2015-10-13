@@ -225,10 +225,9 @@
     <string name="position_meaning_up">Up</string>
     <string name="title_change_position_meaning">Thay đổi vị trí ý nghĩa</string>
     <string name="message_download_database_fail">Tải cơ sở dữ liệu không thành công!</string>
-    <string name="action_goto_dictionary">Từ điền</string>
+    <string name="action_goto_dictionary">Từ điển</string>
     <string name="an_error_occurred">Có lỗi xảy ra</string>
-    <string name="dictionary_vn_en">Việt-Anh</string>
-    <string name="dictionary_en_en">Anh-Anh</string>
+
     <string name="setting_set_time_notification">Thời gian thông báo %s</string>
     <string name="setting_custom_study">Thiết lập học</string>
     <string name="setting_custom_study_title">Học</string>

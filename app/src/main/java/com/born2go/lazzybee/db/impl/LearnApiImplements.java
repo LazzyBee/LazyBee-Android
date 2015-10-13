@@ -99,8 +99,8 @@ public class LearnApiImplements implements LearnApi {
 
     public static int CARD_INDEX_GID = 14;
 
-    public static final int CARD_INDEX_L_VN = 15;
-    public static final int CARD_INDEX_L_EN = 16;
+    public static final int CARD_INDEX_L_EN = 15;
+    public static final int CARD_INDEX_L_VN = 16;
 
     public static int CARD_INDEX_TAGS = 17;
     public static int CARD_INDEX_RELATED = 18;
@@ -221,7 +221,7 @@ public class LearnApiImplements implements LearnApi {
             String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
                     + " ORDER BY " + KEY_QUESTION;
             //Seach card
-            List<Card> datas = _getListCardQueryString(likeQuery,1);
+            List<Card> datas = _getListCardQueryString(likeQuery, 1);
             return datas;
         }
     }
@@ -537,7 +537,7 @@ public class LearnApiImplements implements LearnApi {
 
         //TODO query select List Card by status=learned
         String selectListCardByStatus = "SELECT  " + selectFull + " FROM " + TABLE_VOCABULARY + " where status = 1 ";
-        List<Card> datas = _getListCardQueryString(selectQuery,0);
+        List<Card> datas = _getListCardQueryString(selectQuery, 0);
         return datas;
     }
 
@@ -931,11 +931,10 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Card> _getListCardLearned() {
-        String query = "SELECT "+selectList+" FROM " + TABLE_VOCABULARY + " where queue >= 1";
+        String query = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY + " where queue >= 1";
         List<Card> cardList = _getListCardQueryString(query, 1);
         return cardList;
     }
-
 
 
     @Override
@@ -1173,7 +1172,7 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Card> _getListCarDue(int limit) {
-        String select_list_card_by_queue = "SELECT "+selectFull+" FROM " + TABLE_VOCABULARY +
+        String select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY +
                 " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
         return _getListCardQueryString(select_list_card_by_queue, 0);
     }
