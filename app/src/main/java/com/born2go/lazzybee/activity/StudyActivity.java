@@ -199,7 +199,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             sequence.start();
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -254,7 +254,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -341,7 +341,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             }
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -379,7 +379,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 //                    ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE));
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -570,7 +570,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     }
 
 
-
     private void _addCardToFavorite() {
         try {
             int statusFavrite = 0;
@@ -589,7 +588,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             dataBaseHelper._updateCard(currentCard);
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -602,7 +601,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             startActivity(sendIntent);
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -749,7 +748,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             btnBackBeforeCard.setVisible(false);
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
         Log.i(TAG, "------------------END-------------------");
     }
@@ -765,6 +764,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _learntorIgnoreCardbyQueue(int queue) {
         Log.i(TAG, "-------------------_learntorIgnoreCardbyQueue:" + queue + "-------------------");
         try {
+            //Show item BackBeroreCard when answer
+            btnBackBeforeCard.setVisible(false);
+
             if (btnShowAnswer.getVisibility() == View.GONE) {
                 mShowAnswer.setVisibility(View.VISIBLE);
                 btnShowAnswer.setVisibility(View.VISIBLE);
@@ -834,7 +836,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
         Log.i(TAG, "-----------------------END----------------------");
     }
@@ -954,7 +956,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -1063,7 +1065,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             }
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
         Log.i(TAG, "-----------------------END-----------------------------");
     }
@@ -1071,8 +1073,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _addJavascriptInterfaceQuestionAndAnswer() {
         String sp = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
         float speechRate = 1.0f;
-        if (sp!=null){
-            speechRate=Float.valueOf(sp);
+        if (sp != null) {
+            speechRate = Float.valueOf(sp);
         }
         //addJavascriptInterface play question
         final float finalSpeechRate = speechRate;
@@ -1284,7 +1286,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             }
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
