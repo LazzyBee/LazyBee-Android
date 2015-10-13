@@ -11,14 +11,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="add_course">Add Course</string>
+    <string name="add_course">Add course</string>
     <string name="action_profile">Profile</string>
     <string name="action_logout">Logout</string>
     <string name="action_search">Search</string>
 
     <string name="not_found">Not found</string>
     <string name="review">Review</string>
-    <string name="custom_study">Custom Study</string>
+    <string name="custom_study">Custom study</string>
     <string name="result">Result</string>
     <string name="title_activity_study">Study</string>
 
@@ -40,7 +40,7 @@
     <string name="congratulations">Congratulations!</string>
     <string name="suport_complete_card" translatable="false">Touch LEARN MORE</string>
 
-    <string name="action_learnt">Learnt card</string>
+    <string name="action_learnt">Card learned</string>
     <string name="action_ignore">Ignore card</string>
 
 
@@ -69,15 +69,15 @@
     <string name="dialog_title_add_to_learn">Add card to learn</string>
 
 
-    <string name="notificaion">Notificaion</string>
+    <string name="notification">Notification</string>
     <string name="language">Language</string>
     <string name="add_to" />
     <string name="queue" translatable="false">queue</string>
 
     <!--Dialog Done card-->
     <string name="dialog_title_delete_card">Delete card</string>
-    <string name="dialog_message_delete_card">Are you sure to delete card %s!</string>
-    <string name="message_learnt_card_sucessful">Learnt card successful!</string>
+    <string name="dialog_message_delete_card">Are you sure to delete card: %s!</string>
+    <string name="message_learnt_card_sucessful">Card changes to learned</string>
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
@@ -100,7 +100,7 @@
     <string name="fb_app_id" translatable="false">386540048195283</string>
 
 
-    <string name="action_check_update_database">Check Update</string>
+    <string name="action_check_update_database">Check update</string>
 
     <!--Dialog update-->
     <string name="dialog_update">Update</string>
@@ -150,7 +150,7 @@
     <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
     <string name="under_construction">Under construction</string>
 
-    <string name="notificaion_title">%1$s %2$s</string>
+    <string name="notification_title">%1$s %2$s</string>
     <string name="message_hellp_study">Tip/help panel(under construction)</string>
     <string name="setting_speech_rate">Speech Rate</string>
     <string name="setting_speech_rate_slider" translatable="false">SpeechSlider</string>
@@ -182,13 +182,13 @@
     <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
     <string name="gtag_container_load_error" translatable="false">Failed to load container</string>
 
-    <string name="notificaion_message">Study word english now!</string>
+    <string name="notification_message">Build English vocabulary now!</string>
     <string name="local_service_started" translatable="false">no</string>
 
     <string name="setting_reset_to_default">Reset to default</string>
 
     <string name="dialog_title_reset_custom_study">Reset to default custom study</string>
-    <string name="dialog_message_reset_custom_study">You are reset default custom study?</string>
+    <string name="dialog_message_reset_custom_study">You are reset to default custom study?</string>
 
     <string name="setting_export_database">Export database</string>
     <string name="dialog_title_export_database">Export database</string>
@@ -277,12 +277,12 @@
     <string name="action_not_favorite" translatable="false">No favorite</string>
     <string name="action_share">Share</string>
 
-    <string name="message_update_card_successful" >Update card successful!</string>
+    <string name="message_update_card_successful" >Update card successfully!</string>
     <string name="message_update_card_fails" >Update card fails!</string>
 
     <string name="message_no_new_card">No new card</string>
 
-    <string name="mesage_update_database_successful">Update database successful!</string>
+    <string name="mesage_update_database_successful">Update database successfully!</string>
     <string name="mesage_update_database_fails">Update database fails!</string>
     <string name="message_add_favorite_card_done">Add %s to Favorite</string>
 
@@ -308,8 +308,8 @@
     <string name="setting_message_default">Default</string>
     <string name="dialog_title_change_my_level">Change my level</string>
 
-    <string name="message_custom_setting_successful">Custom setting successful</string>
-    <string name="message_ignore_card_sucessful">Ignore card sucessful</string>
+    <string name="message_custom_setting_successful">Change setting successfully</string>
+    <string name="message_ignore_card_sucessful">Ignore card successfully</string>
     <string name="setting_position_meaning">Position Meaning</string>
     <string name="position_meaning_up">Up</string>
     <string name="position_meaning_down">Down</string>
