@@ -45,15 +45,15 @@
     <string name="new_card">Mới</string>
 
     <string name="action_add_to_learn">Thêm thẻ vào khóa học</string>
-    <string name="dialog_message_add_to_learn">Bạn có muốn thêm thẻ <b>%s</b> vào khóa học</string>
+    <string name="dialog_message_add_to_learn">Bạn có muốn thêm thẻ <b>%s</b> vào khóa học </string>
     <string name="dialog_title_add_to_learn">Thêm thẻ vào khóa học</string>
 
-    <string name="notificaion">Thông báo</string>
+    <string name="notification">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
     <string name="add_to">Thêm vào</string>
 
     <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
-    <string name="message_learnt_card_sucessful">Bỏ qua thành công!</string>
+    <string name="message_learnt_card_sucessful">Đã học xong thẻ!</string>
 
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
@@ -97,7 +97,7 @@
 
     <string name="message_hellp_study" >Bảng trợ giúp (Đang xây dựng)</string>
 
-    <string name="notificaion_title">%1$s %2$s</string>
+    <string name="notification_title">%1$s %2$s</string>
     <string name="setting_speech_rate">Tốc độ đọc</string>
     <string name="action_change_speech_rate">Tốc độ đọc</string>
 
@@ -109,7 +109,7 @@
 
     <string name="dialog_title_change_speech_rate">Thay đổi tốc độ đọc</string>
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
-    <string name="notificaion_message">Học từ tiếng anh nào!</string>
+    <string name="notification_message">Học từ vựng tiếng Anh nào!</string>
 
 
     <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
