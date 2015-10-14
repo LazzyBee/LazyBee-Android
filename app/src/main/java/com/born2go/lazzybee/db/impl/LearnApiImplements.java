@@ -1153,6 +1153,7 @@ public class LearnApiImplements implements LearnApi {
                 new String[]{card.getQuestion()});
         Log.i(TAG, "_insertOrUpdateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         if (update_result == 0) {
+            values.put(KEY_QUESTION, card.getQuestion());
             db.insert(TABLE_VOCABULARY, null, values);
         }
 
