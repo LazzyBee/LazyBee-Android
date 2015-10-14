@@ -46,7 +46,7 @@ public class MyAlarmService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_drawer)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notificaion_message)).setAutoCancel(true);
+                .setContentText(getString(R.string.notification_message)).setAutoCancel(true);
 
         PendingIntent pendingNotificationIntent = PendingIntent.getActivity
                 (this.getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);

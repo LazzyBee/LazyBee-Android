@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
-    TextView txtSearch;
+    private static final Object GA_SCREEN = "aSearchScreen";
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
     LearnApiImplements dataBaseHelper;
@@ -52,61 +55,83 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         setContentView(R.layout.activity_search);
         context = this;
 
-        //init DB SQLIte
-        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
+        _initLazzyBeeSingleton();
 
-        connectGdatabase = LazzyBeeSingleton.connectGdatabase;
+        _initRecyclerViewSearchResults();
 
+        //get query text in Intent
         query_text = getIntent().getStringExtra(QUERY_TEXT);
 
+        //Search by text
+        // _search(query_text);
+        handleIntent(getIntent());
+
+        //Show Home as Up
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        _trackerApplication();
+
+    }
+
+    private void _initRecyclerViewSearchResults() {
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
         lbResultCount = (TextView) findViewById(R.id.lbResultCount);
+
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(this, mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-                //Cast tag lbQuestion to CardId
-                Card card = (Card) lbQuestion.getTag();
-                if (card.getId() > 0) {
-                    String cardID = String.valueOf(card.getId());
-                    _gotoCardDetail(cardID);
-                } else {
-                    Log.w(TAG, "card.getId()==0");
+                try {
+                    //Cast tag lbQuestion to CardId
+                    Card card = (Card) lbQuestion.getTag();
+                    if (card.getId() > 0) {
+                        String cardID = String.valueOf(card.getId());
+                        _gotoCardDetail(cardID);
+                    } else {
+                        Log.w(TAG, "card.getId()==0");
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
                 }
 
             }
 
             @Override
             public void onItemLongPress(View view, int position) {
-                Log.i(TAG, "Long Press");
                 TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-                //Cast tag lbQuestion to CardId
-                Card card = (Card) lbQuestion.getTag();
-                String cardID = String.valueOf(card.getId());
-                if (card.getId() > 0) {
-                    _optionList(card);
-                } else {
-                    Log.w(TAG, "card.getId()==0");
+                try {
+                    //Cast tag lbQuestion to CardId
+                    Card card = (Card) lbQuestion.getTag();
+                    String cardID = String.valueOf(card.getId());
+                    if (card.getId() > 0) {
+                        _optionList(card);
+                    } else {
+                        Log.w(TAG, "card.getId()==0");
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
                 }
 
             }
         });
-        _search(query_text);
-        handleIntent(getIntent());
-
         //Set data and add Touch Listener
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
 
         mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
+    }
 
-        //Show Home as Up
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    private void _initLazzyBeeSingleton() {
+        //init DB SQLIte
+        dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
 
+        connectGdatabase = LazzyBeeSingleton.connectGdatabase;
     }
 
 
@@ -121,27 +146,25 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search = (SearchView) menu.findItem(R.id.search).getActionView();
-        search.setQuery(query_text, false);
-        search.setIconified(false);
-        search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                //query_text = String.valueOf(hasFocus);
-//                Toast.makeText(getBaseContext(), String.valueOf(hasFocus),
-//                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        if (query_text.equals("gotoDictionary")) {
+            search.setQuery(LazzyBeeShare.EMPTY, false);
+            search.setIconified(true);
+            _search(query_text);
+        } else {
+            search.setQuery(query_text, false);
+            search.setIconified(false);
+        }
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         //***setOnQueryTextListener***
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                query_text = query_text;
                 Toast.makeText(getBaseContext(), query,
                         Toast.LENGTH_SHORT).show();
                 _search(query);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 return false;
             }
 
@@ -202,25 +225,33 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
     private void _search(String query) {
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
-        List<Card> cardList = dataBaseHelper._searchCard(query);
+        if (query_text.equals("gotoDictionary")) {
+//
+        }
+        try {
+            List<Card> cardList = dataBaseHelper._searchCard(query);
 
-        int result_count = cardList.size();
-        Log.i(TAG, "Search result_count:" + result_count);
+            int result_count = cardList.size();
+            Log.i(TAG, "Search result_count:" + result_count);
 
-        //set count
-        lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+            //set count
+            lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
 
-        if (result_count > 0) {
-            //Init Adapter
-            setAdapterListCard(cardList);
-        } else if (result_count == 0) {//Check result_count==0 search in server
-            //Define Card
-            Card card = new Card();
-            card.setQuestion(query);
-            //Call Search in server
-            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-            getCardFormServerByQuestion.execute(card);
-            getCardFormServerByQuestion.delegate = this;
+            if (result_count > 0) {
+                //Init Adapter
+                setAdapterListCard(cardList);
+            } else if (result_count == 0) {//Check result_count==0 search in server
+                //Define Card
+                Card card = new Card();
+                card.setQuestion(query);
+                //Call Search in server
+                GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                getCardFormServerByQuestion.execute(card);
+                getCardFormServerByQuestion.delegate = this;
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
 
 
@@ -272,7 +303,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         });
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // TODO:Update Queue_list in system table
+                //Update Queue_list in system table
                 card.setQueue(Card.QUEUE_DONE_2);
                 dataBaseHelper._updateCard(card);
                 String action = getString(R.string.done_card);
@@ -302,7 +333,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         });
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // TODO:Update Queue_list in system table
+                //Update Queue_list in system table
                 dataBaseHelper._addCardIdToQueueList(card);
                 Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                 ADD_TO_LEARN = 1;
@@ -350,6 +381,16 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             //Reload data
             Log.i(TAG, QUERY_TEXT + ":" + query_text);
             _search(query_text);
+        }
+    }
+
+    private void _trackerApplication() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 }

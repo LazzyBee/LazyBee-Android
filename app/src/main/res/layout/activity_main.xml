@@ -42,7 +42,8 @@
                 android:layout_marginBottom="@dimen/main_top_bottom_magin_view"
                 android:background="#AEB404"
                 app:cardBackgroundColor="#AEB404"
-                android:onClick="onlbTipHelpClick">
+                android:onClick="onlbTipHelpClick"
+                android:visibility="gone">
             <!--<RelativeLayout-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="45dp"-->
@@ -387,7 +388,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="@dimen/main_top_bottom_magin_view"
-                android:nestedScrollingEnabled="false">
+                android:nestedScrollingEnabled="false"
+                android:visibility="invisible">
 
                 <RelativeLayout
                     android:id="@+id/mCustomLearn"

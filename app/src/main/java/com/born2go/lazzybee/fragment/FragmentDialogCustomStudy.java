@@ -27,6 +27,10 @@ public class FragmentDialogCustomStudy extends DialogFragment {
     Context context;
     LearnApiImplements learnApiImplements;
 
+    RecyclerView mRecyclerViewCustomStudy;
+    List<String> settings;
+    DialogCustomStudyInferface studyInferface;
+
     public FragmentDialogCustomStudy() {
         // Required empty public constructor
     }
@@ -39,11 +43,8 @@ public class FragmentDialogCustomStudy extends DialogFragment {
 
     public interface DialogCustomStudyInferface {
         void _finishCustomStudy();
-    }
 
-    RecyclerView mRecyclerViewCustomStudy;
-    DialogCustomStudyInferface studyInferface;
-    List<String> settings;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +68,7 @@ public class FragmentDialogCustomStudy extends DialogFragment {
     }
 
     public void setCustomStudyAdapter() {
-        RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, getDialog(), studyInferface);
+        RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, mRecyclerViewCustomStudy);
         mRecyclerViewCustomStudy.setAdapter(recyclerViewCustomStudyAdapter);
 
     }
@@ -75,7 +76,10 @@ public class FragmentDialogCustomStudy extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        studyInferface = (DialogCustomStudyInferface) activity;
+        try {
+            studyInferface = (DialogCustomStudyInferface) activity;
+        } catch (Exception e) {
+        }
 
     }
 }

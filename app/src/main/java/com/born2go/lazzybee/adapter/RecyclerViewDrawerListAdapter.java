@@ -2,11 +2,13 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -64,45 +66,50 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public void onBindViewHolder(RecyclerViewDrawerListAdapterViewHolder holder, int position) {
+        try {
 
-        View view = holder.view;
-        if (holder.viewType == TYPE_COURSE) {
-            TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
-            TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
-            lbNameCourse.setText(String.valueOf(objectList.get(position)));
-            if (objectList.get(position).equals("English Word")) {
-                lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
-                int allCount = learnApiImplements._getCountAllListCard();
 
+            View view = holder.view;
+            if (holder.viewType == TYPE_COURSE) {
+                TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
+                TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
-                lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+                if (objectList.get(position).equals("English Word")) {
+                    lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+                    int allCount = learnApiImplements._getCountAllListCard();
 
-                lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
-            } else if (objectList.get(position).equals(context.getString(R.string.drawer_dictionary))) {
-                lbCount.setVisibility(View.GONE);
-            }
+                    lbNameCourse.setText(String.valueOf(objectList.get(position)));
+                    lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
+
+                    lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
+                } else if (objectList.get(position).equals(context.getString(R.string.drawer_dictionary))) {
+                    lbCount.setVisibility(View.GONE);
+                }
 
 
-        } else if (holder.viewType == TYPE_ADD_COURCE) {
+            } else if (holder.viewType == TYPE_ADD_COURCE) {
 
-        } else if (holder.viewType == TYPE_USER) {
+            } else if (holder.viewType == TYPE_USER) {
 
-        } else if (holder.viewType == TYPE_TITLE_COURSE) {
-            TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
-            lbDrawerName.setText(context.getString(R.string.my_course));
-            lbDrawerName.setTextSize(15f);
-            lbDrawerName.setTextColor(context.getResources().getColor(R.color.grey_300));
-        } else if (holder.viewType == TYPE_SETTING) {
+            } else if (holder.viewType == TYPE_TITLE_COURSE) {
+                TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
+                lbDrawerName.setText(context.getString(R.string.my_course));
+                lbDrawerName.setTextSize(15f);
+                lbDrawerName.setTextColor(context.getResources().getColor(R.color.grey_300));
+            } else if (holder.viewType == TYPE_SETTING) {
 //            TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
 //            lbDrawerName.setText(context.getString(R.string.action_settings));
-        } else if (holder.viewType == TYPE_ABOUT) {
-            ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
-            mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
-            TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
-            lbDrawerName.setText(context.getString(R.string.setting_about));
+            } else if (holder.viewType == TYPE_ABOUT) {
+                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
+                TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
+                lbDrawerName.setText(context.getString(R.string.setting_about));
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
         }
-
-
     }
 
     @Override

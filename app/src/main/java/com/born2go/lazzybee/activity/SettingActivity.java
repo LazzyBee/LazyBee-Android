@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewSettingListAdapter;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.List;
 public class SettingActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingActivity";
+    private static final Object GA_SCREEN = "aSettingScreen";
 
     Context context;
     RecyclerView mRecyclerViewSettings;
@@ -27,6 +32,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         this.context = this;
         initSettingView();
+        _trackerApplication();
     }
 
     private void initSettingView() {
@@ -51,7 +57,7 @@ public class SettingActivity extends AppCompatActivity {
         final List<String> settings = Arrays.asList(context.getResources().getStringArray(R.array.settings));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
-        RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(mRecyclerViewSettings.getContext(), settings,mRecyclerViewSettings);
+        RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(mRecyclerViewSettings.getContext(), settings, mRecyclerViewSettings);
 
         mRecyclerViewSettings.setLayoutManager(gridLayoutManager);
         mRecyclerViewSettings.setAdapter(recyclerViewSettingListAdapter);
@@ -91,5 +97,15 @@ public class SettingActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    private void _trackerApplication() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 }

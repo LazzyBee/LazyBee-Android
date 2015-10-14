@@ -202,17 +202,18 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_today_new_card_limit</item>-->
         <!--<item>@string/setting_today_review_card_limit</item>-->
+        <!--<item>@string/setting_custom_study_title</item>-->
+        <item>@string/setting_custom_study</item>
+        <!--<item>@string/setting_speech_rate</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_speech_rate</item>
-        <!--<item>@string/setting_speech_rate_slider</item>-->
-        <item>@string/setting_lines</item>
-
         <item>@string/setting_update_title</item>
         <item>@string/setting_check_update</item>
-        <item>@string/setting_auto_check_update</item>
+        <!--<item>@string/setting_auto_check_update</item>-->
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
@@ -220,8 +221,8 @@
 
         <item>@string/setting_debug_info</item>
         <item>@string/setting_reset_cache</item>
-        <item>@string/setting_export_database</item>
-        <item>@string/setting_update_db_form_query</item>
+        <!--<item>@string/setting_export_database</item>-->
+        <!--<item>@string/setting_update_db_form_query</item>-->
         <item>@string/setting_lines</item>
 
         <item>@string/setting_about</item>
@@ -229,12 +230,18 @@
     </string-array>
 
     <string-array name="custom_study">
-        <item>@string/custom_study</item>
-        <item>@string/setting_lines</item>
+        <!--<item>@string/custom_study</item>
+        <item>@string/setting_lines</item>-->
         <item>@string/setting_my_level</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_today_new_card_limit</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_max_learn_more_per_day</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_position_meaning</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_reset_to_default</item>
     </string-array>
 
@@ -277,8 +284,9 @@
     <string name="action_not_favorite" translatable="false">No favorite</string>
     <string name="action_share">Share</string>
 
-    <string name="message_update_card_successful" >Update card successfully!</string>
-    <string name="message_update_card_fails" >Update card fails!</string>
+
+    <string name="message_update_card_successful">Update card successful!</string>
+    <string name="message_update_card_fails">Update card fails!</string>
 
     <string name="message_no_new_card">No new card</string>
 
@@ -316,6 +324,18 @@
     <string name="title_change_position_meaning">Change Posiiton meaning</string>
     <string name="message_download_database_fail">Download database fails</string>
     <string name="action_goto_dictionary">Dictionary</string>
+    <string name="an_error_occurred">An error occurred</string>
+
+    <string name="dictionary_vn_en" translatable="false">VN-EN</string>
+    <string name="dictionary_en_en" translatable="false">EN-EN</string>
+    <string name="dictionary_lazzybee" translatable="false">LazzyBee</string>
+
+    <string name="setting_set_time_notification">Set Time Notification 8:0</string>
+    <string name="title_activity_custom_study_setting">Custom Study</string>
+    <string name="setting_custom_study">Custom Study</string>
+    <string name="setting_custom_study_title">Study</string>
+    <string name="prefs_first_time">FirstTime</string>
+    <string name="english_word" translatable="false">10000 EngLish Word</string>
 
 
 </resources>

@@ -45,7 +45,6 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
-import com.born2go.lazzybee.fragment.FragmentProfile;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     private static final int REQUEST_PICK_ACCOUNT = 120;
+    private static final Object GA_SCREEN = "aMainScreen";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity
     private LearnApiImplements dataBaseHelper;
     private Context context = this;
 
-
     boolean appPause = false;
-
 
     private boolean mSignInClicked;
 
@@ -145,9 +143,6 @@ public class MainActivity extends AppCompatActivity
 
     FrameLayout container;
 
-    DataLayer lazzybeeTag;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,78 +161,83 @@ public class MainActivity extends AppCompatActivity
         //Check complete Learn
         complete = _checkCompleteLearn();
 
-        _initGoogleApiClient();
-
         _initInterstitialAd();
 
         _initShowcaseLazzyBee();
+
+        _trackerApplication();
 
 
     }
 
     private void _initShowcaseLazzyBee() {
-        String SHOWCASE_ID = getString(R.string.SHOWCASE_MAIN_ID);
-        // sequence example
-        ShowcaseConfig config = new ShowcaseConfig();
+        try {
+            String SHOWCASE_ID = getString(R.string.SHOWCASE_MAIN_ID);
+            // sequence example
+            ShowcaseConfig config = new ShowcaseConfig();
 
-        config.setDelay(500); // half second between each showcase view
+            config.setDelay(500); // half second between each showcase view
 
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-        sequence.setConfig(config);
-        if (mCardViewStudy.getVisibility() != View.GONE) {
-            MaterialShowcaseView showcaseStartActivity = new MaterialShowcaseView.Builder(this)
-                    .setTarget(lbStudy)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_start_study))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            sequence.addSequenceItem(showcaseStartActivity);
-        }
-        if (mDue.getVisibility() != View.GONE) {
-            MaterialShowcaseView showcase_my_due = new MaterialShowcaseView.Builder(this)
-                    .setTarget(lbDueToday)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_my_due))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            sequence.addSequenceItem(showcase_my_due);
-        }
-        if (mCardViewReView.getVisibility() != View.GONE) {
-            MaterialShowcaseView showcase_gotoReview = new MaterialShowcaseView.Builder(this)
-                    .setTarget(mCardViewReView)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_gotoReview))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            sequence.addSequenceItem(showcase_gotoReview);
-        }
+            MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+            sequence.setConfig(config);
+            if (mCardViewStudy.getVisibility() != View.GONE) {
+                MaterialShowcaseView showcaseStartActivity = new MaterialShowcaseView.Builder(this)
+                        .setTarget(lbStudy)
+                        .setDismissText(getString(R.string.showcase_message_got_it))
+                        .setContentText(getString(R.string.showcase_message_start_study))
+                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDismissOnTouch(true)
+                        .build();
+                sequence.addSequenceItem(showcaseStartActivity);
+            }
+            if (mDue.getVisibility() != View.GONE) {
+                MaterialShowcaseView showcase_my_due = new MaterialShowcaseView.Builder(this)
+                        .setTarget(lbDueToday)
+                        .setDismissText(getString(R.string.showcase_message_got_it))
+                        .setContentText(getString(R.string.showcase_message_my_due))
+                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDismissOnTouch(true)
+                        .build();
+                sequence.addSequenceItem(showcase_my_due);
+            }
+            if (mCardViewReView.getVisibility() != View.GONE) {
+                MaterialShowcaseView showcase_gotoReview = new MaterialShowcaseView.Builder(this)
+                        .setTarget(mCardViewReView)
+                        .setDismissText(getString(R.string.showcase_message_got_it))
+                        .setContentText(getString(R.string.showcase_message_gotoReview))
+                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDismissOnTouch(true)
+                        .build();
+                sequence.addSequenceItem(showcase_gotoReview);
+            }
 
 
-        if (mCardViewLearnMore.getVisibility() != View.GONE) {
-            MaterialShowcaseView showcase_learn_more = new MaterialShowcaseView.Builder(this)
-                    .setTarget(mCardViewLearnMore)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_learn_more))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            sequence.addSequenceItem(showcase_learn_more);
-        }
-        if (mCardViewCustomStudy.getVisibility() != View.GONE) {
-            MaterialShowcaseView showcase_custom_study = new MaterialShowcaseView.Builder(this)
-                    .setTarget(lbCustomStudy)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_custom_study))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
+            if (mCardViewLearnMore.getVisibility() != View.GONE) {
+                MaterialShowcaseView showcase_learn_more = new MaterialShowcaseView.Builder(this)
+                        .setTarget(mCardViewLearnMore)
+                        .setDismissText(getString(R.string.showcase_message_got_it))
+                        .setContentText(getString(R.string.showcase_message_learn_more))
+                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDismissOnTouch(true)
+                        .build();
+                sequence.addSequenceItem(showcase_learn_more);
+            }
+            if (mCardViewCustomStudy.getVisibility() != View.GONE) {
+                MaterialShowcaseView showcase_custom_study = new MaterialShowcaseView.Builder(this)
+                        .setTarget(lbCustomStudy)
+                        .setDismissText(getString(R.string.showcase_message_got_it))
+                        .setContentText(getString(R.string.showcase_message_custom_study))
+                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDismissOnTouch(true)
+                        .build();
 
-            sequence.addSequenceItem(showcase_custom_study);
+                sequence.addSequenceItem(showcase_custom_study);
+            }
+            sequence.start();
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
-        sequence.start();
     }
 
     private void _initInterstitialAd() {
@@ -268,69 +268,59 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void _initGoogleApiClient() {
-        // Initializing google plus api client
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this).addApi(Plus.API, Plus.PlusOptions.builder().build())
-//                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
-        // Build GoogleApiClient with access to basic profile
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(Plus.API)
-//                .addScope(new Scope(Scopes.PROFILE))
-//                .build();
-    }
 
     private void _setUpNotification() {
         Log.i(TAG, "---------setUpNotification-------");
-        //Check currentTime
-        Calendar currentCalendar = Calendar.getInstance();
-        int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
+        try {
+            //Check currentTime
+            Calendar currentCalendar = Calendar.getInstance();
+            int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
 
-        //Define clone hours
-        List<Integer> cloneHours = new ArrayList<Integer>();
+            //Define clone hours
+            List<Integer> cloneHours = new ArrayList<Integer>();
 
 //        Remove
-        Log.i(TAG, "setUpNotification currentHour:" + currentHour);
-        Log.i(TAG, "setUpNotification hours:" + hours.toString());
-        for (int i = 0; i < hours.size(); i++) {
-            int hour = hours.get(i);
-            if (!(currentHour >= hour)) {
-                cloneHours.add(hour);
+            Log.i(TAG, "setUpNotification currentHour:" + currentHour);
+            Log.i(TAG, "setUpNotification hours:" + hours.toString());
+            for (int i = 0; i < hours.size(); i++) {
+                int hour = hours.get(i);
+                if (!(currentHour >= hour)) {
+                    cloneHours.add(hour);
+                }
+
             }
 
+            Log.i(TAG, "setUpNotification cloneHours:" + cloneHours.toString());
+            //Define count
+            //int count = cloneHours.size();
+
+//        if (count >= 1) {
+//            //Set notification by hours
+//            for (int i = 0; i < 1; i++) {
+            // Define a time
+            Calendar calendar = Calendar.getInstance();
+            //calendar.add(Calendar.DATE, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, cloneHours.get(0));
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+
+            //
+            Long alertTime = calendar.getTimeInMillis();
+            //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Alert " + 0 + ",time:" + alertTime);
+
+            //set notificaion by time
+            scheduleNotification(0, alertTime);
+//            }
+//        } else {
+//            Log.i(TAG, "Qua gio set  Notification");
+//            //Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
+//        }
+
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
-
-        Log.i(TAG, "setUpNotification cloneHours:" + cloneHours.toString());
-        //Define count
-        int count = cloneHours.size();
-
-        if (count >= 1) {
-            //Set notification by hours
-            for (int i = 0; i < cloneHours.size(); i++) {
-                // Define a time
-                Calendar calendar = Calendar.getInstance();
-                //calendar.add(Calendar.DATE, 1);
-                calendar.set(Calendar.HOUR_OF_DAY, cloneHours.get(i));
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-
-                //
-                Long alertTime = calendar.getTimeInMillis();
-                //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "Alert " + i + ",time:" + alertTime);
-
-                //set notificaion by time
-                scheduleNotification(i, alertTime);
-            }
-        } else {
-            Log.i(TAG, "Qua gio set  Notification");
-            //Toast.makeText(context, "Qua gio set  Notification", Toast.LENGTH_SHORT).show();
-        }
-
-
         Log.i(TAG, "---------END-------");
     }
 
@@ -383,98 +373,102 @@ public class MainActivity extends AppCompatActivity
 
 
     private int _checkCompleteLearn() {
-        String value = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000));
-        String totalLearnCard = dataBaseHelper._getValueFromSystemByKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
+        int complete = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000));
+        try {
+            int check = dataBaseHelper._checkListTodayExit();
+            int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
 
-        int complete = 0;
-        int check = dataBaseHelper._checkListTodayExit();
-        int total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+            if (total == 0)
+                total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
 
-        if (totalLearnCard != null)
-            total = Integer.valueOf(totalLearnCard);
+            int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
+            int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
 
-        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
-        int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+            Log.i(TAG, "_checkCompleteLearn:\t complete code:" + complete);
+            Log.i(TAG, "_checkCompleteLearn:\t check code:" + check);
+            int visibility = getResources().getInteger(R.integer.visibility_state_study0);
+            //complete=0 chua hoc xong
+            //complete>0
+            if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+                //check > 0 hoc xong rui nhung van con card
+                //check = 0 hoc het card rui
+                //check < 0 chua hoc xong
 
-        if (value != null) {
-            complete = Integer.valueOf(value);
-        }
-        Log.i(TAG, "_checkCompleteLearn:\t complete code:" + complete);
-        Log.i(TAG, "_checkCompleteLearn:\t check code:" + check);
-        int visibility = getResources().getInteger(R.integer.visibility_state_study0);
-        //complete=0 chua hoc xong
-        //complete>0
-        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            //check > 0 hoc xong rui nhung van con card
-            //check = 0 hoc het card rui
-            //check < 0 chua hoc xong
-
-            //state0 chua hoc song
-            //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
-            //state2 hoc xong het rui
-            if (check == -1) {
-                //ngay moi rui
-                Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
-                visibility = getResources().getInteger(R.integer.visibility_state_study0);
-            } else {
-                check = check + countDue + countAgain;
-                Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
-                if (check > 0) {
-                    //inday finish Lession van cho hoc tiep
-                    visibility = getResources().getInteger(R.integer.visibility_state_study1);
-                    Log.i(TAG, "_checkCompleteLearn:\t hoc xong rui nhung van con card");
-                } else if (check == 0) {
-                    //hoc het card rui
-                    Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui 1");
-                    visibility = getResources().getInteger(R.integer.visibility_state_study2);
-                } else {
-                    //chua hoc xong
+                //state0 chua hoc song
+                //state1 hoc xon mot luot va van con tu de hoc(trong ngay)
+                //state2 hoc xong het rui
+                if (check == -1) {
+                    //ngay moi rui
                     Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
                     visibility = getResources().getInteger(R.integer.visibility_state_study0);
+                } else {
+                    check = check + countDue + countAgain;
+                    Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
+                    if (check > 0) {
+                        //inday finish Lession van cho hoc tiep
+                        visibility = getResources().getInteger(R.integer.visibility_state_study1);
+                        Log.i(TAG, "_checkCompleteLearn:\t hoc xong rui nhung van con card");
+                    } else if (check == 0) {
+                        //hoc het card rui
+                        Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui 1");
+                        visibility = getResources().getInteger(R.integer.visibility_state_study2);
+                    } else {
+                        //chua hoc xong
+                        Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong");
+                        visibility = getResources().getInteger(R.integer.visibility_state_study0);
+                    }
                 }
+            } else if (complete == 0) {
+                //chua hoc xong
+                Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong 2");
+                visibility = getResources().getInteger(R.integer.visibility_state_study0);
             }
-        } else if (complete == 0) {
-            //chua hoc xong
-            Log.i(TAG, "_checkCompleteLearn:\t chua hoc xong 2");
-            visibility = getResources().getInteger(R.integer.visibility_state_study0);
-        }
 //        else {
 //            //hoc het card rui
 //            Log.i(TAG, "_checkCompleteLearn:\t hoc het card rui 2");
 //            visibility = getResources().getInteger(R.integer.visibility_state_study2);
 //        }
-        _visibilityCount(visibility);
+            _visibilityCount(visibility);
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
         return complete;
     }
 
     private void _cancelNotification() {
         notificationManager.cancelAll();
-        for (int i = 0; i < hours.size(); i++) {
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.cancel(pendingIntent);
-        }
+//        for (int i = 0; i < hours.size(); i++) {
+//        }
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void _getCountCard() {
         Log.i(TAG, "--------------------------_getCountCard()------------------------------");
+        try {
+            String dueToday = dataBaseHelper._getStringDueToday();
+            int allCount = dataBaseHelper._getCountAllListCard();
+            int learnCount = dataBaseHelper._getCountListCardLearned();
+            countCardNoLearn = allCount - learnCount;
 
-        String dueToday = dataBaseHelper._getStringDueToday();
-        int allCount = dataBaseHelper._getCountAllListCard();
-        int learnCount = dataBaseHelper._getCountListCardLearned();
-        countCardNoLearn = allCount - learnCount;
+            if (dueToday != null) {
+                lbDueToday.setText(Html.fromHtml(dueToday));
+            }
+            String reviewText = "<font color=" + context.getResources().getColor(R.color.teal_500) + "> " + getString(R.string.review) + "</font>" +
+                    "<font color=" + context.getResources().getColor(R.color.red_500) + ">(" + learnCount + ")</font>";
+            Log.i(TAG, "_getCountCard \t  reviewText:" + reviewText);
+            lbReview.setText(Html.fromHtml(reviewText));
 
-        if (dueToday != null) {
-            lbDueToday.setText(Html.fromHtml(dueToday));
+            lbTotalsCount.setText(String.valueOf(allCount));
+            lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
-        String reviewText = "<font color=" + context.getResources().getColor(R.color.teal_500) + "> " + getString(R.string.review) + "</font>" +
-                "<font color=" + context.getResources().getColor(R.color.red_500) + ">(" + learnCount + ")</font>";
-        Log.i(TAG, "_getCountCard \t  reviewText:" + reviewText);
-        lbReview.setText(Html.fromHtml(reviewText));
-
-        lbTotalsCount.setText(String.valueOf(allCount));
-        lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
         Log.i(TAG, "-------------------------_getCountCard() END----------------------------\n");
+
 
     }
 
@@ -554,7 +548,7 @@ public class MainActivity extends AppCompatActivity
             mCongratulations.setVisibility(View.VISIBLE);
             mLine.setVisibility(View.VISIBLE);
         }
-        Log.i(TAG, "_visibilityCount \t message_congratulations:" + messgage_congratilation);
+        //Log.i(TAG, "_visibilityCount \t message_congratulations:" + messgage_congratilation);
         txtMessageCongratulation.setText(Html.fromHtml(messgage_congratilation));
 
     }
@@ -810,14 +804,20 @@ public class MainActivity extends AppCompatActivity
 
 
     private boolean _checkUpdate() {
-        if (dataBaseHelper._checkUpdateDataBase()) {
-            Log.i(TAG, "Co Update");
-            Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
-            _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-            return true;
-        } else {
-            Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Khong co Update");
+        try {
+            if (dataBaseHelper._checkUpdateDataBase()) {
+                Log.i(TAG, "Co Update");
+                Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
+                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+                return true;
+            } else {
+                Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Khong co Update");
+                return false;
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
             return false;
         }
 
@@ -914,7 +914,7 @@ public class MainActivity extends AppCompatActivity
     private void _downloadFile() {
         String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        int version = 0;
+        int version = LazzyBeeShare.DEFAULT_VERSION_DB;
         if (db_v != null) {
             version = Integer.valueOf(db_v);
         }
@@ -950,27 +950,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Goto Fragment Profile
-     */
-    private void _gotoProfile() {
-        Toast.makeText(this, getString(R.string.action_profile), Toast.LENGTH_SHORT).show();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //intit fragmentProfile
-        FragmentProfile fragmentProfile = new FragmentProfile();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set profile_id
-        String profile_id = "";
-        bundle.putString(FragmentProfile.Profile_ID, profile_id);
-        //setArguments for fragmentProfile
-        fragmentProfile.setArguments(bundle);
-        //replace from container to fragmentProfile
-        fragmentTransaction.replace(R.id.container, fragmentProfile)
-                .addToBackStack(FragmentProfile.TAG).commit();
 
-    }
 
     /**
      * Goto setting
@@ -998,9 +978,11 @@ public class MainActivity extends AppCompatActivity
     public void _finishCustomStudy() {
         //fragmentDialogCustomStudy.dismiss();
         //fragmentDialogCustomStudy.
-        fragmentDialogCustomStudy.setCustomStudyAdapter();
-        _getCountCard();
-        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
+//        fragmentDialogCustomStudy.setCustomStudyAdapter();
+//        _getCountCard();
+//        int my_level = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+//        dataBaseHelper._initPreFetchNewCardList(my_level);
+//        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
 //        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
 //                .show();
 
@@ -1145,9 +1127,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogCustomStudy() {
-        FragmentManager fm = getSupportFragmentManager();
-        fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
-        fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
+//        FragmentManager fm = getSupportFragmentManager();
+//        fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
+//        fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
 
     }
 
@@ -1273,6 +1255,16 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
+    }
+
+    private void _trackerApplication() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 
 }

@@ -73,7 +73,8 @@ public class SplashScreen extends Activity {
                 }
                 _updateVersionDB();
 
-                learnApiImplements._get100Card();
+                int my_level = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+                learnApiImplements._get100Card(my_level);
 
                 startMainActivity();
             }
@@ -195,18 +196,21 @@ public class SplashScreen extends Activity {
         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, (gae_db_version == null || gae_db_version.isEmpty()) ? String.valueOf(0) : gae_db_version);
 
         //get version in DB
-        int _dbVesion = 0;
-        int _gdbVesion = 0;
+        int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
+        int _gdbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
         String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+
 
         if (db_v != null) {
             _dbVesion = Integer.valueOf(db_v);
+        } else if (db_v == null) {
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.DEFAULT_VERSION_DB));
         }
         if (gae_db_version != null) {
             _gdbVesion = Integer.valueOf(gae_db_version);
         }
         if (_dbVesion > _gdbVesion) {
-            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(0));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.DEFAULT_VERSION_DB));
         }
         //
         if (_dbVesion == 0) {

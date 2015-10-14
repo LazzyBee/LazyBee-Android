@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -74,6 +76,10 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_POSITION_MEANIG = "position_meaning";
     public static final String YES = "yes";
     public static final String NO = "no";
+    public static final String LINK_CARD_IN_SERVER = "http://www.lazzybee.com/library/#dictionary/";
+    public static final Object DEFAULT_TIME_NOTIFICATION = "8:0";
+    public static final String KEY_SETTING_TIME_NOTIFICATION = "time_notification";
+    public static final int DEFAULT_VERSION_DB = 1;
 
 
     private static boolean DEBUG = true;
@@ -107,28 +113,6 @@ public class LazzyBeeShare {
     public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
     public static final int DEFAULT_MY_LEVEL = 0;
 
-    public static final String DOWNLOAD = "Download";
-
-    //
-    public static int CARD_INDEX_ID = 0;
-    public static int CARD_INDEX_QUESTION = 1;
-    public static int CARD_INDEX_ANSWER = 2;
-    public static int CARD_INDEX_CATRGORIES = 3;
-    public static int CARD_INDEX_SUBCAT = 4;
-    public static int CARD_INDEX_TAGS = 5;
-    public static int CARD_INDEX_RELATED = 6;
-    public static int CARD_INDEX_GID = 7;
-    public static int CARD_INDEX_STATUS = 8;
-    public static int CARD_INDEX_QUEUE = 9;
-    public static int CARD_INDEX_PACKAGE = 10;
-    public static int CARD_INDEX_LEVEL = 11;
-    public static int CARD_INDEX_DUE = 12;
-    public static int CARD_INDEX_REV_COUNT = 13;
-    public static int CARD_INDEX_USER_NOTE = 14;
-    public static int CARD_INDEX_LAST_IVL = 15;
-    public static int CARD_INDEX_E_FACTOR = 16;
-    public static final int CARD_INDEX_L_VN = 17;
-    public static final int CARD_INDEX_L_EN = 18;
 
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
 
@@ -144,7 +128,9 @@ public class LazzyBeeShare {
 
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
     public static String BASE_URL_DB = "base_url_db";
-    public static String ADV_ENABLE ="adv_enable";
+    public static String ADV_ENABLE = "adv_enable";
+
+    static TextToSpeech textToSpeech;
 
     /**
      * Init data demo List Course
@@ -466,6 +452,36 @@ public class LazzyBeeShare {
 
     private static Drawable getDrawableUnder20(Context context, int id) {
         return context.getResources().getDrawable(id);
+    }
+
+    /**
+     * Speak text theo version andorid
+     */
+    public static void _speakText(String toSpeak, float v) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            _textToSpeechGreater21(toSpeak, v);
+        } else {
+            _textToSpeechUnder20(toSpeak, v);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void _textToSpeechUnder20(String text, float v) {
+        if (textToSpeech == null)
+            textToSpeech = LazzyBeeSingleton.textToSpeech;
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
+        textToSpeech.setSpeechRate(v);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void _textToSpeechGreater21(String text, float v) {
+        if (textToSpeech == null)
+            textToSpeech = LazzyBeeSingleton.textToSpeech;
+        String utteranceId = EMPTY;
+        textToSpeech.setSpeechRate(v);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
 

@@ -177,6 +177,10 @@
             android:name=".activity.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
+        <activity
+            android:name=".activity.CustomStudySettingActivity"
+            android:label="@string/title_activity_custom_study_setting" >
+        </activity>
     </application>
 
 </manifest>

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -99,6 +101,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);
             }
+            Log.i(TAG, "_insertOrUpdateCard:" + cards.size());
             //Update version
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(version));
             databaseUpgrade.close();
@@ -107,8 +110,8 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             Log.i(TAG, "Delete database?" + context.deleteDatabase(DatabaseUpgrade.DB_NAME));
 
         } catch (Exception e) {
-            Log.e(TAG, "Update DB Error:" + e.getMessage());
-            e.printStackTrace();
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 

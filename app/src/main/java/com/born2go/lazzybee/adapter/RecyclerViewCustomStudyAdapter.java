@@ -1,6 +1,5 @@
 package com.born2go.lazzybee.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -16,10 +15,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -28,26 +27,32 @@ import java.util.List;
 /**
  * Created by Hue on 8/24/2015.
  */
-public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<RecyclerViewCustomStudyAdapter.RecyclerViewCustomStudyAdapterViewHolder> {
+public class RecyclerViewCustomStudyAdapter extends
+        RecyclerView.Adapter<RecyclerViewCustomStudyAdapter.RecyclerViewCustomStudyAdapterViewHolder> {
     private static final String TAG = "CustomStudyAdapter";
     Context context;
     List<String> customStudys;
     LearnApiImplements learnApiImplements;
-    Dialog main;
-    FragmentDialogCustomStudy.DialogCustomStudyInferface studyInferface;
+    //    Dialog main;
     int TYPE_TITLE = 0;
     int TYPE_SETTING_NAME = 1;
     int TYPE_SETTING_SWITCH = 2;
     int TYPE_LINE = -1;
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
+    RecyclerView recyclerView;
 
-    public RecyclerViewCustomStudyAdapter(Context context, List<String> customStudys, Dialog dialog, FragmentDialogCustomStudy.DialogCustomStudyInferface studyInferface) {
+    public RecyclerViewCustomStudyAdapter(Context context, List<String> customStudys, RecyclerView recyclerView) {
         this.context = context;
         this.customStudys = customStudys;
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
-        this.main = dialog;
-        this.studyInferface = studyInferface;
+//        this.main = dialog;
+        this.recyclerView = recyclerView;
     }
+
+    private void _reloadRecylerView() {
+        recyclerView.setAdapter(this);
+    }
+
 
     @Override
     public RecyclerViewCustomStudyAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,7 +62,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         } else if (viewType == TYPE_SETTING_NAME) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
         } else if (viewType == TYPE_LINE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_lines, parent, false); //Inflating the layout
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_lines, parent, false); //Inflating the layout
         }
         RecyclerViewCustomStudyAdapterViewHolder recyclerViewCustomStudyAdapterViewHolder = new RecyclerViewCustomStudyAdapterViewHolder(view, viewType);
         return recyclerViewCustomStudyAdapterViewHolder;
@@ -72,43 +77,51 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         String setting = customStudys.get(position);
         final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
-        if (holder.viewType == TYPE_TITLE) {
-            lbSettingName.setText(customStudys.get(position));
-            mSwitch.setVisibility(View.GONE);
-            // mCardView.setRadius(0f);
-            lbLimit.setVisibility(View.GONE);
-            lbSettingName.setTextSize(15f);
-            lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-        } else if (holder.viewType == TYPE_SETTING_NAME) {
-            lbSettingName.setText(customStudys.get(position));
-            // mCardView.setRadius(0f);
-            mSwitch.setVisibility(View.GONE);
-            if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
-                String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-                lbLimit.setTag(limit);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, limit);
-            } else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
-                String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
-                lbLimit.setTag(limit);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
-
-            } else if (setting.equals(context.getString(R.string.setting_max_learn_more_per_day))) {
-                String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
-                lbLimit.setTag(limit);
-                getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, limit);
-
-            } else if (setting.equals(context.getString(R.string.setting_reset_to_default))) {
+        try {
+            if (holder.viewType == TYPE_TITLE) {
+                lbSettingName.setText(customStudys.get(position));
+                mSwitch.setVisibility(View.GONE);
+                // mCardView.setRadius(0f);
                 lbLimit.setVisibility(View.GONE);
-                mCardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        _showConfirmResetToDefauls();
-                    }
-                });
+                lbSettingName.setTextSize(15f);
+                lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+            } else if (holder.viewType == TYPE_SETTING_NAME) {
+                lbSettingName.setText(customStudys.get(position));
+                // mCardView.setRadius(0f);
+                mSwitch.setVisibility(View.GONE);
+                if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
+                    String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+                    lbLimit.setTag(limit);
+                    getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, limit);
+                } else if (setting.equals(context.getString(R.string.setting_total_learn_per_day))) {
+                    String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+                    lbLimit.setTag(limit);
+                    getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
 
-            } else if (setting.equals(context.getString(R.string.setting_my_level))) {
-                getLevelandShowDialogChangeLevel(mCardView, lbLimit);
+                } else if (setting.equals(context.getString(R.string.setting_max_learn_more_per_day))) {
+                    String limit = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
+                    lbLimit.setTag(limit);
+                    getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, limit);
+
+                } else if (setting.equals(context.getString(R.string.setting_reset_to_default))) {
+                    lbLimit.setVisibility(View.GONE);
+                    mCardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            _showConfirmResetToDefauls();
+                        }
+                    });
+
+                } else if (setting.equals(context.getString(R.string.setting_my_level))) {
+                    getLevelandShowDialogChangeLevel(mCardView, lbLimit);
+                } else if (setting.equals(context.getString(R.string.setting_position_meaning))) {
+                    _setPositionMeaning(mCardView, lbLimit);
+                }
             }
+            //_reloadRecylerView();
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
@@ -138,7 +151,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void _showDialogSelectLevel(int finalLevel) {
-        final String[] strlevels = {context.getString(R.string.setting_message_default), "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        final String[] strlevels = {context.getString(R.string.setting_message_default), "1", "2", "3", "4", "5", "6"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 
@@ -146,8 +159,9 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         builder.setSingleChoiceItems(strlevels, finalLevel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(item));
-                dialog.cancel();
-                studyInferface._finishCustomStudy();
+                dialog.dismiss();
+//                studyInferface._finishCustomStudy();
+                _reloadRecylerView();
             }
         });
         // Get the AlertDialog from create()
@@ -174,7 +188,8 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(LazzyBeeShare.DEFAULT_MY_LEVEL));
-                studyInferface._finishCustomStudy();
+//                studyInferface._finishCustomStudy();
+                _reloadRecylerView();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -203,6 +218,7 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_reset_to_default))
                 || setting.equals(context.getString(R.string.setting_my_level))
+                || setting.equals(context.getString(R.string.setting_position_meaning))
                 || setting.equals(context.getString(R.string.setting_max_learn_more_per_day)))
             return TYPE_SETTING_NAME;
         else
@@ -314,7 +330,8 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 //main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 1");
-                                studyInferface._finishCustomStudy();
+//                                studyInferface._finishCustomStudy();
+                                _reloadRecylerView();
                             }
                         } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
 
@@ -329,7 +346,8 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 //main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 2");
-                                studyInferface._finishCustomStudy();
+//                                studyInferface._finishCustomStudy();
+                                _reloadRecylerView();
                             }
                         } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT) {
                             int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
@@ -342,7 +360,8 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
                                 // main.hide();
                                 dialog.dismiss();
                                 Log.e(TAG, "Update 3");
-                                studyInferface._finishCustomStudy();
+//                                studyInferface._finishCustomStudy();
+                                _reloadRecylerView();
                             }
                         }
                     }
@@ -352,5 +371,40 @@ public class RecyclerViewCustomStudyAdapter extends RecyclerView.Adapter<Recycle
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         dialog.show();
+    }
+
+    private void _setPositionMeaning(RelativeLayout mCardView, TextView lbLimit) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle(context.getString(R.string.title_change_position_meaning));
+        final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
+        int index = 0;
+        String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG);
+
+        if (value != null && value.equals(LazzyBeeShare.DOWN)) {
+            index = 1;
+            lbLimit.setText(LazzyBeeShare.DOWN);
+        } else {
+            lbLimit.setText(LazzyBeeShare.UP);
+        }
+
+
+        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                //Update position
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, items[item].toString());
+                dialog.cancel();
+                _reloadRecylerView();
+
+            }
+        });
+        // Get the AlertDialog from create()
+        final AlertDialog dialog = builder.create();
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
+
     }
 }
