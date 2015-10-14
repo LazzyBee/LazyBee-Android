@@ -105,10 +105,14 @@ public class LearnApiImplements implements LearnApi {
     public static int CARD_INDEX_TAGS = 17;
     public static int CARD_INDEX_RELATED = 18;
 
-    private String selectFull = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.category,vocabulary.subcats,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
-    //    private String selectDetails = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
-//    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level";
-    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.queue,vocabulary.level";
+    private String selectFull = "vocabulary.id,vocabulary.question,vocabulary.answers," +
+            "vocabulary.queue,vocabulary.level," +
+            "vocabulary.package,vocabulary.category," +
+            "vocabulary.subcats,vocabulary.status,vocabulary.due,vocabulary.rev_count," +
+            "vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid," +
+            "vocabulary.l_en,vocabulary.l_vn";
+    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers," +
+            "vocabulary.queue,vocabulary.level";
 
 
     /**
