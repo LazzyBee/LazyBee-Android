@@ -336,6 +336,7 @@
     <string name="setting_custom_study_title">Study</string>
     <string name="prefs_first_time">FirstTime</string>
     <string name="english_word" translatable="false">10000 EngLish Word</string>
+    <string name="message_no_results_found_for">No results found for %s</string>
 
 
 </resources>

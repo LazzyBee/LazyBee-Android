@@ -106,6 +106,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     private void _displayCard() {
         try {
             card = learnApiImplements._getCardByID(cardId);
+
+            setTitle(card.getQuestion());
+
             if (itemFavorite != null) {
                 //load favorite
                 if (card.getStatus() == 1) {
@@ -419,11 +422,11 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 switch (position) {
                     case 0:
                         //dic VN
-                        displayHTML = card.getL_vn();
+                        displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
                         break;
                     case 1:
                         //dic ENG
-                        displayHTML = card.getL_en();
+                        displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
                         break;
                     case 2:
                         //dic Lazzybee
