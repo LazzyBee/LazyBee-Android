@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +34,8 @@ import com.google.android.gms.tagmanager.DataLayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
+public class SearchActivity extends AppCompatActivity implements
+        GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
@@ -146,6 +146,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search = (SearchView) menu.findItem(R.id.search).getActionView();
+
+        Log.i(TAG, "Query search:" + query_text);
         if (query_text.equals("gotoDictionary")) {
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
@@ -153,7 +155,10 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         } else {
             search.setQuery(query_text, false);
             search.setIconified(false);
+            search.clearFocus();
+            _search(query_text);
         }
+
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         //***setOnQueryTextListener***
@@ -163,8 +168,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(getBaseContext(), query,
                         Toast.LENGTH_SHORT).show();
+                search.clearFocus();
                 _search(query);
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 return false;
             }
 
@@ -249,6 +254,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 getCardFormServerByQuestion.execute(card);
                 getCardFormServerByQuestion.delegate = this;
             }
+            hideKeyboard();
+
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
@@ -392,5 +399,10 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
