@@ -82,10 +82,10 @@ public class LearnApiImplements implements LearnApi {
     static int CARD_INDEX_ID = 0;
     public static int CARD_INDEX_QUESTION = 1;
     public static int CARD_INDEX_ANSWER = 2;
-    public static int CARD_INDEX_PACKAGE = 3;
-    public static int CARD_INDEX_QUEUE = 4;
+    public static int CARD_INDEX_QUEUE = 3;
+    public static int CARD_INDEX_LEVEL = 4;
 
-    public static int CARD_INDEX_LEVEL = 5;
+    public static int CARD_INDEX_PACKAGE = 5;
     public static int CARD_INDEX_CATRGORIES = 6;
     public static int CARD_INDEX_SUBCAT = 7;
     public static int CARD_INDEX_STATUS = 8;
@@ -106,8 +106,9 @@ public class LearnApiImplements implements LearnApi {
     public static int CARD_INDEX_RELATED = 18;
 
     private String selectFull = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.category,vocabulary.subcats,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
-    private String selectDetails = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
-    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level";
+    //    private String selectDetails = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level,vocabulary.status,vocabulary.due,vocabulary.rev_count,vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid,vocabulary.l_en,vocabulary.l_vn";
+//    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.queue,vocabulary.level";
+    private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.queue,vocabulary.level";
 
 
     /**
@@ -144,9 +145,9 @@ public class LearnApiImplements implements LearnApi {
         card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
         card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
         card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
-        card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
         card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
         if (type == 0) {
+            card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
             card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
             card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
@@ -583,7 +584,7 @@ public class LearnApiImplements implements LearnApi {
             //TODO insert to system table
             SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
             long long_insert_results = db_insert.insert(TABLE_SYSTEM, null, values);
-            Log.i(TAG, "_insertOrUpdateToSystemTable\tInsert Results:" + long_insert_results);
+            Log.i(TAG, "_insertOrUpdateToSystemTable\tInsert:KEY=" + key + "-value=" + value + "-Insert: " + long_insert_results);
             db_insert.close();
             return (int) long_insert_results;
         } else {
@@ -595,9 +596,9 @@ public class LearnApiImplements implements LearnApi {
             try {
                 int update_result = db_update.update(TABLE_SYSTEM, values, KEY_SYSTEM + " = ?",
                         new String[]{String.valueOf(key)});
-                Log.i(TAG, "_insertOrUpdateToSystemTable\tUpdate:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
-                String valueUpdate = _getValueFromSystemByKey(key);
-                Log.i(TAG, "Update Key:" + key + " ,value:" + valueUpdate);
+                Log.i(TAG, "_insertOrUpdateToSystemTable\tUpdate:KEY=" + key + "-value=" + value + "-Update: " + (update_result == 1 ? "OK" : "False") + "_" + update_result);
+//                String valueUpdate = _getValueFromSystemByKey(key);
+//                Log.i(TAG, "Update Key:" + key + " ,value:" + valueUpdate);
                 db_update.close();
 
                 return update_result;
