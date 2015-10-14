@@ -34,6 +34,7 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServe
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
@@ -594,15 +595,29 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     private void _shareCard() {
         try {
+            //get base url in Task Manager
+            String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
+            String server_base_url_sharing = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            if (server_base_url_sharing != null) {
+                if (server_base_url_sharing.length() > 0)
+                    base_url_sharing = server_base_url_sharing;
+            }
+
+            //define base url with question
+            base_url_sharing = base_url_sharing + currentCard.getQuestion();
+            Log.i(TAG, "Sharing URL:" + base_url_sharing);
+
+            //Share card
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, LazzyBeeShare.LINK_CARD_IN_SERVER + currentCard.getQuestion());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing);
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
+
     }
 
     private void _backToBeforeCard() {

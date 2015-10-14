@@ -80,6 +80,8 @@ public class LazzyBeeShare {
     public static final Object DEFAULT_TIME_NOTIFICATION = "8:0";
     public static final String KEY_SETTING_TIME_NOTIFICATION = "time_notification";
     public static final int DEFAULT_VERSION_DB = 1;
+    public static final String BASE_URL_SHARING = "base_url_sharing";
+    public static final String DEFAULTS_BASE_URL_SHARING = "http://www.lazzybee.com/library/#dictionary/";
 
 
     private static boolean DEBUG = true;
