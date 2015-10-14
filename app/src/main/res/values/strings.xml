@@ -326,7 +326,7 @@
     <string name="action_goto_dictionary">Dictionary</string>
     <string name="an_error_occurred">An error occurred</string>
 
-    <string name="dictionary_vn_en" translatable="false">VN-EN</string>
+    <string name="dictionary_vn_en" translatable="false">EN-VN</string>
     <string name="dictionary_en_en" translatable="false">EN-EN</string>
     <string name="dictionary_lazzybee" translatable="false">LazzyBee</string>
 
