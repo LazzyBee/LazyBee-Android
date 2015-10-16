@@ -2,7 +2,9 @@ package com.born2go.lazzybee.shared;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
@@ -548,5 +550,13 @@ public class LazzyBeeShare {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
+    public static Intent getOpenFacebookIntent(Context context) {
 
+        try {
+            context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/"+context.getString(R.string.page_facebook_id)));
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.facebook_group_url)));
+        }
+    }
 }

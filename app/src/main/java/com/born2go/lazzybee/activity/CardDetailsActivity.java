@@ -206,6 +206,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
                 _addCardToFavorite();
                 return true;
+            case R.id.action_report:
+                _reportCard();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -239,6 +242,15 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
 
+    }
+
+    private void _reportCard() {
+        try {
+            startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 
     private void _addCardToFavorite() {

@@ -555,10 +555,21 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case R.id.action_goto_dictionary:
                 _gotoDictionnary();
                 return true;
+            case R.id.action_report:
+                _reportCard();
+                return true;
 
 
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void _reportCard() {
+        try {
+            startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
     }
 
     private void _gotoDictionnary() {

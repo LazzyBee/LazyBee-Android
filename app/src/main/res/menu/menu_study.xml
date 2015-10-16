@@ -42,8 +42,12 @@
         android:title="@string/action_ignore"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_goto_dictionary"
-        android:title="@string/action_goto_dictionary"
+    android:id="@+id/action_goto_dictionary"
+    android:title="@string/action_goto_dictionary"
+    app:showAsAction="never" />
+    <item
+        android:id="@+id/action_report"
+        android:title="@string/action_report"
         app:showAsAction="never" />
 </menu>
 

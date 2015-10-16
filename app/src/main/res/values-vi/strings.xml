@@ -232,6 +232,7 @@
     <string name="setting_custom_study">Thiết lập học</string>
     <string name="setting_custom_study_title">Học</string>
     <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>
+    <string name="action_report">Góp ý</string>
 
 
 </resources>

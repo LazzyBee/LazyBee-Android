@@ -337,6 +337,9 @@
     <string name="prefs_first_time">FirstTime</string>
     <string name="english_word" translatable="false">10000 EngLish Word</string>
     <string name="message_no_results_found_for">No results found for %s</string>
+    <string name="action_report">Report</string>
+    <string name="page_facebook_id" translatable="false">1012100435467230</string>
+    <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
 
 
 </resources>
