@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -101,11 +102,14 @@ public class RecyclerViewSettingListAdapter extends
         String setting = settings.get(position);
         final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
+        ImageView imageView = (ImageView) view.findViewById(R.id.imgGoto);
         try {
             if (holder.viewType == TYPE_TITLE) {
                 lbSettingName.setText(settings.get(position));
                 mSwitch.setVisibility(View.GONE);
                 lbLimit.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+
                 lbSettingName.setTextSize(15f);
                 lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
             } else if (holder.viewType == TYPE_SETTING_NAME) {//TODO:TYPE_SETTING_NAME
@@ -113,6 +117,8 @@ public class RecyclerViewSettingListAdapter extends
                 lbSettingName.setText(settings.get(position));
                 mSwitch.setVisibility(View.GONE);
                 lbLimit.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+
                 if (setting.equals(context.getString(R.string.setting_today_new_card_limit))) {
                     String limit = learnApiImplements._getValueFromSystemByKey(setting);
                     getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, limit);
@@ -146,13 +152,15 @@ public class RecyclerViewSettingListAdapter extends
 
                     _showDialogExecuteQueue(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_custom_study))) {
-
+                    imageView.setVisibility(View.VISIBLE);
                     _gotoCustomStudySetting(mCardView);
                 }
 
 
             } else if (holder.viewType == TYPE_SETTING_SWITCH) {
                 lbLimit.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+
                 lbSettingName.setText(settings.get(position));
                 if (setting.equals(context.getString(R.string.setting_auto_check_update))) {
                     getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE);
