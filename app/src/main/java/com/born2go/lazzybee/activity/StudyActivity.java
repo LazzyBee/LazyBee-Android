@@ -134,7 +134,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         _setUpStudy();
 
-       // _initShowcaseInitStudy();
+        // _initShowcaseInitStudy();
 
     }
 
@@ -388,7 +388,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         Log.i(TAG, "----_completeLean----");
         setBeforeCard(null);
         completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
-        onBackPressed();
+        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
+        setResult(completeStudy, new Intent());
+        finish();
         Log.i(TAG, "---------END---------");
 
     }
@@ -1326,12 +1328,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         super.onDestroy();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
-        setResult(completeStudy, new Intent(this, MainActivity.class));
-        finish();
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//
+//
+//    }
 }
