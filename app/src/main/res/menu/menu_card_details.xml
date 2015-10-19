@@ -28,4 +28,8 @@
         android:id="@+id/action_update"
         android:title="@string/action_update_card"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_report"
+        android:title="@string/action_report"
+        app:showAsAction="never" />
 </menu>

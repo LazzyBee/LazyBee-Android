@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,13 +34,15 @@ import com.google.android.gms.tagmanager.DataLayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
+public class SearchActivity extends AppCompatActivity implements
+        GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
     private static final Object GA_SCREEN = "aSearchScreen";
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
+    TextView lbMessageNotFound;
     LearnApiImplements dataBaseHelper;
     SearchView search;
     private Context context;
@@ -80,6 +81,7 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
         //init LbResult Count
         lbResultCount = (TextView) findViewById(R.id.lbResultCount);
+        lbMessageNotFound = (TextView) findViewById(R.id.lbMessageNotFound);
 
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(this, mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
@@ -146,6 +148,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search = (SearchView) menu.findItem(R.id.search).getActionView();
+
+        Log.i(TAG, "Query search:" + query_text);
         if (query_text.equals("gotoDictionary")) {
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
@@ -153,7 +157,10 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         } else {
             search.setQuery(query_text, false);
             search.setIconified(false);
+            search.clearFocus();
+            _search(query_text);
         }
+
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         //***setOnQueryTextListener***
@@ -163,8 +170,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(getBaseContext(), query,
                         Toast.LENGTH_SHORT).show();
+                search.clearFocus();
                 _search(query);
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 return false;
             }
 
@@ -230,14 +237,15 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
         }
         try {
             List<Card> cardList = dataBaseHelper._searchCard(query);
-
             int result_count = cardList.size();
             Log.i(TAG, "Search result_count:" + result_count);
-
-            //set count
-            lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
-
             if (result_count > 0) {
+                lbResultCount.setVisibility(View.VISIBLE);
+                mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
+                lbMessageNotFound.setVisibility(View.GONE);
+
+                //set count
+                lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
                 //Init Adapter
                 setAdapterListCard(cardList);
             } else if (result_count == 0) {//Check result_count==0 search in server
@@ -249,6 +257,8 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
                 getCardFormServerByQuestion.execute(card);
                 getCardFormServerByQuestion.delegate = this;
             }
+            hideKeyboard();
+
         } catch (Exception e) {
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
@@ -357,20 +367,36 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
 
     @Override
     public void processFinish(Card card) {
-        List<Card> cardList = new ArrayList<Card>();
-        int result_count = 0;
-        if (card != null) {
-            if (card.getId() == 0) {
-                dataBaseHelper._insertOrUpdateCard(card);
-                card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
+        try {
+            List<Card> cardList = new ArrayList<Card>();
+            int result_count = 0;
+            if (card != null) {
+                if (card.getId() == 0) {
+                    dataBaseHelper._insertOrUpdateCard(card);
+                    card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
+                }
+                cardList.add(card);
+                result_count = cardList.size();
+            } else {
+                Log.i(TAG, getString(R.string.not_found));
             }
-            cardList.add(card);
-            result_count = cardList.size();
-            setAdapterListCard(cardList);
-        } else {
-            Log.i(TAG, getString(R.string.not_found));
+            if (result_count > 0) {
+                lbResultCount.setVisibility(View.VISIBLE);
+                mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
+                lbMessageNotFound.setVisibility(View.GONE);
+                lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+                setAdapterListCard(cardList);
+            } else {
+                lbResultCount.setVisibility(View.GONE);
+                mRecyclerViewSearchResults.setVisibility(View.GONE);
+                lbMessageNotFound.setVisibility(View.VISIBLE);
+                lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
+            }
+            hideKeyboard();
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
-        lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
     }
 
     @Override
@@ -392,5 +418,12 @@ public class SearchActivity extends AppCompatActivity implements GetCardFormServ
             Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
+    }
+
+    private void hideKeyboard() {
+        if (search != null)
+            search.clearFocus();
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

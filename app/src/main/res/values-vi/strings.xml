@@ -127,7 +127,6 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-
         <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
@@ -144,6 +143,9 @@
         <!--<item>@string/setting_export_database</item>-->
         <!--<item>@string/setting_update_db_form_query</item>-->
         <item>@string/setting_lines</item>
+
+        <item>@string/setting_about</item>
+        <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="custom_study">
@@ -222,15 +224,20 @@
     <string name="message_custom_setting_successful">Thay đổi thành công</string>
     <string name="message_ignore_card_sucessful">Bỏ qua thẻ thành công</string>
     <string name="setting_position_meaning">Vị trí nghĩa</string>
-    <string name="position_meaning_up">Up</string>
+    <string name="position_meaning_up">Trên</string>
     <string name="title_change_position_meaning">Thay đổi vị trí ý nghĩa</string>
     <string name="message_download_database_fail">Tải cơ sở dữ liệu không thành công!</string>
     <string name="action_goto_dictionary">Từ điển</string>
     <string name="an_error_occurred">Có lỗi xảy ra</string>
 
     <string name="setting_set_time_notification">Thời gian thông báo %s</string>
-    <string name="setting_custom_study">Thiết lập học</string>
-    <string name="setting_custom_study_title">Học</string>
+
+    <string name="setting_custom_study">Thiết lập</string>
+
+    <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>
+    <string name="action_report">Góp ý</string>
+    <string name="drawer_dictionary">Từ diển</string>
+    <string name="position_meaning_down">Dưới</string>
 
 
 </resources>

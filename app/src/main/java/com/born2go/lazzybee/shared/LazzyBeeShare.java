@@ -2,7 +2,9 @@ package com.born2go.lazzybee.shared;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
@@ -80,6 +82,8 @@ public class LazzyBeeShare {
     public static final Object DEFAULT_TIME_NOTIFICATION = "8:0";
     public static final String KEY_SETTING_TIME_NOTIFICATION = "time_notification";
     public static final int DEFAULT_VERSION_DB = 1;
+    public static final String BASE_URL_SHARING = "base_url_sharing";
+    public static final String DEFAULTS_BASE_URL_SHARING = "http://www.lazzybee.com/library/#dictionary/";
 
 
     private static boolean DEBUG = true;
@@ -309,7 +313,7 @@ public class LazzyBeeShare {
                 "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
 
                 "       <div style=\"float:left;width:100%\">\n" +
-                "            <div style=\"float:left;width:100%\"><strong>" + _explain + "</strong></div>\n" +
+//                "            <div style=\"float:left;width:100%\"><strong>" + _explain + "</strong></div>\n" +
                 "           <div style=\"float:left;width:90%\">\n" +
                 "               " + explain + "\n" +
                 "           </div>\n" +
@@ -378,9 +382,71 @@ public class LazzyBeeShare {
         }
     }
 
-    public static String getTextColor(int color, String string) {
-        String message = "<font color=" + color + ">" + string + "</font>";
-        return message;
+    public static String getDictionaryHTML(String l_vn) {
+        String html =
+                "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<style>\n" +
+                        ".outer {\n" +
+                        "    display: table;\n" +
+                        "    position: absolute;\n" +
+                        "    height: 100%;\n" +
+                        "    width: 100%;\n" +
+                        "}\n" +
+                        "\n" +
+                        ".middle {\n" +
+                        "    display: table-cell;\n" +
+                        "    vertical-align: middle;\n" +
+                        "}\n" +
+                        "\n" +
+                        ".inner {\n" +
+                        "    margin-left: auto;\n" +
+                        "    margin-right: auto; \n" +
+                        "  \n" +
+                        "    width: /*whatever width you want*/;\n" +
+                        "}\n" +
+                        "</style>\n" +
+                        "<body>\n" +
+                        "<div class=\"outer\">\n" +
+                        "<div class=\"middle\">\n" +
+                        "<div class=\"inner\">\n" +
+                        "<center>\n" +
+                        "<h1><img src='ic_cloud_96.png'></h1>" +
+                        "<p>Database updating...</p>" +
+                        "<center>\n" +
+                        "</div>\n" +
+                        "</div>\n" +
+                        "</div>\n" +
+                        "</body>\n" +
+                        "</html>";
+        if (l_vn != null) {
+            if (l_vn.length() > 0) {
+                html =
+                        "<!DOCTYPE html>\n" +
+                                "<html>\n" +
+                                "<head>\n" +
+                                "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                                "name=\"viewport\">\n" +
+                                "<style>" +
+                                ".tl {\n" +
+                                "    font-size: 14px;\n" +
+                                "    color: #0e74af;\n" +
+                                "    font-weight: bold;\n" +
+                                "}" +
+                                ".ex {\n" +
+                                "    color: gray;\n" +
+                                "    margin-left: 15px;\n" +
+                                "}" +
+                                "</style>" +
+                                "</head>\n" +
+                                "<body>\n" +
+                                l_vn +
+                                "</body>\n" +
+                                "</html>";
+            }
+        }
+        Log.i(TAG, html);
+        return html;
     }
 
     /*
@@ -484,5 +550,13 @@ public class LazzyBeeShare {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
+    public static Intent getOpenFacebookIntent(Context context) {
 
+        try {
+            context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/"+context.getString(R.string.page_facebook_id)));
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.facebook_group_url)));
+        }
+    }
 }

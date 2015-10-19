@@ -277,7 +277,7 @@
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>
     <string name="drawer_about" translatable="false">About</string>
-    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_about" translatable="false">AboutActivity</string>
     <string name="setting_update_db_form_query" translatable="false">Update by Query</string>
     <string name="action_query" translatable="false">Query</string>
     <string name="action_favorite" translatable="false">Favorite</string>
@@ -326,16 +326,22 @@
     <string name="action_goto_dictionary">Dictionary</string>
     <string name="an_error_occurred">An error occurred</string>
 
-    <string name="dictionary_vn_en" translatable="false">VN-EN</string>
+    <string name="dictionary_vn_en" translatable="false">EN-VN</string>
     <string name="dictionary_en_en" translatable="false">EN-EN</string>
     <string name="dictionary_lazzybee" translatable="false">LazzyBee</string>
 
     <string name="setting_set_time_notification">Set Time Notification 8:0</string>
-    <string name="title_activity_custom_study_setting">Custom Study</string>
+    <string name="title_activity_custom_study_setting" translatable="false">Custom Study</string>
+
     <string name="setting_custom_study">Custom Study</string>
-    <string name="setting_custom_study_title">Study</string>
-    <string name="prefs_first_time">FirstTime</string>
+
+    <string name="setting_custom_study_title" translatable="false">Study</string>
+    <string name="prefs_first_time" translatable="false">FirstTime</string>
     <string name="english_word" translatable="false">10000 EngLish Word</string>
+    <string name="message_no_results_found_for">No results found for %s</string>
+    <string name="action_report">Report</string>
+    <string name="page_facebook_id" translatable="false">1012100435467230</string>
+    <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
 
 
 </resources>

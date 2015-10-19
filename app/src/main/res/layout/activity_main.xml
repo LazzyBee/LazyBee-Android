@@ -106,7 +106,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center_horizontal"
-                            android:text="10000 EngLish Word "
+                            android:text="@string/english_word"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="30dp" />
