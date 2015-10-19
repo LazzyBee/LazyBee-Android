@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
@@ -450,6 +451,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
+            _addJavascriptInterface(card);
 
             try {
                 String displayHTML = LazzyBeeShare.EMPTY;
@@ -478,6 +480,47 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             // Return the View
             return view;
+        }
+
+        private void _addJavascriptInterface(final Card card) {
+            String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
+            float speechRate = 1.0f;
+            if (sp != null) {
+                speechRate = Float.valueOf(sp);
+            }
+            //addJavascriptInterface play question
+            final float finalSpeechRate = speechRate;
+            mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
+                @JavascriptInterface
+                public void playQuestion() {
+                    String toSpeak = card.getQuestion();
+
+                    //Speak text
+                    LazzyBeeShare._speakText(toSpeak, finalSpeechRate);
+                }
+            }, "question");
+            mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
+                @JavascriptInterface
+                public void speechExplain() {
+                    //get answer json
+                    String answer = card.getAnswers();
+                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
+
+                    //Speak text
+                    LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
+                }
+            }, "explain");
+            mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
+                @JavascriptInterface
+                public void speechExample() {
+                    //get answer json
+                    String answer = card.getAnswers();
+                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
+
+                    //Speak text
+                    LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
+                }
+            }, "example");
         }
 
 
