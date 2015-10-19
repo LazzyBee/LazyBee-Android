@@ -563,6 +563,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void _reportCard() {
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
@@ -872,15 +873,18 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         switch (currentQueue) {
             case Card.QUEUE_NEW_CRAM0:
                 Log.i(TAG, "_nextCard:\t Queue=Card.QUEUE_NEW_CRAM0");
-                _nextAgainCard();
+                //_nextAgainCard();
+                _nextNewCard();
                 break;
             case Card.QUEUE_LNR1:
                 Log.i(TAG, "_nextCard:\t Queue=Card.QUEUE_LNR1");
-                _nextDueCard();
+                //_nextDueCard();
+                _nextAgainCard();
                 break;
             case Card.QUEUE_REV2:
                 Log.i(TAG, "_nextCard:\t Queue=Card.QUEUE_REV2");
-                _nextNewCard();
+                //_nextNewCard();
+                _nextDueCard();
                 break;
         }
         if (itemFavorite != null) {
