@@ -1,6 +1,9 @@
 package com.born2go.lazzybee.shared;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,6 +20,7 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.Course;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.born2go.lazzybee.utils.NotificationReceiver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,7 +84,8 @@ public class LazzyBeeShare {
     public static final String NO = "no";
     public static final String LINK_CARD_IN_SERVER = "http://www.lazzybee.com/library/#dictionary/";
     public static final Object DEFAULT_TIME_NOTIFICATION = "8:0";
-    public static final String KEY_SETTING_TIME_NOTIFICATION = "time_notification";
+    public static final String KEY_SETTING_HOUR_NOTIFICATION = "hour_notification";
+    public static final String KEY_SETTING_MINUTE_NOTIFICATION = "minute_notification";
     public static final int DEFAULT_VERSION_DB = 1;
     public static final String BASE_URL_SHARING = "base_url_sharing";
     public static final String DEFAULTS_BASE_URL_SHARING = "http://www.lazzybee.com/library/#dictionary/";
@@ -554,9 +559,28 @@ public class LazzyBeeShare {
 
         try {
             context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/"+context.getString(R.string.page_facebook_id)));
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + context.getString(R.string.page_facebook_id)));
         } catch (Exception e) {
             return new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.facebook_group_url)));
         }
+    }
+
+    public static void scheduleNotification(Context context, int i, long time) {
+        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, i);
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_WHEN, time);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+    public static void _cancelNotification(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        notificationManager.cancelAll();
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.cancel(pendingIntent);
     }
 }
