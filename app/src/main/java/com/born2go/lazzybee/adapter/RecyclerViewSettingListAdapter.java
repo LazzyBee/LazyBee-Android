@@ -103,6 +103,10 @@ public class RecyclerViewSettingListAdapter extends
         final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
         ImageView imageView = (ImageView) view.findViewById(R.id.imgGoto);
+
+        Log.i(TAG, "Setting Name:" + setting);
+
+
         try {
             if (holder.viewType == TYPE_TITLE) {
                 lbSettingName.setText(settings.get(position));
@@ -112,7 +116,8 @@ public class RecyclerViewSettingListAdapter extends
 
                 lbSettingName.setTextSize(15f);
                 lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
-            } else if (holder.viewType == TYPE_SETTING_NAME) {//TODO:TYPE_SETTING_NAME
+            } else if (holder.viewType == TYPE_SETTING_NAME) {
+                //TODO:TYPE_SETTING_NAME
 
                 lbSettingName.setText(settings.get(position));
                 mSwitch.setVisibility(View.GONE);
@@ -152,6 +157,7 @@ public class RecyclerViewSettingListAdapter extends
 
                     _showDialogExecuteQueue(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_custom_study))) {
+                    Log.i(TAG, "Here?");
                     imageView.setVisibility(View.VISIBLE);
                     _gotoCustomStudySetting(mCardView);
                 }
@@ -746,19 +752,18 @@ public class RecyclerViewSettingListAdapter extends
         String setting = settings.get(position);
 
         if (setting.equals(context.getString(R.string.setting_learn_title))
-                || setting.equals(context.getString(R.string.setting_custom_study_title))
                 || setting.equals(context.getString(R.string.setting_update_title))
                 || setting.equals(context.getString(R.string.setting_speech_rate))
-                )
+                ) {
             return TYPE_TITLE;
-        else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
+        } else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
                 || setting.equals(context.getString(R.string.setting_check_update))
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
-                || setting.equals(context.getString(R.string.setting_custom_study))
+
                 || setting.equals(context.getString(R.string.setting_update_db_form_query))
                 )
             return TYPE_SETTING_NAME;
@@ -780,6 +785,9 @@ public class RecyclerViewSettingListAdapter extends
         else if (setting.equals(context.getString(R.string.setting_notification)))
 
             return TYPE_SETTING_NOTIFICATION;
+        else if (setting.equals(context.getString(R.string.setting_custom_study)))
+
+            return TYPE_SETTING_NAME;
         else
             return -1;
     }
