@@ -134,7 +134,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         _setUpStudy();
 
-        _initShowcaseInitStudy();
+       // _initShowcaseInitStudy();
 
     }
 
@@ -931,7 +931,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //Set flag Display State
         answerDisplay = true;
         _showAnswer();
-        _initShowcaseShowAnswer();
+//        _initShowcaseShowAnswer();
 
     }
 
