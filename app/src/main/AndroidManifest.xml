@@ -81,7 +81,7 @@
         </activity>
         <activity
             android:name=".activity.SettingActivity"
-            android:label="@string/title_activity_seating"
+            android:label="@string/title_activity_setting"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
