@@ -182,7 +182,8 @@
     <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
     <string name="gtag_container_load_error" translatable="false">Failed to load container</string>
 
-    <string name="notification_message">Build English vocabulary now!</string>
+    <string name="notification_message" translatable="false">Build English vocabulary now!</string>
+
     <string name="local_service_started" translatable="false">no</string>
 
     <string name="setting_reset_to_default">Reset to default</string>

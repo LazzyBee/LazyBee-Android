@@ -109,7 +109,7 @@
 
     <string name="dialog_title_change_speech_rate">Thay đổi tốc độ đọc</string>
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
-    <string name="notification_message">Học từ vựng tiếng Anh nào!</string>
+   <!-- <string name="notification_message">Học từ vựng tiếng Anh nào!</string>-->
 
 
     <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
