@@ -3,6 +3,7 @@ package com.born2go.lazzybee.activity;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -1254,13 +1256,15 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 ||
-                requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             if (resultCode == 1
                     || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
                 complete = _checkCompleteLearn();
                 _getCountCard();
-            } else if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            }
+        }
+        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(getString(R.string.prefs_first_time), false);
@@ -1268,16 +1272,48 @@ public class MainActivity extends AppCompatActivity
 
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
-
-                complete = _checkCompleteLearn();
-                _getCountCard();
                 String messgage_congratilation = getString(R.string.message_congratulations);
                 _showDialogCongraturation(messgage_congratilation);
 
             } else {
-                complete = _checkCompleteLearn();
-                _getCountCard();
+                _showDialogTip();
             }
+            complete = _checkCompleteLearn();
+            _getCountCard();
+        }
+    }
+
+    private void _showDialogTip() {
+        try {
+            String popup_text = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_TEXT);
+            final String popup_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_URL);
+            if (popup_text != null) {
+                final Snackbar snackbar =
+                        Snackbar
+                                .make(mCardViewReView, popup_text, Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            snackbar.dismiss();
+                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(popup_url));
+                            startActivity(myIntent);
+                        } catch (ActivityNotFoundException e) {
+                            Log.e(TAG, "No application can handle this request."
+                                    + " Please install a webbrowser");
+                        }
+                    }
+                });
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
+
+                snackbar.setDuration(7000).show();
+            } else {
+                Log.e(TAG, "popup_text null");
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
         }
     }
 
