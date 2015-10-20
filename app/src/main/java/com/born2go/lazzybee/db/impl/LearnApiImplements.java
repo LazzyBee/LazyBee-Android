@@ -1365,4 +1365,18 @@ public class LearnApiImplements implements LearnApi {
         }
     }
 
+    public List<Card> _getIncomingListCard() {
+        List<Card> cards = new ArrayList<Card>();
+        String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+        try {
+            JSONObject valueObj = new JSONObject(value);
+            JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);
+            cards.addAll(_getListCardByListCardIdJsonArray(listIdArray));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cards;
+    }
+
+
 }

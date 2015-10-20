@@ -62,9 +62,9 @@ public class FragmentReviewToday extends Fragment {
         TextView lbCountReviewCard = (TextView) view.findViewById(R.id.lbCountReviewCard);
         try {
             //get review List Card today
-            final List<Card> vocabularies = dataBaseHelper._getReviewListCard();
+            final List<Card> vocabularies = dataBaseHelper._getIncomingListCard();
 
-            lbCountReviewCard.setText(getString(R.string.message_total_card_review) + vocabularies.size());
+            lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
             //Init Adapter
             RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(context, vocabularies);
 
