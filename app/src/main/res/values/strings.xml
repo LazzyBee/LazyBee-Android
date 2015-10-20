@@ -342,7 +342,7 @@
     <string name="action_report">Report</string>
     <string name="page_facebook_id" translatable="false">1012100435467230</string>
     <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
-    <string name="incoming" translatable="false">Incoming</string>
+    <string name="incoming">Incoming</string>
     <string name="message_total_card_incoming">Total card:</string>
 
 

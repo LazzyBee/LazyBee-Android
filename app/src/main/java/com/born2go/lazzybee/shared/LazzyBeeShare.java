@@ -138,6 +138,8 @@ public class LazzyBeeShare {
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
     public static String BASE_URL_DB = "base_url_db";
     public static String ADV_ENABLE = "adv_enable";
+    public static String POPUP_TEXT = "popup_text";
+    public static String POPUP_URL = "popup_url";
 
     static TextToSpeech textToSpeech;
 

@@ -20,7 +20,7 @@
     <string name="review">Đã học</string>
     <string name="title_activity_add_course">Thêm khóa học</string>
     <string name="title_activity_card_details">Chi tiết thẻ</string>
-    <string name="title_activity_review_card">Incoming</string>
+    <string name="title_activity_review_card">Từ sắp học</string>
     <string name="title_activity_search">Tìm kiếm</string>
     <string name="title_activity_study">Học</string>
     <string name="action_profile">Hồ sơ</string>
@@ -109,7 +109,7 @@
 
     <string name="dialog_title_change_speech_rate">Thay đổi tốc độ đọc</string>
     <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
-   <!-- <string name="notification_message">Học từ vựng tiếng Anh nào!</string>-->
+    <!-- <string name="notification_message">Học từ vựng tiếng Anh nào!</string>-->
 
 
     <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
@@ -239,8 +239,8 @@
     <string name="position_meaning_down">Dưới</string>
     <string name="message_total_card_incoming">Tổng số:</string>
     <string name="setting_custom_study_title">Học</string>
-    <string name="english_word" translatable="false">Học từ vựng tiếng Anh</string>
->>>>>>> 1ecf3c8aeb5ec6ebb2bf766453b27b557809a119
+    <string name="english_word" >Học từ vựng tiếng Anh</string>
+    <string name="incoming">Từ sắp học</string>
 
 
 </resources>
