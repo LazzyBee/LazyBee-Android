@@ -240,7 +240,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/textView"
                                 android:layout_centerHorizontal="true"
-                                android:text="@string/message_congratulations"
+                                android:text="@string/message_congratulations_with_tip"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:textColor="@color/grey_600" />
                         </RelativeLayout>
@@ -338,7 +338,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="1"
                         android:background="@color/white"
-                        android:text="@string/review"
+                        android:text="@string/incoming"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/colorPrimary"
                         android:padding="10dp"

@@ -134,7 +134,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         _setUpStudy();
 
-        _initShowcaseInitStudy();
+        // _initShowcaseInitStudy();
 
     }
 
@@ -388,7 +388,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         Log.i(TAG, "----_completeLean----");
         setBeforeCard(null);
         completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
-        onBackPressed();
+        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
+        setResult(completeStudy, new Intent());
+        finish();
         Log.i(TAG, "---------END---------");
 
     }
@@ -563,6 +565,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void _reportCard() {
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
@@ -872,15 +875,18 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         switch (currentQueue) {
             case Card.QUEUE_NEW_CRAM0:
                 Log.i(TAG, "_nextCard:\t Queue=Card.QUEUE_NEW_CRAM0");
-                _nextAgainCard();
+                //_nextAgainCard();
+                _nextNewCard();
                 break;
             case Card.QUEUE_LNR1:
                 Log.i(TAG, "_nextCard:\t Queue=Card.QUEUE_LNR1");
-                _nextDueCard();
+                //_nextDueCard();
+                _nextAgainCard();
                 break;
             case Card.QUEUE_REV2:
                 Log.i(TAG, "_nextCard:\t Queue=Card.QUEUE_REV2");
-                _nextNewCard();
+                //_nextNewCard();
+                _nextDueCard();
                 break;
         }
         if (itemFavorite != null) {
@@ -927,7 +933,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //Set flag Display State
         answerDisplay = true;
         _showAnswer();
-        _initShowcaseShowAnswer();
+//        _initShowcaseShowAnswer();
 
     }
 
@@ -1322,12 +1328,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         super.onDestroy();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
-        setResult(completeStudy, new Intent(this, MainActivity.class));
-        finish();
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//
+//
+//    }
 }

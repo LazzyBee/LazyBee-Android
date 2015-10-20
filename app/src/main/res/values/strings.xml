@@ -24,8 +24,8 @@
 
     <string name="hello_world" translatable="false">Hello world!</string>
     <string name="title_activity_search">Search</string>
+    <string name="title_activity_review_card">Incoming</string>
     <string name="title_activity_setting" translatable="false">Settings</string>
-    <string name="title_activity_review_card">Review Card</string>
     <string name="title_activity_add_course">Add Course</string>
     <string name="hint_search">Search</string>
     <string name="title_activity_card_details">Card Details</string>
@@ -139,8 +139,9 @@
     <string name="message_total_card_review">Total card review:</string>
 
     <string name="my_course">My Course</string>
-    <string name="message_congratulations" formatted="false">Click %1s to learn more and click %2s to view learned cards</string>
+    <string name="message_congratulations_with_tip" formatted="false">Click %1s to learn more and click %2s to view learned cards</string>
     <string name="message_congratulations_continue">Click %s to study</string>
+    <string name="message_congratulations" translatable="false">congratulations</string>
 
     <string name="drawer_user" translatable="false">user</string>
     <string name="drawer_title_course" translatable="false">title_course</string>
@@ -341,4 +342,8 @@
     <string name="action_report">Report</string>
     <string name="page_facebook_id" translatable="false">1012100435467230</string>
     <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
+    <string name="incoming" translatable="false">Incoming</string>
+    <string name="message_total_card_incoming">Total card:</string>
+
+
 </resources>

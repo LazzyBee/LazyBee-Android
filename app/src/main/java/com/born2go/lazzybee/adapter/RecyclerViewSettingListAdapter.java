@@ -301,12 +301,13 @@ public class RecyclerViewSettingListAdapter extends
         final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
         final TextView txtTimeNotification = (TextView) mSetUpNotification.findViewById(R.id.txtTimeNotification);
         String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-        String time = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_TIME_NOTIFICATION);
+        String hour = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        String minute = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         if (value == null) {
             mSwitch.setChecked(false);
             mSetUpNotification.setVisibility(View.GONE);
         } else if (value.equals(LazzyBeeShare.ON)) {
-            mSetUpNotification.setVisibility(View.GONE);
+            mSetUpNotification.setVisibility(View.VISIBLE);
             mSwitch.setChecked(true);
         } else if (value.equals(LazzyBeeShare.OFF)) {
             mSetUpNotification.setVisibility(View.GONE);
@@ -315,11 +316,17 @@ public class RecyclerViewSettingListAdapter extends
             mSwitch.setChecked(false);
             mSetUpNotification.setVisibility(View.GONE);
         }
-        if (time == null) {
+        String time = "";
+        if (hour == null) {
             txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
         } else {
-            txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
+            if (minute == null) {
+                minute = "00";
+            }
+            time = hour + ":" + minute;
         }
+
+        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
 
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -327,10 +334,12 @@ public class RecyclerViewSettingListAdapter extends
                 String value;
                 if (isChecked) {
                     value = LazzyBeeShare.ON;
-                    mSetUpNotification.setVisibility(View.GONE);
+                    mSetUpNotification.setVisibility(View.VISIBLE);
+                    _setUpNotification(8, 0);
                 } else {
                     value = LazzyBeeShare.OFF;
                     mSetUpNotification.setVisibility(View.GONE);
+                    LazzyBeeShare._cancelNotification(context);
                 }
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
             }
@@ -343,7 +352,7 @@ public class RecyclerViewSettingListAdapter extends
                 if (!mSwitch.isChecked()) {
                     mSwitch.setChecked(true);
                     value = LazzyBeeShare.ON;
-                    mSetUpNotification.setVisibility(View.GONE);
+                    mSetUpNotification.setVisibility(View.VISIBLE);
                 } else {
                     mSwitch.setChecked(false);
                     value = LazzyBeeShare.OFF;
@@ -363,10 +372,10 @@ public class RecyclerViewSettingListAdapter extends
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, view.getCurrentHour() + ":" + view.getCurrentMinute()));
-
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_NOTIFICATION, view.getCurrentHour() + ":" + view.getCurrentMinute());
+                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, String.valueOf(view.getCurrentHour() + ":" + view.getCurrentMinute())));
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(view.getCurrentHour()));
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(view.getCurrentMinute()));
+                        _setUpNotification(view.getCurrentHour(), view.getCurrentMinute());
                     }
                 }, hour, minute, true);
                 timePickerDialog.setTitle("Select Date");
@@ -951,5 +960,37 @@ public class RecyclerViewSettingListAdapter extends
         }
 
 
+    }
+
+    private void _setUpNotification(int hour, int minute) {
+        Log.i(TAG, "---------setUpNotification-------");
+        try {
+            //Check currentTime
+            Calendar currentCalendar = Calendar.getInstance();
+            int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
+            boolean nextday = true;
+            Calendar calendar = Calendar.getInstance();
+            if (hour < currentHour) {
+                // Define a time
+                calendar.add(Calendar.DATE, 1);
+            }
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+
+            //
+            Long alertTime = calendar.getTimeInMillis();
+            //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Alert " + 0 + ",time:" + alertTime);
+
+            //set notificaion by time
+            LazzyBeeShare.scheduleNotification(context, 0, alertTime);
+//            Toast.makeText(context, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)));
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+        }
+        Log.i(TAG, "---------END-------");
     }
 }
