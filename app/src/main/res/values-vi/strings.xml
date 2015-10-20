@@ -59,7 +59,7 @@
     <string name="change_language">Thay đổi ngôn ngữ</string>
     <string name="lang_english">Tiếng anh</string>
     <string name="lang_viet">Tiếng việt</string>
-    <string name="dialog_message_restart_app">Bạn có muốn thay đồi ngôn ngữ ngay?</string>
+    <string name="dialog_message_restart_app">Ứng dụng sẽ khởi động lại</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>
     <string name="action_login">Đăng nhập</string>
     <string name="action_check_update_database">Kiểm tra cập nhật</string>
@@ -70,8 +70,8 @@
     <string name="auto_check_update">Tự động kiểm tra cập nhật</string>
     <string name="debug_infor">Thông tin gỡ lỗi</string>
     <string name="setting_learn_title">Thiết lập học</string>
-    <string name="setting_today_new_card_limit">Giới hạn học thẻ mới hôm nay</string>
-    <string name="setting_today_review_card_limit">Giới hạn thẻ xem lại hôm nay</string>
+    <string name="setting_today_new_card_limit">Số từ mới tối đa mỗi ngày</string>
+    <string name="setting_today_review_card_limit">Số từ xem lại tối đa mỗi ngày</string>
     <string name="dialog_message_setting_today_review_card_limit_by">Thay đổi số thẻ xem lại</string>
     <string name="setting_total_learn_per_day">Tổng số thẻ học trong một ngày</string>
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Tổng số thẻ muốn học trong một ngày</string>
@@ -184,7 +184,7 @@
         <item>@string/speech_rate_very_fast</item>
     </string-array>
     <string name="dialog_message_reset_custom_study">Bạn có muốn thiết lập về mặc đinh?</string>
-    <string name="setting_about_message">Born2Go © 2015 All Rights Reserved</string>
+    <string name="setting_about_message">Born2Go © 2015</string>
     <string name="setting_export_database">Export database</string>
     <string name="setting_reset_cache">Reset Cache</string>
     <string name="setting_reset_to_default">Thiết lập mặc định</string>
@@ -231,14 +231,16 @@
     <string name="an_error_occurred">Có lỗi xảy ra</string>
 
     <string name="setting_set_time_notification">Thời gian thông báo %s</string>
-
-    <string name="setting_custom_study">Thiết lập</string>
+    <string name="setting_custom_study">Thiết lập học</string>
 
     <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>
     <string name="action_report">Góp ý</string>
     <string name="drawer_dictionary">Từ diển</string>
     <string name="position_meaning_down">Dưới</string>
     <string name="message_total_card_incoming">Tổng số:</string>
+    <string name="setting_custom_study_title">Học</string>
+    <string name="english_word" translatable="false">Học từ vựng tiếng Anh</string>
+>>>>>>> 1ecf3c8aeb5ec6ebb2bf766453b27b557809a119
 
 
 </resources>
