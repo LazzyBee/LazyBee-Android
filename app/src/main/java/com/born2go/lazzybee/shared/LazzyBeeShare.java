@@ -143,6 +143,7 @@ public class LazzyBeeShare {
     public static String POPUP_URL = "popup_url";
 
     static TextToSpeech textToSpeech;
+    public static String GOTO_DICTIONARY ="GOTO_DICTIONARY";
 
     /**
      * Init data demo List Course

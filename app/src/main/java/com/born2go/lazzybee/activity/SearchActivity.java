@@ -148,7 +148,7 @@ public class SearchActivity extends AppCompatActivity implements
         search = (SearchView) menu.findItem(R.id.search).getActionView();
 
         Log.i(TAG, "Query search:" + query_text);
-        if (query_text.equals("gotoDictionary")) {
+        if (query_text.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
             _search(query_text);
@@ -230,15 +230,17 @@ public class SearchActivity extends AppCompatActivity implements
     private void _search(String query) {
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
-        if (query_text.equals("gotoDictionary")) {
-//
+        boolean isDir = false;
+        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
+            isDir = true;
         }
         try {
             List<Card> cardList = dataBaseHelper._searchCard(query);
             int result_count = cardList.size();
             Log.i(TAG, "Search result_count:" + result_count);
             if (result_count > 0) {
-                lbResultCount.setVisibility(View.VISIBLE);
+                lbResultCount.setVisibility((isDir) ? View.GONE : View.VISIBLE);
+
                 mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
                 lbMessageNotFound.setVisibility(View.GONE);
 

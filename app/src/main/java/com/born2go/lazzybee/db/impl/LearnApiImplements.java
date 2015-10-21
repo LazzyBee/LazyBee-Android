@@ -220,7 +220,7 @@ public class LearnApiImplements implements LearnApi {
 //                + " ORDER BY (CASE WHEN " +
 //                " question = '" + query + "' THEN 1 WHEN " +
 //                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
-        if (query.equals("gotoDictionary")) {
+        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
             return _getDictionary();
         } else {
             String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"

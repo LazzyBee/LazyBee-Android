@@ -60,6 +60,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Calendar;
@@ -210,10 +211,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private void _initInterstitialAd() {
         try {
-            String adb_ennable = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE);
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String adb_ennable;
+            if (container == null) {
+                adb_ennable = LazzyBeeShare.NO;
+            } else {
+                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+
+            }
             Log.i(TAG, "adb_ennable ? " + adb_ennable);
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
                 mInterstitialAd = new InterstitialAd(this);
@@ -620,7 +627,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        _gotoSeach("gotoDictionary");
+        _gotoSeach(LazzyBeeShare.GOTO_DICTIONARY);
     }
 
     private void _gotoAbout() {
@@ -876,7 +883,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
+        Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+        String base_url;
+        if (container == null) {
+            base_url = getString(R.string.url_lazzybee_website);
+        } else {
+            base_url = container.getString(LazzyBeeShare.BASE_URL_DB);
+
+        }
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
         int version = LazzyBeeShare.DEFAULT_VERSION_DB;
         if (db_v != null) {
@@ -1200,19 +1214,28 @@ public class MainActivity extends AppCompatActivity
 
     private void _showDialogTip() {
         try {
-            String popup_text = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_TEXT);
-            final String popup_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_URL);
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String popup_text;
+            String popup_url = LazzyBeeShare.EMPTY;
+            if (container == null) {
+                popup_text = null;
+            } else {
+                popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
+                popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+
+            }
             if (popup_text != null) {
                 final Snackbar snackbar =
                         Snackbar
                                 .make(mCardViewReView, popup_text, Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
+                final String finalPopup_url = popup_url;
                 snackBarView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
                             snackbar.dismiss();
-                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(popup_url));
+                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
                             startActivity(myIntent);
                         } catch (ActivityNotFoundException e) {
                             Log.e(TAG, "No application can handle this request."
