@@ -1,15 +1,14 @@
 package com.born2go.lazzybee.activity;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.DataLayer;
 
 public class AboutActivity extends AppCompatActivity {
@@ -49,8 +48,7 @@ public class AboutActivity extends AppCompatActivity {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 }

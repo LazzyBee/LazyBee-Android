@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
@@ -20,6 +19,7 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.List;
 
@@ -79,8 +79,7 @@ public class FragmentReviewToday extends Fragment {
                             fragmentReviewTodayListener.gotoCardDetails(cardId);
                         }
                     } catch (Exception e) {
-                        Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+                        LazzyBeeShare.showErrorOccurred(context, e);
                     }
                 }
 
@@ -95,8 +94,7 @@ public class FragmentReviewToday extends Fragment {
             mRecyclerViewReviewTodayList.setAdapter(recyclerViewReviewTodayListAdapter);
             mRecyclerViewReviewTodayList.addOnItemTouchListener(recyclerViewTouchListener);
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         return view;
     }

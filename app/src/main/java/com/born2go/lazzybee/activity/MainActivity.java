@@ -279,14 +279,14 @@ public class MainActivity extends AppCompatActivity
 
             sequence.start();
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
     private void _initInterstitialAd() {
         try {
             String adb_ennable = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE);
+            Log.i(TAG, "adb_ennable ? " + adb_ennable);
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
                 mInterstitialAd = new InterstitialAd(this);
                 mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -304,8 +304,7 @@ public class MainActivity extends AppCompatActivity
                 mInterstitialAd = null;
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -350,8 +349,7 @@ public class MainActivity extends AppCompatActivity
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
             Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "---------END-------");
     }
@@ -446,8 +444,7 @@ public class MainActivity extends AppCompatActivity
 //        }
             _visibilityCount(visibility);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         return complete;
     }
@@ -472,8 +469,7 @@ public class MainActivity extends AppCompatActivity
             lbTotalsCount.setText(String.valueOf(allCount));
             lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "-------------------------_getCountCard() END----------------------------\n");
 
@@ -857,8 +853,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
             return false;
         }
 
@@ -1312,8 +1307,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "popup_text null");
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -1357,8 +1351,7 @@ public class MainActivity extends AppCompatActivity
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 

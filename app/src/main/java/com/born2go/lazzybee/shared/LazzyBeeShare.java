@@ -14,6 +14,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
@@ -454,6 +455,14 @@ public class LazzyBeeShare {
         }
         Log.i(TAG, html);
         return html;
+    }
+
+    public static void showErrorOccurred(Context context, Exception e) {
+        String messageError = context.getString(R.string.an_error_occurred)
+                + "\t" + context.getClass().getName() + ":" + e.getMessage();
+        Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, messageError);
+        e.printStackTrace();
     }
 
     /*

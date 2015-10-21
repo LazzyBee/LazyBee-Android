@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -120,8 +119,7 @@ public class RecyclerViewCustomStudyAdapter extends
             }
             //_reloadRecylerView();
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
