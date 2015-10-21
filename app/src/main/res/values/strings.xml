@@ -5,15 +5,12 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="action_example" translatable="false">Example action</string>
 
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="add_course">Add course</string>
-    <string name="action_profile">Profile</string>
-    <string name="action_logout">Logout</string>
+
     <string name="action_search">Search</string>
 
     <string name="not_found">Not found</string>
@@ -22,9 +19,8 @@
     <string name="result">Result</string>
     <string name="title_activity_study">Study</string>
 
-    <string name="hello_world" translatable="false">Hello world!</string>
     <string name="title_activity_search">Search</string>
-    <string name="title_activity_seating" translatable="false">SeatingActivity</string>
+    <string name="title_activity_setting" translatable="false">SettingActivity</string>
     <string name="title_activity_review_card">Incoming</string>
     <string name="title_activity_add_course">Add Course</string>
     <string name="hint_search">Search</string>
@@ -38,7 +34,6 @@
 
     <string name="learn_more">Learn more</string>
     <string name="congratulations">Congratulations!</string>
-    <string name="suport_complete_card" translatable="false">Touch LEARN MORE</string>
 
     <string name="action_learnt">Card learned</string>
     <string name="action_ignore">Ignore card</string>
@@ -71,7 +66,6 @@
 
     <string name="notification">Notification</string>
     <string name="language">Language</string>
-    <string name="add_to" />
     <string name="queue" translatable="false">queue</string>
 
     <!--Dialog Done card-->
@@ -88,7 +82,6 @@
     <string name="dialog_message_restart_app">Your app is going to restart now</string>
     <string name="dialog_title_restart_app">Restart App</string>
 
-    <string name="action_login">Login</string>
 
     <!--Config Google,Facebook -->
     <!--AIzaSyDGoIb-19xn16xjhgJh2v38rRsfcsRQZQ-->
@@ -108,8 +101,6 @@
 
     <string name="btn_update">Update</string>
     <string name="updated">Updated</string>
-
-    <string name="dowload_file_success" translatable="false">A new file is downloaded successfully</string>
 
     <string name="auto_check_update">Auto check update</string>
     <string name="debug_infor">Debug Information</string>
@@ -272,9 +263,7 @@
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
     </string-array>
 
-    <string name="SHOWCASE_MAIN_ID" translatable="false">50</string>
-    <string name="SHOWCASE_INIT_STUDY_ID" translatable="false">47</string>
-    <string name="SHOWCASE_STUDY_ID" translatable="false">48</string>
+
 
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
     <string name="number_row_updated">%d row updated</string>
@@ -298,22 +287,8 @@
 
     <string name="drawer_dictionary">Dictionary</string>
 
-    <string name="showcase_message_button_again0">Again,Study word after 10 minute</string>
-    <string name="showcase_message_button_hard1">Hard,Study word after 1 day</string>
-    <string name="showcase_message_button_good2">Good,Study word after 2 day</string>
-    <string name="showcase_message_button_easy3">Easy,Study word after 2 day</string>
-    <string name="showcase_message_got_it">Got it!</string>
-    <string name="showcase_message_button_show_answer">This is Show Answer</string>
-    <string name="showcase_message_new_count">This is new count</string>
-    <string name="showcase_message_again_count">This is again count</string>
-    <string name="showcase_message_reivew_count">This is review count</string>
 
-    <string name="showcase_message_help_panel">This is help study</string>
-    <string name="showcase_message_start_study">Touch to Start Study</string>
-    <string name="showcase_message_my_due">This is my taget</string>
-    <string name="showcase_message_gotoReview">Touch to my Review word</string>
-    <string name="showcase_message_learn_more">Touch to Learn more</string>
-    <string name="showcase_message_custom_study">Touch to Custom Study</string>
+
     <string name="setting_my_level">My level</string>
     <string name="setting_message_default">Default</string>
     <string name="dialog_title_change_my_level">Change my level</string>
@@ -339,7 +314,7 @@
 
     <string name="setting_custom_study_title" translatable="false">Study</string>
     <string name="prefs_first_time" translatable="false">FirstTime</string>
-    <string name="english_word" translatable="false">10000 EngLish Word</string>
+    <string name="english_word" translatable="false">EngLish Word</string>
     <string name="message_no_results_found_for">No results found for %s</string>
     <string name="action_report">Report</string>
     <string name="page_facebook_id" translatable="false">1012100435467230</string>

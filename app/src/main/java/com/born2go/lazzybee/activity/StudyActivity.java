@@ -46,10 +46,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
-
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 
 public class StudyActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
@@ -138,124 +134,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     }
 
-    private void _initShowcaseInitStudy() {
-        try {
-            String SHOWCASE_ID = getString(R.string.SHOWCASE_INIT_STUDY_ID);
-            // sequence example
-            ShowcaseConfig config = new ShowcaseConfig();
-            config.setDelay(500); // half second between each showcase view
-
-            MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-
-            MaterialShowcaseView showcase_lbCountNew = new MaterialShowcaseView.Builder(this)
-                    .setTarget(lbCountNew)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_new_count))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_lbCountAgain = new MaterialShowcaseView.Builder(this)
-                    .setTarget(lbCountAgain)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_again_count))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_lbCountDue = new MaterialShowcaseView.Builder(this)
-                    .setTarget(lbCountDue)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_reivew_count))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_btnShowAnswer = new MaterialShowcaseView.Builder(this)
-                    .setTarget(btnShowAnswer)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_button_show_answer))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_mCardViewHelpandAdMod = new MaterialShowcaseView.Builder(this)
-                    .setTarget(mCardViewHelpandAdMod)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_help_panel))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
 
 
-            sequence.setConfig(config);
-
-            sequence.addSequenceItem(showcase_lbCountNew);
-
-            sequence.addSequenceItem(showcase_lbCountAgain);
-
-            sequence.addSequenceItem(showcase_lbCountDue);
-
-            sequence.addSequenceItem(showcase_btnShowAnswer);
-
-            //sequence.addSequenceItem(showcase_mCardViewHelpandAdMod);
-
-
-            sequence.start();
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
-        }
-    }
-
-    private void _initShowcaseShowAnswer() {
-        try {
-            String SHOWCASE_ID = getString(R.string.SHOWCASE_STUDY_ID);
-            // sequence example
-            ShowcaseConfig config = new ShowcaseConfig();
-            config.setDelay(500); // half second between each showcase view
-
-            MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-            MaterialShowcaseView showcase_btnAgain0 = new MaterialShowcaseView.Builder(this)
-                    .setTarget(btnAgain0)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_button_again0))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_btnHard1 = new MaterialShowcaseView.Builder(this)
-                    .setTarget(btnHard1)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_button_hard1))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_btnGood2 = new MaterialShowcaseView.Builder(this)
-                    .setTarget(btnGood2)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_button_good2))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            MaterialShowcaseView showcase_btnEasy3 = new MaterialShowcaseView.Builder(this)
-                    .setTarget(btnEasy3)
-                    .setDismissText(getString(R.string.showcase_message_got_it))
-                    .setContentText(getString(R.string.showcase_message_button_easy3))
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .setDismissOnTouch(true)
-                    .build();
-            sequence.setConfig(config);
-
-            sequence.addSequenceItem(showcase_btnAgain0);
-
-            sequence.addSequenceItem(showcase_btnHard1);
-
-            sequence.addSequenceItem(showcase_btnGood2);
-
-            sequence.addSequenceItem(showcase_btnEasy3);
-
-
-            sequence.start();
-
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
-        }
-    }
 
 
     private void _setUpStudy() {
