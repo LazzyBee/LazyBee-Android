@@ -65,10 +65,6 @@ import com.google.android.gms.tagmanager.DataLayer;
 import java.util.Calendar;
 import java.util.List;
 
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -737,9 +733,9 @@ public class MainActivity extends AppCompatActivity
 //                Toast.makeText(this, "BACK", Toast.LENGTH_SHORT).show();
 //                onBackPressed();
                 break;
-            case R.id.action_settings:
-                _gotoSetting();
-                break;
+//            case R.id.action_settings:
+//                _gotoSetting();
+//                break;
 //            case R.id.action_login:
 ////                if (item.getTitle() == getString(R.string.action_login))
 //                _login();
