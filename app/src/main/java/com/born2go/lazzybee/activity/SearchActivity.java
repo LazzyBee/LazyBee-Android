@@ -255,10 +255,10 @@ public class SearchActivity extends AppCompatActivity implements
                 getCardFormServerByQuestion.execute(card);
                 getCardFormServerByQuestion.delegate = this;
             }
-            hideKeyboard();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+        hideKeyboard();
 
 
     }
@@ -388,10 +388,10 @@ public class SearchActivity extends AppCompatActivity implements
                 lbMessageNotFound.setVisibility(View.VISIBLE);
                 lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
             }
-            hideKeyboard();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+        hideKeyboard();
     }
 
     @Override
@@ -415,10 +415,14 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        if (search != null) {
-            search.clearFocus();
+        try {
+            if (search != null) {
+                search.clearFocus();
+            }
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+
         }
     }
 }
