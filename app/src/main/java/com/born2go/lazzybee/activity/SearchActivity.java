@@ -98,8 +98,7 @@ public class SearchActivity extends AppCompatActivity implements
                         Log.w(TAG, "card.getId()==0");
                     }
                 } catch (Exception e) {
-                    Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+                    LazzyBeeShare.showErrorOccurred(context, e);
                 }
 
             }
@@ -117,8 +116,7 @@ public class SearchActivity extends AppCompatActivity implements
                         Log.w(TAG, "card.getId()==0");
                     }
                 } catch (Exception e) {
-                    Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+                    LazzyBeeShare.showErrorOccurred(context, e);
                 }
 
             }
@@ -168,8 +166,8 @@ public class SearchActivity extends AppCompatActivity implements
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getBaseContext(), query,
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getBaseContext(), query,
+//                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
                 _search(query);
                 return false;
@@ -257,12 +255,10 @@ public class SearchActivity extends AppCompatActivity implements
                 getCardFormServerByQuestion.execute(card);
                 getCardFormServerByQuestion.delegate = this;
             }
-            hideKeyboard();
-
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
+        hideKeyboard();
 
 
     }
@@ -392,11 +388,10 @@ public class SearchActivity extends AppCompatActivity implements
                 lbMessageNotFound.setVisibility(View.VISIBLE);
                 lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
             }
-            hideKeyboard();
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
+        hideKeyboard();
     }
 
     @Override
@@ -415,15 +410,19 @@ public class SearchActivity extends AppCompatActivity implements
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
     private void hideKeyboard() {
-        if (search != null)
-            search.clearFocus();
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            if (search != null) {
+                search.clearFocus();
+            }
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+
+        }
     }
 }

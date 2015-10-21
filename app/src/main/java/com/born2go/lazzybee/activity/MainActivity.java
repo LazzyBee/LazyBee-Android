@@ -3,6 +3,7 @@ package com.born2go.lazzybee.activity;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -211,80 +213,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void _initShowcaseLazzyBee() {
-        try {
-            String SHOWCASE_ID = getString(R.string.SHOWCASE_MAIN_ID);
-            // sequence example
-            ShowcaseConfig config = new ShowcaseConfig();
 
-            config.setDelay(500); // half second between each showcase view
-
-            MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-            sequence.setConfig(config);
-            if (mCardViewStudy.getVisibility() != View.GONE) {
-                MaterialShowcaseView showcaseStartActivity = new MaterialShowcaseView.Builder(this)
-                        .setTarget(lbStudy)
-                        .setDismissText(getString(R.string.showcase_message_got_it))
-                        .setContentText(getString(R.string.showcase_message_start_study))
-                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                        .setDismissOnTouch(true)
-                        .build();
-                sequence.addSequenceItem(showcaseStartActivity);
-            }
-            if (mDue.getVisibility() != View.GONE) {
-                MaterialShowcaseView showcase_my_due = new MaterialShowcaseView.Builder(this)
-                        .setTarget(lbDueToday)
-                        .setDismissText(getString(R.string.showcase_message_got_it))
-                        .setContentText(getString(R.string.showcase_message_my_due))
-                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                        .setDismissOnTouch(true)
-                        .build();
-                sequence.addSequenceItem(showcase_my_due);
-            }
-            if (mCardViewReView.getVisibility() != View.GONE) {
-                MaterialShowcaseView showcase_gotoReview = new MaterialShowcaseView.Builder(this)
-                        .setTarget(mCardViewReView)
-                        .setDismissText(getString(R.string.showcase_message_got_it))
-                        .setContentText(getString(R.string.showcase_message_gotoReview))
-                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                        .setDismissOnTouch(true)
-                        .build();
-                sequence.addSequenceItem(showcase_gotoReview);
-            }
-
-
-            if (mCardViewLearnMore.getVisibility() != View.GONE) {
-                MaterialShowcaseView showcase_learn_more = new MaterialShowcaseView.Builder(this)
-                        .setTarget(mCardViewLearnMore)
-                        .setDismissText(getString(R.string.showcase_message_got_it))
-                        .setContentText(getString(R.string.showcase_message_learn_more))
-                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                        .setDismissOnTouch(true)
-                        .build();
-                sequence.addSequenceItem(showcase_learn_more);
-            }
-            if (mCardViewCustomStudy.getVisibility() != View.GONE) {
-                MaterialShowcaseView showcase_custom_study = new MaterialShowcaseView.Builder(this)
-                        .setTarget(lbCustomStudy)
-                        .setDismissText(getString(R.string.showcase_message_got_it))
-                        .setContentText(getString(R.string.showcase_message_custom_study))
-                        .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                        .setDismissOnTouch(true)
-                        .build();
-
-                sequence.addSequenceItem(showcase_custom_study);
-            }
-
-            sequence.start();
-        } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
-        }
-    }
 
     private void _initInterstitialAd() {
         try {
             String adb_ennable = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE);
+            Log.i(TAG, "adb_ennable ? " + adb_ennable);
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
                 mInterstitialAd = new InterstitialAd(this);
                 mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -302,8 +236,7 @@ public class MainActivity extends AppCompatActivity
                 mInterstitialAd = null;
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -348,8 +281,7 @@ public class MainActivity extends AppCompatActivity
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
             Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "---------END-------");
     }
@@ -444,8 +376,7 @@ public class MainActivity extends AppCompatActivity
 //        }
             _visibilityCount(visibility);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         return complete;
     }
@@ -470,8 +401,7 @@ public class MainActivity extends AppCompatActivity
             lbTotalsCount.setText(String.valueOf(allCount));
             lbTotalNewCount.setText(String.valueOf(countCardNoLearn));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "-------------------------_getCountCard() END----------------------------\n");
 
@@ -855,8 +785,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
             return false;
         }
 
@@ -1254,13 +1183,15 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         Log.i(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000 ||
-                requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
+        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
             if (resultCode == 1
                     || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
                 complete = _checkCompleteLearn();
                 _getCountCard();
-            } else if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            }
+        }
+        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(getString(R.string.prefs_first_time), false);
@@ -1268,16 +1199,47 @@ public class MainActivity extends AppCompatActivity
 
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
-
-                complete = _checkCompleteLearn();
-                _getCountCard();
                 String messgage_congratilation = getString(R.string.message_congratulations);
                 _showDialogCongraturation(messgage_congratilation);
 
             } else {
-                complete = _checkCompleteLearn();
-                _getCountCard();
+                _showDialogTip();
             }
+            complete = _checkCompleteLearn();
+            _getCountCard();
+        }
+    }
+
+    private void _showDialogTip() {
+        try {
+            String popup_text = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_TEXT);
+            final String popup_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_URL);
+            if (popup_text != null) {
+                final Snackbar snackbar =
+                        Snackbar
+                                .make(mCardViewReView, popup_text, Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            snackbar.dismiss();
+                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(popup_url));
+                            startActivity(myIntent);
+                        } catch (ActivityNotFoundException e) {
+                            Log.e(TAG, "No application can handle this request."
+                                    + " Please install a webbrowser");
+                        }
+                    }
+                });
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
+
+                snackbar.setDuration(7000).show();
+            } else {
+                Log.e(TAG, "popup_text null");
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -1321,8 +1283,7 @@ public class MainActivity extends AppCompatActivity
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
