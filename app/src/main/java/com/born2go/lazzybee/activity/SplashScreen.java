@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -29,7 +30,8 @@ import java.util.concurrent.TimeUnit;
 public class SplashScreen extends Activity {
     private static final String TAG = "SplashScreen";
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 2000;
+    private static int SPLASH_TIME_OUT = 300;
+    private static int GTM_TIME_OUT = 2000;
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements learnApiImplements;
@@ -40,69 +42,54 @@ public class SplashScreen extends Activity {
 
         setContentView(R.layout.activity_splash_screen);
 
-        TagManager tagManager = TagManager.getInstance(this);
-
-        // Modify the log level of the logger to print out not only
-        // warning and error messages, but also verbose, debug, info messages.
-        tagManager.setVerboseLoggingEnabled(true);
-
-        PendingResult<ContainerHolder> pending =
-                tagManager.loadContainerPreferNonDefault(getString(R.string.google_tag_ID),
-                        R.raw.gtm_default_container);
-
-        // The onResult method will be called as soon as one of the following happens:
-        //     1. a saved container is loaded
-        //     2. if there is no saved container, a network container is loaded
-        //     3. the request times out. The example below uses a constant to manage the timeout period.
-        pending.setResultCallback(new ResultCallback<ContainerHolder>() {
+        new Handler().postDelayed(new Runnable() {
+            /*
+             * Showing splash screen with a timer. This will be useful when you
+             * want to show case your app logo / company
+             */
             @Override
-            public void onResult(ContainerHolder containerHolder) {
-                _initSQlIte();
-                _changeLanguage();
-                //init Container
-                ContainerHolderSingleton.setContainerHolder(containerHolder);
-                Container container = containerHolder.getContainer();
-                if (!containerHolder.getStatus().isSuccess()) {
-                    Log.e("LazzyBee", "failure loading container for GTag");
-                    displayErrorToUser(R.string.gtag_container_load_error);
-                    //return;
-                } else {
-                    ContainerHolderSingleton.setContainerHolder(containerHolder);
-                    ContainerLoadedCallback.registerCallbacksForContainer(container);
-                    containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
-                }
-                _updateVersionDB();
+            public void run() {
+                TagManager tagManager = TagManager.getInstance(SplashScreen.this);
 
-                int my_level = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-                learnApiImplements._get100Card(my_level);
+                // Modify the log level of the logger to print out not only
+                // warning and error messages, but also verbose, debug, info messages.
+                tagManager.setVerboseLoggingEnabled(true);
 
-                startMainActivity();
+                PendingResult<ContainerHolder> pending =
+                        tagManager.loadContainerPreferNonDefault(getString(R.string.google_tag_ID),
+                                R.raw.gtm_default_container);
+
+                // The onResult method will be called as soon as one of the following happens:
+                //     1. a saved container is loaded
+                //     2. if there is no saved container, a network container is loaded
+                //     3. the request times out. The example below uses a constant to manage the timeout period.
+                pending.setResultCallback(new ResultCallback<ContainerHolder>() {
+                    @Override
+                    public void onResult(ContainerHolder containerHolder) {
+                        _initSQlIte();
+                        _changeLanguage();
+                        //init Container
+                        ContainerHolderSingleton.setContainerHolder(containerHolder);
+                        Container container = containerHolder.getContainer();
+                        if (!containerHolder.getStatus().isSuccess()) {
+                            Log.e("LazzyBee", "failure loading container for GTag");
+                            displayErrorToUser(R.string.gtag_container_load_error);
+                            //return;
+                        } else {
+                            ContainerHolderSingleton.setContainerHolder(containerHolder);
+                            ContainerLoadedCallback.registerCallbacksForContainer(container);
+                            containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
+                        }
+                        _updateVersionDB();
+
+                        int my_level = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+                        learnApiImplements._get100Card(my_level);
+
+                        startMainActivity();
+                    }
+                }, GTM_TIME_OUT, TimeUnit.MILLISECONDS);
             }
-        }, SPLASH_TIME_OUT, TimeUnit.MILLISECONDS);
-
-//        new Handler().postDelayed(new Runnable() {
-//
-//            /*
-//             * Showing splash screen with a timer. This will be useful when you
-//             * want to show case your app logo / company
-//             */
-//
-//            @Override
-//            public void run() {
-//                // This method will be executed once the timer is over
-//                startMainActivity();
-//
-//                // close this activity
-//                finish();
-//            }
-//        }, SPLASH_TIME_OUT);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //startMainActivity();
+        }, SPLASH_TIME_OUT);
     }
 
     private void startMainActivity() {

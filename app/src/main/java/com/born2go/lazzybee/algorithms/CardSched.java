@@ -56,7 +56,7 @@ public class CardSched {
                 double month = (double) day / 30;
                 str = String.format("%.1f", month) + " month";
                 if (month > 12) {
-                    double year = day / 365;
+                    double year = (double) day / 365;
                     str = String.format("%.1f",year) + " year";
                 }
             }
