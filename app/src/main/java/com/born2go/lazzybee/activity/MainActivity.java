@@ -7,10 +7,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,8 +52,6 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -298,10 +294,7 @@ public class MainActivity extends AppCompatActivity
         if (!_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
             //_setUpNotification(true);
         }
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(getString(R.string.prefs_first_time), true);
-        editor.commit();
+
 
 
     }
@@ -498,31 +491,44 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogCongraturation(String messgage_congratilation) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean firsrtTime = prefs.getBoolean(getString(R.string.prefs_first_time), false);
-        if (!firsrtTime) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean firsrtTime = prefs.getBoolean(getString(R.string.prefs_first_time), false);
+//        if (!firsrtTime) {
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//
+//            // Chain together various setter methods to set the dialog characteristics
+//            builder.setTitle(R.string.congratulations);
+//            builder.setMessage(messgage_congratilation);
+//
+//
+//            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    SharedPreferences.Editor editor = prefs.edit();
+//                    editor.putBoolean(getString(R.string.prefs_first_time), true);
+//                    editor.commit();
+//
+//                    dialog.cancel();
+//
+//                }
+//            });
+//            // Get the AlertDialog from create()
+//            AlertDialog dialog = builder.create();
+//
+//            dialog.show();
+        final Snackbar snackbar =
+                Snackbar
+                        .make(mCardViewReView, messgage_congratilation, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
+        snackbar.show();
 
-            // Chain together various setter methods to set the dialog characteristics
-            builder.setTitle(R.string.congratulations);
-            builder.setMessage(messgage_congratilation);
-
-
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean(getString(R.string.prefs_first_time), true);
-                    editor.commit();
-
-                    dialog.cancel();
-
-                }
-            });
-            // Get the AlertDialog from create()
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-        }
+//        }
     }
 
     private void _initToolBar() {
@@ -532,31 +538,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Check login
-     */
-    private void _checkLogin() {
-//        gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
-//            @Override
-//            public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
-//                Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onSignInFailed() {
-//                Toast.makeText(context, "Sign in failed", Toast.LENGTH_LONG).show();
-//            }
-//        }).build();
 
-    }
-
-    public void authenticate() {
-        Intent accountChooserIntent =
-                AccountPicker.newChooseAccountIntent(null, null,
-                        new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, "Select an account", null,
-                        null, null);
-        startActivityForResult(accountChooserIntent, REQUEST_PICK_ACCOUNT);
-    }
 
     /**
      * Init Sql
@@ -565,14 +547,6 @@ public class MainActivity extends AppCompatActivity
         myDbHelper = LazzyBeeSingleton.dataBaseHelper;
         databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
-//        try {
-//            myDbHelper._createDataBase();
-//        } catch (IOException ioe) {
-//            //throw new Error("Unable to create database");
-//            //ioe.printStackTrace();
-//            Log.e(TAG, "Unable to create database:" + ioe.getMessage());
-//
-//        }
     }
 
 
@@ -1194,14 +1168,14 @@ public class MainActivity extends AppCompatActivity
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(getString(R.string.prefs_first_time), false);
-                editor.commit();
+//                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//                SharedPreferences.Editor editor = prefs.edit();
+//                editor.putBoolean(getString(R.string.prefs_first_time), false);
+//                editor.commit();
 
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
-                String messgage_congratilation = getString(R.string.message_congratulations);
+                String messgage_congratilation = getString(R.string.congratulations);
                 _showDialogCongraturation(messgage_congratilation);
 
             } else {
