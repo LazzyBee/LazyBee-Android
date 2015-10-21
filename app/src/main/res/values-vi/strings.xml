@@ -8,7 +8,6 @@
     <string name="action_learnt">Đã biết</string>
     <string name="action_ignore">Bỏ qua</string>
 
-    <string name="action_logout">Đăng xuất</string>
     <string name="action_search">Tìm kiếm</string>
     <string name="action_settings">Cài đặt</string>
     <string name="congratulations">Chúc mừng bạn đã hoàn thành!</string>
@@ -23,7 +22,6 @@
     <string name="title_activity_review_card">Từ sắp học</string>
     <string name="title_activity_search">Tìm kiếm</string>
     <string name="title_activity_study">Học</string>
-    <string name="action_profile">Hồ sơ</string>
     <string name="add_course">Thêm khóa học</string>
     <string name="show_answer">Hiện đáp án</string>
     <string name="study">Học</string>
@@ -50,7 +48,6 @@
 
     <string name="notification">Thông báo</string>
     <string name="language">Ngôn ngữ</string>
-    <string name="add_to">Thêm vào</string>
 
     <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
     <string name="message_learnt_card_sucessful">Đã học xong thẻ!</string>
@@ -61,7 +58,6 @@
     <string name="lang_viet">Tiếng việt</string>
     <string name="dialog_message_restart_app">Ứng dụng sẽ khởi động lại</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>
-    <string name="action_login">Đăng nhập</string>
     <string name="action_check_update_database">Kiểm tra cập nhật</string>
     <string name="dialog_update">Cập nhật</string>
     <string name="dialog_title_update">Cập nhật cơ sở dữ liệu</string>
@@ -201,23 +197,8 @@
     <string name="mesage_update_database_fails">Cập nhật cơ sở dữ liệu thất bại!</string>
     <string name="message_add_favorite_card_done">Thêm %s vào Yêu thích</string>
 
-    <string name="showcase_message_button_again0">Học lại,Học từ lại ngay sau 10 phút</string>
-    <string name="showcase_message_button_hard1">Khó,Học từ lại ngay sau 1 ngày</string>
-    <string name="showcase_message_button_good2">Tốt,Học từ lại ngay sau 3 ngày</string>
-    <string name="showcase_message_button_easy3">Dễ,Học từ lại ngay sau 3 ngày</string>
-    <string name="showcase_message_got_it">Bỏ qua!</string>
-    <string name="showcase_message_button_show_answer">Đây là hiện câu trả lời</string>
-    <string name="showcase_message_new_count">Đây là số các từ chưa học</string>
-    <string name="showcase_message_again_count">Đây là số các từ học lại</string>
-    <string name="showcase_message_reivew_count">Đây là số các từ đã học</string>
 
-    <string name="showcase_message_help_panel">Đây là bảng hỗ trợ học</string>
 
-    <string name="showcase_message_start_study">Bấm vào đây để Học</string>
-    <string name="showcase_message_my_due">Đây là mục tiêu của bạn</string>
-    <string name="showcase_message_gotoReview">Bấm vào đây để xem các thẻ đã học</string>
-    <string name="showcase_message_learn_more">Bấm vào đây để Học thêm</string>
-    <string name="showcase_message_custom_study">Bấm vào đây để thiết lập cách học</string>
     <string name="setting_my_level">Cấp độ của bạn</string>
     <string name="setting_message_default">Mặc định</string>
     <string name="dialog_title_change_my_level">Thay đổi cấp độ</string>
@@ -238,7 +219,6 @@
     <string name="drawer_dictionary">Từ diển</string>
     <string name="position_meaning_down">Dưới</string>
     <string name="message_total_card_incoming">Tổng số:</string>
-    <string name="setting_custom_study_title">Học</string>
     <string name="english_word" >Học từ vựng tiếng Anh</string>
     <string name="incoming">Từ sắp học</string>
 
