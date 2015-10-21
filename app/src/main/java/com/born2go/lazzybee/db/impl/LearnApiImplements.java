@@ -220,15 +220,15 @@ public class LearnApiImplements implements LearnApi {
 //                + " ORDER BY (CASE WHEN " +
 //                " question = '" + query + "' THEN 1 WHEN " +
 //                " question LIKE '" + query + "%' THEN 2 ELSE 3 END) ";
-        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
-            return _getDictionary();
-        } else {
-            String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
-                    + " ORDER BY " + KEY_QUESTION;
-            //Seach card
-            List<Card> datas = _getListCardQueryString(likeQuery, 1);
-            return datas;
-        }
+//        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
+//            return _getDictionary();
+//        } else {
+        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
+                + " ORDER BY " + KEY_QUESTION;
+        //Seach card
+        List<Card> datas = _getListCardQueryString(likeQuery, 1);
+        return datas;
+//        }
     }
 
     private List<Card> _getDictionary() {
@@ -1379,4 +1379,11 @@ public class LearnApiImplements implements LearnApi {
     }
 
 
+    public List<Card> _searchCardOrGotoDictionary(String query, int type) {
+        if (type == 0) {
+            return _searchCard(query);
+        } else {
+            return _getDictionary();
+        }
+    }
 }

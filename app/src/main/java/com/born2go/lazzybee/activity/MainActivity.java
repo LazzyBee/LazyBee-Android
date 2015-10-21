@@ -296,7 +296,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
     }
 
 
@@ -538,8 +537,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     /**
      * Init Sql
      */
@@ -601,7 +598,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        _gotoSeach(LazzyBeeShare.GOTO_DICTIONARY);
+        _gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, 1);
     }
 
     private void _gotoAbout() {
@@ -686,7 +683,7 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    _gotoSeach(query);
+                    _gotoSeachOrDictionary(query, 0);
                     return false;
                 }
 
@@ -738,7 +735,7 @@ public class MainActivity extends AppCompatActivity
             //Search
 //                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
 //                _setUpSearchActionBar();
-//                _gotoSeach("a");
+//                _gotoSeachOrDictionary("a");
             //
 //                mSearchView.setIconified(false);
             //break;
@@ -917,8 +914,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * Goto FragemenSearch with query_text
      */
-    private void _gotoSeach(String query) {
+    private void _gotoSeachOrDictionary(String query, int type) {
         Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(SearchActivity.DISPLAY_TYPE, type);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
