@@ -2,13 +2,11 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -107,8 +105,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             }
 
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred)+":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 

@@ -199,8 +199,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
             sequence.start();
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -254,8 +253,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             sequence.start();
 
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -341,8 +339,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 _completeLean();
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -379,8 +376,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 //            Log.i(TAG, "Get config from TagManager: ADV_ENABLE? " +
 //                    ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -570,8 +566,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -602,8 +597,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             currentCard.setStatus(statusFavrite);
             dataBaseHelper._updateCard(currentCard);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -628,8 +622,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
 
     }
@@ -776,8 +769,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             //Hide btnBackBeforeCard
             btnBackBeforeCard.setVisible(false);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "------------------END-------------------");
     }
@@ -864,8 +856,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             }
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "-----------------------END----------------------");
     }
@@ -987,8 +978,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
 
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -1096,8 +1086,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "-----------------------END-----------------------------");
     }
@@ -1317,8 +1306,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 

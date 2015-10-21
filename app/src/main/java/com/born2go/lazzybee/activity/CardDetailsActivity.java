@@ -81,8 +81,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         container = (LinearLayout) findViewById(R.id.container);
 
-        cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
-
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
 
@@ -102,6 +100,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     private void _displayCard() {
         try {
+            cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
             card = learnApiImplements._getCardByID(cardId);
 
             setTitle(card.getQuestion());
@@ -120,8 +119,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+           LazzyBeeShare.showErrorOccurred(context,e);
         }
     }
 
@@ -239,8 +237,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
 
     }
@@ -249,8 +246,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -276,8 +272,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             Toast.makeText(context, getString(R.string.message_add_favorite_card_done, card.getQuestion()), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -329,8 +324,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             dialog.show();
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -384,8 +378,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -473,8 +466,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
                 mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             } catch (Exception e) {
-                Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+                LazzyBeeShare.showErrorOccurred(context, e);
             }
 
 
@@ -548,8 +540,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 

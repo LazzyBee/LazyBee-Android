@@ -206,8 +206,7 @@ public class RecyclerViewSettingListAdapter extends
                 _handlerChangeSpeechRate(mSlideSpeechRate);
             }
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
 
     }
@@ -988,8 +987,7 @@ public class RecyclerViewSettingListAdapter extends
 //            Toast.makeText(context, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)), Toast.LENGTH_SHORT).show();
             Log.e(TAG, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)));
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.an_error_occurred), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.an_error_occurred) + ":" + e.getMessage());
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "---------END-------");
     }
