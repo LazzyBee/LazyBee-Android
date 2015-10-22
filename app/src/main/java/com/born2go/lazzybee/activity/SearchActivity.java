@@ -66,7 +66,7 @@ public class SearchActivity extends AppCompatActivity implements
 
         //get query text in Intent
         query_text = getIntent().getStringExtra(QUERY_TEXT);
-        display_type = getIntent().getIntExtra(DISPLAY_TYPE, 0);
+        display_type = getIntent().getIntExtra(DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
         //Search by text
         // _search(query_text);
         handleIntent(getIntent());

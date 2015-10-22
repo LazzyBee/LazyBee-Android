@@ -265,7 +265,7 @@ public class LearnApiImplements implements LearnApi {
         } else {
             //limit learn more =5 row
             if (learnmore == true)
-                number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
+                number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
             String settingMyLevel = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
             int my_level = 0;

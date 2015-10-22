@@ -230,8 +230,8 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_today_new_card_limit</item>
-        <item>@string/setting_lines</item>
-        <item>@string/setting_max_learn_more_per_day</item>
+       <!-- <item>@string/setting_lines</item>
+        <item>@string/setting_max_learn_more_per_day</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_position_meaning</item>
         <item>@string/setting_lines</item>
