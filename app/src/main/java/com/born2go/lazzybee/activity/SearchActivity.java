@@ -191,14 +191,8 @@ public class SearchActivity extends AppCompatActivity implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if (id == android.R.id.home) {
             finish();
-            onBackPressed();
             return true;
         }
 
@@ -344,6 +338,7 @@ public class SearchActivity extends AppCompatActivity implements
                 dataBaseHelper._addCardIdToQueueList(card);
                 Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                 ADD_TO_LEARN = 1;
+                setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
             }
         });
         // Get the AlertDialog from create()
@@ -352,21 +347,6 @@ public class SearchActivity extends AppCompatActivity implements
         dialog.show();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (ADD_TO_LEARN == 1)
-            setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
-
-        finish();
-        super.onBackPressed();
-
-    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Toast.makeText(context,"Search OnResume",Toast.LENGTH_SHORT).show();
-//    }
 
     @Override
     public void processFinish(Card card) {

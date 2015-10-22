@@ -35,7 +35,6 @@ public class AddCourseActivity extends AppCompatActivity {
         }
         if (id == android.R.id.home) {
             finish();
-            onBackPressed();
             return true;
         }
 

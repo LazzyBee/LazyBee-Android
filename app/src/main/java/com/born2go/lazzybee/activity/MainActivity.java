@@ -1,7 +1,5 @@
 package com.born2go.lazzybee.activity;
 
-import android.app.Activity;
-import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -10,9 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -24,12 +19,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,7 +37,6 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.FragmentCourse;
-import com.born2go.lazzybee.fragment.FragmentDialogCustomStudy;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -52,10 +44,6 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
@@ -65,12 +53,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        FragmentDialogCustomStudy.DialogCustomStudyInferface,
-        ConnectionCallbacks, OnConnectionFailedListener
-        , DownloadFileDatabaseResponse {
+        DownloadFileDatabaseResponse {
 
+    private Context context = this;
     private static final String TAG = "MainActivity";
-    private static final int REQUEST_PICK_ACCOUNT = 120;
     private static final Object GA_SCREEN = "aMainScreen";
 
     /**
@@ -85,123 +71,56 @@ public class MainActivity extends AppCompatActivity
 
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
+    LearnApiImplements dataBaseHelper;
+
+    FrameLayout container;
     DrawerLayout drawerLayout;
 
     CardView mCardViewStudy;
     CardView mCardViewReView;
     CardView mCardViewLearnMore;
+
     CardView mCardViewCustomStudy;
-
     TextView lbNameCourse;
-
     TextView lbDueToday;
     TextView lbTotalNewCount;
-    TextView lbTotalsCount;
 
+    TextView lbTotalsCount;
+    TextView lbReview;
+
+    TextView lbStudy;
+    TextView lbCustomStudy;
+
+
+    TextView txtMessageCongratulation;
+    InterstitialAd mInterstitialAd;
 
     RelativeLayout mDue, mCongratulations;
     LinearLayout mLine;
 
-
-    private LearnApiImplements dataBaseHelper;
-    private Context context = this;
-
     boolean appPause = false;
 
-
-    InterstitialAd mInterstitialAd;
-
-
-    // Allows us to notify the user that something happened in the background
-    NotificationManager notificationManager;
-
-
-    TextView lbReview;
-
-    TextView lbStudy;
-
-    TextView lbCustomStudy;
-
-
     int countCardNoLearn = 0;
-
     int complete = 0;
-
-    TextView txtMessageCongratulation;
-
-    FrameLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        long startTime_onCreate = System.nanoTime();
         super.onCreate(savedInstanceState);
-//        long endTime_onCreate = System.nanoTime();
-//        long duration_onCreate = (endTime_onCreate - startTime_onCreate);
-//        Log.i(TAG, "duration_onCreate:" + duration_onCreate);
-
-//        long startTime_setContentView = System.nanoTime();
         setContentView(R.layout.activity_main);
-//        long endTime_setContentView = System.nanoTime();
-//        long duration_setContentView = (endTime_setContentView - startTime_setContentView);
-//        Log.i(TAG, "duration_setContentView:" + duration_setContentView);
 
-//        long startTime_initSQlIte = System.nanoTime();
         _initSQlIte();
-//        long endTime_initSQlIte = System.nanoTime();
-//        long duration_initSQlIte = (endTime_initSQlIte - startTime_initSQlIte);
-//        Log.i(TAG, "duration_initSQlIte:" + duration_initSQlIte);
-
-//        long startTime_initSettingApplication = System.nanoTime();
         _initSettingApplication();
-//        long endTime_initSettingApplication = System.nanoTime();
-//        long duration_initSettingApplication = (endTime_initSettingApplication - startTime_initSettingApplication);
-//        Log.i(TAG, "duration_initSettingApplication:" + duration_initSettingApplication);
 
-//        long startTime_initToolBar = System.nanoTime();
         _initToolBar();
-//        long endTime_initToolBar = System.nanoTime();
-//        long duration__initToolBar = (endTime_initToolBar - startTime_initToolBar);
-//        Log.i(TAG, "duration__initToolBar:" + duration__initToolBar);
-
-//        long startTime_intInterfaceView = System.nanoTime();
         _intInterfaceView();
-//        long endTime_intInterfaceView = System.nanoTime();
-//        long duration_intInterfaceView = (endTime_intInterfaceView - startTime_intInterfaceView);
-//        Log.i(TAG, "duration_intInterfaceView:" + duration_intInterfaceView);
 
-//        long startTime_getCountCard = System.nanoTime();
         _getCountCard();
-//        long endTime_getCountCard = System.nanoTime();
-//        long duration_getCountCard = (endTime_getCountCard - startTime_getCountCard);
-//        Log.i(TAG, "duration_getCountCard:" + duration_getCountCard);
-
-//        long startTime_checkCompleteLearn = System.nanoTime();
         //Check complete Learn
         complete = _checkCompleteLearn();
-//        long endTime_checkCompleteLearn = System.nanoTime();
-//        long duration_checkCompleteLearn = (endTime_checkCompleteLearn - startTime_checkCompleteLearn);
-//        Log.i(TAG, "duration_checkCompleteLearn:" + duration_checkCompleteLearn);
 
-//        long startTime_initInterstitialAd = System.nanoTime();
         _initInterstitialAd();
-//        long endTime_initInterstitialAd = System.nanoTime();
-//        long duration_initInterstitialAd = (endTime_initInterstitialAd - startTime_initInterstitialAd);
-//        Log.i(TAG, "duration_initInterstitialAd:" + duration_initInterstitialAd);
 
-//        Log.i(TAG, "mNavigationDrawerFragment.isDrawerOpen()?" + mNavigationDrawerFragment.isDrawerOpen());
-//        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-//            long startTime_initShowcaseLazzyBee = System.nanoTime();
-//            _initShowcaseLazzyBee();
-//            long endTime_initShowcaseLazzyBee = System.nanoTime();
-//            long duration_initShowcaseLazzyBee = (endTime_initShowcaseLazzyBee - startTime_initShowcaseLazzyBee);
-//            Log.i(TAG, "duration_initShowcaseLazzyBee:" + duration_initShowcaseLazzyBee);
-//        }
-
-//        long startTime_trackerApplication = System.nanoTime();
         _trackerApplication();
-//        long endTime_trackerApplication = System.nanoTime();
-//        long duration_trackerApplication = (endTime_trackerApplication - startTime_trackerApplication);
-//        Log.i(TAG, "duration_trackerApplication:" + duration_trackerApplication);
 
 
     }
@@ -291,11 +210,6 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         LazzyBeeShare._cancelNotification(context);
-        if (!_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-            //_setUpNotification(true);
-        }
-
-
     }
 
 
@@ -490,30 +404,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogCongraturation(String messgage_congratilation) {
-//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        boolean firsrtTime = prefs.getBoolean(getString(R.string.prefs_first_time), false);
-//        if (!firsrtTime) {
-//            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-//
-//            // Chain together various setter methods to set the dialog characteristics
-//            builder.setTitle(R.string.congratulations);
-//            builder.setMessage(messgage_congratilation);
-//
-//
-//            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int id) {
-//                    SharedPreferences.Editor editor = prefs.edit();
-//                    editor.putBoolean(getString(R.string.prefs_first_time), true);
-//                    editor.commit();
-//
-//                    dialog.cancel();
-//
-//                }
-//            });
-//            // Get the AlertDialog from create()
-//            AlertDialog dialog = builder.create();
-//
-//            dialog.show();
         final Snackbar snackbar =
                 Snackbar
                         .make(mCardViewReView, messgage_congratilation, Snackbar.LENGTH_LONG);
@@ -526,8 +416,6 @@ public class MainActivity extends AppCompatActivity
         });
         snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
         snackbar.show();
-
-//        }
     }
 
     private void _initToolBar() {
@@ -617,29 +505,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Repale to course details
-     * Add back stack
-     */
-    private void _gotoCourseDetails(String course_id) {
-
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //Got Course Details
-        FragmentCourse fragmentCourse = new FragmentCourse();
-        //New bunder
-        Bundle bundle = new Bundle();
-        //Set Course id
-        bundle.putString(FragmentCourse.COURSE_ID, course_id);
-        //setArguments for fragmentCourse
-        fragmentCourse.setArguments(bundle);
-        //replace from container to fragmentCourse
-        fragmentTransaction.replace(R.id.container, fragmentCourse)
-                .addToBackStack(FragmentCourse.TAG).commit();
-        //
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
     public void _onSectionAttached(int number) {
         switch (number) {
@@ -657,7 +522,6 @@ public class MainActivity extends AppCompatActivity
 
     public void _restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
@@ -884,21 +748,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private boolean _compareToVersion(int clientVesion) {
-        if (clientVesion == 0) {
-            return true;
-        } else {
-            int update_local_version = databaseUpgrade._getVersionDB();
-            if (update_local_version > clientVesion)
-                return true;
-            else if (LazzyBeeShare.VERSION_SERVER > clientVesion)
-                return true;
-            else
-                return false;
-        }
-
-    }
-
 
     /**
      * Goto setting
@@ -923,52 +772,6 @@ public class MainActivity extends AppCompatActivity
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
     }
 
-    @Override
-    public void _finishCustomStudy() {
-        //fragmentDialogCustomStudy.dismiss();
-        //fragmentDialogCustomStudy.
-//        fragmentDialogCustomStudy.setCustomStudyAdapter();
-//        _getCountCard();
-//        int my_level = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-//        dataBaseHelper._initPreFetchNewCardList(my_level);
-//        Toast.makeText(context, R.string.message_custom_setting_successful, Toast.LENGTH_SHORT).show();
-//        Snackbar.make(container, getString(R.string.message_custom_setting_successful), Snackbar.LENGTH_LONG)
-//                .show();
-
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-
-        // Get user's information
-        getProfileInformation();
-
-        // Update the UI after signin
-        // updateUI(true);
-    }
-
-    private void getProfileInformation() {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // mGoogleApiClient.connect();
-        //updateUI(false);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        if (!result.hasResolution()) {
-            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
-                    0).show();
-            Log.e(TAG, "ConnectionFailed:" + result.getErrorCode());
-            return;
-        }
-
-
-    }
 
     @Override
     protected void onStart() {
@@ -989,46 +792,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity)._onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 
@@ -1067,19 +830,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-    public void _onCustomStudyOnClick(View view) {
-        //_gotoSetting();
-        _showDialogCustomStudy();
-
-    }
-
-    private void _showDialogCustomStudy() {
-//        FragmentManager fm = getSupportFragmentManager();
-//        fragmentDialogCustomStudy = new FragmentDialogCustomStudy();
-//        fragmentDialogCustomStudy.show(fm, FragmentDialogCustomStudy.TAG);
-
-    }
 
     public void _onLearnMoreClick(View view) {
         if (countCardNoLearn == 0) {
@@ -1138,9 +888,6 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
-//    private void _gotoStudyLearnMore() {
-//
-//    }
 
     public void _onbtnReviewOnClick(View view) {
         //Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
@@ -1167,11 +914,6 @@ public class MainActivity extends AppCompatActivity
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-//                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//                SharedPreferences.Editor editor = prefs.edit();
-//                editor.putBoolean(getString(R.string.prefs_first_time), false);
-//                editor.commit();
-
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
                 String messgage_congratilation = getString(R.string.congratulations);
@@ -1238,12 +980,6 @@ public class MainActivity extends AppCompatActivity
             _getCountCard();
         }
         LazzyBeeShare._cancelNotification(context);
-    }
-
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-
     }
 
     @Override

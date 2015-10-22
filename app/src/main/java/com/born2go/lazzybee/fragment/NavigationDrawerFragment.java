@@ -21,8 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewDrawerListAdapter;
@@ -89,7 +87,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-       // selectItem(mCurrentSelectedPosition);
+        // selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -136,11 +134,11 @@ public class NavigationDrawerFragment extends Fragment {
                     selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
                 } else if (o.equals(getString(R.string.drawer_about))) {
                     selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
-                }else if (o.equals(getString(R.string.drawer_dictionary))) {
-                        selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
+                } else if (o.equals(getString(R.string.drawer_dictionary))) {
+                    selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
                 } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
                     selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                }else if(o instanceof Course){
+                } else if (o instanceof Course) {
                     selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
                 }
 
@@ -326,8 +324,6 @@ public class NavigationDrawerFragment extends Fragment {
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        //actionBar.setTitle(R.string.app_name);
     }
 
     private ActionBar getActionBar() {
@@ -337,54 +333,13 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
     }
 
-    class CouresListAdapter extends ArrayAdapter<Course> {
 
-        public CouresListAdapter(Context context, int resource) {
-            super(context, resource);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            return super.getView(position, convertView, parent);
-        }
-    }
-
-    class DrawerListAdapter extends ArrayAdapter<String> {
-        private Context context;
-        private int resource;
-        private List<String> strings;
-
-        public DrawerListAdapter(Context context, int resource, List<String> strings) {
-            super(context, resource, strings);
-            this.context = context;
-            this.resource = resource;
-            this.strings = strings;
-
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(resource, parent, false);
-            TextView lbNameCourse = (TextView) rowView.findViewById(R.id.lbNameCourse);
-            //TextView lbCountNew = (TextView) rowView.findViewById(R.id.lbCountNew);
-            lbNameCourse.setText(strings.get(position));
-            return rowView;
-        }
-
-        @Override
-        public String getItem(int position) {
-            return strings.get(position);
-        }
-    }
 }
 

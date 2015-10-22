@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -15,7 +14,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,29 +42,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CardDetailsActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
-
-
     private static final String TAG = "CardDetailsActivity";
     private static final Object GA_SCREEN = "aCardDetailsScreen";
 
     private Context context;
-
+    LearnApiImplements learnApiImplements;
 
     Card card;
     String cardId;
 
-    LearnApiImplements learnApiImplements;
-
+    LinearLayout container;
     private SlidingTabLayout mSlidingTabLayout;
-
     private ViewPager mViewPager;
-    WebView mWebViewLeadDetails;
-    TextToSpeech textToSpeech;
 
     MenuItem itemFavorite;
 
-    LinearLayout container;
-
+    WebView mWebViewLeadDetails;
     CardView mCardViewAdv;
     CardView mCardViewViewPager;
 
@@ -194,9 +185,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        Log.i(TAG, "MENU ITEM:" + id + ",Home:" + android.R.id.home);
         switch (id) {
             case android.R.id.home:
                 finish();
@@ -315,10 +303,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 public void onClick(DialogInterface dialog, int id) {
                     //Update Queue_list in system table
                     learnApiImplements._addCardIdToQueueList(card);
-//                Snackbar.make(container,
-//                        Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-//                                , getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()))), Snackbar.LENGTH_SHORT)
-//                        .show();
                     Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
 
                 }
@@ -338,22 +322,22 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
     }
 
-    /**
-     * Take care of calling onBackPressed() for pre-Eclair platforms.
-     *
-     * @param keyCode
-     * @param event
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            // do something on back.
-            finish();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
+//    /**
+//     * Take care of calling onBackPressed() for pre-Eclair platforms.
+//     *
+//     * @param keyCode
+//     * @param event
+//     */
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            // do something on back.
+//            finish();
+//            return true;
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     @Override
     public void processFinish(Card card) {
@@ -530,13 +514,13 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
 
     }
-
-    @Override
-    protected void onDestroy() {
-        //_stopTextToSpeech();
-        super.onDestroy();
-
-    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        //_stopTextToSpeech();
+//        super.onDestroy();
+//
+//    }
 
     private void _trackerApplication() {
         try {
