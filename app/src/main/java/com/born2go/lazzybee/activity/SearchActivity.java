@@ -55,8 +55,10 @@ public class SearchActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.onResume();
         setContentView(R.layout.activity_search);
         context = this;
+//        Toast.makeText(context,"Search onCreate",Toast.LENGTH_SHORT).show();
 
         _initLazzyBeeSingleton();
 
@@ -150,7 +152,7 @@ public class SearchActivity extends AppCompatActivity implements
         search = (SearchView) menu.findItem(R.id.search).getActionView();
 
         Log.i(TAG, "Query search:" + query_text);
-        if (display_type == 0) {
+        if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
             search.setQuery(query_text, false);
             search.setIconified(false);
             search.clearFocus();
@@ -360,6 +362,12 @@ public class SearchActivity extends AppCompatActivity implements
         super.onBackPressed();
 
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Toast.makeText(context,"Search OnResume",Toast.LENGTH_SHORT).show();
+//    }
 
     @Override
     public void processFinish(Card card) {

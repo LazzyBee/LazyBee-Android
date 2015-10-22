@@ -598,7 +598,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        _gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, 1);
+        _gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+
     }
 
     private void _gotoAbout() {
@@ -683,7 +684,7 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    _gotoSeachOrDictionary(query, 0);
+                    _gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
                     return false;
                 }
 

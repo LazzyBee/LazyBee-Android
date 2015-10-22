@@ -1380,7 +1380,7 @@ public class LearnApiImplements implements LearnApi {
 
 
     public List<Card> _searchCardOrGotoDictionary(String query, int type) {
-        if (type == 0) {
+        if (type == LazzyBeeShare.GOTO_SEARCH_CODE) {
             return _searchCard(query);
         } else {
             return _getDictionary();

@@ -90,6 +90,8 @@ public class LazzyBeeShare {
     public static final int DEFAULT_VERSION_DB = 1;
     public static final String BASE_URL_SHARING = "base_url_sharing";
     public static final String DEFAULTS_BASE_URL_SHARING = "http://www.lazzybee.com/library/#dictionary/";
+    public static final int GOTO_DICTIONARY_CODE = 1;
+    public static final int GOTO_SEARCH_CODE = 0;
 
 
     private static boolean DEBUG = true;
