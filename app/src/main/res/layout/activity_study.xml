@@ -185,7 +185,7 @@
 
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/button_green_color"
                     android:id="@+id/mShowAnswer"
                     android:onClick="onbtnShowAnswerClick">
 
@@ -196,7 +196,7 @@
                         android:onClick="onbtnShowAnswerClick"
                         android:text="@string/show_answer"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/button_green_color"
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -220,7 +220,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/button_green_color"
                         android:onClick="onbtnAgainClick"
                         android:paddingRight="5dp"
                         android:text="@string/EASE_AGAIN" />
@@ -231,7 +231,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/button_green_color"
                         android:onClick="onbtnHardClick"
                         android:paddingRight="5dp"
                         android:text="@string/EASE_HARD" />
@@ -242,7 +242,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.3"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/button_green_color"
                         android:onClick="onbtnGoodClick"
                         android:text="@string/EASE_GOOD" />
 
@@ -251,7 +251,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="0.3"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/button_green_color"
                         android:onClick="onbtnEasyClick"
                         android:text="@string/EASE_EASY" />
 

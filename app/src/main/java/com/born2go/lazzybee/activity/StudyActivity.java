@@ -354,7 +354,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _search(String query) {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivityForResult(intent, 2);
     }
 

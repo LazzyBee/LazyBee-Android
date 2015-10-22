@@ -23,7 +23,7 @@
                 android:layout_alignParentTop="true"
                 android:textSize="20sp"
                 android:singleLine="true"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#ff060606"
                 android:text="Question" />
 
             <TextView
@@ -72,7 +72,8 @@
                 android:layout_alignBaseline="@+id/lbQuestion"
                 android:layout_alignBottom="@+id/learned"
                 android:layout_toRightOf="@+id/lbQuestion"
-                android:layout_toEndOf="@+id/lbQuestion" />
+                android:layout_toEndOf="@+id/lbQuestion"
+                android:layout_marginLeft="15dp" />
 
         </RelativeLayout>
 

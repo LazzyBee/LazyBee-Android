@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity
                 snackbar.dismiss();
             }
         });
-        snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
         snackbar.show();
     }
 
@@ -768,7 +768,8 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.DISPLAY_TYPE, type);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
     }
 
@@ -958,7 +959,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 });
-                snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
 
                 snackbar.setDuration(7000).show();
             } else {
