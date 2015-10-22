@@ -64,7 +64,6 @@ public class CustomStudySettingActivity extends AppCompatActivity {
 
         if (id == android.R.id.home) {
             finish();
-            onBackPressed();
             return true;
         }
 
