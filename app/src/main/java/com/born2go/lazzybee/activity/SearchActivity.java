@@ -159,7 +159,7 @@ public class SearchActivity extends AppCompatActivity implements
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
         }
-        _search(query_text, display_type);
+        _search(query_text, display_type, false);
 
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -172,18 +172,20 @@ public class SearchActivity extends AppCompatActivity implements
 //                Toast.makeText(getBaseContext(), query,
 //                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
-                _search(query, display_type);
+                _search(query, display_type, false);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                _search(newText, display_type, true);
                 return false;
             }
         });
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -220,11 +222,11 @@ public class SearchActivity extends AppCompatActivity implements
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query_text = intent.getStringExtra(SearchManager.QUERY);
-            _search(query_text, display_type);
+            _search(query_text, display_type, false);
         }
     }
 
-    private void _search(String query, int display_type) {
+    private void _search(String query, int display_type, boolean suggestion) {
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
         try {
@@ -253,7 +255,8 @@ public class SearchActivity extends AppCompatActivity implements
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
-        hideKeyboard();
+        if (!suggestion)
+            hideKeyboard();
 
 
     }
@@ -276,7 +279,7 @@ public class SearchActivity extends AppCompatActivity implements
                 } else if (items[item] == getString(R.string.action_learnt)) {
                     _doneCard(card);
                 }
-                _search(query_text, display_type);
+                _search(query_text, display_type, false);
                 dialog.cancel();
             }
         });
@@ -388,7 +391,7 @@ public class SearchActivity extends AppCompatActivity implements
         if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
             //Reload data
             Log.i(TAG, QUERY_TEXT + ":" + query_text);
-            _search(query_text, display_type);
+            _search(query_text, display_type, false);
         }
     }
 
