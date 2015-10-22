@@ -30,6 +30,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 
@@ -922,25 +923,36 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _downloadFile() {
-        String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
-        String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-        int version = LazzyBeeShare.DEFAULT_VERSION_DB;
-        if (db_v != null) {
-            version = Integer.valueOf(db_v);
-        }
-        String dbUpdateName = (version + 1) + ".db";
-        String download_url = base_url + dbUpdateName;
-        Log.i(TAG, "download_url=" + download_url);
+        try {
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String base_url;
+            if (container == null) {
+                base_url = context.getString(R.string.url_lazzybee_website);
+            } else {
+                base_url = container.getString(LazzyBeeShare.BASE_URL_DB);
 
-        if (!base_url.isEmpty() || base_url != null) {
+            }
+            String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+            int version = LazzyBeeShare.DEFAULT_VERSION_DB;
+            if (db_v != null) {
+                version = Integer.valueOf(db_v);
+            }
+            String dbUpdateName = (version + 1) + ".db";
+            String download_url = base_url + dbUpdateName;
+            Log.i(TAG, "download_url=" + download_url);
 
-            DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+            if (!base_url.isEmpty() || base_url != null) {
 
-            //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-            downloadFileandUpdateDatabase.execute(download_url);
-            downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
-        } else {
-            Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+                DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+
+                //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+                downloadFileandUpdateDatabase.execute(download_url);
+                downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+            } else {
+                Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 

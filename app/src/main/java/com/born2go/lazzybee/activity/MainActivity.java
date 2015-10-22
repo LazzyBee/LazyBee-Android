@@ -7,10 +7,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,20 +52,15 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Calendar;
 import java.util.List;
-
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 public class MainActivity extends AppCompatActivity
@@ -214,10 +207,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private void _initInterstitialAd() {
         try {
-            String adb_ennable = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE);
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String adb_ennable;
+            if (container == null) {
+                adb_ennable = LazzyBeeShare.NO;
+            } else {
+                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+
+            }
             Log.i(TAG, "adb_ennable ? " + adb_ennable);
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
                 mInterstitialAd = new InterstitialAd(this);
@@ -295,10 +294,6 @@ public class MainActivity extends AppCompatActivity
         if (!_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
             //_setUpNotification(true);
         }
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(getString(R.string.prefs_first_time), true);
-        editor.commit();
 
 
     }
@@ -495,31 +490,44 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogCongraturation(String messgage_congratilation) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean firsrtTime = prefs.getBoolean(getString(R.string.prefs_first_time), false);
-        if (!firsrtTime) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean firsrtTime = prefs.getBoolean(getString(R.string.prefs_first_time), false);
+//        if (!firsrtTime) {
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//
+//            // Chain together various setter methods to set the dialog characteristics
+//            builder.setTitle(R.string.congratulations);
+//            builder.setMessage(messgage_congratilation);
+//
+//
+//            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    SharedPreferences.Editor editor = prefs.edit();
+//                    editor.putBoolean(getString(R.string.prefs_first_time), true);
+//                    editor.commit();
+//
+//                    dialog.cancel();
+//
+//                }
+//            });
+//            // Get the AlertDialog from create()
+//            AlertDialog dialog = builder.create();
+//
+//            dialog.show();
+        final Snackbar snackbar =
+                Snackbar
+                        .make(mCardViewReView, messgage_congratilation, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.teal_500));
+        snackbar.show();
 
-            // Chain together various setter methods to set the dialog characteristics
-            builder.setTitle(R.string.congratulations);
-            builder.setMessage(messgage_congratilation);
-
-
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean(getString(R.string.prefs_first_time), true);
-                    editor.commit();
-
-                    dialog.cancel();
-
-                }
-            });
-            // Get the AlertDialog from create()
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-        }
+//        }
     }
 
     private void _initToolBar() {
@@ -530,46 +538,12 @@ public class MainActivity extends AppCompatActivity
 
 
     /**
-     * Check login
-     */
-    private void _checkLogin() {
-//        gitkitClient = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
-//            @Override
-//            public void onSignIn(IdToken idToken, GitkitUser gitkitUser) {
-//                Toast.makeText(context, "Sign in with:" + idToken, Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onSignInFailed() {
-//                Toast.makeText(context, "Sign in failed", Toast.LENGTH_LONG).show();
-//            }
-//        }).build();
-
-    }
-
-    public void authenticate() {
-        Intent accountChooserIntent =
-                AccountPicker.newChooseAccountIntent(null, null,
-                        new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, "Select an account", null,
-                        null, null);
-        startActivityForResult(accountChooserIntent, REQUEST_PICK_ACCOUNT);
-    }
-
-    /**
      * Init Sql
      */
     private void _initSQlIte() {
         myDbHelper = LazzyBeeSingleton.dataBaseHelper;
         databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
-//        try {
-//            myDbHelper._createDataBase();
-//        } catch (IOException ioe) {
-//            //throw new Error("Unable to create database");
-//            //ioe.printStackTrace();
-//            Log.e(TAG, "Unable to create database:" + ioe.getMessage());
-//
-//        }
     }
 
 
@@ -624,7 +598,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        _gotoSeach("gotoDictionary");
+        _gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+
     }
 
     private void _gotoAbout() {
@@ -709,7 +684,7 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    _gotoSeach(query);
+                    _gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
                     return false;
                 }
 
@@ -737,9 +712,9 @@ public class MainActivity extends AppCompatActivity
 //                Toast.makeText(this, "BACK", Toast.LENGTH_SHORT).show();
 //                onBackPressed();
                 break;
-            case R.id.action_settings:
-                _gotoSetting();
-                break;
+//            case R.id.action_settings:
+//                _gotoSetting();
+//                break;
 //            case R.id.action_login:
 ////                if (item.getTitle() == getString(R.string.action_login))
 //                _login();
@@ -761,7 +736,7 @@ public class MainActivity extends AppCompatActivity
             //Search
 //                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
 //                _setUpSearchActionBar();
-//                _gotoSeach("a");
+//                _gotoSeachOrDictionary("a");
             //
 //                mSearchView.setIconified(false);
             //break;
@@ -880,7 +855,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        String base_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_DB);
+        Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+        String base_url;
+        if (container == null) {
+            base_url = getString(R.string.url_lazzybee_website);
+        } else {
+            base_url = container.getString(LazzyBeeShare.BASE_URL_DB);
+
+        }
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
         int version = LazzyBeeShare.DEFAULT_VERSION_DB;
         if (db_v != null) {
@@ -933,8 +915,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * Goto FragemenSearch with query_text
      */
-    private void _gotoSeach(String query) {
+    private void _gotoSeachOrDictionary(String query, int type) {
         Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(SearchActivity.DISPLAY_TYPE, type);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
@@ -1184,14 +1167,14 @@ public class MainActivity extends AppCompatActivity
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(getString(R.string.prefs_first_time), false);
-                editor.commit();
+//                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//                SharedPreferences.Editor editor = prefs.edit();
+//                editor.putBoolean(getString(R.string.prefs_first_time), false);
+//                editor.commit();
 
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
-                String messgage_congratilation = getString(R.string.message_congratulations);
+                String messgage_congratilation = getString(R.string.congratulations);
                 _showDialogCongraturation(messgage_congratilation);
 
             } else {
@@ -1204,19 +1187,28 @@ public class MainActivity extends AppCompatActivity
 
     private void _showDialogTip() {
         try {
-            String popup_text = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_TEXT);
-            final String popup_url = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.POPUP_URL);
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String popup_text;
+            String popup_url = LazzyBeeShare.EMPTY;
+            if (container == null) {
+                popup_text = null;
+            } else {
+                popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
+                popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+
+            }
             if (popup_text != null) {
                 final Snackbar snackbar =
                         Snackbar
                                 .make(mCardViewReView, popup_text, Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
+                final String finalPopup_url = popup_url;
                 snackBarView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
                             snackbar.dismiss();
-                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(popup_url));
+                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
                             startActivity(myIntent);
                         } catch (ActivityNotFoundException e) {
                             Log.e(TAG, "No application can handle this request."

@@ -37,6 +37,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Arrays;
@@ -119,36 +120,46 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
         } catch (Exception e) {
-           LazzyBeeShare.showErrorOccurred(context,e);
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
     private void _initAdView() {
-        //get value form task manager
-        String adb_ennable = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE);
+        try {
+            //get value form task manager
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String adb_ennable;
+            if (container == null) {
+                adb_ennable = LazzyBeeShare.NO;
+            } else {
+                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
 
-        mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        if (adb_ennable.equals(LazzyBeeShare.YES)) {
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                    .build();
-            mAdView.loadAd(adRequest);
-            mCardViewAdv.setVisibility(View.VISIBLE);
-            //
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
-            mCardViewViewPager.setLayoutParams(param);
-        } else {
-            mCardViewAdv.setVisibility(View.GONE);
-            //
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0f);
-            mCardViewViewPager.setLayoutParams(param);
+            }
+            mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            if (adb_ennable.equals(LazzyBeeShare.YES)) {
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .build();
+                mAdView.loadAd(adRequest);
+                mCardViewAdv.setVisibility(View.VISIBLE);
+                //
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+                mCardViewViewPager.setLayoutParams(param);
+            } else {
+                mCardViewAdv.setVisibility(View.GONE);
+                //
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT, 0f);
+                mCardViewViewPager.setLayoutParams(param);
 
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 

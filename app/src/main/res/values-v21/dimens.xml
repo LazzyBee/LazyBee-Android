@@ -9,4 +9,5 @@
     <dimen name="setting_card_view_elevation">1dp</dimen>
     <dimen name="margin_left_due_card">0dp</dimen>
     <dimen name="main_top_bottom_magin_view">5dp</dimen>
+    <dimen name="cardview_count_study_margin_top">5dp</dimen>
 </resources>
