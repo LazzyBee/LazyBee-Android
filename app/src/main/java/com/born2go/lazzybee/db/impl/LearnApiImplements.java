@@ -225,10 +225,11 @@ public class LearnApiImplements implements LearnApi {
 //        } else {
         String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
                 + " ORDER BY " + KEY_QUESTION;
+        List<Card> datas = new ArrayList<>();
         //Seach card
-        List<Card> datas = _getListCardQueryString(likeQuery, 1);
+        if (query != null || query.length() > 0)
+            datas = _getListCardQueryString(likeQuery, 1);
         return datas;
-//        }
     }
 
     private List<Card> _getDictionary() {

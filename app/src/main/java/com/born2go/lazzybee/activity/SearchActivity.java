@@ -172,14 +172,14 @@ public class SearchActivity extends AppCompatActivity implements
 //                Toast.makeText(getBaseContext(), query,
 //                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
-                _search(query, display_type, false);
+                _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, false);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
-                _search(newText, display_type, true);
+                _search(newText, LazzyBeeShare.GOTO_SEARCH_CODE, true);
                 return false;
             }
         });
@@ -230,27 +230,37 @@ public class SearchActivity extends AppCompatActivity implements
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
         try {
-            List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
-            int result_count = cardList.size();
-            Log.i(TAG, "Search result_count:" + result_count);
-            if (result_count > 0) {
-                lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
-
-                mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
-                lbMessageNotFound.setVisibility(View.GONE);
-
-                //set count
-                lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
-                //Init Adapter
+            if (query.equals(LazzyBeeShare.EMPTY)) {
+                lbResultCount.setVisibility(View.GONE);
+                List<Card> cardList = new ArrayList<Card>();
                 setAdapterListCard(cardList);
-            } else if (result_count == 0) {//Check result_count==0 search in server
-                //Define Card
-                Card card = new Card();
-                card.setQuestion(query);
-                //Call Search in server
-                GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                getCardFormServerByQuestion.execute(card);
-                getCardFormServerByQuestion.delegate = this;
+            } else if (query != null || query.length() > 0) {
+                List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                int result_count = cardList.size();
+                Log.i(TAG, "Search result_count:" + result_count);
+                if (result_count > 0) {
+                    lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
+
+                    mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
+                    lbMessageNotFound.setVisibility(View.GONE);
+
+                    //set count
+                    lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+                    //Init Adapter
+                    setAdapterListCard(cardList);
+                } else if (result_count == 0) {//Check result_count==0 search in server
+                    //Define Card
+                    Card card = new Card();
+                    card.setQuestion(query);
+                    //Call Search in server
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    getCardFormServerByQuestion.execute(card);
+                    getCardFormServerByQuestion.delegate = this;
+                }
+            } else {
+                lbResultCount.setVisibility(View.GONE);
+                List<Card> cardList = new ArrayList<Card>();
+                setAdapterListCard(cardList);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
