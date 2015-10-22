@@ -79,9 +79,4 @@ public class CustomStudySettingActivity extends AppCompatActivity {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

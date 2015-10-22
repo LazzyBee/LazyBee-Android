@@ -200,7 +200,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         switch (id) {
             case android.R.id.home:
                 finish();
-                onBackPressed();
                 return true;
             case R.id.action_add_to_learn:
                 _addCardToLearn();
@@ -337,13 +336,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        super.onBackPressed();
-        finish();
     }
 
     /**

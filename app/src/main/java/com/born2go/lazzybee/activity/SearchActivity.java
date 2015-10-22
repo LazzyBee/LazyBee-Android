@@ -55,7 +55,6 @@ public class SearchActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.onResume();
         setContentView(R.layout.activity_search);
         context = this;
 //        Toast.makeText(context,"Search onCreate",Toast.LENGTH_SHORT).show();
