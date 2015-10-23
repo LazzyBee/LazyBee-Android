@@ -556,7 +556,7 @@ public class MainActivity extends AppCompatActivity
                     return false;
                 }
             });
-            
+
             _restoreActionBar();
             // return true;
         }
