@@ -34,6 +34,7 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
@@ -119,20 +120,33 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String adb_ennable;
+            String admob_pub_id = LazzyBeeShare.EMPTY;
+            String adv_dictionary_id = LazzyBeeShare.EMPTY;
             if (container == null) {
                 adb_ennable = LazzyBeeShare.NO;
             } else {
                 adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
+                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
 
             }
+            String advId = admob_pub_id + "/" + adv_dictionary_id;
+            if (admob_pub_id == null || adv_dictionary_id == null) {
+                advId = getString(R.string.banner_ad_unit_id);
+            }
             mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
-            AdView mAdView = (AdView) findViewById(R.id.adView);
+            Log.i(TAG, "AdUnitId:" + admob_pub_id + "/" + adv_dictionary_id);
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
+                AdView mAdView = new AdView(this);
                 AdRequest adRequest = new AdRequest.Builder()
                         .addTestDevice(getResources().getStringArray(R.array.devices)[0])
                         .addTestDevice(getResources().getStringArray(R.array.devices)[1])
                         .build();
+                mAdView.setAdSize(AdSize.BANNER);
+                mAdView.setAdUnitId(advId);
                 mAdView.loadAd(adRequest);
+                ((LinearLayout)findViewById(R.id.adView)).addView(mAdView);
+
                 mCardViewAdv.setVisibility(View.VISIBLE);
                 //
                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(

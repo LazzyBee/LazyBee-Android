@@ -37,7 +37,9 @@ import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
@@ -202,13 +204,39 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     }
 
     private void _initAdView() {
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        try {
+            //get value form task manager
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String adb_ennable;
+            String admob_pub_id = LazzyBeeShare.EMPTY;
+            String adv_dictionary_id = LazzyBeeShare.EMPTY;
+            if (container == null) {
+                adb_ennable = LazzyBeeShare.NO;
+            } else {
+                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
+                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
 
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                .build();
-        mAdView.loadAd(adRequest);
+            }
+            String advId = admob_pub_id + "/" + adv_dictionary_id;
+            if (admob_pub_id == null || adv_dictionary_id == null) {
+                advId = getString(R.string.banner_ad_unit_id);
+            }
+            if (adb_ennable.equals(LazzyBeeShare.YES)) {
+
+                AdView mAdView = new AdView(this);
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .build();
+                mAdView.setAdSize(AdSize.BANNER);
+                mAdView.setAdUnitId(advId);
+                mAdView.loadAd(adRequest);
+                ((LinearLayout) findViewById(R.id.adView)).addView(mAdView);
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 
     private void _initActonBar() {

@@ -149,6 +149,12 @@ public class LazzyBeeShare {
     static TextToSpeech textToSpeech;
     public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
+    public static String ADMOB_PUB_ID="admob_pub_id";
+    public static String ADV_DEFAULT_ID="adv_default_id";
+    public static String ADV_FULLSCREEB_ID="adv_fullscreen_id";
+    public static String ADV_DICTIONARY_ID="adv_dictionary_id";
+
+
     /**
      * Init data demo List Course
      */

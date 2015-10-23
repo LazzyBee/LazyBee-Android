@@ -318,8 +318,8 @@ public class LearnApiImplements implements LearnApi {
             objNewCard.put(KEY_CARD_JSON, arrCard);
 
             Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: Count:" + count);
-            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: cards:" + cards.toString());
-            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: arrCard:" + arrCard.toString());
+//            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: cards:" + cards.toString());
+//            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: arrCard:" + arrCard.toString());
 
             _insertOrUpdateToSystemTable(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST, objNewCard.toString());
         } catch (JSONException e) {

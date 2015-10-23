@@ -131,16 +131,26 @@ public class MainActivity extends AppCompatActivity
         try {
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String adb_ennable;
+            String admob_pub_id = LazzyBeeShare.EMPTY;
+            String adv_fullscreen_id = LazzyBeeShare.EMPTY;
             if (container == null) {
                 adb_ennable = LazzyBeeShare.NO;
             } else {
                 adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
+                adv_fullscreen_id = container.getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
 
             }
+            String advId = admob_pub_id + "/" + adv_fullscreen_id;
+            if (admob_pub_id == null || adv_fullscreen_id == null) {
+                advId = "ca-app-pub-3940256099942544/1033173712";
+            }
             Log.i(TAG, "adb_ennable ? " + adb_ennable);
+            Log.i(TAG, "advId ? " + advId);
+
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
                 mInterstitialAd = new InterstitialAd(this);
-                mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+                mInterstitialAd.setAdUnitId(advId);
 
                 mInterstitialAd.setAdListener(new AdListener() {
                     @Override
@@ -167,6 +177,8 @@ public class MainActivity extends AppCompatActivity
                     .build();
 
             mInterstitialAd.loadAd(adRequest);
+        } else {
+            Log.i(TAG, "mInterstitialAd null");
         }
     }
 
