@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
@@ -37,7 +36,6 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tagmanager.DataLayer;
@@ -55,61 +53,47 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private DataLayer mDataLayer;
     private Context context;
 
-    boolean learn_more;
-
     LearnApiImplements dataBaseHelper;
-    TextToSpeech textToSpeech;
-    WebView mWebViewLeadDetails;
-    TextView btnShowAnswer;
-    LinearLayout mLayoutButton;
-    Button btnAgain0, btnHard1, btnGood2, btnEasy3;
+    CardSched cardSched;
 
+    TextToSpeech textToSpeech;
+    LinearLayout container;
+
+    LinearLayout mLayoutButton;
+    WebView mWebViewLeadDetails;
+
+    MenuItem itemFavorite;
+    MenuItem btnBackBeforeCard;
+
+    Button btnAgain0, btnHard1, btnGood2, btnEasy3;
     TextView lbCountNew;
+    TextView btnShowAnswer;
 
     TextView lbCountAgain;
-
     TextView lbCountDue;
+
+    CardView mCountStudy;
+
+    CardView mCardViewHelpandAdMod;
+    RelativeLayout mShowAnswer;
 
     List<Card> todayList = new ArrayList<Card>();
     List<Card> againList = new ArrayList<Card>();
     List<Card> dueList = new ArrayList<Card>();
     List<Card> cardListAddDueToDay = new ArrayList<Card>();
-
-    CardSched cardSched;
-
     //Current Card
     Card currentCard = new Card();
-
-
     //Define before card
     Card beforeCard;
 
-    LinearLayout container;
-
-    public Card getBeforeCard() {
-        return beforeCard;
-    }
+    boolean answerDisplay = false;
+    boolean learn_more;
+    int completeStudy = 0;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
     }
 
-
-    ViewPager mViewPager;
-    SlidingTabLayout mSlidingTabLayout;
-
-    boolean answerDisplay = false;
-
-    MenuItem btnBackBeforeCard;
-
-    CardView mCountStudy;
-    int completeStudy = 0;
-
-    MenuItem itemFavorite;
-
-    CardView mCardViewHelpandAdMod;
-
-    RelativeLayout mShowAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,19 +107,13 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         //init cardSched
         cardSched = new CardSched();
 
-
         _initView();
         _initTextToSpeech();
         _initAdView();
 
         _setUpStudy();
 
-        // _initShowcaseInitStudy();
-
     }
-
-
-
 
 
     private void _setUpStudy() {
@@ -241,20 +219,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     }
 
     private void _trackerApplication() {
-        //LazzyBeeApplication lazzyBeeApplication = (LazzyBeeApplication) getApplication();
-        //mTracker = lazzyBeeApplication.getTracker(LazzyBeeApplication.TrackerName.APP_TRACKER);
-        //mTracker = lazzyBeeApplication.getDefaultTracker();
-
-        //Log.i(TAG, "Setting screen name: " + TAG);
-        //mTracker.setScreenName("Image~" + TAG);
-        //mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         try {
             Log.i(TAG, "Trying to use TagManager");
             mDataLayer = LazzyBeeSingleton.mDataLayer;
-            //mDataLayer.push(DataLayer.mapOf("event", "openScreen", "screenName", TAG));
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
-//            Log.i(TAG, "Get config from TagManager: ADV_ENABLE? " +
-//                    ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.ADV_ENABLE));
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
@@ -343,6 +311,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setQueryHint(getString(R.string.hint_search));
         btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
         btnBackBeforeCard.setVisible(false);
 
@@ -374,7 +343,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -387,7 +355,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _search(String query) {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, query);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivityForResult(intent, 2);
     }
 
@@ -456,7 +424,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         intent.putExtra(LazzyBeeShare.CARDID, String.valueOf(currentCard.getId()));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-//        startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
 
@@ -1171,18 +1138,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                 //Update Card form DB
                 dataBaseHelper._updateCardFormServer(card);
-
-//            Snackbar.make(container,
-//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-//                            , getString(R.string.message_update_card_successful))), Snackbar.LENGTH_SHORT)
-//                    .show();
                 Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
             } else {
-
-//            Snackbar.make(container,
-//                    Html.fromHtml(LazzyBeeShare.getTextColor(context.getResources().getColor(R.color.teal_500)
-//                            , getString(R.string.message_update_card_fails))), Snackbar.LENGTH_SHORT)
-//                    .show();
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
@@ -1190,16 +1147,17 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         }
     }
 
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//
-//
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
 }

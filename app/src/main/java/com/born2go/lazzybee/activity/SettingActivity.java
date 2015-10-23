@@ -77,26 +77,13 @@ public class SettingActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == android.R.id.home) {
             finish();
-            onBackPressed();
             return true;
         }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 
     private void _trackerApplication() {
         try {
@@ -105,5 +92,18 @@ public class SettingActivity extends AppCompatActivity {
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
     }
 }

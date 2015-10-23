@@ -225,10 +225,11 @@ public class LearnApiImplements implements LearnApi {
 //        } else {
         String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
                 + " ORDER BY " + KEY_QUESTION;
+        List<Card> datas = new ArrayList<>();
         //Seach card
-        List<Card> datas = _getListCardQueryString(likeQuery, 1);
+        if (query != null || query.length() > 0)
+            datas = _getListCardQueryString(likeQuery, 1);
         return datas;
-//        }
     }
 
     private List<Card> _getDictionary() {
@@ -265,7 +266,7 @@ public class LearnApiImplements implements LearnApi {
         } else {
             //limit learn more =5 row
             if (learnmore == true)
-                number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT);
+                number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
             String settingMyLevel = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
             int my_level = 0;

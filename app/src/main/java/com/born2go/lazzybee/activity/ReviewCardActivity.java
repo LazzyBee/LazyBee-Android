@@ -36,16 +36,6 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -75,5 +65,18 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
     }
 }

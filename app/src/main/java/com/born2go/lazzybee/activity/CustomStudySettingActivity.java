@@ -64,7 +64,6 @@ public class CustomStudySettingActivity extends AppCompatActivity {
 
         if (id == android.R.id.home) {
             finish();
-            onBackPressed();
             return true;
         }
 
@@ -78,10 +77,5 @@ public class CustomStudySettingActivity extends AppCompatActivity {
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }

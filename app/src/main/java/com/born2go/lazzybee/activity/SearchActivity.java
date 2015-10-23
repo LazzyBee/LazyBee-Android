@@ -55,7 +55,6 @@ public class SearchActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.onResume();
         setContentView(R.layout.activity_search);
         context = this;
 //        Toast.makeText(context,"Search onCreate",Toast.LENGTH_SHORT).show();
@@ -66,7 +65,7 @@ public class SearchActivity extends AppCompatActivity implements
 
         //get query text in Intent
         query_text = getIntent().getStringExtra(QUERY_TEXT);
-        display_type = getIntent().getIntExtra(DISPLAY_TYPE, 0);
+        display_type = getIntent().getIntExtra(DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
         //Search by text
         // _search(query_text);
         handleIntent(getIntent());
@@ -150,7 +149,7 @@ public class SearchActivity extends AppCompatActivity implements
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search = (SearchView) menu.findItem(R.id.search).getActionView();
-
+        search.setQueryHint(getString(R.string.hint_search));
         Log.i(TAG, "Query search:" + query_text);
         if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
             search.setQuery(query_text, false);
@@ -160,7 +159,7 @@ public class SearchActivity extends AppCompatActivity implements
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
         }
-        _search(query_text, display_type);
+        _search(query_text, display_type, false);
 
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -173,18 +172,20 @@ public class SearchActivity extends AppCompatActivity implements
 //                Toast.makeText(getBaseContext(), query,
 //                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
-                _search(query, display_type);
+                _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, false);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
+                _search(newText, LazzyBeeShare.GOTO_SEARCH_CODE, true);
                 return false;
             }
         });
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -192,14 +193,8 @@ public class SearchActivity extends AppCompatActivity implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if (id == android.R.id.home) {
             finish();
-            onBackPressed();
             return true;
         }
 
@@ -227,40 +222,51 @@ public class SearchActivity extends AppCompatActivity implements
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query_text = intent.getStringExtra(SearchManager.QUERY);
-            _search(query_text, display_type);
+            _search(query_text, display_type, false);
         }
     }
 
-    private void _search(String query, int display_type) {
+    private void _search(String query, int display_type, boolean suggestion) {
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
         try {
-            List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
-            int result_count = cardList.size();
-            Log.i(TAG, "Search result_count:" + result_count);
-            if (result_count > 0) {
-                lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
-
-                mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
-                lbMessageNotFound.setVisibility(View.GONE);
-
-                //set count
-                lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
-                //Init Adapter
+            if (query.equals(LazzyBeeShare.EMPTY)) {
+                lbResultCount.setVisibility(View.GONE);
+                List<Card> cardList = new ArrayList<Card>();
                 setAdapterListCard(cardList);
-            } else if (result_count == 0) {//Check result_count==0 search in server
-                //Define Card
-                Card card = new Card();
-                card.setQuestion(query);
-                //Call Search in server
-                GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                getCardFormServerByQuestion.execute(card);
-                getCardFormServerByQuestion.delegate = this;
+            } else if (query != null || query.length() > 0) {
+                List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                int result_count = cardList.size();
+                Log.i(TAG, "Search result_count:" + result_count);
+                if (result_count > 0) {
+                    lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
+
+                    mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
+                    lbMessageNotFound.setVisibility(View.GONE);
+
+                    //set count
+                    lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+                    //Init Adapter
+                    setAdapterListCard(cardList);
+                } else if (result_count == 0) {//Check result_count==0 search in server
+                    //Define Card
+                    Card card = new Card();
+                    card.setQuestion(query);
+                    //Call Search in server
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    getCardFormServerByQuestion.execute(card);
+                    getCardFormServerByQuestion.delegate = this;
+                }
+            } else {
+                lbResultCount.setVisibility(View.GONE);
+                List<Card> cardList = new ArrayList<Card>();
+                setAdapterListCard(cardList);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
-        hideKeyboard();
+        if (!suggestion)
+            hideKeyboard();
 
 
     }
@@ -283,7 +289,7 @@ public class SearchActivity extends AppCompatActivity implements
                 } else if (items[item] == getString(R.string.action_learnt)) {
                     _doneCard(card);
                 }
-                _search(query_text, display_type);
+                _search(query_text, display_type, false);
                 dialog.cancel();
             }
         });
@@ -345,6 +351,7 @@ public class SearchActivity extends AppCompatActivity implements
                 dataBaseHelper._addCardIdToQueueList(card);
                 Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                 ADD_TO_LEARN = 1;
+                setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
             }
         });
         // Get the AlertDialog from create()
@@ -353,21 +360,6 @@ public class SearchActivity extends AppCompatActivity implements
         dialog.show();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (ADD_TO_LEARN == 1)
-            setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
-
-        finish();
-        super.onBackPressed();
-
-    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Toast.makeText(context,"Search OnResume",Toast.LENGTH_SHORT).show();
-//    }
 
     @Override
     public void processFinish(Card card) {
@@ -409,7 +401,7 @@ public class SearchActivity extends AppCompatActivity implements
         if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
             //Reload data
             Log.i(TAG, QUERY_TEXT + ":" + query_text);
-            _search(query_text, display_type);
+            _search(query_text, display_type, false);
         }
     }
 
@@ -432,5 +424,19 @@ public class SearchActivity extends AppCompatActivity implements
         } catch (Exception e) {
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
     }
 }

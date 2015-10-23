@@ -26,7 +26,7 @@
     <string name="show_answer">Hiện đáp án</string>
     <string name="study">Học</string>
     <string name="due_today">Mục tiêu hôm nay:</string>
-    <string name="total_new_learn">Tổng số chưa học học:</string>
+    <string name="total_new_learn">Tổng số chưa học:</string>
     <string name="total_cards">Tổng số thẻ:</string>
     <string name="example">Ví dụ:</string>
     <string name="explain">Giải nghĩa</string>
@@ -89,7 +89,6 @@
 
     <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
     <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>
-    <string name="under_construction">Under construction</string>
 
     <string name="message_hellp_study">Bảng trợ giúp (Đang xây dựng)</string>
 
@@ -109,7 +108,6 @@
 
 
     <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
-    <string name="dialog_title_export_database">Export database</string>
 
 
     <string-array name="settings">
@@ -152,8 +150,8 @@
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_today_new_card_limit</item>
-        <item>@string/setting_lines</item>
-        <item>@string/setting_max_learn_more_per_day</item>
+        <!-- <item>@string/setting_lines</item>
+         <item>@string/setting_max_learn_more_per_day</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_position_meaning</item>
         <item>@string/setting_lines</item>
@@ -180,13 +178,9 @@
         <item>@string/speech_rate_very_fast</item>
     </string-array>
     <string name="dialog_message_reset_custom_study">Bạn có muốn thiết lập về mặc đinh?</string>
-    <string name="setting_about_message">Born2Go © 2015</string>
-    <string name="setting_export_database">Export database</string>
     <string name="setting_reset_cache">Reset Cache</string>
     <string name="setting_reset_to_default">Thiết lập mặc định</string>
     <string name="action_update_card">Cập nhật thẻ</string>
-    <string name="action_back_before_card">Back before card</string>
-    <string name="number_row_updated">%d row updated</string>
 
     <string name="action_share">Chia sẻ</string>
     <string name="message_update_card_successful">Cập nhật thẻ thành công!</string>
@@ -211,7 +205,7 @@
     <string name="action_goto_dictionary">Từ điển</string>
     <string name="an_error_occurred">Có lỗi xảy ra</string>
 
-    <string name="setting_set_time_notification">Thời gian thông báo %s</string>
+    <string name="setting_set_time_notification">Thời gian nhắc nhở: %s</string>
     <string name="setting_custom_study">Thiết lập học</string>
 
     <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>

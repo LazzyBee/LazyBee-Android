@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/teal_500</color>
-    <color name="colorPrimaryDark">@color/teal_200</color>
+    <color name="colorPrimary">@color/button_green_color</color>
+    <color name="colorPrimaryDark">@color/main_color</color>
+    <color name="textcolorPrimary">@color/button_green_color</color>
+    <color name="main_color">#FFC82F</color>
 
     <color name="rau_xanh">#529C01</color>
 
@@ -26,6 +28,11 @@
 
     <color name="teal_200">#80CBC4</color>
     <color name="teal_500">#009688</color>
+
+    <color name="button_green_color">#3C9F1E</color>
+
+    <color name="snackbar_background_color">@color/colorPrimary</color>
+    <color name="color_backgroud_english_word">#FFC82F</color>
 
 
 </resources>

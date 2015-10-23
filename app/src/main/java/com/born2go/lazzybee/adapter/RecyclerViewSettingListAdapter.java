@@ -214,7 +214,6 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _handlerChangeSpeechRate(SeekBar mSlideSpeechRate) {
-        final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
         String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
         final int index;
         if (sp == null) {
@@ -279,7 +278,7 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (progress > 12 && progress <= 16) {
                     speechRate = 1.3f;
                 }
-                LazzyBeeShare._speakText("Test changer speech rate", speechRate);
+                LazzyBeeShare._speakText(context.getString(R.string.test_speech_rate), speechRate);
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
 
 
@@ -336,7 +335,7 @@ public class RecyclerViewSettingListAdapter extends
                 if (isChecked) {
                     value = LazzyBeeShare.ON;
                     mSetUpNotification.setVisibility(View.VISIBLE);
-                    _setUpNotification(8, 0);
+                    LazzyBeeShare._setUpNotification(context, 0, 0);
                 } else {
                     value = LazzyBeeShare.OFF;
                     mSetUpNotification.setVisibility(View.GONE);
@@ -373,11 +372,11 @@ public class RecyclerViewSettingListAdapter extends
                 CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
                         txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, String.valueOf(hourOfDay + ":" + minute)));
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(hourOfDay));
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(minute));
-                        _setUpNotification(view.getCurrentHour(), view.getCurrentMinute());
-                        //Toast.makeText(context, hourOfDay + ":" + minute, Toast.LENGTH_SHORT).show();
+                        LazzyBeeShare._setUpNotification(context, hourOfDay, minute);
                     }
                 }, hour, minute, true);
                 timePickerDialog.setTitle("Select Date");
@@ -973,36 +972,5 @@ public class RecyclerViewSettingListAdapter extends
         }
 
 
-    }
-
-    private void _setUpNotification(int hour, int minute) {
-        Log.i(TAG, "---------setUpNotification-------");
-        try {
-            //Check currentTime
-            Calendar currentCalendar = Calendar.getInstance();
-            int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
-            boolean nextday = true;
-            Calendar calendar = Calendar.getInstance();
-            if (hour < currentHour) {
-                // Define a time
-                calendar.add(Calendar.DATE, 1);
-            }
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, minute);
-            calendar.set(Calendar.SECOND, 0);
-
-            //
-            Long alertTime = calendar.getTimeInMillis();
-            //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Alert " + 0 + ",time:" + alertTime);
-
-            //set notificaion by time
-            LazzyBeeShare.scheduleNotification(context, 0, alertTime);
-//            Toast.makeText(context, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)));
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
-        }
-        Log.i(TAG, "---------END-------");
     }
 }

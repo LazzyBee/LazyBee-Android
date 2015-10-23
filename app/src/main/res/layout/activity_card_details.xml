@@ -17,7 +17,7 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/button_green_color"
         android:elevation="2dp" />
 
     <android.support.v7.widget.CardView
