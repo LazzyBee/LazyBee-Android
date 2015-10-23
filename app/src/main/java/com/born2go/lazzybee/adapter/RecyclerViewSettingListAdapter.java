@@ -30,6 +30,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.utils.CustomTimePickerDialog;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
@@ -369,13 +370,14 @@ public class RecyclerViewSettingListAdapter extends
                 int minute = c.get(Calendar.MINUTE);
 
                 // Create a new instance of TimePickerDialog and return it
-                TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, String.valueOf(view.getCurrentHour() + ":" + view.getCurrentMinute())));
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(view.getCurrentHour()));
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(view.getCurrentMinute()));
-                        LazzyBeeShare._setUpNotification(context, hour, minute);
+
+                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, String.valueOf(hourOfDay + ":" + minute)));
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(hourOfDay));
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(minute));
+                        LazzyBeeShare._setUpNotification(context, hourOfDay, minute);
                     }
                 }, hour, minute, true);
                 timePickerDialog.setTitle("Select Date");
