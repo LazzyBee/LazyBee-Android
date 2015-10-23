@@ -34,7 +34,7 @@
     <string name="EASE_EASY">Easy</string>
 
     <string name="learn_more">Learn more</string>
-    <string name="congratulations">Congratulations!</string>
+    <string name="congratulations">You have reached daily goal. Have fun!</string>
 
     <string name="action_learnt">Card learned</string>
     <string name="action_ignore">Ignore card</string>
