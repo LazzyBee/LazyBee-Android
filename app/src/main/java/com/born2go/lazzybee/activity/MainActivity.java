@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     private Context context = this;
     private static final String TAG = "MainActivity";
-    private static final Object GA_SCREEN = "aMainScreen";
+    private static final Object GA_SCREEN = "aHomeScreen";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity
 
     int countCardNoLearn = 0;
     int complete = 0;
+
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -536,7 +538,7 @@ public class MainActivity extends AppCompatActivity
             // Inflate menu to add items to action bar if it is present.
             inflater.inflate(R.menu.main, menu);
             // Associate searchable configuration with the SearchView
-            SearchView searchView =
+            searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
             searchView.setQueryHint(getString(R.string.hint_search));
 
@@ -554,6 +556,7 @@ public class MainActivity extends AppCompatActivity
                     return false;
                 }
             });
+            
             _restoreActionBar();
             // return true;
         }
@@ -908,6 +911,7 @@ public class MainActivity extends AppCompatActivity
                 complete = _checkCompleteLearn();
                 _getCountCard();
             }
+            _restoreSearchView();
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
@@ -921,6 +925,14 @@ public class MainActivity extends AppCompatActivity
             }
             complete = _checkCompleteLearn();
             _getCountCard();
+        }
+    }
+
+    private void _restoreSearchView() {
+        if (searchView != null) {
+            searchView.setQuery(LazzyBeeShare.EMPTY, false);
+//            searchView.clearFocus();
+            searchView.setIconified(true);
         }
     }
 
