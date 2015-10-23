@@ -311,6 +311,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setQueryHint(getString(R.string.hint_search));
         btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
         btnBackBeforeCard.setVisible(false);
 
@@ -1145,6 +1146,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();

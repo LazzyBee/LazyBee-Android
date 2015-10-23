@@ -149,7 +149,7 @@ public class SearchActivity extends AppCompatActivity implements
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search = (SearchView) menu.findItem(R.id.search).getActionView();
-
+        search.setQueryHint(getString(R.string.hint_search));
         Log.i(TAG, "Query search:" + query_text);
         if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
             search.setQuery(query_text, false);

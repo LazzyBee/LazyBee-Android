@@ -163,6 +163,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+        searchView.setQueryHint(getString(R.string.hint_search));
         itemFavorite = menu.findItem(R.id.action_favorite);
         if (card != null) {
             //load favorite

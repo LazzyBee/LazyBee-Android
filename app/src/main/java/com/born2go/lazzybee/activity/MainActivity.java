@@ -1,6 +1,5 @@
 package com.born2go.lazzybee.activity;
 
-import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -537,13 +536,10 @@ public class MainActivity extends AppCompatActivity
             // Inflate menu to add items to action bar if it is present.
             inflater.inflate(R.menu.main, menu);
             // Associate searchable configuration with the SearchView
-            SearchManager searchManager =
-                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             SearchView searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
-//            searchView.setSearchableInfo(
-//                    searchManager.getSearchableInfo(getComponentName()));
-            searchView.setQueryHint("dsjdkajkd");
+            searchView.setQueryHint(getString(R.string.hint_search));
+
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
                 @Override

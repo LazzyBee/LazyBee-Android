@@ -24,7 +24,7 @@
     <string name="title_activity_review_card">Incoming</string>
     <string name="title_activity_setting" translatable="false">Settings</string>
     <string name="title_activity_add_course">Add Course</string>
-    <string name="hint_search">Search</string>
+    <string name="hint_search">Search card</string>
     <string name="title_activity_card_details">Card Details</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 
