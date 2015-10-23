@@ -214,7 +214,6 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _handlerChangeSpeechRate(SeekBar mSlideSpeechRate) {
-        final CharSequence[] items = context.getResources().getStringArray(R.array.speech_rate);
         String sp = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
         final int index;
         if (sp == null) {
@@ -279,7 +278,7 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (progress > 12 && progress <= 16) {
                     speechRate = 1.3f;
                 }
-                LazzyBeeShare._speakText("Test changer speech rate", speechRate);
+                LazzyBeeShare._speakText(context.getString(R.string.test_speech_rate), speechRate);
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
 
 

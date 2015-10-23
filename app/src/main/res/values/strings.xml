@@ -319,6 +319,7 @@
     <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
     <string name="incoming">Incoming</string>
     <string name="message_total_card_incoming">Total card:</string>
+    <string name="test_speech_rate" translatable="false">This is to adjust speaking speed. Thank you for using lazy bee application.</string>
 
 
 </resources>
