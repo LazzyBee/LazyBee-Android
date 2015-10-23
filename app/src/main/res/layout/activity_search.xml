@@ -10,7 +10,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/result"
         android:id="@+id/lbResultCount"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/textcolorPrimary"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />
