@@ -87,7 +87,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         _trackerApplication();
 
-
     }
 
     private void _displayCard() {
@@ -531,4 +530,17 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
 }

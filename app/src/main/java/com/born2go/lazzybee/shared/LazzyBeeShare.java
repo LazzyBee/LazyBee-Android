@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -145,7 +146,7 @@ public class LazzyBeeShare {
     public static String POPUP_URL = "popup_url";
 
     static TextToSpeech textToSpeech;
-    public static String GOTO_DICTIONARY ="GOTO_DICTIONARY";
+    public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
     /**
      * Init data demo List Course
@@ -590,11 +591,48 @@ public class LazzyBeeShare {
     }
 
     public static void _cancelNotification(Context context) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        notificationManager.cancelAll();
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.cancel(pendingIntent);
+        try {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            notificationManager.cancelAll();
+            Intent intent = new Intent(context, NotificationReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.cancel(pendingIntent);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void _setUpNotification(Context context, int hour, int minute) {
+        Log.i(TAG, "---------setUpNotification-------");
+        try {
+            if (hour == 0)
+                hour = 8;//default time
+            //Check currentTime
+            Calendar currentCalendar = Calendar.getInstance();
+            int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
+
+            Calendar calendar = Calendar.getInstance();
+            if (hour <= currentHour) {
+                calendar.add(Calendar.DATE, 1);
+            }
+            // Define a time
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+
+            //
+            Long alertTime = calendar.getTimeInMillis();
+            //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Alert " + 0 + ",time:" + alertTime);
+
+            //set notificaion by time
+            LazzyBeeShare.scheduleNotification(context, 0, alertTime);
+            Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
+        Log.i(TAG, "---------END-------");
     }
 }

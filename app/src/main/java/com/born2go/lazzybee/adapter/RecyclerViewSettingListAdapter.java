@@ -335,7 +335,7 @@ public class RecyclerViewSettingListAdapter extends
                 if (isChecked) {
                     value = LazzyBeeShare.ON;
                     mSetUpNotification.setVisibility(View.VISIBLE);
-                    _setUpNotification(8, 0);
+                    LazzyBeeShare._setUpNotification(context, 0, 0);
                 } else {
                     value = LazzyBeeShare.OFF;
                     mSetUpNotification.setVisibility(View.GONE);
@@ -375,7 +375,7 @@ public class RecyclerViewSettingListAdapter extends
                         txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, String.valueOf(view.getCurrentHour() + ":" + view.getCurrentMinute())));
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(view.getCurrentHour()));
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(view.getCurrentMinute()));
-                        _setUpNotification(view.getCurrentHour(), view.getCurrentMinute());
+                        LazzyBeeShare._setUpNotification(context, hour, minute);
                     }
                 }, hour, minute, true);
                 timePickerDialog.setTitle("Select Date");
@@ -971,36 +971,5 @@ public class RecyclerViewSettingListAdapter extends
         }
 
 
-    }
-
-    private void _setUpNotification(int hour, int minute) {
-        Log.i(TAG, "---------setUpNotification-------");
-        try {
-            //Check currentTime
-            Calendar currentCalendar = Calendar.getInstance();
-            int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
-            boolean nextday = true;
-            Calendar calendar = Calendar.getInstance();
-            if (hour < currentHour) {
-                // Define a time
-                calendar.add(Calendar.DATE, 1);
-            }
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, minute);
-            calendar.set(Calendar.SECOND, 0);
-
-            //
-            Long alertTime = calendar.getTimeInMillis();
-            //Toast.makeText(context, "Alert time:" + alertTime, Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Alert " + 0 + ",time:" + alertTime);
-
-            //set notificaion by time
-            LazzyBeeShare.scheduleNotification(context, 0, alertTime);
-//            Toast.makeText(context, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, context.getString(R.string.setting_set_time_notification, String.valueOf(hour + ":" + minute)));
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
-        }
-        Log.i(TAG, "---------END-------");
     }
 }

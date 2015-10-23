@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity
             int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
 
             Calendar calendar = Calendar.getInstance();
-            if (hour < currentHour || nextday) {
+            if (hour <= currentHour || nextday) {
                 calendar.add(Calendar.DATE, 1);
             }
             // Define a time
@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
 //            searchView.setSearchableInfo(
 //                    searchManager.getSearchableInfo(getComponentName()));
-
+            searchView.setQueryHint("dsjdkajkd");
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
                 @Override
@@ -988,15 +988,13 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
+        _setUpNotification(false);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
-        if (_checkSetting(LazzyBeeShare.KEY_SETTING_NOTIFICTION)) {
-            _setUpNotification(false);
-        }
     }
 
     private void _trackerApplication() {

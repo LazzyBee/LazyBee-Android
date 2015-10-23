@@ -1145,4 +1145,17 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
 }

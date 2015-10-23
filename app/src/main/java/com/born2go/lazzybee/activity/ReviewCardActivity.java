@@ -66,4 +66,17 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LazzyBeeShare._cancelNotification(context);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int hour = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        int minute = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
 }
