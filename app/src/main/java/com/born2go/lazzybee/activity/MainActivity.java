@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity
     LinearLayout mLine;
 
     boolean appPause = false;
+    boolean studyComplete = false;
 
     int countCardNoLearn = 0;
     int complete = 0;
@@ -820,7 +821,7 @@ public class MainActivity extends AppCompatActivity
         //goto_study_code1 learnmore
 
         //Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
-
+        studyComplete = false;
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -931,6 +932,8 @@ public class MainActivity extends AppCompatActivity
                 _setUpNotification(true);
                 String messgage_congratilation = getString(R.string.congratulations);
                 _showDialogCongraturation(messgage_congratilation);
+                studyComplete = true;
+
 
             } else {
                 _showDialogTip();
@@ -1008,7 +1011,8 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
-        _setUpNotification(false);
+        Log.i(TAG, "studyComplete ?" + studyComplete);
+        _setUpNotification(studyComplete);
     }
 
     @Override

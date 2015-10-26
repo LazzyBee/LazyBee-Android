@@ -52,6 +52,9 @@ public class NotificationReceiver extends BroadcastReceiver {
                 message = context.getString(R.string.notification_message);
             } else {
                 message = container.getString(LazzyBeeShare.NOTIFY_TEXT);
+                if (message == null) {
+                    message = context.getString(R.string.notification_message);
+                }
             }
         } catch (Exception e) {
             message = context.getString(R.string.notification_message);
