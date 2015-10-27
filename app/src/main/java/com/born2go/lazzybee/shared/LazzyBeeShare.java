@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -149,10 +150,12 @@ public class LazzyBeeShare {
     static TextToSpeech textToSpeech;
     public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
-    public static String ADMOB_PUB_ID="admob_pub_id";
-    public static String ADV_DEFAULT_ID="adv_default_id";
-    public static String ADV_FULLSCREEB_ID="adv_fullscreen_id";
-    public static String ADV_DICTIONARY_ID="adv_dictionary_id";
+    public static String ADMOB_PUB_ID = "admob_pub_id";
+    public static String ADV_DEFAULT_ID = "adv_default_id";
+    public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
+    public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
+    public static String MyPREFERENCES = "LazzyBee";
+    public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
 
     /**
@@ -473,7 +476,7 @@ public class LazzyBeeShare {
                 + "\t" + context.getClass().getName() + ":" + e.getMessage();
         Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
         Log.e(TAG, messageError);
-        e.printStackTrace();
+        //e.printStackTrace();
     }
 
     /*
@@ -614,14 +617,20 @@ public class LazzyBeeShare {
     public static void _setUpNotification(Context context, int hour, int minute) {
         Log.i(TAG, "---------setUpNotification-------");
         try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
+            int time = (int) (sharedPreferences.getLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, 0l) / 1000);
+            boolean nextday = false;
+            if (time >= (getStartOfDayInMillis() / 1000) && time <= getEndOfDayInSecond()) {
+                nextday = true;
+            }
             if (hour == 0)
                 hour = 8;//default time
             //Check currentTime
             Calendar currentCalendar = Calendar.getInstance();
             int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
-
+            Log.i(TAG, "nextday ?" + nextday);
             Calendar calendar = Calendar.getInstance();
-            if (hour <= currentHour) {
+            if (hour <= currentHour || nextday) {
                 calendar.add(Calendar.DATE, 1);
             }
             // Define a time
@@ -641,5 +650,20 @@ public class LazzyBeeShare {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "---------END-------");
+    }
+
+    public static long getStartOfDayInMillis() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    public static int getEndOfDayInSecond() {
+        //Add one day's time to the beginning of the day.
+        //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
+        return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
     }
 }

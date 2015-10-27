@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -47,6 +48,7 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -104,6 +106,9 @@ public class MainActivity extends AppCompatActivity
     int complete = 0;
 
     SearchView searchView;
+
+    SharedPreferences sharedpreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +200,7 @@ public class MainActivity extends AppCompatActivity
             Calendar currentCalendar = Calendar.getInstance();
             int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
 
+
             Calendar calendar = Calendar.getInstance();
             if (hour <= currentHour || nextday) {
                 calendar.add(Calendar.DATE, 1);
@@ -220,6 +226,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _initSettingApplication() {
+        sharedpreferences = getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
@@ -839,8 +846,6 @@ public class MainActivity extends AppCompatActivity
             dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
             // _setUpNotification();
         }
-
-
     }
 
 
@@ -934,7 +939,9 @@ public class MainActivity extends AppCompatActivity
                 _showDialogCongraturation(messgage_congratilation);
                 studyComplete = true;
 
-
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, new Date().getTime());
+                editor.commit();
             } else {
                 _showDialogTip();
             }
