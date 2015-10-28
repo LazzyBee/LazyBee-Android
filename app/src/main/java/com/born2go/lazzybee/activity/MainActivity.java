@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -47,6 +48,7 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 
     private Context context = this;
     private static final String TAG = "MainActivity";
-    private static final Object GA_SCREEN = "aMainScreen";
+    private static final Object GA_SCREEN = "aHomeScreen";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -98,9 +100,15 @@ public class MainActivity extends AppCompatActivity
     LinearLayout mLine;
 
     boolean appPause = false;
+    boolean studyComplete = false;
 
     int countCardNoLearn = 0;
     int complete = 0;
+
+    SearchView searchView;
+
+    SharedPreferences sharedpreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,16 +137,26 @@ public class MainActivity extends AppCompatActivity
         try {
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String adb_ennable;
+            String admob_pub_id = LazzyBeeShare.EMPTY;
+            String adv_fullscreen_id = LazzyBeeShare.EMPTY;
             if (container == null) {
                 adb_ennable = LazzyBeeShare.NO;
             } else {
                 adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
+                adv_fullscreen_id = container.getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
 
             }
+            String advId = admob_pub_id + "/" + adv_fullscreen_id;
+            if (admob_pub_id == null || adv_fullscreen_id == null) {
+                advId = "ca-app-pub-3940256099942544/1033173712";
+            }
             Log.i(TAG, "adb_ennable ? " + adb_ennable);
+            Log.i(TAG, "advId ? " + advId);
+
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
                 mInterstitialAd = new InterstitialAd(this);
-                mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+                mInterstitialAd.setAdUnitId(advId);
 
                 mInterstitialAd.setAdListener(new AdListener() {
                     @Override
@@ -165,6 +183,8 @@ public class MainActivity extends AppCompatActivity
                     .build();
 
             mInterstitialAd.loadAd(adRequest);
+        } else {
+            Log.i(TAG, "mInterstitialAd null");
         }
     }
 
@@ -179,6 +199,7 @@ public class MainActivity extends AppCompatActivity
             //Check currentTime
             Calendar currentCalendar = Calendar.getInstance();
             int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
+
 
             Calendar calendar = Calendar.getInstance();
             if (hour <= currentHour || nextday) {
@@ -205,6 +226,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _initSettingApplication() {
+        sharedpreferences = getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
         }
@@ -536,7 +558,7 @@ public class MainActivity extends AppCompatActivity
             // Inflate menu to add items to action bar if it is present.
             inflater.inflate(R.menu.main, menu);
             // Associate searchable configuration with the SearchView
-            SearchView searchView =
+            searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
             searchView.setQueryHint(getString(R.string.hint_search));
 
@@ -554,6 +576,7 @@ public class MainActivity extends AppCompatActivity
                     return false;
                 }
             });
+
             _restoreActionBar();
             // return true;
         }
@@ -805,7 +828,7 @@ public class MainActivity extends AppCompatActivity
         //goto_study_code1 learnmore
 
         //Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
-
+        studyComplete = false;
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -823,8 +846,6 @@ public class MainActivity extends AppCompatActivity
             dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
             // _setUpNotification();
         }
-
-
     }
 
 
@@ -908,6 +929,7 @@ public class MainActivity extends AppCompatActivity
                 complete = _checkCompleteLearn();
                 _getCountCard();
             }
+            _restoreSearchView();
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
@@ -915,12 +937,24 @@ public class MainActivity extends AppCompatActivity
                 _setUpNotification(true);
                 String messgage_congratilation = getString(R.string.congratulations);
                 _showDialogCongraturation(messgage_congratilation);
+                studyComplete = true;
 
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, new Date().getTime());
+                editor.commit();
             } else {
                 _showDialogTip();
             }
             complete = _checkCompleteLearn();
             _getCountCard();
+        }
+    }
+
+    private void _restoreSearchView() {
+        if (searchView != null) {
+            searchView.setQuery(LazzyBeeShare.EMPTY, false);
+//            searchView.clearFocus();
+            searchView.setIconified(true);
         }
     }
 
@@ -984,7 +1018,8 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
-        _setUpNotification(false);
+        Log.i(TAG, "studyComplete ?" + studyComplete);
+        _setUpNotification(studyComplete);
     }
 
     @Override

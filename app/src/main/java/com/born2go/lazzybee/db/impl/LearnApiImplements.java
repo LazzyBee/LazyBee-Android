@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -318,8 +317,8 @@ public class LearnApiImplements implements LearnApi {
             objNewCard.put(KEY_CARD_JSON, arrCard);
 
             Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: Count:" + count);
-            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: cards:" + cards.toString());
-            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: arrCard:" + arrCard.toString());
+//            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: cards:" + cards.toString());
+//            Log.i(TAG, "_insertOrUpdatePreFetchNewCardList: arrCard:" + arrCard.toString());
 
             _insertOrUpdateToSystemTable(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST, objNewCard.toString());
         } catch (JSONException e) {
@@ -396,7 +395,7 @@ public class LearnApiImplements implements LearnApi {
                 int countListId = listIdArray.length();
                 //Log.i(TAG, (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) ? "_checkListTodayExit: inday" : "_checkListTodayExit: outday");
 
-                if (dayInSecond > (getStartOfDayInMillis() / 1000) && dayInSecond < getEndOfDayInSecond()) {
+                if (dayInSecond > (LazzyBeeShare.getStartOfDayInMillis() / 1000) && dayInSecond < LazzyBeeShare.getEndOfDayInSecond()) {
                     Log.i(TAG, "_checkListTodayExit:today_parse is equal to date_now\n");
                     Log.i(TAG, "|------------------------------End-------------------------|\n");
                     return countListId;
@@ -707,9 +706,8 @@ public class LearnApiImplements implements LearnApi {
         long long_curent_time = new Date().getTime();
 
         int curent_time = (int) (long_curent_time / 1000);
-        int endofday = getEndOfDayInSecond();
         Log.d(TAG, "Current Time:" + curent_time + ":" + new Date().getTime());
-        Log.d(TAG, "StartOfDayInMillis:" + getStartOfDayInMillis() + ":" + getEndOfDayInSecond());
+        Log.d(TAG, "StartOfDayInMillis:" + LazzyBeeShare.getStartOfDayInMillis() + ":" + LazzyBeeShare.getEndOfDayInSecond());
         String select_list_card_by_queue = "";
 
         if (queue == Card.QUEUE_LNR1) {
@@ -924,7 +922,7 @@ public class LearnApiImplements implements LearnApi {
             query = "SELECT  COUNT(id) FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
         } else if (queue == Card.QUEUE_REV2) {
             query = "SELECT  COUNT(id) FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
+                    " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (LazzyBeeShare.getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
         }
         return _queryCount(query);
     }
@@ -1163,24 +1161,10 @@ public class LearnApiImplements implements LearnApi {
 
     }
 
-    public long getStartOfDayInMillis() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTimeInMillis();
-    }
-
-    public int getEndOfDayInSecond() {
-        //Add one day's time to the beginning of the day.
-        //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
-        return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
-    }
 
     public List<Card> _getListCarDue(int limit) {
         String select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
+                " where queue = " + Card.QUEUE_REV2 + " AND due <= " + (LazzyBeeShare.getEndOfDayInSecond()) + " order by due " + " LIMIT " + limit;
         return _getListCardQueryString(select_list_card_by_queue, 0);
     }
 

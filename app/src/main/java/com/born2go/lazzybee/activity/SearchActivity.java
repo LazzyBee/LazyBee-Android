@@ -159,7 +159,7 @@ public class SearchActivity extends AppCompatActivity implements
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
         }
-        _search(query_text, display_type, false);
+        _search(query_text, display_type, true);
 
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -172,14 +172,14 @@ public class SearchActivity extends AppCompatActivity implements
 //                Toast.makeText(getBaseContext(), query,
 //                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
-                _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, false);
+                _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, true);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
-                _search(newText, LazzyBeeShare.GOTO_SEARCH_CODE, true);
+                //_search(newText, LazzyBeeShare.GOTO_SEARCH_CODE, false);
                 return false;
             }
         });
@@ -222,7 +222,7 @@ public class SearchActivity extends AppCompatActivity implements
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query_text = intent.getStringExtra(SearchManager.QUERY);
-            _search(query_text, display_type, false);
+            _search(query_text, display_type, true);
         }
     }
 
@@ -230,6 +230,7 @@ public class SearchActivity extends AppCompatActivity implements
         //use the query_text to search
         Log.i(TAG, "query_text:" + query);
         try {
+            query_text = query;
             if (query.equals(LazzyBeeShare.EMPTY)) {
                 lbResultCount.setVisibility(View.GONE);
                 List<Card> cardList = new ArrayList<Card>();
@@ -265,7 +266,7 @@ public class SearchActivity extends AppCompatActivity implements
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
-        if (!suggestion)
+        if (suggestion)
             hideKeyboard();
 
 
@@ -382,6 +383,7 @@ public class SearchActivity extends AppCompatActivity implements
                 lbMessageNotFound.setVisibility(View.GONE);
                 lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
                 setAdapterListCard(cardList);
+
             } else {
                 lbResultCount.setVisibility(View.GONE);
                 mRecyclerViewSearchResults.setVisibility(View.GONE);

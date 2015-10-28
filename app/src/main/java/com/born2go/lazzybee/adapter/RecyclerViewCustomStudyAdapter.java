@@ -127,16 +127,12 @@ public class RecyclerViewCustomStudyAdapter extends
 
         String strlevel = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
         int level = 0;
-        if (strlevel != null) {
+        if (strlevel == null) {
+            level = 1;
+        } else {
             level = Integer.valueOf(strlevel);
         }
-
-        //Set text Level
-        if (level == 0) {
-            lbLimit.setText(context.getString(R.string.setting_message_default));
-        } else {
-            lbLimit.setText(String.valueOf(level));
-        }
+        lbLimit.setText(String.valueOf(level + 1));
 
         //handel oncllick
         final int finalLevel = level;
@@ -149,7 +145,7 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
     private void _showDialogSelectLevel(int finalLevel) {
-        final String[] strlevels = {context.getString(R.string.setting_message_default), "1", "2", "3", "4", "5", "6"};
+        final String[] strlevels = {"1", "2", "3", "4", "5", "6"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 
@@ -182,7 +178,7 @@ public class RecyclerViewCustomStudyAdapter extends
                 //KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT
                 //KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT
                 //KEY_SETTING_TODAY_NEW_CARD_LIMIT
-               // learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
+                // learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(LazzyBeeShare.DEFAULT_MY_LEVEL));

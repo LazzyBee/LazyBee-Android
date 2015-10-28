@@ -188,14 +188,21 @@ public class RecyclerViewSettingListAdapter extends
                 TextView lbAppVersion = (TextView) view.findViewById(R.id.lbAppVersion);
                 TextView lbDbVersion = (TextView) view.findViewById(R.id.lbDbVersion);
                 String versionName = "1";
+                int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
+
                 try {
                     versionName = context.getPackageManager()
                             .getPackageInfo(context.getPackageName(), 0).versionName;
+                    String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+                    if (db_v != null) {
+                        _dbVesion = Integer.valueOf(db_v);
+                    }
                     lbAppVersion.setText("AppVersion:" + versionName);
-                    lbDbVersion.setText("DBVersion:3");
+                    lbDbVersion.setText("DBVersion:" + _dbVesion);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                     lbAppVersion.setText("AppVersion:" + versionName);
+                    lbDbVersion.setText("DBVersion:" + _dbVesion);
                 }
 
 
@@ -365,8 +372,10 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
-                final int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
+                int hour = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+                int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+                if (hour == 0)
+                    hour = 8;
 
                 // Create a new instance of TimePickerDialog and return it
                 CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
