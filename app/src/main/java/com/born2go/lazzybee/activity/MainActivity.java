@@ -36,7 +36,6 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.fragment.FragmentCourse;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -527,24 +526,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void _onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = FragmentCourse.TAG;
-                break;
-            case 2:
-//                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-//                mTitle = getString(R.string.title_section3);
-                break;
-        }
-    }
-
     public void _restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(getString(R.string.app_name));
     }
 
 
@@ -560,6 +545,19 @@ public class MainActivity extends AppCompatActivity
             // Associate searchable configuration with the SearchView
             searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
+            searchView.setOnSearchClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getSupportActionBar().setDisplayShowTitleEnabled(false);
+                }
+            });
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                @Override
+                public boolean onClose() {
+                    _restoreActionBar();
+                    return false;
+                }
+            });
             searchView.setQueryHint(getString(R.string.hint_search));
 
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
