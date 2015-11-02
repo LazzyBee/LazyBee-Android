@@ -890,7 +890,7 @@ public class RecyclerViewSettingListAdapter extends
             _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
             return true;
         } else {
-            //Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.message_updated, Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Khong co Update");
             return false;
         }
