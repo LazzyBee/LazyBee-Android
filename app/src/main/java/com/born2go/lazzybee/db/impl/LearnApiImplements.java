@@ -268,7 +268,7 @@ public class LearnApiImplements implements LearnApi {
                 number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
 
             String settingMyLevel = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-            int my_level = 0;
+            int my_level = 2;
             try {
                 if (settingMyLevel != null) {
                     my_level = Integer.valueOf(my_level);
@@ -971,6 +971,10 @@ public class LearnApiImplements implements LearnApi {
     public int _initPreFetchNewCardList(int myLevel) {
         List<String> cardIds = new ArrayList<String>();
         Log.i(TAG, "my_level:" + myLevel);
+
+        if (myLevel == 0)
+            myLevel = 2;
+
         if (myLevel > 0) {
             int limit = 100;
             String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +

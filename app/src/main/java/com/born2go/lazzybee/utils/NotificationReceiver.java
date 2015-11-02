@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.activity.MainActivity;
+import com.born2go.lazzybee.activity.SplashScreen;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.Container;
@@ -40,7 +40,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         long alertTime = intent.getLongExtra(NOTIFICATION_WHEN, 0);
 
         //Define intent and pendingInten MainActivity
-        Intent intent1 = new Intent(context, MainActivity.class);
+        Intent intent1 = new Intent(context, SplashScreen.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

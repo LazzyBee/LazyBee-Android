@@ -126,13 +126,13 @@ public class RecyclerViewCustomStudyAdapter extends
     private void getLevelandShowDialogChangeLevel(RelativeLayout mCardView, TextView lbLimit) {
 
         String strlevel = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-        int level = 0;
+        int level;
         if (strlevel == null) {
-            level = 1;
+            level = 2;
         } else {
             level = Integer.valueOf(strlevel);
         }
-        lbLimit.setText(String.valueOf(level + 1));
+        lbLimit.setText(String.valueOf(level));
 
         //handel oncllick
         final int finalLevel = level;
@@ -145,17 +145,19 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
     private void _showDialogSelectLevel(int finalLevel) {
+
         final String[] strlevels = {"1", "2", "3", "4", "5", "6"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 
-
-        builder.setSingleChoiceItems(strlevels, finalLevel, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(strlevels, (finalLevel == 1) ? 0 : finalLevel - 1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(item));
+
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, strlevels[item]);
+                learnApiImplements._initPreFetchNewCardList(Integer.valueOf(strlevels[item]));
                 dialog.dismiss();
-//                studyInferface._finishCustomStudy();
                 _reloadRecylerView();
+
             }
         });
         // Get the AlertDialog from create()
