@@ -222,7 +222,9 @@ public class LearnApiImplements implements LearnApi {
 //        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
 //            return _getDictionary();
 //        } else {
-        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '" + query + "%'"
+        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " 
+							+ KEY_QUESTION + " like '" + query + "%' OR "
+							+ KEY_QUESTION + " like '% " + query + "%'"
                 + " ORDER BY " + KEY_QUESTION;
         List<Card> datas = new ArrayList<>();
         //Seach card
