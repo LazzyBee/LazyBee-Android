@@ -216,6 +216,8 @@
     <string name="english_word" >Học từ vựng tiếng Anh</string>
     <string name="incoming">Từ sắp học</string>
     <string name="message_updated">Đã cập nhật</string>
+    <string name="swipe_action_ignore">Bỏ qua</string>
+    <string name="swipe_action_learned">Đã biết</string>
 
 
 </resources>

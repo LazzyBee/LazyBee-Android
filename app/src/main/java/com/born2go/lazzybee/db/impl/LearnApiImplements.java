@@ -222,9 +222,9 @@ public class LearnApiImplements implements LearnApi {
 //        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
 //            return _getDictionary();
 //        } else {
-        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " 
-							+ KEY_QUESTION + " like '" + query + "%' OR "
-							+ KEY_QUESTION + " like '% " + query + "%'"
+        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE "
+                + KEY_QUESTION + " like '" + query + "%' OR "
+                + KEY_QUESTION + " like '% " + query + "%'"
                 + " ORDER BY " + KEY_QUESTION;
         List<Card> datas = new ArrayList<>();
         //Seach card
@@ -328,7 +328,7 @@ public class LearnApiImplements implements LearnApi {
         }
     }
 
-    private List<String> _converlistCardToListCardId(List<Card> cards) {
+    public List<String> _converlistCardToListCardId(List<Card> cards) {
         List<String> cardIds = new ArrayList<String>();
         for (int i = 0; i < cards.size(); i++) {
             String id = String.valueOf(cards.get(i).getId());
@@ -1026,18 +1026,22 @@ public class LearnApiImplements implements LearnApi {
         if (count < 0) {
             return -1;
         } else {
-            try {
-                String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
-                JSONObject newcardlist = new JSONObject();
-                JSONArray jsonArray = new JSONArray(cardIds);
-                newcardlist.put(KEY_COUNT_JSON, count);
-                newcardlist.put(KEY_CARD_JSON, jsonArray);
-
-                _insertOrUpdateToSystemTable(key, newcardlist.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            initIncomingList(cardIds);
             return count;
+        }
+    }
+
+    public void initIncomingList(List<String> cardIds) {
+        try {
+            String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
+            JSONObject newcardlist = new JSONObject();
+            JSONArray jsonArray = new JSONArray(cardIds);
+            newcardlist.put(KEY_COUNT_JSON, cardIds.size());
+            newcardlist.put(KEY_CARD_JSON, jsonArray);
+
+            _insertOrUpdateToSystemTable(key, newcardlist.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

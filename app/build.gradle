@@ -58,6 +58,7 @@ dependencies {
     }
 
     compile 'com.github.deano2390:MaterialShowcaseView:1.0.5'
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
 
 
 }

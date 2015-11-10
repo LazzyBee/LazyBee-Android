@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.daimajia.swipe.SwipeLayout;
 
 import java.util.List;
 
@@ -42,7 +43,12 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         TextView level = (TextView) view.findViewById(R.id.level);
         TextView learned = (TextView) view.findViewById(R.id.learned);
         TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
+        final SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipeLayout);
         try {
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            //add drag edge.(If the BottomView has 'layout_gravity' attribute, this line is unnecessary)
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Left, null);
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Right, null);
             //get Card by position
             Card card = vocabularies.get(position);
 

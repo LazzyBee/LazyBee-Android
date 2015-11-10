@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -66,33 +64,11 @@ public class FragmentReviewToday extends Fragment {
 
             lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
             //Init Adapter
-            RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(context, vocabularies);
-
-            //Init Touch Listener
-            RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(), mRecyclerViewReviewTodayList, new RecyclerViewTouchListener.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    try {
-                        if (fragmentReviewTodayListener != null) {
-                            String cardId = String.valueOf(vocabularies.get(position).getId());
-                            Log.i(TAG, "CardId=" + cardId);
-                            fragmentReviewTodayListener.gotoCardDetails(cardId);
-                        }
-                    } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, e);
-                    }
-                }
-
-                @Override
-                public void onItemLongPress(View childView, int position) {
-
-                }
-            });
+            RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewReviewTodayListAdapter(context, mRecyclerViewReviewTodayList, vocabularies,lbCountReviewCard);
 
             //Set data and add Touch Listener
             mRecyclerViewReviewTodayList.setLayoutManager(gridLayoutManager);
             mRecyclerViewReviewTodayList.setAdapter(recyclerViewReviewTodayListAdapter);
-            mRecyclerViewReviewTodayList.addOnItemTouchListener(recyclerViewTouchListener);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
