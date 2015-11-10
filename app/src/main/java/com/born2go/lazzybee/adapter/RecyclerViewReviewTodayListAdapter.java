@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<RecyclerViewReviewTodayListAdapter.RecyclerViewReviewTodayListAdapterViewHolder> {
     private static final String TAG = "ReviewAdapter";
-    private List<Card> vocabularies;
+    List<Card> vocabularies;
     private Context context;
     private LearnApiImplements learnApiImplements;
     private RecyclerView mRecyclerViewReviewTodayList;
@@ -141,7 +141,7 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
 
             //set size
             lbCountReviewCard.setText(context.getString(R.string.message_total_card_incoming) + vocabularies.size());
-
+            lbCountReviewCard.setTag(vocabularies.size());
             //reset adapter
             //mRecyclerViewReviewTodayList.setAdapter(this);
             mRecyclerViewReviewTodayList.getAdapter().notifyItemRemoved(position);
@@ -163,6 +163,12 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
             this.view = itemView;
         }
     }
+    public List<Card> getVocabularies() {
+        return vocabularies;
+    }
 
+    public void setVocabularies(List<Card> vocabularies) {
+        this.vocabularies = vocabularies;
+    }
 
 }

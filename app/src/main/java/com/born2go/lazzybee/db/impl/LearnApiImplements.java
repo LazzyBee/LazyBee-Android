@@ -973,7 +973,6 @@ public class LearnApiImplements implements LearnApi {
     public int _initPreFetchNewCardList(int myLevel) {
         List<String> cardIds = new ArrayList<String>();
         Log.i(TAG, "my_level:" + myLevel);
-
         if (myLevel == 0)
             myLevel = 2;
 
@@ -1044,6 +1043,25 @@ public class LearnApiImplements implements LearnApi {
             e.printStackTrace();
         }
     }
+
+    public void initIncomingListwithLimit(List<String> cardIds, int limit) {
+        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+        String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+        cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+
+        while (cardIds.size() < limit) {
+            limit = limit - cardIds.size();
+            myLevel++;
+            select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+            Log.i(TAG, "_initPreFetchNewCardList: Level " + myLevel +
+                    ", target = " + limit);
+            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+        }
+        initIncomingList(cardIds);
+    }
+
 
     /*
     * @param key
@@ -1354,7 +1372,10 @@ public class LearnApiImplements implements LearnApi {
     public int getSettingIntergerValuebyKey(String keySettingMyLevel) {
         String settingMyLevel = _getValueFromSystemByKey(keySettingMyLevel);
         if (settingMyLevel == null) {
-            return 0;
+            if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MY_LEVEL) {
+                return LazzyBeeShare.DEFAULT_MY_LEVEL;
+            } else
+                return 0;
         } else {
             return Integer.valueOf(settingMyLevel);
         }
