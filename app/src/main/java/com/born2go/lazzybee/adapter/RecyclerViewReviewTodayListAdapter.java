@@ -89,16 +89,23 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
             lbLearned.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Toast.makeText(context, "Learned Card:"+position, Toast.LENGTH_SHORT).show();
-                    ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_DONE_2);
+                    try {
+                        // Toast.makeText(context, "Learned Card:"+position, Toast.LENGTH_SHORT).show();
+                        ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_DONE_2);
+                    } catch (Exception e) {
+                        LazzyBeeShare.showErrorOccurred(context, e);
+                    }
                 }
             });
             lbIgnore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Toast.makeText(context, "Ignore Card:"+position, Toast.LENGTH_SHORT).show();
-                    ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_SUSPENDED_1);
-
+                    try {
+                        // Toast.makeText(context, "Ignore Card:"+position, Toast.LENGTH_SHORT).show();
+                        ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_SUSPENDED_1);
+                    } catch (Exception e) {
+                        LazzyBeeShare.showErrorOccurred(context, e);
+                    }
                 }
             });
             mDetailsCard.setOnClickListener(new View.OnClickListener() {
