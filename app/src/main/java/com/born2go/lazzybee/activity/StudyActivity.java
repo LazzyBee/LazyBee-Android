@@ -635,7 +635,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), currentCard.getQueue());
                 }
                 Log.i(TAG, "_backToBeforeCard()\t" + getString(R.string.number_row_updated, results_num));
-                Toast.makeText(context, getString(R.string.number_row_updated, results_num), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, getString(R.string.number_row_updated, results_num), Toast.LENGTH_SHORT).show();
 
             } else {
                 Toast.makeText(context, R.string.message_error_back_before_card, Toast.LENGTH_SHORT).show();
