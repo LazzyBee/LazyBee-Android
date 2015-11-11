@@ -72,7 +72,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                 TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
                 TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
+                lbCount.setVisibility(View.GONE);
                 if (objectList.get(position).equals("English Word")) {
+                    lbCount.setVisibility(View.VISIBLE);
                     lbNameCourse.setTag(LazzyBeeShare.COURSE_ID_TEST);
                     int allCount = learnApiImplements._getCountAllListCard();
 
@@ -111,8 +113,10 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemViewType(int position) {
-        if (objectList.get(position).equals("English Word") ||
-                objectList.get(position).equals(context.getString(R.string.drawer_dictionary)))
+        if (objectList.get(position).equals("English Word")
+                || objectList.get(position).equals(context.getString(R.string.drawer_dictionary))
+                || objectList.get(position).equals(context.getString(R.string.drawer_major))
+                )
             return TYPE_COURSE;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_title_course)))
             return TYPE_TITLE_COURSE;

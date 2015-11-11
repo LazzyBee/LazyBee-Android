@@ -1,15 +1,22 @@
 package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.activity.CardDetailsActivity;
 import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.daimajia.swipe.SwipeLayout;
 
 import java.util.List;
 
@@ -18,12 +25,18 @@ import java.util.List;
  */
 public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<RecyclerViewReviewTodayListAdapter.RecyclerViewReviewTodayListAdapterViewHolder> {
     private static final String TAG = "ReviewAdapter";
-    private List<Card> vocabularies;
+    List<Card> vocabularies;
     private Context context;
+    private LearnApiImplements learnApiImplements;
+    private RecyclerView mRecyclerViewReviewTodayList;
+    private TextView lbCountReviewCard;
 
-    public RecyclerViewReviewTodayListAdapter(Context context, List<Card> vocabularies) {
+    public RecyclerViewReviewTodayListAdapter(Context context, RecyclerView mRecyclerViewReviewTodayList, List<Card> vocabularies, TextView lbCountReviewCard) {
         this.context = context;
         this.vocabularies = vocabularies;
+        this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        this.mRecyclerViewReviewTodayList = mRecyclerViewReviewTodayList;
+        this.lbCountReviewCard = lbCountReviewCard;
     }
 
     @Override
@@ -34,17 +47,28 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewReviewTodayListAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerViewReviewTodayListAdapterViewHolder holder, final int position) {
         //Define view
-        View view = holder.view;
+        final View view = holder.view;
+        final SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipeLayout);
         TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
         TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
         TextView level = (TextView) view.findViewById(R.id.level);
-        TextView learned = (TextView) view.findViewById(R.id.learned);
+        final TextView learned = (TextView) view.findViewById(R.id.learned);
         TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
+
+        TextView lbIgnore = (TextView) view.findViewById(R.id.lbIgnore);
+        TextView lbLearned = (TextView) view.findViewById(R.id.lbLearned);
+        LinearLayout mDetailsCard = (LinearLayout) view.findViewById(R.id.mDetailsCard);
         try {
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            //add drag edge.(If the BottomView has 'layout_gravity' attribute, this line is unnecessary)
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Left, null);
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Right, view.findViewById(R.id.bottom_wrapper));
+
+
             //get Card by position
-            Card card = vocabularies.get(position);
+            final Card card = vocabularies.get(position);
 
             String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
             String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
@@ -62,10 +86,68 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
                 learned.setText(context.getResources().getString(R.string.new_card));
             }
             learned.setVisibility(View.GONE);
+            lbLearned.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        // Toast.makeText(context, "Learned Card:"+position, Toast.LENGTH_SHORT).show();
+                        ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_DONE_2);
+                    } catch (Exception e) {
+                        LazzyBeeShare.showErrorOccurred(context, e);
+                    }
+                }
+            });
+            lbIgnore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        // Toast.makeText(context, "Ignore Card:"+position, Toast.LENGTH_SHORT).show();
+                        ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_SUSPENDED_1);
+                    } catch (Exception e) {
+                        LazzyBeeShare.showErrorOccurred(context, e);
+                    }
+                }
+            });
+            mDetailsCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String cardId = String.valueOf(card.getId());
+                    Intent intent = new Intent(context, CardDetailsActivity.class);
+                    intent.putExtra(LazzyBeeShare.CARDID, cardId);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(intent);
+                }
+            });
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
 
+    }
+
+    private void ignoreAndLearnedCard(int position, int queue) {
+        try {
+            Log.i(TAG, "position:" + position);
+            Card card = vocabularies.get(position);
+            card.setQueue(queue);
+
+            //Update Card in server
+            learnApiImplements._updateCard(card);
+
+            //re display Icoming list
+            vocabularies.remove(card);
+
+            //remove card id in Incomming List
+            learnApiImplements.initIncomingList(learnApiImplements._converlistCardToListCardId(vocabularies));
+
+            //set size
+            lbCountReviewCard.setText(context.getString(R.string.message_total_card_incoming) + vocabularies.size());
+            lbCountReviewCard.setTag(vocabularies.size());
+            //reset adapter
+            //mRecyclerViewReviewTodayList.setAdapter(this);
+            mRecyclerViewReviewTodayList.getAdapter().notifyItemRemoved(position);
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 
     @Override
@@ -81,4 +163,12 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
             this.view = itemView;
         }
     }
+    public List<Card> getVocabularies() {
+        return vocabularies;
+    }
+
+    public void setVocabularies(List<Card> vocabularies) {
+        this.vocabularies = vocabularies;
+    }
+
 }

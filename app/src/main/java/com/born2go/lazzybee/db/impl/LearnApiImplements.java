@@ -222,9 +222,9 @@ public class LearnApiImplements implements LearnApi {
 //        if (query.equals(LazzyBeeShare.GOTO_DICTIONARY)) {
 //            return _getDictionary();
 //        } else {
-        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE " 
-							+ KEY_QUESTION + " like '" + query + "%' OR "
-							+ KEY_QUESTION + " like '% " + query + "%'"
+        String likeQuery = "SELECT  " + selectList + " FROM " + TABLE_VOCABULARY + " WHERE "
+                + KEY_QUESTION + " like '" + query + "%' OR "
+                + KEY_QUESTION + " like '% " + query + "%'"
                 + " ORDER BY " + KEY_QUESTION;
         List<Card> datas = new ArrayList<>();
         //Seach card
@@ -328,7 +328,7 @@ public class LearnApiImplements implements LearnApi {
         }
     }
 
-    private List<String> _converlistCardToListCardId(List<Card> cards) {
+    public List<String> _converlistCardToListCardId(List<Card> cards) {
         List<String> cardIds = new ArrayList<String>();
         for (int i = 0; i < cards.size(); i++) {
             String id = String.valueOf(cards.get(i).getId());
@@ -973,7 +973,6 @@ public class LearnApiImplements implements LearnApi {
     public int _initPreFetchNewCardList(int myLevel) {
         List<String> cardIds = new ArrayList<String>();
         Log.i(TAG, "my_level:" + myLevel);
-
         if (myLevel == 0)
             myLevel = 2;
 
@@ -1026,20 +1025,43 @@ public class LearnApiImplements implements LearnApi {
         if (count < 0) {
             return -1;
         } else {
-            try {
-                String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
-                JSONObject newcardlist = new JSONObject();
-                JSONArray jsonArray = new JSONArray(cardIds);
-                newcardlist.put(KEY_COUNT_JSON, count);
-                newcardlist.put(KEY_CARD_JSON, jsonArray);
-
-                _insertOrUpdateToSystemTable(key, newcardlist.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            initIncomingList(cardIds);
             return count;
         }
     }
+
+    public void initIncomingList(List<String> cardIds) {
+        try {
+            String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
+            JSONObject newcardlist = new JSONObject();
+            JSONArray jsonArray = new JSONArray(cardIds);
+            newcardlist.put(KEY_COUNT_JSON, cardIds.size());
+            newcardlist.put(KEY_CARD_JSON, jsonArray);
+
+            _insertOrUpdateToSystemTable(key, newcardlist.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initIncomingListwithLimit(List<String> cardIds, int limit) {
+        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+        String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+        cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+
+        while (cardIds.size() < limit) {
+            limit = limit - cardIds.size();
+            myLevel++;
+            select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+            Log.i(TAG, "_initPreFetchNewCardList: Level " + myLevel +
+                    ", target = " + limit);
+            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+        }
+        initIncomingList(cardIds);
+    }
+
 
     /*
     * @param key
@@ -1350,7 +1372,10 @@ public class LearnApiImplements implements LearnApi {
     public int getSettingIntergerValuebyKey(String keySettingMyLevel) {
         String settingMyLevel = _getValueFromSystemByKey(keySettingMyLevel);
         if (settingMyLevel == null) {
-            return 0;
+            if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MY_LEVEL) {
+                return LazzyBeeShare.DEFAULT_MY_LEVEL;
+            } else
+                return 0;
         } else {
             return Integer.valueOf(settingMyLevel);
         }

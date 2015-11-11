@@ -497,6 +497,9 @@ public class MainActivity extends AppCompatActivity
             case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
                 _gotoDictionary();
                 break;
+            case LazzyBeeShare.DRAWER_MAJOR_INDEX:
+                Toast.makeText(context, "Select major", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
 

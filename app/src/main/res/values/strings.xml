@@ -242,7 +242,9 @@
         <!--<item>@string/drawer_user</item>-->
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
+        <item>@string/drawer_major</item>
         <item>@string/drawer_line</item>
+
         <item>@string/drawer_dictionary</item>
         <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
@@ -321,6 +323,8 @@
     <string name="message_total_card_incoming">Total card:</string>
     <string name="test_speech_rate" translatable="false">This is to adjust speaking speed. Thank you for using lazy bee application.</string>
     <string name="message_updated">Updated</string>
-
+    <string name="swipe_action_ignore">Ignore</string>
+    <string name="swipe_action_learned">Learned</string>
+    <string name="drawer_major">Major</string>
 
 </resources>

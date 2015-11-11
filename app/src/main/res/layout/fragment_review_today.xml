@@ -1,25 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.born2go.lazzybee.fragment.FragmentReviewToday"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.born2go.lazzybee.fragment.FragmentReviewToday">
 
     <!-- TODO: Update blank fragment layout -->
 
     <TextView
+        android:id="@+id/lbCountReviewCard"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Total 200"
-        android:id="@+id/lbCountReviewCard"
-        android:textColor="@color/textcolorPrimary"
+        android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:text="Total 200"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/textcolorPrimary" />
 
-    <view
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="android.support.v7.widget.RecyclerView"
-        android:id="@+id/mRecyclerViewReviewTodayList" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <view
+            android:id="@+id/mRecyclerViewReviewTodayList"
+            class="android.support.v7.widget.RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
