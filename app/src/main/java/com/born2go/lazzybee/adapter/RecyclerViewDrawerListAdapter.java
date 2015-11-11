@@ -115,7 +115,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     public int getItemViewType(int position) {
         if (objectList.get(position).equals("English Word")
                 || objectList.get(position).equals(context.getString(R.string.drawer_dictionary))
-                || objectList.get(position).equals(context.getString(R.string.drawer_major))
+                || objectList.get(position).equals(context.getString(R.string.drawer_subject))
                 )
             return TYPE_COURSE;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_title_course)))

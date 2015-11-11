@@ -15,17 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewDrawerListAdapter;
 import com.born2go.lazzybee.db.Course;
-import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.Arrays;
@@ -122,39 +123,34 @@ public class NavigationDrawerFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
         //init Adapter
         RecyclerViewDrawerListAdapter recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
+
         mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
         mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
-        RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(getActivity(), mRecyclerViewDrawerList, new RecyclerViewTouchListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Object o = objects.get(position);
-                if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
-                    selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
-                } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
-                    selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
-                } else if (o.equals(getString(R.string.drawer_about))) {
-                    selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
-                } else if (o.equals(getString(R.string.drawer_dictionary))) {
-                    selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
-                } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
-                    selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                } else if (o instanceof Course) {
-                    selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
-                }else if (o.equals(getString(R.string.drawer_major))) {
-                    selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
-                }
+        mRecyclerViewDrawerList.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        Object o = objects.get(position);
+                        if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
+                            selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
+                        } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
+                            selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_about))) {
+                            selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_dictionary))) {
+                            selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
+                        } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
+                            selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
+                        } else if (o instanceof Course) {
+                            selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_subject))) {
+                            selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
+                        }
+                    }
+                })
+        );
 
-            }
-
-            @Override
-            public void onItemLongPress(View childView, int position) {
-
-            }
-        });
-        mRecyclerViewDrawerList.addOnItemTouchListener(recyclerViewTouchListener);
-
-        return view;
-    }
+    return view;
+}
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
@@ -332,15 +328,57 @@ public class NavigationDrawerFragment extends Fragment {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
+/**
+ * Callbacks interface that all activities using this fragment must implement.
+ */
+public interface NavigationDrawerCallbacks {
     /**
-     * Callbacks interface that all activities using this fragment must implement.
+     * Called when an item in the navigation drawer is selected.
      */
-    public interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
-    }
+    void onNavigationDrawerItemSelected(int position);
+}
+
+
+
+     static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+        private OnItemClickListener mListener;
+
+         interface OnItemClickListener {
+            public void onItemClick(View view, int position);
+        }
+
+        GestureDetector mGestureDetector;
+
+        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
+            mListener = listener;
+            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+            View childView = view.findChildViewUnder(e.getX(), e.getY());
+            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+                mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        }
+
+         @Override
+         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+         }
+     }
+
+
 
 
 }
