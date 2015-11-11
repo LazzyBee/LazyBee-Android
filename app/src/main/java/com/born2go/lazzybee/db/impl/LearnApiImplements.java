@@ -1044,23 +1044,7 @@ public class LearnApiImplements implements LearnApi {
         }
     }
 
-    public void initIncomingListwithLimit(List<String> cardIds, int limit) {
-        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-        String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
-        cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
-        while (cardIds.size() < limit) {
-            limit = limit - cardIds.size();
-            myLevel++;
-            select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
-            Log.i(TAG, "_initPreFetchNewCardList: Level " + myLevel +
-                    ", target = " + limit);
-            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
-        }
-        initIncomingList(cardIds);
-    }
 
 
     /*
