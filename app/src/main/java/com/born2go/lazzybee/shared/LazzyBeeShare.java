@@ -96,6 +96,7 @@ public class LazzyBeeShare {
     public static final int GOTO_DICTIONARY_CODE = 1;
     public static final int GOTO_SEARCH_CODE = 0;
     public static final String NOTIFY_TEXT = "notify_text";
+    public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
 
 
     private static boolean DEBUG = true;

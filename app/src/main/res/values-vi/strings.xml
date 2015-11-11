@@ -225,10 +225,8 @@
     <string name="subject_economy">Kinh tế</string>
     <string name="subject_science">Khoa học</string>
     <string name="subject_medical">Y tế</string>
-    <string name="select_subject_title">Chọn chuyên ngànhr</string>
-    <string name="subject_common">Common</string>
+    <string name="select_subject_title">Chọn chuyên ngành</string>
     <string-array name="subjects">
-        <item>@string/subject_common</item>
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>
         <item>@string/subject_science</item>

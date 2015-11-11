@@ -331,10 +331,8 @@
     <string name="subject_science">Science</string>
     <string name="subject_medical">Medical</string>
     <string name="select_subject_title">Select subject</string>
-    <string name="subject_common">Common</string>
 
     <string-array name="subjects">
-        <item>@string/subject_common</item>
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>
         <item>@string/subject_science</item>

@@ -369,6 +369,7 @@ public class MainActivity extends AppCompatActivity
         lbTipHelp.setSingleLine();
         lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         lbTipHelp.setHorizontallyScrolling(true);
+
     }
 
     public void onlbTipHelpClick(View view) {
@@ -498,7 +499,7 @@ public class MainActivity extends AppCompatActivity
                 _gotoDictionary();
                 break;
             case LazzyBeeShare.DRAWER_MAJOR_INDEX:
-                Toast.makeText(context, "Select major", Toast.LENGTH_SHORT).show();
+                showSelectSubject();
                 break;
             default:
                 break;
@@ -506,6 +507,45 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+    }
+
+    private void showSelectSubject() {
+        //get my subbject
+        String my_subject = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+
+        //define index
+        int index = 0;
+        if (my_subject == null) {
+            index = -1;
+        } else if (my_subject.equals(getString(R.string.subject_it))) {
+            index = 0;
+        } else if (my_subject.equals(getString(R.string.subject_economy))) {
+            index = 1;
+        } else if (my_subject.equals(getString(R.string.subject_science))) {
+            index = 2;
+        } else if (my_subject.equals(getString(R.string.subject_medical))) {
+            index = 3;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle(context.getString(R.string.select_subject_title));
+        final CharSequence[] items = context.getResources().getStringArray(R.array.subjects);
+
+        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                String subjectSelected = String.valueOf(items[item]);
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     private void _gotoDictionary() {
