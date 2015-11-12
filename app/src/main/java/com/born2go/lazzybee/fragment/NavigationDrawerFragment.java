@@ -67,7 +67,7 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-
+    RecyclerViewDrawerListAdapter recyclerViewDrawerListAdapter;
     private Context context;
 
     public NavigationDrawerFragment() {
@@ -122,13 +122,14 @@ public class NavigationDrawerFragment extends Fragment {
         //init GridLayoutManager
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
         //init Adapter
-        RecyclerViewDrawerListAdapter recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
+        recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
 
         mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
         mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
         mRecyclerViewDrawerList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         Object o = objects.get(position);
                         if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
                             selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
@@ -149,8 +150,8 @@ public class NavigationDrawerFragment extends Fragment {
                 })
         );
 
-    return view;
-}
+        return view;
+    }
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
@@ -218,6 +219,8 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                if (recyclerViewDrawerListAdapter != null)
+                    recyclerViewDrawerListAdapter.notifyDataSetChanged();
             }
         };
 
@@ -328,22 +331,21 @@ public class NavigationDrawerFragment extends Fragment {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
-/**
- * Callbacks interface that all activities using this fragment must implement.
- */
-public interface NavigationDrawerCallbacks {
     /**
-     * Called when an item in the navigation drawer is selected.
+     * Callbacks interface that all activities using this fragment must implement.
      */
-    void onNavigationDrawerItemSelected(int position);
-}
+    public interface NavigationDrawerCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationDrawerItemSelected(int position);
+    }
 
 
-
-     static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+    static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
         private OnItemClickListener mListener;
 
-         interface OnItemClickListener {
+        interface OnItemClickListener {
             public void onItemClick(View view, int position);
         }
 
@@ -372,13 +374,11 @@ public interface NavigationDrawerCallbacks {
         public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
         }
 
-         @Override
-         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-         }
-     }
-
-
+        }
+    }
 
 
 }
