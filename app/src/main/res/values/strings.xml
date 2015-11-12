@@ -329,7 +329,13 @@
     <string name="subject_it">IT</string>
     <string name="subject_economy">Economy</string>
     <string name="subject_science">Science</string>
-    <string name="subject_medical">Medical</string>
+    <string name="subject_medical">Medicine</string>
+
+    <string name="subject_it_value">it</string>
+    <string name="subject_economy_value">economy</string>
+    <string name="subject_science_value">science</string>
+    <string name="subject_medical_value">medicine</string>
+
     <string name="select_subject_title">Select subject</string>
 
     <string-array name="subjects">
@@ -338,5 +344,13 @@
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
     </string-array>
+
+    <string-array name="subjects_value" translatable="false">
+        <item>@string/subject_it_value</item>
+        <item>@string/subject_economy_value</item>
+        <item>@string/subject_science_value</item>
+        <item>@string/subject_medical_value</item>
+    </string-array>
+
 
 </resources>

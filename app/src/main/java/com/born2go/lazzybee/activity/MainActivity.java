@@ -503,9 +503,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 break;
-
-
         }
+
 
     }
 
@@ -517,28 +516,43 @@ public class MainActivity extends AppCompatActivity
         int index = 0;
         if (my_subject == null) {
             index = -1;
-        } else if (my_subject.equals(getString(R.string.subject_it))) {
+        } else if (my_subject.equals(getString(R.string.subject_it_value))) {
             index = 0;
-        } else if (my_subject.equals(getString(R.string.subject_economy))) {
+        } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
             index = 1;
-        } else if (my_subject.equals(getString(R.string.subject_science))) {
+        } else if (my_subject.equals(getString(R.string.subject_science_value))) {
             index = 2;
-        } else if (my_subject.equals(getString(R.string.subject_medical))) {
+        } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
             index = 3;
+        } else {
+            index = -1;
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.select_subject_title));
         final CharSequence[] items = context.getResources().getStringArray(R.array.subjects);
+        final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
 
+        final int[] seleted_index = {0};
         builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                String subjectSelected = String.valueOf(items[item]);
-                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
+                seleted_index[0] = item;
+
             }
         });
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+
+                int index = seleted_index[0];
+                Log.i(TAG, "seleted_index:" + index);
+                String subjectSelected = String.valueOf(items_value[index]);
+
+                //save my subject
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
+
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
                 dialog.cancel();
             }
         });
