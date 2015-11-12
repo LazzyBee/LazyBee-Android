@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity
         } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study2)
                 || countCardNoLearn == 0) {
             //state2 hoc xong het rui & hoc het card rui
-            mCardViewStudy.setVisibility(View.GONE);
+            mCardViewStudy.setVisibility(View.VISIBLE);
             mDue.setVisibility(View.GONE);
 
             mLine.setVisibility(View.GONE);
@@ -871,10 +871,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        if (countCardNoLearn == 0) {
-            Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
+        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+            builder.setMessage(context.getString(R.string.congratulations));
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        } else {
+            if (countCardNoLearn == 0) {
+                Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
+            }
+            _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
         }
-        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+
 
     }
 
