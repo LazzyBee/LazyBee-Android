@@ -63,7 +63,7 @@ public class ReviewCardActivity extends AppCompatActivity {
                     if (count < 100) {
                         //fill up incoming list
                         int myLevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-                        dataBaseHelper._initPreFetchNewCardList(myLevel);
+                        dataBaseHelper._initIncomingCardIdList();
                         //get new IncomingList
                         List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
 
