@@ -179,7 +179,11 @@ public class LazzyBeeShare {
      * init HTML answer
      */
     public static String getAnswerHTML(Context context, Card card) {
-        return getAnswerHTMLwithPackage(context, card, "common", false);
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        String mySubject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+        if (mySubject == null)
+            mySubject = "common";
+        return getAnswerHTMLwithPackage(context, card, mySubject, false);
     }
 
     /**
@@ -279,6 +283,9 @@ public class LazzyBeeShare {
             JSONObject packagesObj = answerObj.getJSONObject("packages");
             // System.out.print("\npackagesObj.length():" + packagesObj.length());
             if (packagesObj.length() > 0) {
+                if (packagesObj.isNull(packages)) {
+                    packages = "common";
+                }
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
                 meaning = commonObj.getString("meaning");
                 explain = commonObj.getString("explain");
@@ -290,7 +297,7 @@ public class LazzyBeeShare {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         if (!explain.isEmpty()) {
