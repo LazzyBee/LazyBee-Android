@@ -781,6 +781,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
 
+        //Inject native handle to web element
+        _addJavascriptInterfaceQuestionAndAnswer();
+
         //Load first card
         if (dueList.size() > 0) {
             //Load first card is Due card
@@ -793,8 +796,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _nextNewCard();
         }
 
-        //Inject native handle to web element
-        _addJavascriptInterfaceQuestionAndAnswer();
     }
 
     public void onbtnShowAnswerClick(View view) {
