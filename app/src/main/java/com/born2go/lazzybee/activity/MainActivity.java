@@ -871,26 +871,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-            builder.setMessage(context.getString(R.string.congratulations));
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
-            // Get the AlertDialog from create()
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-        } else {
-            if (countCardNoLearn == 0) {
-                Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
-            }
-            _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+        if (countCardNoLearn == 0) {
+            Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         }
-
-
+        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
     }
 
     private void _gotoStudy(int type) {
