@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -501,6 +503,9 @@ public class MainActivity extends AppCompatActivity
             case LazzyBeeShare.DRAWER_MAJOR_INDEX:
                 showSelectSubject();
                 break;
+            case LazzyBeeShare.DRAWER_HELP_INDEX:
+                _showHelp();
+                break;
             default:
                 break;
         }
@@ -571,6 +576,26 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(context, AboutActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
+    }
+
+    private void _showHelp() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        View viewDialog = View.inflate(context, R.layout.webview_help, null);
+        WebView mWebViewHelp = (WebView) viewDialog.findViewById(R.id.mWebViewHelp);
+        FloatingActionButton mFloatClose = (FloatingActionButton) viewDialog.findViewById(R.id.mFloatClose);
+        mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
+        builder.setView(viewDialog);
+
+        // Get the AlertDialog from create()
+        final AlertDialog dialog = builder.create();
+
+        dialog.show();
+        mFloatClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.hide();
+            }
+        });
     }
 
     private void _gotoAddCourse() {
@@ -871,26 +896,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-            builder.setMessage(context.getString(R.string.congratulations));
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
-            // Get the AlertDialog from create()
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-        } else {
-            if (countCardNoLearn == 0) {
-                Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
-            }
-            _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+        if (countCardNoLearn == 0) {
+            Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         }
-
-
+        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
     }
 
     private void _gotoStudy(int type) {

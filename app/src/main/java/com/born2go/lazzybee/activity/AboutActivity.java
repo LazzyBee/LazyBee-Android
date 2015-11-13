@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -16,11 +17,14 @@ public class AboutActivity extends AppCompatActivity {
     private static final Object GA_SCREEN = "aAboutScreen";
     private static final String TAG = "AboutActivity";
     private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        this.context=this;
+        WebView mWebViewHelp = (WebView) findViewById(R.id.mWebViewHelp);
+        mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
+        this.context = this;
         _trackerApplication();
     }
 
