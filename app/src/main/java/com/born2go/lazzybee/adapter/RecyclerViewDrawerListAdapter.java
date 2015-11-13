@@ -29,6 +29,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_SETTING = 4;
     private static final int TYPE_ABOUT = 5;
     private static final int TYPE_LINES = 6;
+    private static final int TYPE_HELP = 7;
 
     List<String> objectList;
     Context context;
@@ -57,6 +58,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         } else if (viewType == TYPE_LINES) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_lines, parent, false);
+        }else if (viewType == TYPE_HELP) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         }
         RecyclerViewDrawerListAdapterViewHolder recyclerViewDrawerListAdapterViewHolder = new RecyclerViewDrawerListAdapterViewHolder(v, viewType);
         return recyclerViewDrawerListAdapterViewHolder;
@@ -115,6 +118,11 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
                 TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
                 lbDrawerName.setText(context.getString(R.string.setting_about));
+            }else if (holder.viewType == TYPE_HELP) {
+                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_help));
+                TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
+                lbDrawerName.setText(context.getString(R.string.drawer_help));
             }
 
         } catch (Exception e) {
@@ -137,6 +145,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             return TYPE_SETTING;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_about)))
             return TYPE_ABOUT;
+        else if (objectList.get(position).equals(context.getString(R.string.drawer_help)))
+            return TYPE_HELP;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_line)))
             return TYPE_LINES;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_add_course)))

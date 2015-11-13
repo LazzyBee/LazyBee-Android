@@ -77,6 +77,7 @@ public class LazzyBeeShare {
     public static final int DRAWER_DICTIONARY_INDEX = 5;
 
     public static final int DRAWER_MAJOR_INDEX = 6;
+    public static final int DRAWER_HELP_INDEX = 7;
     public static final int CODE_COMPLETE_STUDY_RESULTS_1000 = 1000;
     public static final int CODE_SEARCH_RESULT = 1001;
     public static final String NOTIFICATION_MESSAGE = "n_message";
@@ -97,6 +98,7 @@ public class LazzyBeeShare {
     public static final int GOTO_SEARCH_CODE = 0;
     public static final String NOTIFY_TEXT = "notify_text";
     public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
+
 
 
     private static boolean DEBUG = true;
