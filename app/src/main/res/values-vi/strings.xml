@@ -162,7 +162,7 @@
         <!--<item>@string/drawer_user</item>-->
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
-        <item>@string/drawer_major</item>
+        <item>@string/drawer_subject</item>
         <item>@string/drawer_line</item>
 
         <item>@string/drawer_dictionary</item>
@@ -220,7 +220,18 @@
     <string name="swipe_action_ignore">Bỏ qua</string>
     <string name="swipe_action_learned">Đã biết</string>
 
-    <string name="drawer_major">Chuyên ngành</string>
+    <string name="drawer_subject">Chuyên ngành</string>
+    <string name="subject_it">Tin học</string>
+    <string name="subject_economy">Kinh tế</string>
+    <string name="subject_science">Khoa học</string>
+    <string name="subject_medical">Y tế</string>
+    <string name="select_subject_title">Chọn chuyên ngành</string>
+    <string-array name="subjects">
+        <item>@string/subject_it</item>
+        <item>@string/subject_economy</item>
+        <item>@string/subject_science</item>
+        <item>@string/subject_medical</item>
+    </string-array>
 
 
 </resources>

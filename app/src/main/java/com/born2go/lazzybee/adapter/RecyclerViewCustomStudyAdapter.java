@@ -154,7 +154,7 @@ public class RecyclerViewCustomStudyAdapter extends
             public void onClick(DialogInterface dialog, int item) {
 
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, strlevels[item]);
-                learnApiImplements._initPreFetchNewCardList(Integer.valueOf(strlevels[item]));
+                learnApiImplements._initIncomingCardIdListbyLevel(Integer.valueOf(strlevels[item]));
                 dialog.dismiss();
                 _reloadRecylerView();
 

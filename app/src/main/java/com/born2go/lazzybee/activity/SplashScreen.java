@@ -82,8 +82,7 @@ public class SplashScreen extends Activity {
                         }
                         _updateVersionDB();
 
-                        int my_level = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-                        learnApiImplements._get100Card(my_level);
+                        learnApiImplements._get100Card();
 
                         startMainActivity();
                     }

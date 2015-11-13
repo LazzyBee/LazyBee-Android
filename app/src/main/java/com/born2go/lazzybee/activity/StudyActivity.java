@@ -91,6 +91,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     boolean answerDisplay = false;
     boolean learn_more;
     int completeStudy = 0;
+    TextView lbTagetActionStudy;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -311,6 +312,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         mCardViewHelpandAdMod = (CardView) findViewById(R.id.mCardViewHelpandAdMod);
 
+        lbTagetActionStudy = (TextView) findViewById(R.id.lbTagetActionStudy);
 //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
@@ -635,7 +637,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), currentCard.getQueue());
                 }
                 Log.i(TAG, "_backToBeforeCard()\t" + getString(R.string.number_row_updated, results_num));
-               // Toast.makeText(context, getString(R.string.number_row_updated, results_num), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, getString(R.string.number_row_updated, results_num), Toast.LENGTH_SHORT).show();
 
             } else {
                 Toast.makeText(context, R.string.message_error_back_before_card, Toast.LENGTH_SHORT).show();
@@ -779,6 +781,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
 
+        //Inject native handle to web element
+        _addJavascriptInterfaceQuestionAndAnswer();
+
         //Load first card
         if (dueList.size() > 0) {
             //Load first card is Due card
@@ -791,8 +796,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _nextNewCard();
         }
 
-        //Inject native handle to web element
-        _addJavascriptInterfaceQuestionAndAnswer();
     }
 
     public void onbtnShowAnswerClick(View view) {
@@ -1119,18 +1122,28 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            lbTagetActionStudy.setText("New");
+            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_new_color));
+            lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else if (queue == Card.QUEUE_LNR1) {
             //set BackBackground color
             lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbTagetActionStudy.setText("Again");
+            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_again_color));
+            lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else if (queue == Card.QUEUE_REV2) {
             //set BackBackground color
             lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbTagetActionStudy.setText("Review");
+            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_due_color));
+
         } else if (queue == 10) {
         }
+        lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         //Set Data
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);

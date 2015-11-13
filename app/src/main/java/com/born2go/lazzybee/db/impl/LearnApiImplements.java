@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.algorithms.WordEstimate;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
@@ -268,17 +267,7 @@ public class LearnApiImplements implements LearnApi {
             //limit learn more =5 row
             if (learnmore == true)
                 number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-
-            String settingMyLevel = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-            int my_level = 2;
-            try {
-                if (settingMyLevel != null) {
-                    my_level = Integer.valueOf(my_level);
-
-                }
-            } catch (Exception e) {
-            }
-            int countNewCard = _get100Card(my_level);
+            int countNewCard = _get100Card();
             if (countNewCard > 0) {
                 //_getValueFromSystemByKey()
                 String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
@@ -944,7 +933,8 @@ public class LearnApiImplements implements LearnApi {
 
 
     @Override
-    public int _get100Card(int myLevel) {
+    public int _get100Card() {
+        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
         String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
         if (value != null) {
             try {
@@ -954,7 +944,7 @@ public class LearnApiImplements implements LearnApi {
                 //Check count < today new card limit ->init
                 if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
                     Log.i(TAG, "_get100Card:Init New 100 Card");
-                    return _initPreFetchNewCardList(myLevel);
+                    return _initIncomingCardIdList();
                 } else {
                     Log.i(TAG, "_get100Card:" + count);
                     return count;
@@ -962,75 +952,111 @@ public class LearnApiImplements implements LearnApi {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                return _initPreFetchNewCardList(myLevel);
+                return _initIncomingCardIdList();
             }
 
         } else {
-            return _initPreFetchNewCardList(myLevel);
+            return _initIncomingCardIdList();
         }
     }
 
-    public int _initPreFetchNewCardList(int myLevel) {
-        List<String> cardIds = new ArrayList<String>();
-        Log.i(TAG, "my_level:" + myLevel);
-        if (myLevel == 0)
-            myLevel = 2;
+    public int _initIncomingCardIdList() {
+        String subject = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+        if (subject == null) {
+            return _initIncomingCardIdListbyLevel(myLevel);
+        } else {
+            return _initIncomingCardIdListbyLevelandSubject(myLevel, subject);
+        }
 
-        if (myLevel > 0) {
+    }
+
+    public int _initIncomingCardIdListbyLevelandSubject(int myLevel, String subject) {
+        List<String> cardIds = new ArrayList<String>();
+        int final_limit = 100;
+        int limit = 100;
+        String subCommon = "common";
+
+        String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
+                myLevel + " AND package like '%," + subject + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+        cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+
+        int count = cardIds.size();
+        if (count < limit) {
+            limit = limit - cardIds.size();
+            //set default
+            select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
+                    myLevel + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
+                    + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+        }
+
+        while (cardIds.size() < limit) {
+            limit = limit - cardIds.size();
+            myLevel++;
+            select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
+                    myLevel + " AND package like '%," + subject + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+
+            Log.i(TAG, "initIncomingListwithSubject: Level " + myLevel +
+                    ", target = " + limit);
+            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+            if (cardIds.size() < final_limit) {
+                limit = final_limit - cardIds.size();
+                //set default
+                select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
+                        myLevel + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
+                        + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+                cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+            }
+        }
+        if (cardIds.size() < 0) {
+            return -1;
+        } else {
+            saveIncomingCardIdList(cardIds);
+            return cardIds.size();
+        }
+    }
+
+    public int _initIncomingCardIdListbyLevel(int myLevel) {
+        String subject = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+        if (subject == null) {
+            List<String> cardIds = new ArrayList<String>();
+            Log.i(TAG, "my_level:" + myLevel);
+            if (myLevel == 0)
+                myLevel = 2;
             int limit = 100;
             String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " ORDER BY vocabulary.question" + " LIMIT " + limit;
             cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
             while (cardIds.size() < limit) {
                 limit = limit - cardIds.size();
                 myLevel++;
                 select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
-                Log.i(TAG, "_initPreFetchNewCardList: Level " + myLevel +
+                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " ORDER BY vocabulary.question" + " LIMIT " + limit;
+                Log.i(TAG, "_initIncomingCardIdListbyLevel: Level " + myLevel +
                         ", target = " + limit);
                 cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
             }
-        } else {
-
-            WordEstimate wordEstimate = new WordEstimate();
-            int number[] = wordEstimate.getNumberWordEachLevel(0d);
-            int target = 0;
-            for (int i = 1; i < number.length; i++) {
-                target += number[i];
-                if (target > 0) {
-                    String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                            " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + i + " LIMIT " + target;
-
-                    List<String> cardIdListbylevel = _getCardIDListQueryString(select_list_card_by_queue);
-
-                    int count = cardIdListbylevel.size();
-                    Log.i(TAG, "_initPreFetchNewCardList: Level " + i + ": config = " + number[i] +
-                            ", target = " + target +
-                            ", real_count = " + count);
-
-                    cardIds.addAll(cardIdListbylevel);
-
-                    if (count < target) {
-                        target = target - count;
-                    } else target = 0;
-                }
+            int count = cardIds.size();
+            Log.i(TAG, "_initIncomingCardIdListbyLevel: Card size=" + count);
+            if (count < 0) {
+                return -1;
+            } else {
+                saveIncomingCardIdList(cardIds);
+                return count;
             }
-        }
-        int count = cardIds.size();
-
-        Log.i(TAG, "_initPreFetchNewCardList: Card size=" + count);
-
-//        if (count < _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-        if (count < 0) {
-            return -1;
         } else {
-            initIncomingList(cardIds);
-            return count;
+            return _initIncomingCardIdListbyLevelandSubject(myLevel, subject);
         }
+
     }
 
-    public void initIncomingList(List<String> cardIds) {
+    public void saveIncomingCardIdList(List<String> cardIds) {
         try {
             String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
             JSONObject newcardlist = new JSONObject();
@@ -1042,24 +1068,6 @@ public class LearnApiImplements implements LearnApi {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void initIncomingListwithLimit(List<String> cardIds, int limit) {
-        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-        String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
-        cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
-
-        while (cardIds.size() < limit) {
-            limit = limit - cardIds.size();
-            myLevel++;
-            select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " LIMIT " + limit;
-            Log.i(TAG, "_initPreFetchNewCardList: Level " + myLevel +
-                    ", target = " + limit);
-            cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
-        }
-        initIncomingList(cardIds);
     }
 
 
@@ -1402,4 +1410,7 @@ public class LearnApiImplements implements LearnApi {
             return _getDictionary();
         }
     }
+
+
+
 }

@@ -369,6 +369,7 @@ public class MainActivity extends AppCompatActivity
         lbTipHelp.setSingleLine();
         lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         lbTipHelp.setHorizontallyScrolling(true);
+
     }
 
     public void onlbTipHelpClick(View view) {
@@ -409,7 +410,7 @@ public class MainActivity extends AppCompatActivity
         } else if (visibilityCode == getResources().getInteger(R.integer.visibility_state_study2)
                 || countCardNoLearn == 0) {
             //state2 hoc xong het rui & hoc het card rui
-            mCardViewStudy.setVisibility(View.GONE);
+            mCardViewStudy.setVisibility(View.VISIBLE);
             mDue.setVisibility(View.GONE);
 
             mLine.setVisibility(View.GONE);
@@ -498,14 +499,67 @@ public class MainActivity extends AppCompatActivity
                 _gotoDictionary();
                 break;
             case LazzyBeeShare.DRAWER_MAJOR_INDEX:
-                Toast.makeText(context, "Select major", Toast.LENGTH_SHORT).show();
+                showSelectSubject();
                 break;
             default:
                 break;
-
-
         }
 
+
+    }
+
+    private void showSelectSubject() {
+        //get my subbject
+        String my_subject = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+
+        //define index
+        int index = 0;
+        if (my_subject == null) {
+            index = -1;
+        } else if (my_subject.equals(getString(R.string.subject_it_value))) {
+            index = 0;
+        } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
+            index = 1;
+        } else if (my_subject.equals(getString(R.string.subject_science_value))) {
+            index = 2;
+        } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
+            index = 3;
+        } else {
+            index = -1;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle(context.getString(R.string.select_subject_title));
+        final CharSequence[] items = context.getResources().getStringArray(R.array.subjects);
+        final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
+
+        final int[] seleted_index = {0};
+        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                seleted_index[0] = item;
+
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+
+                int index = seleted_index[0];
+                Log.i(TAG, "seleted_index:" + index);
+                String subjectSelected = String.valueOf(items_value[index]);
+
+                //save my subject
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
+
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     private void _gotoDictionary() {
@@ -817,10 +871,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _onBtnStudyOnClick(View view) {
-        if (countCardNoLearn == 0) {
-            Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
+        if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+            builder.setMessage(context.getString(R.string.congratulations));
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        } else {
+            if (countCardNoLearn == 0) {
+                Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
+            }
+            _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
         }
-        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+
 
     }
 

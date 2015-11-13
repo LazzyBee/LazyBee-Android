@@ -3,17 +3,25 @@ package com.born2go.lazzybee.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.fragment.FragmentReviewToday;
+import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
+import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.DataLayer;
 
-public class ReviewCardActivity extends AppCompatActivity implements FragmentReviewToday.FragmentReviewTodayListener {
+import java.util.List;
+
+public class ReviewCardActivity extends AppCompatActivity {
 
     private static final String TAG = "ReviewCardActivity";
     private static final Object GA_SCREEN = "aReviewCardScreen";
@@ -24,6 +32,58 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_card);
         this.context = this;
+        //init DB SQLIte
+        final LearnApiImplements dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
+
+        //Init RecyclerView and Layout Manager
+        final RecyclerView mRecyclerViewReviewTodayList = (RecyclerView) findViewById(R.id.mRecyclerViewReviewTodayList);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewReviewTodayList.getContext(), 1);
+        final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        final TextView lbCountReviewCard = (TextView) findViewById(R.id.lbCountReviewCard);
+        try {
+            //get review List Card today
+            final List<Card> vocabularies = dataBaseHelper._getIncomingListCard();
+
+            lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
+            lbCountReviewCard.setTag(vocabularies.size());
+            //Init Adapter
+            RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter =
+                    new RecyclerViewReviewTodayListAdapter
+                            (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
+
+            //Set data and add Touch Listener
+            mRecyclerViewReviewTodayList.setLayoutManager(gridLayoutManager);
+            mRecyclerViewReviewTodayList.setAdapter(recyclerViewReviewTodayListAdapter);
+
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    // Refresh items
+                    int count = (int) lbCountReviewCard.getTag();
+                    if (count < 100) {
+                        //fill up incoming list
+                        int myLevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+                        dataBaseHelper._initIncomingCardIdList();
+                        //get new IncomingList
+                        List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
+
+                        //set count
+                        lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + fillUpCards.size());
+                        lbCountReviewCard.setTag(fillUpCards.size());
+
+                        //Reset adapter incoming list
+                        RecyclerViewReviewTodayListAdapter fillUpnewincomingAdapter =
+                                new RecyclerViewReviewTodayListAdapter(context, mRecyclerViewReviewTodayList, fillUpCards, lbCountReviewCard);
+                        mRecyclerViewReviewTodayList.setAdapter(fillUpnewincomingAdapter);
+                    }
+
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
         _trackerApplication();
     }
 
@@ -39,13 +99,6 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void gotoCardDetails(String cardId) {
-        Intent intent = new Intent(this, CardDetailsActivity.class);
-        intent.putExtra(LazzyBeeShare.CARDID, cardId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -72,6 +125,7 @@ public class ReviewCardActivity extends AppCompatActivity implements FragmentRev
         super.onResume();
         LazzyBeeShare._cancelNotification(context);
     }
+
     @Override
     protected void onPause() {
         super.onPause();

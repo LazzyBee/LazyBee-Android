@@ -137,7 +137,7 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
             vocabularies.remove(card);
 
             //remove card id in Incomming List
-            learnApiImplements.initIncomingList(learnApiImplements._converlistCardToListCardId(vocabularies));
+            learnApiImplements.saveIncomingCardIdList(learnApiImplements._converlistCardToListCardId(vocabularies));
 
             //set size
             lbCountReviewCard.setText(context.getString(R.string.message_total_card_incoming) + vocabularies.size());
