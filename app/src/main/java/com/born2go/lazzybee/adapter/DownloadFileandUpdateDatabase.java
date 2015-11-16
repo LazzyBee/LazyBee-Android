@@ -80,6 +80,8 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             fos.close();
             Log.e("Download file update:", "Complete");
             results = 1;
+            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
         } catch (IOException ioe) {
@@ -108,7 +110,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             Log.i(TAG, "Delete database?" + context.deleteDatabase(DatabaseUpgrade.DB_NAME));
 
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+           // LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -117,11 +119,10 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
         super.onPostExecute(aVoid);
         try {
             if (aVoid == 1) {
+                downloadFileDatabaseResponse.processFinish(aVoid);
                 if (this.progressDialog.isShowing()) {
                     this.progressDialog.dismiss();
                 }
-                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
-                downloadFileDatabaseResponse.processFinish(aVoid);
             } else {
                 Log.i(TAG, "dowload DB False:" + aVoid);
             }
