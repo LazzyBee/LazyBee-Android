@@ -1159,31 +1159,17 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public void _insertOrUpdateCard(Card card) {
-        // Log.i(TAG, "q: " + card.getQuestion());
-        String cardId = String.valueOf(card.getId());
+
         //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-
-        //values.put(KEY_QUESTION, card.getQuestion());
         values.put(KEY_ANSWERS, card.getAnswers());
         values.put(KEY_LEVEL, card.getLevel());
         values.put(KEY_PACKAGES, card.getPackage());
 
         values.put(KEY_L_EN, card.getL_en());
         values.put(KEY_L_VN, card.getL_vn());
-//        db.replace(TABLE_VOCABULARY,null,values);
-        //int id = (int) db.insertWithOnConflict(TABLE_VOCABULARY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        //if (id == -1) {
-//            db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-//                    new String[]{cardId});
-        //}
 
-        //db.in
-        //
-//        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
-//                new String[]{cardId});
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
                 new String[]{card.getQuestion()});
         Log.i(TAG, "_insertOrUpdateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
@@ -1191,9 +1177,6 @@ public class LearnApiImplements implements LearnApi {
             values.put(KEY_QUESTION, card.getQuestion());
             db.insert(TABLE_VOCABULARY, null, values);
         }
-
-
-        //db.close();
 
     }
 
@@ -1410,7 +1393,6 @@ public class LearnApiImplements implements LearnApi {
             return _getDictionary();
         }
     }
-
 
 
 }
