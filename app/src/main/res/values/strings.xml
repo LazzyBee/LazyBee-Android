@@ -222,6 +222,38 @@
         <item>@string/setting_all_right</item>
     </string-array>
 
+    <string-array name="settings_dev">
+        <!--<item>@string/setting_learn_title</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>-->
+        <!--<item>@string/setting_today_review_card_limit</item>-->
+        <!--<item>@string/setting_custom_study_title</item>-->
+        <item>@string/setting_custom_study</item>
+        <!--<item>@string/setting_speech_rate</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_speech_rate_slider</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_notification</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <!--<item>@string/setting_auto_check_update</item>-->
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_export_database</item>
+        <item>@string/setting_update_db_form_query</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_about</item>
+        <item>@string/setting_all_right</item>
+    </string-array>
+
     <string-array name="custom_study">
         <!--<item>@string/custom_study</item>
         <item>@string/setting_lines</item>-->
@@ -340,6 +372,10 @@
     <string name="select_subject_title">Select subject</string>
     <string name="drawer_help">Help</string>
 
+    <string name="study_again">Again</string>
+    <string name="study_new">New </string>
+    <string name="study_review">Review</string>
+
     <string-array name="subjects">
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>
@@ -353,6 +389,9 @@
         <item>@string/subject_science_value</item>
         <item>@string/subject_medical_value</item>
     </string-array>
-
+    <string-array name="devices_dev_id" translatable="false">
+        <item>b6fe9200bf21fe7e</item>
+        <item>7761c5785b548881</item>
+    </string-array>
 
 </resources>

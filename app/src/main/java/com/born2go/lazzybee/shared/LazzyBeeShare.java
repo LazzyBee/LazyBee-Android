@@ -100,7 +100,6 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
 
 
-
     private static boolean DEBUG = true;
     private static boolean POSITION_MEANING = true;
     public static final String CARD_MEANING = "meaning";
@@ -483,11 +482,15 @@ public class LazzyBeeShare {
     }
 
     public static void showErrorOccurred(Context context, Exception e) {
-        String messageError = context.getString(R.string.an_error_occurred)
-                + "\t" + context.getClass().getName() + ":" + e.getMessage();
-        Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
-        Log.e(TAG, messageError);
-        //e.printStackTrace();
+        try {
+            String messageError = context.getString(R.string.an_error_occurred)
+                    + "\t" + context.getClass().getName() + ":" + e.getMessage();
+            Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, messageError);
+           // e.printStackTrace();
+        } catch (Exception ex) {
+            Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
+        }
     }
 
     /*

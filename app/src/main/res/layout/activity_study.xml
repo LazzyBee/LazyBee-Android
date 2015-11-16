@@ -70,7 +70,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:text="0"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@color/card_new_color"
                         android:layout_marginRight="16dp"
                         android:layout_gravity="center_vertical" />
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="0"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@color/card_again_color"
                         android:layout_marginRight="16dp"
                         android:layout_gravity="center_vertical" />
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="0"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@color/card_due_color"
                         android:layout_gravity="center_vertical" />
 

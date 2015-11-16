@@ -142,6 +142,38 @@
         <item>@string/setting_all_right</item>
     </string-array>
 
+    <string-array name="settings_dev">
+        <!--<item>@string/setting_learn_title</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_today_new_card_limit</item>-->
+        <!--<item>@string/setting_today_review_card_limit</item>-->
+        <!--<item>@string/setting_custom_study_title</item>-->
+        <item>@string/setting_custom_study</item>
+        <!--<item>@string/setting_speech_rate</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_speech_rate_slider</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_notification</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <!--<item>@string/setting_auto_check_update</item>-->
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_language</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_export_database</item>
+        <item>@string/setting_update_db_form_query</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_about</item>
+        <item>@string/setting_all_right</item>
+    </string-array>
+
     <string-array name="custom_study">
         <!--<item>@string/custom_study</item>
         <item>@string/setting_lines</item>-->
@@ -228,6 +260,11 @@
     <string name="subject_medical">Y tế</string>
     <string name="select_subject_title">Chọn chuyên ngành</string>
     <string name="drawer_help">Trợ giúp</string>
+
+    <string name="study_again">Học lại</string>
+    <string name="study_new">Từ mới </string>
+    <string name="study_review">Ôn lại</string>
+
     <string-array name="subjects">
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>

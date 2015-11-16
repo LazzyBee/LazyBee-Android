@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -78,6 +80,8 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             fos.close();
             Log.e("Download file update:", "Complete");
             results = 1;
+            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
         } catch (IOException ioe) {
@@ -85,8 +89,6 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
         } catch (SecurityException se) {
             Log.e("SYNC getUpdate", "security error", se);
         }
-        if (results == 1)
-            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
         return results;
     }
 
@@ -108,17 +110,30 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             Log.i(TAG, "Delete database?" + context.deleteDatabase(DatabaseUpgrade.DB_NAME));
 
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            // LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
     @Override
     protected void onPostExecute(Integer aVoid) {
         super.onPostExecute(aVoid);
-        if (this.progressDialog.isShowing()) {
-            this.progressDialog.dismiss();
+        try {
+            if (aVoid == 1) {
+                downloadFileDatabaseResponse.processFinish(aVoid);
+            } else {
+                Log.i(TAG, "dowload DB False:" + aVoid);
+                Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+            }
+            if (this.progressDialog.isShowing()) {
+                this.progressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            String messageError = context.getString(R.string.an_error_occurred)
+                    + "\t" + context.getClass().getName() + ":" + e.getMessage();
+            Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, messageError);
         }
-        downloadFileDatabaseResponse.processFinish(aVoid);
+
     }
 
 

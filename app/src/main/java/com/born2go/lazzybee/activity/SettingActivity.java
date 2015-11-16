@@ -2,9 +2,11 @@ package com.born2go.lazzybee.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -53,7 +55,18 @@ public class SettingActivity extends AppCompatActivity {
                 context.getString(R.string.setting_lines),
                 context.getString(R.string.setting_language),
                 context.getString(R.string.setting_lines)*/
-        final List<String> settings = Arrays.asList(context.getResources().getStringArray(R.array.settings));
+        final List<String> settings;
+        final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
+        String android_id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.i(TAG, "Android id:" + android_id);
+        if (devices.contains(android_id)) {
+            Log.i(TAG, "Contain");
+            settings = Arrays.asList(context.getResources().getStringArray(R.array.settings_dev));
+        } else {
+            settings = Arrays.asList(context.getResources().getStringArray(R.array.settings));
+            Log.i(TAG, "Not contain");
+        }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(mRecyclerViewSettings.getContext(), settings, mRecyclerViewSettings);
@@ -99,6 +112,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onResume();
         LazzyBeeShare._cancelNotification(context);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
