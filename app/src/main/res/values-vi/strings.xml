@@ -228,6 +228,11 @@
     <string name="subject_medical">Y tế</string>
     <string name="select_subject_title">Chọn chuyên ngành</string>
     <string name="drawer_help">Trợ giúp</string>
+
+    <string name="study_again">Học lại</string>
+    <string name="study_new">Từ mới </string>
+    <string name="study_review">Ôn lại</string>
+
     <string-array name="subjects">
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>

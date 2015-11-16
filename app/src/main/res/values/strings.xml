@@ -340,6 +340,10 @@
     <string name="select_subject_title">Select subject</string>
     <string name="drawer_help">Help</string>
 
+    <string name="study_again">Again</string>
+    <string name="study_new">New </string>
+    <string name="study_review">Review</string>
+
     <string-array name="subjects">
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>
