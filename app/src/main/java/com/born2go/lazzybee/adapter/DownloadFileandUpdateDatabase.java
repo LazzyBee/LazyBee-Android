@@ -110,7 +110,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             Log.i(TAG, "Delete database?" + context.deleteDatabase(DatabaseUpgrade.DB_NAME));
 
         } catch (Exception e) {
-           // LazzyBeeShare.showErrorOccurred(context, e);
+            // LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
 
@@ -120,11 +120,12 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
         try {
             if (aVoid == 1) {
                 downloadFileDatabaseResponse.processFinish(aVoid);
-                if (this.progressDialog.isShowing()) {
-                    this.progressDialog.dismiss();
-                }
             } else {
                 Log.i(TAG, "dowload DB False:" + aVoid);
+                Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+            }
+            if (this.progressDialog.isShowing()) {
+                this.progressDialog.dismiss();
             }
         } catch (Exception e) {
             String messageError = context.getString(R.string.an_error_occurred)
