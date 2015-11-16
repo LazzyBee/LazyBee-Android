@@ -308,8 +308,8 @@ public class RecyclerViewSettingListAdapter extends
         final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
         final TextView txtTimeNotification = (TextView) mSetUpNotification.findViewById(R.id.txtTimeNotification);
         String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-        String hour = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
-        String minute = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+        String hour_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+        String minute_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         if (value == null) {
             mSwitch.setChecked(false);
             mSetUpNotification.setVisibility(View.GONE);
@@ -324,13 +324,21 @@ public class RecyclerViewSettingListAdapter extends
             mSetUpNotification.setVisibility(View.GONE);
         }
         String time = "";
-        if (hour == null) {
+        if (hour_str == null) {
             txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
         } else {
-            if (minute == null) {
-                minute = "00";
+            if (minute_str == null) {
+                minute_str = "0";
             }
-            time = hour + ":" + minute;
+            int hour = Integer.valueOf(hour_str);
+            int minute = Integer.valueOf(minute_str);
+            if (hour < 10) {
+                hour_str = "0" + hour;
+            }
+            if (minute < 10) {
+                minute_str = "0" + minute;
+            }
+            time = hour_str + ":" + minute_str;
         }
 
         txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
@@ -381,8 +389,17 @@ public class RecyclerViewSettingListAdapter extends
                 CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String hour_str = String.valueOf(hourOfDay);
+                        String minute_str = String.valueOf(minute);
 
-                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, String.valueOf(hourOfDay + ":" + minute)));
+                        if (hourOfDay < 10) {
+                            hour_str = "0" + hourOfDay;
+                        }
+                        if (minute < 10) {
+                            minute_str = "0" + minute;
+                        }
+                        String time = String.valueOf(hour_str + ":" + minute_str);
+                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(hourOfDay));
                         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(minute));
                         LazzyBeeShare._setUpNotification(context, hourOfDay, minute);
