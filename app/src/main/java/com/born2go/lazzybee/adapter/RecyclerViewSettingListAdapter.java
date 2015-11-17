@@ -832,13 +832,12 @@ public class RecyclerViewSettingListAdapter extends
     public void processFinish(int code) {
         if (code == 1) {
             //Dowload and update Complete
-//            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_successful), Snackbar.LENGTH_LONG)
-//                    .show();
-            if (!_checkUpdate())
+            if (!_checkUpdate()) {
                 Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
+                _reloadRecylerView();
+            }
+
         } else {
-//            Snackbar.make(mRecyclerViewSettings, context.getString(R.string.mesage_update_database_fails), Snackbar.LENGTH_LONG)
-//                    .show();
             Toast.makeText(context, context.getString(R.string.mesage_update_database_fails), Toast.LENGTH_SHORT).show();
         }
 
