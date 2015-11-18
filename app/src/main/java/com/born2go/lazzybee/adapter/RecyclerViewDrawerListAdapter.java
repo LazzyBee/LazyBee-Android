@@ -58,7 +58,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         } else if (viewType == TYPE_LINES) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_lines, parent, false);
-        }else if (viewType == TYPE_HELP) {
+        } else if (viewType == TYPE_HELP) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         }
         RecyclerViewDrawerListAdapterViewHolder recyclerViewDrawerListAdapterViewHolder = new RecyclerViewDrawerListAdapterViewHolder(v, viewType);
@@ -100,6 +100,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                         else
                             lbCount.setText(LazzyBeeShare.EMPTY);
                     }
+                } else if (objectList.get(position).equals(context.getString(R.string.setting_about_message))) {
+                    lbNameCourse.setTextColor(context.getResources().getColor(R.color.grey_300));
+                    lbNameCourse.setTextSize(15f);
                 }
             } else if (holder.viewType == TYPE_ADD_COURCE) {
 
@@ -118,7 +121,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
                 TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
                 lbDrawerName.setText(context.getString(R.string.setting_about));
-            }else if (holder.viewType == TYPE_HELP) {
+            } else if (holder.viewType == TYPE_HELP) {
                 ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_help));
                 TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
@@ -135,6 +138,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         if (objectList.get(position).equals("English Word")
                 || objectList.get(position).equals(context.getString(R.string.drawer_dictionary))
                 || objectList.get(position).equals(context.getString(R.string.drawer_subject))
+                || objectList.get(position).equals(context.getString(R.string.setting_about_message))
                 )
             return TYPE_COURSE;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_title_course)))
