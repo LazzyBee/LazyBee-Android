@@ -129,7 +129,7 @@ public class LazzyBeeShare {
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
     public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
-    public static final int DEFAULT_MY_LEVEL = 1;
+    public static final int DEFAULT_MY_LEVEL = 2;
 
 
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
@@ -487,7 +487,7 @@ public class LazzyBeeShare {
                     + "\t" + context.getClass().getName() + ":" + e.getMessage();
             Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
             Log.e(TAG, messageError);
-           // e.printStackTrace();
+            e.printStackTrace();
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
         }
