@@ -266,6 +266,17 @@
     <string name="study_again">Học lại</string>
     <string name="study_new">Từ mới </string>
     <string name="study_review">Ôn lại</string>
+    <string name="title_dialog_daily_target_completed">Hoàn thành mục tiêu hôm nay</string>
+    <string name="day_mon">T2</string>
+    <string name="day_tue">T3</string>
+    <string name="day_wed">T4</string>
+    <string name="day_thu">T5</string>
+    <string name="day_fri">T6</string>
+    <string name="day_sat">T7</string>
+    <string name="day_sun">CN</string>
+
+
+
 
     <string-array name="subjects">
         <item>@string/subject_it</item>
