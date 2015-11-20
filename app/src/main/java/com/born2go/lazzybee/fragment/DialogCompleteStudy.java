@@ -80,12 +80,16 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private void _initStreakCount(View view) {
+        //get count
+        int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+        //Define view
         View mCount = view.findViewById(R.id.mCount);
         TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
         ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
         //
-        lbCountStreak.setText("1000000 days");
+        lbCountStreak.setText(count + " " +getString(R.string.streak_day));
 
+        //set animation
         Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
         a.setDuration(1000);
         streak_ring.startAnimation(a);
