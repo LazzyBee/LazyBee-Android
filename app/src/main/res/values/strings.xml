@@ -404,4 +404,15 @@
     <string name="day_fri">Fri</string>
     <string name="day_sat">Sat</string>
     <string name="day_sun">Sun</string>
+    <string name="streak_day">days</string>
+
+    <string-array name="days" >
+        <item>@string/day_mon</item>
+        <item>@string/day_tue</item>
+        <item>@string/day_wed</item>
+        <item>@string/day_thu</item>
+        <item>@string/day_fri</item>
+        <item>@string/day_sat</item>
+        <item>@string/day_sun</item>
+    </string-array>
 </resources>

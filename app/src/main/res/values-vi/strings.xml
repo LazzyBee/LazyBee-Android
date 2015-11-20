@@ -274,8 +274,7 @@
     <string name="day_fri">T6</string>
     <string name="day_sat">T7</string>
     <string name="day_sun">CN</string>
-
-
+    <string name="streak_day">ngày</string>
 
 
     <string-array name="subjects">
@@ -283,6 +282,16 @@
         <item>@string/subject_economy</item>
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
+    </string-array>
+
+    <string-array name="days" >
+        <item>@string/day_mon</item>
+        <item>@string/day_tue</item>
+        <item>@string/day_wed</item>
+        <item>@string/day_thu</item>
+        <item>@string/day_fri</item>
+        <item>@string/day_sat</item>
+        <item>@string/day_sun</item>
     </string-array>
 
 
