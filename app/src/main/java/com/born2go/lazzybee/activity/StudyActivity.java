@@ -33,6 +33,8 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServe
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.fragment.DialogCompleteStudy;
+import com.born2go.lazzybee.fragment.DialogCompleteStudy.ICompleteSutdy;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -48,7 +50,7 @@ import java.util.List;
 
 import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 
-public class StudyActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse {
+public class StudyActivity extends AppCompatActivity implements GetCardFormServerByQuestionResponse, ICompleteSutdy {
 
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
@@ -187,17 +189,17 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             if (check_learn) {
                 _showFirstCard();
                 //set again count
-                lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(againList.size()));
+                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
                 lbCountAgain.setTag(againCount);
                 //set new Count
-                lbCountNew.setText(getString(R.string.study_new)+": " + String.valueOf(todayCount));
+                lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(todayCount));
                 lbCountNew.setTag(todayCount);
                 //set Due Count
-                lbCountDue.setText(getString(R.string.study_review)+": " + String.valueOf(dueCount));
+                lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(dueCount));
                 lbCountDue.setTag(dueCount);
             } else {
                 Log.i(TAG, "_completeLean");
-                _completeLean();
+                _completeLean(false);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -257,15 +259,46 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         }
     }
 
-    private void _completeLean() {
+    private void _completeLean(boolean showCompleteDialog) {
         Log.i(TAG, "----_completeLean----");
         setBeforeCard(null);
         completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
         dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
-        setResult(completeStudy, new Intent());
-        finish();
+
+//        setBeforeCard(null);
+//        completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
+//        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
+//        setResult(completeStudy, new Intent());
+//        finish();
+        if (showCompleteDialog) {
+            _showDialogComplete();
+        } else {
+            setResult(completeStudy, new Intent());
+            finish();
+        }
         Log.i(TAG, "---------END---------");
 
+    }
+
+    private void _showDialogComplete() {
+        if (learn_more == false) {
+            final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
+            dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+        } else {
+            setResult(completeStudy, new Intent());
+            finish();
+        }
+//        final Dialog dialog = new Dialog(this, R.style.full_screen_dialog) {
+//            @Override
+//            protected void onCreate(Bundle savedInstanceState) {
+//                super.onCreate(savedInstanceState);
+//                setContentView(R.layout.fragment_dialog_complete_study);
+//
+//
+//
+//            }
+//        };
+//        dialog.show();
     }
 
     /**
@@ -527,7 +560,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                             }
                         }
 
-                        lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(againList.size()));
+                        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
 
                         //setDue and set Lat_itv to default =0
 //                    beforeCard.setDue(0l);
@@ -552,7 +585,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                         //Set new count
                         int countNew = todayList.size();
-                        lbCountNew.setText(getString(R.string.study_new)+": " + String.valueOf(countNew));
+                        lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
 
                         break;
                     case Card.QUEUE_LNR1:
@@ -568,7 +601,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                                 break;
                             }
                         }
-                        lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(againList.size()));
+                        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
 
                         //Define clone againList
                         List<Card> cloneAgainList = new ArrayList<Card>(againList);
@@ -589,7 +622,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                         //Set new count
                         int countAgain = againList.size();
-                        lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(countAgain));
+                        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
 
                         break;
                     case Card.QUEUE_REV2:
@@ -614,7 +647,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                         //Set new count
                         int countDue = dueList.size();
-                        lbCountDue.setText(getString(R.string.study_review)+": " + String.valueOf(countDue));
+                        lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
 
                         break;
                 }
@@ -685,7 +718,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         todayList.remove(0);
                     }
                     int countNew = todayList.size();
-                    lbCountNew.setText(getString(R.string.study_new)+": " + String.valueOf(countNew));
+                    lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
                     break;
                 case Card.QUEUE_LNR1:
                     Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_LNR1");
@@ -696,7 +729,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         todayList.remove(0);
                     }
                     int countAgain = againList.size();
-                    lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(countAgain));
+                    lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
                     break;
                 case Card.QUEUE_REV2:
                     Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_REV2");
@@ -707,7 +740,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         todayList.remove(0);
                     }
                     int countDue = dueList.size();
-                    lbCountDue.setText(getString(R.string.study_review)+": " + String.valueOf(countDue));
+                    lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
                     break;
             }
 
@@ -894,7 +927,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     todayList.remove(0);
                 }
                 int countNew = todayList.size();
-                lbCountNew.setText(getString(R.string.study_new)+": " + String.valueOf(countNew));
+                lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
 
             } else if (currentQueue == Card.QUEUE_LNR1) {
                 if (easy > Card.EASE_AGAIN) {
@@ -905,7 +938,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         againList.remove(0);
                     }
                     int countAgain = againList.size();
-                    lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(countAgain));
+                    lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
                 }
             } else if (currentQueue == Card.QUEUE_REV2) {
                 //reset new card due
@@ -916,7 +949,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                 }
                 int countDue = dueList.size();
-                lbCountDue.setText(getString(R.string.study_review)+": " + String.valueOf(countDue));
+                lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
             }
 
             Log.i(TAG, "_answerCard Before Update Card " + currentCard.getQuestion() +
@@ -942,7 +975,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                 //reset count Againt
                 int countAgain = againList.size();
-                lbCountAgain.setText(getString(R.string.study_again)+": " + String.valueOf(countAgain));
+                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
             } else if (easy > Card.EASE_AGAIN) {
                 //Add currentCard to DueList
                 cardListAddDueToDay.add(currentCard);
@@ -1038,7 +1071,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _nextDueCard();
         } else if (todayList.size() == 0) {
             Log.i(TAG, "_nextNewCard:_completeLean");
-            _completeLean();
+            _completeLean(true);
         }
         Log.i(TAG, "--------------END------------");
     }
@@ -1061,13 +1094,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _nextAgainCard();
         } else if (todayList.size() == 0) {
             Log.i(TAG, "_nextDueCard:_completeLean");
-            _completeLean();
-        }
-        try {
-
-        } catch (Exception e) {
-            Log.i(TAG, "_nextDueCard:Erorr:" + e.getMessage());
-            _completeLean();
+            _completeLean(true);
         }
         Log.i(TAG, "--------------END------------");
 
@@ -1202,5 +1229,11 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         int minute = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
+
+    @Override
+    public void close() {
+        setResult(completeStudy, new Intent());
+        finish();
     }
 }
