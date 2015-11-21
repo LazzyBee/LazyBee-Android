@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +88,7 @@ public class DialogCompleteStudy extends DialogFragment {
         TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
         ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
         //
-        lbCountStreak.setText(count + " " +getString(R.string.streak_day));
+        lbCountStreak.setText(count + " " + getString(R.string.streak_day));
 
         //set animation
         Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
@@ -101,7 +102,10 @@ public class DialogCompleteStudy extends DialogFragment {
         strings.addAll(Arrays.asList(context.getResources().getStringArray(R.array.days)));
 
         int startOfDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        Log.i("startOfDay:", "" + startOfDay);
         List<Integer> dayCompleteStudys = LazzyBeeSingleton.learnApiImplements._getListDayStudyComplete();
+
+        Log.i("No sort:", "" + dayCompleteStudys.toString());
 
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         String day = LazzyBeeShare.EMPTY;
@@ -113,14 +117,14 @@ public class DialogCompleteStudy extends DialogFragment {
         }
 
         ArrayList<String> weeks = _defineWeekbyDayOfWeek(dayOfWeek);
-        int countWeeks = weeks.size();
+        int countWeeks = 6;
         for (int i = 0; i < weeks.size(); i++) {
             //
             String _day = weeks.get(i);
 
             //define day of week
-            int longDateOfWeek = startOfDay - (84600 * countWeeks--);
-
+            int longDateOfWeek = startOfDay - (86400 * countWeeks--);
+            Log.i("longDateOfWeek", "" + longDateOfWeek);
             FrameLayout _mDayRing = (FrameLayout) inflater.inflate(R.layout.day_ring, null);
             ImageView _dayRing = (ImageView) _mDayRing.findViewById(R.id.dayRing);
             TextView _lbDay = (TextView) _mDayRing.findViewById(R.id.lbDay);
