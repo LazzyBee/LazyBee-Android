@@ -58,7 +58,7 @@ public class LearnApiImplements implements LearnApi {
     public static final String KEY_L_VN = "l_vn";
     public static final String KEY_L_EN = "l_en";
     public static final String TABLE_STREAK = "streak";
-    public static final java.lang.String CREATE_TABLE_STREAK = "CREATE TABLE "+ TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
+    public static final java.lang.String CREATE_TABLE_STREAK = "CREATE TABLE " + TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
 
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -1438,7 +1438,7 @@ public class LearnApiImplements implements LearnApi {
         }
         int day = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
         ContentValues values = new ContentValues();
-        values.put("day", LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        values.put("day", day);
         SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
         long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
         Log.i(TAG, "_insetStreak\tInsert:day=" + day);
