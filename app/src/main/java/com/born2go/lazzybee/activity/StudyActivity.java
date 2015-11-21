@@ -271,6 +271,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 //        setResult(completeStudy, new Intent());
 //        finish();
         if (showCompleteDialog) {
+            dataBaseHelper._insetStreak();
             _showDialogComplete();
         } else {
             setResult(completeStudy, new Intent());
