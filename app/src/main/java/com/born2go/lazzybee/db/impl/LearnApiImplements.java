@@ -57,6 +57,8 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_CARD_JSON = "card";
     public static final String KEY_L_VN = "l_vn";
     public static final String KEY_L_EN = "l_en";
+    public static final String TABLE_STREAK = "streak";
+    public static final java.lang.String CREATE_TABLE_STREAK = "CREATE TABLE "+ TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
 
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -1395,4 +1397,54 @@ public class LearnApiImplements implements LearnApi {
     }
 
 
+    public List<Integer> _getListDayStudyComplete() {
+        String query = "SELECT streak.day FROM streak ORDER by streak.day DESC LIMIT 6";
+        List<Integer> dayCompleteStudys = new ArrayList<Integer>();
+//        int startOfDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+//        dayCompleteStudys.add(startOfDay - (84600 * 12));
+//        dayCompleteStudys.add(startOfDay - (84600 * 14));
+//        dayCompleteStudys.add(startOfDay - (84600 * 3));
+//        dayCompleteStudys.add(startOfDay - (84600 * 13));
+//        dayCompleteStudys.add(startOfDay - (84600 * 15));
+//        dayCompleteStudys.add(startOfDay - (84600 * 17));
+//        dayCompleteStudys.add(startOfDay - 84600);
+
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0) {
+                do {
+                    dayCompleteStudys.add(cursor.getInt(0));
+
+                } while (cursor.moveToNext());
+            }
+        }
+        Log.i(TAG, "_getListDayStudyComplete: \t Query String: " + query + "\n");
+        db.close();
+        return dayCompleteStudys;
+    }
+
+    public int _getCountStreak() {
+        String selectbyIDQuery = "SELECT count(day) FROM " + TABLE_STREAK;
+        return _queryCount(selectbyIDQuery);
+    }
+
+    public int _insetStreak() {
+        String checkTableExit = "SELECT count(name) FROM sqlite_master WHERE type ='table' AND name='" + TABLE_STREAK + "';";
+        if (_queryCount(checkTableExit) == 0) {
+            SQLiteDatabase db_create = this.dataBaseHelper.getReadableDatabase();
+            db_create.execSQL(CREATE_TABLE_STREAK);
+        }
+        int day = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        ContentValues values = new ContentValues();
+        values.put("day", LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
+        long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
+        Log.i(TAG, "_insetStreak\tInsert:day=" + day);
+        db_insert.close();
+        return (int) long_insert_results;
+
+
+    }
 }
