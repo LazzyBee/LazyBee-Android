@@ -535,11 +535,11 @@ public class MainActivity extends AppCompatActivity
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.select_subject_title));
-        final CharSequence[] items = context.getResources().getStringArray(R.array.subjects);
+        final CharSequence[] subjects = context.getResources().getStringArray(R.array.subjects);
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
 
         final int[] seleted_index = {0};
-        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(subjects, index, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 seleted_index[0] = item;
 
@@ -553,11 +553,21 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "seleted_index:" + index);
                 String subjectSelected = String.valueOf(items_value[index]);
 
-                //save my subject
+                //save my subjects
                 dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
 
                 //reset incomming list
                 dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //save my subjects
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
+
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdList();
                 dialog.cancel();
             }
         });
