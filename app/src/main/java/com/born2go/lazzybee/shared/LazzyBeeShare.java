@@ -288,7 +288,7 @@ public class LazzyBeeShare {
                     packages = "common";
                 }
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
-                meaning = commonObj.getString("meaning");
+                meaning = commonObj.getString("meaning") + (!packages.equals("common") ? "(" + packages + ")" : EMPTY);
                 explain = commonObj.getString("explain");
                 example = commonObj.getString("example");
             } else {
