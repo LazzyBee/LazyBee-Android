@@ -1115,6 +1115,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
             //Check due<current_time
             if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
+                //hide btnEasy3 ,btnGood2
+                btnGood2.setVisibility(View.GONE);
+                btnEasy3.setVisibility(View.GONE);
                 Log.i(TAG, "_nextAgainCard:Next card is again card 2");
 
                 //Display next card
@@ -1188,6 +1191,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         mShowAnswer.setVisibility(View.VISIBLE);
         btnShowAnswer.setVisibility(View.VISIBLE);
         mLayoutButton.setVisibility(View.GONE);
+        btnGood2.setVisibility(View.VISIBLE);
+        btnEasy3.setVisibility(View.VISIBLE);
 
     }
 
