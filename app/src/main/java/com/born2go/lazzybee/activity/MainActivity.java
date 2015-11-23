@@ -588,6 +588,22 @@ public class MainActivity extends AppCompatActivity
         this.startActivity(intent);
     }
 
+    private void _showDialogCompletedStudy() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setMessage(R.string.congratulations_learnmore);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        // Get the AlertDialog from create()
+        final AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
+
     private void _showHelp() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         View viewDialog = View.inflate(context, R.layout.webview_help, null);
@@ -909,7 +925,22 @@ public class MainActivity extends AppCompatActivity
         if (countCardNoLearn == 0) {
             Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         }
-        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+        int check = dataBaseHelper._checkListTodayExit();
+        int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
+
+        if (total == 0)
+            total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+
+        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
+        int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+
+        check = check + countDue + countAgain;
+        Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
+        if (check > 0) {
+            _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+        } else if (check == 0) {
+            _showDialogCompletedStudy();
+        }
     }
 
     private void _gotoStudy(int type) {
