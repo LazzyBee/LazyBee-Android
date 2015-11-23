@@ -232,6 +232,13 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         LazzyBeeShare._cancelNotification(context);
+        boolean first_run_app = sharedpreferences.getBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, false);
+        if (!first_run_app) {
+            _showHelp();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).commit();
+        }
+
+
     }
 
 

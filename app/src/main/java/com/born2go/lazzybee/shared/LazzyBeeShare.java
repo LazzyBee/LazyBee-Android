@@ -98,6 +98,7 @@ public class LazzyBeeShare {
     public static final int GOTO_SEARCH_CODE = 0;
     public static final String NOTIFY_TEXT = "notify_text";
     public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
+    public static final String KEY_FIRST_RUN_APP = "first_run_application";
 
 
     private static boolean DEBUG = true;
