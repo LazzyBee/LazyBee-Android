@@ -189,8 +189,35 @@ public class LazzyBeeShare {
 
     /**
      * init HTML question
+     * <p/>
+     * <!DOCTYPE html>
+     * <html>
+     * <head>
+     * <meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\name=\"viewport\">
+     * </head>
+     * <body onload='question.playQuestion()'>
+     * <div style='width:100%'>
+     * <div style='float:left;width:90%;'>
+     * [it]
+     * <center><strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>question</strong></center>
+     * <p/>
+     * </div>
+     * <div style='float:left;width:10%'>
+     * <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>
+     * </div>
+     * </div>
+     * </body>
+     * </html>
      */
     public static String _getQuestionDisplay(Context context, String question) {
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        String mySubject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+        if (mySubject == null)
+            mySubject = "common";
+        else if (mySubject.equals(EMPTY)) {
+            mySubject = "common";
+        }
+        Log.i(TAG, "mySubject:" + mySubject);
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
@@ -200,12 +227,20 @@ public class LazzyBeeShare {
                         "</head>\n" +
                         "<body onload='question.playQuestion()'>\n" +
                         "<div style='width:100%'>\n" +
-                        "<div style='float:left;width:90%;text-align: center;'>\n" +
-                        "<strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>" + question + "</strong>\n" +
-                        "</div>\n" +
-                        "<div style='float:left;width:10%'>\n" +
-                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
-                        "</div>\n" +
+
+                        "<div style='float:left;width: 90%;text-align: center;'>" +
+                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt;font-weight: bold;'>" + question + "</span>" +
+                        "<br><span>" + (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) + "</span>" +
+                        "</div>" +
+                        "<div style='float:left;width: 10%;padding-top: 10px;text-align: end;'><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></div>" +
+//                        "<div style='float:left;width:90%;'>\n" +
+//                        (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) +
+//                        "<center><strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>" + question + "</strong></center>\n" +
+//                        "</div>\n" +
+//                        "<div style='float:left;width:10%'>\n" +
+//                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
+//                        "</div>\n" +
+
                         "</div>\n" +
                         "</body>\n" +
                         "</html>";
@@ -288,7 +323,7 @@ public class LazzyBeeShare {
                     packages = "common";
                 }
                 JSONObject commonObj = packagesObj.getJSONObject(packages);
-                meaning = commonObj.getString("meaning") + (!packages.equals("common") ? "(" + packages + ")" : EMPTY);
+                meaning = commonObj.getString("meaning");
                 explain = commonObj.getString("explain");
                 example = commonObj.getString("example");
             } else {
@@ -311,13 +346,15 @@ public class LazzyBeeShare {
         String meaningDOWN;
         if (!POSITION_MEANING) {
             meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                    "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
                     "</div>";
             meaningDOWN = EMPTY;
         } else {
             meaningUP = EMPTY;
             meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                    "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
                     "</div>";
         }
         html = "\n<html>\n" +
@@ -355,7 +392,7 @@ public class LazzyBeeShare {
                 "       </div>\n" +
 
                 "       <div style=\"float:left;width:100%\">\n" +
-                "            <div style=\"float:left;width:100%\"><strong>" + _example + "</strong></div>\n" +
+                "            <div style=\"float:left;width:100%\"><strong>" + String.valueOf((example.equals(EMPTY)) ? EMPTY : _example) + "</strong></div>\n" +
                 "           <div style=\"float:left;width:90%\">\n" +
                 "               " + example + "\n" +
                 "           </div>\n" +
@@ -382,10 +419,11 @@ public class LazzyBeeShare {
                     "</html>\n";
         }
         html += debug;
-        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html.toString());
 
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());
+
         return html;
 
     }
