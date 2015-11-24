@@ -59,6 +59,7 @@ public class LearnApiImplements implements LearnApi {
     public static final String KEY_L_EN = "l_en";
     public static final String TABLE_STREAK = "streak";
     public static final java.lang.String CREATE_TABLE_STREAK = "CREATE TABLE " + TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
+    private static final String KEY_USER_NOTE = "user_note";
 
 
     String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -1446,5 +1447,19 @@ public class LearnApiImplements implements LearnApi {
         return (int) long_insert_results;
 
 
+    }
+
+    public void _updateUserNoteCard(Card card) {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        if (card.getUser_note() != null)
+
+            values.put(KEY_USER_NOTE, card.getUser_note());
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
+                new String[]{card.getQuestion()});
+        Log.i(TAG, "_updateUserNoteCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
+
+        db.close();
     }
 }
