@@ -2,13 +2,17 @@ package com.born2go.lazzybee.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +26,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -347,6 +352,15 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         mCardViewHelpandAdMod = (CardView) findViewById(R.id.mCardViewHelpandAdMod);
 
         lbTagetActionStudy = (TextView) findViewById(R.id.lbTagetActionStudy);
+
+        FloatingActionButton mFloatActionButtonUserNote = (FloatingActionButton) findViewById(R.id.mFloatActionButtonUserNote);
+
+        mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _showCardNote(currentCard);
+            }
+        });
 //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
@@ -360,6 +374,40 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
 
     }
+
+    private void _showCardNote(final Card currentCard) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
+        final EditText txtUserNote = (EditText) viewDialog.findViewById(R.id.txtUserNote);
+
+        txtUserNote.setText(currentCard.getUser_note());
+
+        builder.setView(viewDialog);
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String user_note = txtUserNote.getText().toString();
+                if (!user_note.isEmpty()) {
+                    currentCard.setUser_note(user_note);
+                    dataBaseHelper._updateUserNoteCard(currentCard);
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        // Get the AlertDialog from create()
+        final AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
+
 
     public void onlbTipHelpClick(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_lazzybee_website)));
