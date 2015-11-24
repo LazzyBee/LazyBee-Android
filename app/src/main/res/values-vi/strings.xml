@@ -81,7 +81,7 @@
     <string name="setting_check_update">Kiểm tra cập nhật</string>
     <string name="setting_auto_check_update">Tự động kiểm tra cập nhật</string>
     <string name="setting_debug_info">Thông tin lỗi</string>
-    <string name="setting_language">Ngôn ngữ</string>
+    <string name="setting_language">Ngôn ngữ/Language</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
 
     <string name="message_congratulations_with_tip" formatted="false">Bấm vào %1s để học tiếp,bấm vào %2s để xem lại thẻ đã học</string>
