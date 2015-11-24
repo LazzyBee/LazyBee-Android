@@ -532,6 +532,19 @@ public class LazzyBeeShare {
         }
     }
 
+    public static String getHTMLButtonAnswer(Context context, String ivlStr, String strLevel, int color) {
+        String btnanswer_string =
+                "<font color='" + ((color == R.color.color_level_btn_answer) ? context.getResources().getColor(R.color.white) :
+                        context.getResources().getColor(R.color.color_level_btn_answer_disable)) + "'>"
+                        + ivlStr + "</font>" +
+                        "<br/>" +
+                        "<font color='" + context.getResources().getColor(color) + "'>" + strLevel.toUpperCase() + "</font>";
+        //Log.i(TAG, "Button Answer string:" + btnanswer_string);
+        return btnanswer_string;
+
+
+    }
+
     /*
  *Java Scrip Object Question
  * */

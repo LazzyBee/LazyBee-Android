@@ -25,7 +25,6 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -74,7 +73,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     MenuItem itemFavorite;
     MenuItem btnBackBeforeCard;
 
-    Button btnAgain0, btnHard1, btnGood2, btnEasy3;
+    TextView btnAgain0, btnHard1, btnGood2, btnEasy3;
     TextView lbCountNew;
     TextView btnShowAnswer;
 
@@ -337,10 +336,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         btnShowAnswer = (TextView) findViewById(R.id.btnShowAnswer);
         mLayoutButton = (LinearLayout) findViewById(R.id.mLayoutButton);
 
-        btnAgain0 = (Button) findViewById(R.id.btnAgain0);
-        btnHard1 = (Button) findViewById(R.id.btnHard1);
-        btnGood2 = (Button) findViewById(R.id.btnGood2);
-        btnEasy3 = (Button) findViewById(R.id.btnEasy3);
+        btnAgain0 = (TextView) findViewById(R.id.btnAgain0);
+        btnHard1 = (TextView) findViewById(R.id.btnHard1);
+        btnGood2 = (TextView) findViewById(R.id.btnGood2);
+        btnEasy3 = (TextView) findViewById(R.id.btnEasy3);
 
         //init lbCount
         lbCountNew = (TextView) findViewById(R.id.lbCountTotalVocabulary);
@@ -930,12 +929,26 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
             //get  next Ivl String List
             String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB);
+            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN], getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
+            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD], getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
 
+            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD], getString(R.string.EASE_GOOD), (card.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY], getString(R.string.EASE_EASY), (card.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
             //set text btn
-            btnAgain0.setText(Html.fromHtml(ivlStrList[Card.EASE_AGAIN] + "<br/>" + getString(R.string.EASE_AGAIN)));
-            btnHard1.setText(Html.fromHtml(ivlStrList[Card.EASE_HARD] + "<br/>" + getString(R.string.EASE_HARD)));
-            btnGood2.setText(Html.fromHtml(ivlStrList[Card.EASE_GOOD] + "<br/>" + getString(R.string.EASE_GOOD)));
-            btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
+            btnAgain0.setText(Html.fromHtml(text_btnAgain));
+            btnHard1.setText(Html.fromHtml(text_btnHard1));
+            btnGood2.setText(Html.fromHtml(text_btnGood2));
+            btnEasy3.setText(Html.fromHtml(text_btnEasy3));
+
+
+            btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
+            btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
+            btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
+            btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
+
+//            btnHard1.setText(Html.fromHtml(ivlStrList[Card.EASE_HARD] + "<br/>" + getString(R.string.EASE_HARD)));
+//            btnGood2.setText(Html.fromHtml(ivlStrList[Card.EASE_GOOD] + "<br/>" + getString(R.string.EASE_GOOD)));
+//            btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -1163,9 +1176,10 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
             //Check due<current_time
             if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
-                //hide btnEasy3 ,btnGood2
                 btnGood2.setEnabled(false);
                 btnEasy3.setEnabled(false);
+
+
                 Log.i(TAG, "_nextAgainCard:Next card is again card 2");
 
                 //Display next card
@@ -1242,6 +1256,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         btnGood2.setEnabled(true);
         btnEasy3.setEnabled(true);
+
+//        btnGood2.setText(Html.fromHtml(LazzyBeeShare.getHTMLButtonAnswer(context, btnGood2.getTag().toString(), getString(R.string.EASE_GOOD), R.color.color_level_btn_answer)));
+//        btnEasy3.setText(Html.fromHtml(LazzyBeeShare.getHTMLButtonAnswer(context, btnEasy3.getTag().toString(), getString(R.string.EASE_EASY), R.color.color_level_btn_answer)));
 
     }
 
