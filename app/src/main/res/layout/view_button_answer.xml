@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mLayoutButton"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+
+    android:paddingBottom="5dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp"
+    android:paddingTop="5dp"
+    android:weightSum="4.9">
+
+    <TextView
+        android:id="@+id/btnAgain0"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1.23"
+        android:background="@color/button_green_color"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onbtnAgainClick"
+        android:paddingRight="5dp"
+        android:text="@string/EASE_AGAIN"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/btnHard1"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1.23"
+        android:background="@color/button_green_color"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onbtnHardClick"
+        android:paddingRight="5dp"
+        android:text="@string/EASE_HARD"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/btnGood2"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="5dp"
+        android:background="@color/button_green_color"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onbtnGoodClick"
+        android:text="@string/EASE_GOOD"
+        android:textColor="@color/white"
+        android:layout_weight="1.23" />
+
+    <TextView
+        android:id="@+id/btnEasy3"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.23"
+        android:background="@color/button_green_color"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onbtnEasyClick"
+        android:text="@string/EASE_EASY"
+        android:textColor="@color/white" />
+
+</LinearLayout>

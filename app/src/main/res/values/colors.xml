@@ -34,5 +34,9 @@
     <color name="snackbar_background_color">@color/colorPrimary</color>
     <color name="color_backgroud_english_word">#FFC82F</color>
 
+    <color name="color_level_btn_answer">#FFC82F</color>
+    <color name="color_level_btn_answer_disable">#757575</color>
+    
+
 
 </resources>
