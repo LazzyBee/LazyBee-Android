@@ -4,12 +4,16 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
@@ -418,16 +422,16 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_study, menu);
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setQueryHint(getString(R.string.hint_search));
-        btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
-        btnBackBeforeCard.setVisible(false);
+        _initAndLoadFavorite(menu);
+        _defineSearchView(menu);
+        return true;
+    }
 
+    private void _initAndLoadFavorite(Menu menu) {
+        btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
         itemFavorite = menu.findItem(R.id.action_favorite);
 
+        btnBackBeforeCard.setVisible(false);
         if (currentCard != null) {
             //load favorite
             if (currentCard.getStatus() == 1) {
@@ -438,37 +442,73 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
             }
         }
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
-        //***setOnQueryTextListener***
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    }
+
+    private void _defineSearchView(Menu menu) {
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getBaseContext(), query,
-                        Toast.LENGTH_SHORT).show();
-                _search(query);
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand");
+                return true;
+            }
+
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
                 return false;
             }
 
-
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = searchView.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+
+                        _gotoCardDetailbyID(cardID);
+
+                        //call back actionbar
+                        searchItem.collapseActionView();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, e);
+                }
+                return true;
             }
         });
-
-
-        return true;
     }
 
-
-    private void _search(String query) {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(SearchActivity.QUERY_TEXT, query);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        this.startActivityForResult(intent, 2);
+    private void _gotoCardDetailbyID(String cardID) {
+        Intent intent = new Intent(this, CardDetailsActivity.class);
+        intent.putExtra(LazzyBeeShare.CARDID, String.valueOf(cardID));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
