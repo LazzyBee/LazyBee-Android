@@ -1,13 +1,18 @@
 package com.born2go.lazzybee.activity;
 
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -451,6 +456,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         _initNavigationDrawerFragment(toolbar);
+
     }
 
 
@@ -642,42 +648,71 @@ public class MainActivity extends AppCompatActivity
             // Inflate menu to add items to action bar if it is present.
             inflater.inflate(R.menu.main, menu);
             // Associate searchable configuration with the SearchView
+            final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            final MenuItem searchItem = menu.findItem(R.id.menu_search);
             searchView =
                     (SearchView) menu.findItem(R.id.menu_search).getActionView();
-            searchView.setOnSearchClickListener(new View.OnClickListener() {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+            MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+
                 @Override
-                public void onClick(View v) {
-                    getSupportActionBar().setDisplayShowTitleEnabled(false);
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    Log.d(TAG, "onMenuItemActionCollapse");
+                    return true;
                 }
-            });
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
                 @Override
-                public boolean onClose() {
-                    _restoreActionBar();
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    Log.d(TAG, "onMenuItemActionExpand");
+                    return true;
+                }
+
+            });
+            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                @Override
+                public boolean onSuggestionSelect(int position) {
+                    Log.d(TAG, "onSuggestionSelect:" + position);
                     return false;
                 }
-            });
-            searchView.setQueryHint(getString(R.string.hint_search));
-
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
                 @Override
-                public boolean onQueryTextSubmit(String query) {
-                    _gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
-                    return false;
-                }
+                public boolean onSuggestionClick(int position) {
+                    Log.d(TAG, "onSuggestionClick:" + position);
+                    try {
+                        CursorAdapter c = searchView.getSuggestionsAdapter();
+                        if (c != null) {
+                            Cursor cur = c.getCursor();
+                            cur.moveToPosition(position);
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
-                    return false;
+                            String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                            Log.d(TAG, "cardID:" + cardID);
+                            String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                            Log.d(TAG, "query:" + query);
+
+                            _gotoCardDetailbyCardId(cardID);
+
+                            //call back actionbar
+                            searchItem.collapseActionView();
+                        } else {
+                            Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                        }
+                    } catch (Exception e) {
+                        LazzyBeeShare.showErrorOccurred(context, e);
+                    }
+                    return true;
                 }
             });
-
             _restoreActionBar();
-            // return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void _gotoCardDetailbyCardId(String cardId) {
+        Intent intent = new Intent(this, CardDetailsActivity.class);
+        intent.putExtra(LazzyBeeShare.CARDID, cardId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
     @Override
@@ -712,14 +747,9 @@ public class MainActivity extends AppCompatActivity
 //                _checkUpdate();
 //
 //                break;
-            //case R.id.action_search:
-            //Search
-//                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
-//                _setUpSearchActionBar();
-//                _gotoSeachOrDictionary("a");
-            //
-//                mSearchView.setIconified(false);
-            //break;
+//            case R.id.menu_search:
+//                onSearchRequested();
+//            break;
         }
 
 
