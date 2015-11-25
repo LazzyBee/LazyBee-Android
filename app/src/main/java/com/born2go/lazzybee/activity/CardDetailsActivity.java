@@ -4,9 +4,13 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
@@ -61,6 +65,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     WebView mWebViewLeadDetails;
     CardView mCardViewAdv;
     CardView mCardViewViewPager;
+    private String carID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        _displayCard();
+        _displayCard(getCarID());
 
         _initAdView();
 
@@ -90,11 +95,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     }
 
-    private void _displayCard() {
+    private void _displayCard(String cardID) {
         try {
-            cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
-            card = learnApiImplements._getCardByID(cardId);
 
+            card = learnApiImplements._getCardByID(cardID);
             setTitle(card.getQuestion());
 
             if (itemFavorite != null) {
@@ -145,7 +149,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
                 mAdView.loadAd(adRequest);
-                ((LinearLayout)findViewById(R.id.adView)).addView(mAdView);
+                ((LinearLayout) findViewById(R.id.adView)).addView(mAdView);
 
                 mCardViewAdv.setVisibility(View.VISIBLE);
                 //
@@ -171,14 +175,15 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-        searchView.setQueryHint(getString(R.string.hint_search));
+        _initAndLoadFavorite(menu);
+        _defineSearchView(menu);
+
+        return true;
+    }
+
+    private void _initAndLoadFavorite(Menu menu) {
         itemFavorite = menu.findItem(R.id.action_favorite);
+
         if (card != null) {
             //load favorite
             if (card.getStatus() == 1) {
@@ -189,8 +194,64 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
             }
         }
+    }
 
-        return true;
+    private void _defineSearchView(Menu menu) {
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand");
+                return true;
+            }
+
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = searchView.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+
+                        _displayCard(cardID);
+
+                        //call back actionbar
+                        searchItem.collapseActionView();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, e);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -381,6 +442,16 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    public String getCarID() {
+        try {
+            cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
+        } catch (Exception e) {
+            cardId = LazzyBeeShare.EMPTY;
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
+        return cardId;
     }
 
     class PackageCardPageAdapter extends PagerAdapter {
