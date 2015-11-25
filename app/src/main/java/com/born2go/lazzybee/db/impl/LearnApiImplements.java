@@ -74,6 +74,7 @@ public class LearnApiImplements implements LearnApi {
 
     private Random randomGenerator;
 
+
     public LearnApiImplements(Context context) {
         this.context = context;
         //init dataBaseHelper
@@ -114,6 +115,7 @@ public class LearnApiImplements implements LearnApi {
             "vocabulary.l_en,vocabulary.l_vn";
     private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers," +
             "vocabulary.queue,vocabulary.level";
+    private String selectSucgetioList = "vocabulary.id,vocabulary.question,vocabulary.answers";
 
 
     /**
@@ -146,47 +148,48 @@ public class LearnApiImplements implements LearnApi {
         Card card = new Card();
         //get data from sqlite
         card.setId(cursor.getInt(CARD_INDEX_ID));
-
         card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
         card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
-        card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
-        card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
-        if (type == 0) {
-            card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
-            card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
-            card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+        if (type < 2) {
+            card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+            card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+            if (type == 0) {
+                card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+                card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+                card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
 
-            if (cursor.getString(CARD_INDEX_STATUS) != null) {
-                card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
-            } else {
-                card.setStatus(0);
-            }
+                if (cursor.getString(CARD_INDEX_STATUS) != null) {
+                    card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
+                } else {
+                    card.setStatus(0);
+                }
 
-            card.setDue(cursor.getLong(CARD_INDEX_DUE));
+                card.setDue(cursor.getLong(CARD_INDEX_DUE));
 
-            card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
-            card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
-            card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
-            card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+                card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+                card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+                card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+                card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
-            if (cursor.getString(CARD_INDEX_GID) != null) {
-                card.setgId(cursor.getLong(CARD_INDEX_GID));
-            } else {
-                card.setgId(0);
-            }
-            try {
-                if (cursor.getString(CARD_INDEX_L_EN) != null)
-                    card.setL_en(cursor.getString(CARD_INDEX_L_EN));
+                if (cursor.getString(CARD_INDEX_GID) != null) {
+                    card.setgId(cursor.getLong(CARD_INDEX_GID));
+                } else {
+                    card.setgId(0);
+                }
+                try {
+                    if (cursor.getString(CARD_INDEX_L_EN) != null)
+                        card.setL_en(cursor.getString(CARD_INDEX_L_EN));
 
-                if (cursor.getString(CARD_INDEX_L_VN) != null)
-                    card.setL_vn(cursor.getString(CARD_INDEX_L_VN));
+                    if (cursor.getString(CARD_INDEX_L_VN) != null)
+                        card.setL_vn(cursor.getString(CARD_INDEX_L_VN));
 
-            } catch (Exception e) {
-                Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
-                card.setL_vn(LazzyBeeShare.EMPTY);
-                card.setL_en(LazzyBeeShare.EMPTY);
+                } catch (Exception e) {
+                    Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
+                    card.setL_vn(LazzyBeeShare.EMPTY);
+                    card.setL_en(LazzyBeeShare.EMPTY);
 
+                }
             }
         }
         return card;
@@ -1461,5 +1464,18 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "_updateUserNoteCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
 
         db.close();
+    }
+
+    public List<Card> _suggestionCard(String query) {
+        String likeQuery = "SELECT  " + selectSucgetioList + " FROM " + TABLE_VOCABULARY + " WHERE "
+                + KEY_QUESTION + " like '" + query + "%' OR "
+                + KEY_QUESTION + " like '% " + query + "%'"
+                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+
+        List<Card> datas = new ArrayList<>();
+        //Seach card
+        if (query != null || query.length() > 0)
+            datas = _getListCardQueryString(likeQuery, 2);
+        return datas;
     }
 }
