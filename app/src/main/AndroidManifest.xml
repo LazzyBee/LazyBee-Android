@@ -21,7 +21,6 @@
     <application
         android:name=".LazzyBeeApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_logo_green"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
@@ -58,27 +57,27 @@
             android:label="@string/title_activity_study"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeNoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".activity.MainActivity" />-->
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".activity.SearchActivity" />
         </activity>
+
         <activity
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_search"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
+            </intent-filter>SS
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
@@ -180,6 +179,11 @@
             android:name=".activity.CustomStudySettingActivity"
             android:label="@string/title_activity_custom_study_setting"
             android:screenOrientation="portrait"></activity>
+
+        <provider
+            android:name="com.born2go.lazzybee.adapter.PlacesSuggestionProvider"
+            android:authorities="com.born2go.lazzybee.adapter.search_suggestion_provider"
+            android:syncable="false" />
     </application>
 
 </manifest>
