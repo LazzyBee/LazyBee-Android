@@ -73,24 +73,33 @@ public class PlacesSuggestionProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-        Log.d(LOG_TAG, "query = " + uri);
+        Log.d(LOG_TAG, "uri = " + uri);
         // Use the UriMatcher to see what kind of query we have
         switch (uriMatcher.match(uri)) {
             case SUGGEST_CARD:
                 String query = uri.getLastPathSegment().toLowerCase().trim();
-                Log.d(LOG_TAG, "Search suggestions requested.Query=" + query);
+                Log.d(LOG_TAG, "query:" + query);
                 MatrixCursor cursor = new MatrixCursor(SUGGEST_COLUMNS, 1);
-                List<Card> cards = LazzyBeeSingleton.learnApiImplements._suggestionCard(query);
-                for (int i = 0; i < cards.size(); i++) {
-                    Card card = cards.get(i);
-                    String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+                if (query != null || query.length() > 1) {
+                    if (query.equals("search_suggest_query"))
+                        return null;
 
-                    cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                    Log.d(LOG_TAG, "Search suggestions requested.Query=" + query);
+                    List<Card> cards = LazzyBeeSingleton.learnApiImplements._suggestionCard(query);
+                    for (int i = 0; i < cards.size(); i++) {
+                        Card card = cards.get(i);
+                        String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+
+                        cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                    }
+                    cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+
+                    return cursor;
+                } else {
+                    Log.d(LOG_TAG, "query null or empty");
+                    return null;
                 }
-                cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
-
-                return cursor;
             default:
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
