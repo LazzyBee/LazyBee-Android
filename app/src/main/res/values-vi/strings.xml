@@ -279,6 +279,7 @@
     <string name="title_dialog_user_note">Ghi chú</string>
     <string name="hint_user_note" >Thêm ghi chú tại đây!</string>
     <string name="save">Lưu</string>
+    <string name="streark_done">Xong</string>
 
 
     <string-array name="subjects">

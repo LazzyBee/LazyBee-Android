@@ -53,7 +53,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Xong"
+            android:text="@string/streark_done"
             android:id="@+id/btnDone"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
