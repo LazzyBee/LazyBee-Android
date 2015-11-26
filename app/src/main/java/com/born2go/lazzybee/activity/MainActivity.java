@@ -605,6 +605,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _showDialogWithMessage(String message) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle("Ops!");
         builder.setMessage(message);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -616,7 +617,6 @@ public class MainActivity extends AppCompatActivity
         final AlertDialog dialog = builder.create();
 
         dialog.show();
-
     }
 
     private void _showHelp() {

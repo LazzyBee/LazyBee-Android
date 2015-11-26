@@ -275,7 +275,7 @@
     <string name="day_sat">T7</string>
     <string name="day_sun">CN</string>
     <string name="streak_day">ngày</string>
-    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm "Học thêm " để học nếu bạn muốn.</string>
+    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm \"Học thêm\" để học nếu bạn muốn.</string>
     <string name="title_dialog_user_note">Ghi chú</string>
     <string name="hint_user_note" >Thêm ghi chú tại đây!</string>
     <string name="save">Lưu</string>

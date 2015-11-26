@@ -405,7 +405,7 @@
     <string name="day_sat">Sat</string>
     <string name="day_sun">Sun</string>
     <string name="streak_day">days</string>
-    <string name="congratulations_learnmore">There is no more word to learn today. Click "Learn more" if you really want to learn more.</string>
+    <string name="congratulations_learnmore">There is no more word to learn today. Click \"Learn more\" if you really want to learn more.</string>
     <string name="title_dialog_user_note">User note</string>
     <string name="hint_user_note" >Add note here!</string>
     <string name="save">Save</string>
