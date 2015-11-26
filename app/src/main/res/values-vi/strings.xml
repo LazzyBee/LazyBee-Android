@@ -54,7 +54,7 @@
 
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
-    <string name="lang_english">Tiếng anh</string>
+    <!--<string name="lang_english">Tiếng anh</string>-->
     <string name="lang_viet">Tiếng việt</string>
     <string name="dialog_message_restart_app">Ứng dụng sẽ khởi động lại</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>

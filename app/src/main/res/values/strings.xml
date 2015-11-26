@@ -76,7 +76,7 @@
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
-    <string name="lang_english">English</string>
+    <string name="lang_english" translatable="false">English</string>
     <string name="lang_viet">Vietnamse</string>
 
     <!--Dialog restart app-->

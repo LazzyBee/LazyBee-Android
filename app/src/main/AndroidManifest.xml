@@ -21,6 +21,7 @@
     <application
         android:name=".LazzyBeeApplication"
         android:allowBackup="true"
+        android:icon="@drawable/ic_logo_green"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
@@ -81,7 +82,7 @@
 
         <activity
             android:name=".activity.SettingActivity"
-            android:label="@string/title_activity_setting"
+            android:label="@string/action_settings"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
