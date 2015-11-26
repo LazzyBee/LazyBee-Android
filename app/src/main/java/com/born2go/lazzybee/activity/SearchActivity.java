@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
@@ -155,6 +158,18 @@ public class SearchActivity extends AppCompatActivity implements
                 (SearchView) menu.findItem(R.id.search).getActionView();
         search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
+        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
+
+        if (autoCompleteTextView != null) {
+            int color = Color.parseColor("#ffffffff");
+            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+
+            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+            autoCompleteTextView.setTextColor(R.color.grey_600);
+        }
+
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 
             @Override
@@ -206,6 +221,7 @@ public class SearchActivity extends AppCompatActivity implements
         });
 
         if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
+            query_text = getIntent().getStringExtra(SearchManager.QUERY);
             search.setQuery(query_text, false);
             search.setIconified(false);
             search.clearFocus();
@@ -280,7 +296,8 @@ public class SearchActivity extends AppCompatActivity implements
             query_text = intent.getStringExtra(SearchManager.QUERY);
             Log.d(TAG, "query:" + query_text);
             display_type = LazzyBeeShare.GOTO_SEARCH_CODE;
-            search.setQuery(query_text, false);
+            if (search != null)
+                search.setQuery(query_text, false);
         }
         _search(query_text, display_type, true);
     }
