@@ -18,6 +18,7 @@ import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,9 +74,15 @@ public class SearchActivity extends AppCompatActivity implements
         handleIntent(getIntent());
 
         //Show Home as Up
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        _initActonBar();
 
         _trackerApplication();
+
+    }
+    private void _initActonBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
