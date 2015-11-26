@@ -58,7 +58,9 @@ public class LearnApiImplements implements LearnApi {
     public static final String KEY_L_VN = "l_vn";
     public static final String KEY_L_EN = "l_en";
     public static final String TABLE_STREAK = "streak";
+    public static final String TABLE_SUGGESTION = "suggestion";
     public static final java.lang.String CREATE_TABLE_STREAK = "CREATE TABLE " + TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
+    public static final java.lang.String CREATE_TABLE_SUGGESTION = "CREATE TABLE suggestion ( id INTEGER NOT NULL , suggestion  TEXT NOT NULL, PRIMARY KEY ( id ) );";
     private static final String KEY_USER_NOTE = "user_note";
 
 
@@ -1263,6 +1265,7 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int executeQuery(String query) {
+        Log.d(TAG, "executeQuery:" + query);
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
         try {
             db.execSQL(query);
@@ -1472,10 +1475,64 @@ public class LearnApiImplements implements LearnApi {
                 + KEY_QUESTION + " like '% " + query + "%'"
                 + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-        List<Card> datas = new ArrayList<>();
+        List<Card> datas = new ArrayList<Card>();
         //Seach card
-        if (query != null || query.length() > 0)
+        if (query != null || query.length() > 1)
             datas = _getListCardQueryString(likeQuery, 2);
+//        if (datas.size()>2){
+//            _insertSuggestion(query);
+//        }
         return datas;
+    }
+
+    public List<String> _getListTextSusggestion() {
+        String checkTableExit = "SELECT count(name) FROM sqlite_master WHERE type ='table' AND name='" + TABLE_SUGGESTION + "';";
+        if (_queryCount(checkTableExit) == 0) {
+            SQLiteDatabase db_create = this.dataBaseHelper.getReadableDatabase();
+            db_create.execSQL(CREATE_TABLE_SUGGESTION);
+        }
+
+        String likeQuery = "Select suggestion.suggestion from suggestion ORDER BY suggestion.id DESC LIMIT 5";
+
+        Log.d(TAG, "Query select suggestion:" + likeQuery);
+
+        List<String> datas = new ArrayList<String>();
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+
+        //query for cursor
+        Cursor cursor = db.rawQuery(likeQuery, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    String suggetion = cursor.getString(0);
+                    datas.add(suggetion);
+                } while (cursor.moveToNext());
+        }
+
+        Log.d(TAG, "Size list text suggetion:" + datas.size());
+
+        return datas;
+    }
+
+    private void _insertSuggestion(String query) {
+        String checkTableExit = "SELECT count(name) FROM sqlite_master WHERE type ='table' AND name='" + TABLE_SUGGESTION + "';";
+        if (_queryCount(checkTableExit) == 0) {
+            SQLiteDatabase db_create = this.dataBaseHelper.getReadableDatabase();
+            db_create.execSQL(CREATE_TABLE_SUGGESTION);
+        }
+
+        String countSuggetion = "SELECT count(id) FROM " + TABLE_SUGGESTION;
+        if (_queryCount(countSuggetion) >= 300) {
+            String delete = "DELETE FROM suggestion  WHERE id IN (SELECT id FROM suggestion ORDER BY id ASC LIMIT 200);";
+            Log.d(TAG, "delete suggetion:" + ((executeQuery(delete) == 1) ? "OK" : "False"));
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(TABLE_SUGGESTION, query);
+        SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
+        db_insert.insert(TABLE_SUGGESTION, null, values);
+        Log.i(TAG, "_insetStreak\tInsert:day=" + query);
+        db_insert.close();
+
     }
 }
