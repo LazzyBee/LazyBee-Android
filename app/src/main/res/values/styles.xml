@@ -41,6 +41,9 @@
         <item name="windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/white</item>
 
+        <item name="android:dropDownItemStyle">@style/myDropDownItemStyle</item>
+
+
     </style>
 
     <style name="full_screen_dialog" parent="android:Theme">
@@ -49,6 +52,13 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="myDropDownItemStyle">
+        <item name="android:divider">#4F4F4F</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/grey_600</item>
     </style>
 
 
