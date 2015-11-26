@@ -69,7 +69,8 @@
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_search"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/ThemeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>SS
