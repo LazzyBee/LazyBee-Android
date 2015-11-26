@@ -275,6 +275,7 @@
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
         <item>@string/drawer_subject</item>
+        <item>@string/drawer_statistical</item>
         <item>@string/drawer_line</item>
 
         <item>@string/drawer_dictionary</item>
@@ -407,10 +408,10 @@
     <string name="streak_day">days</string>
     <string name="congratulations_learnmore">There is no more word to learn today. Click \"Learn more\" if you really want to learn more.</string>
     <string name="title_dialog_user_note">User note</string>
-    <string name="hint_user_note" >Add note here!</string>
+    <string name="hint_user_note">Add note here!</string>
     <string name="save">Save</string>
 
-    <string-array name="days" >
+    <string-array name="days">
         <item>@string/day_mon</item>
         <item>@string/day_tue</item>
         <item>@string/day_wed</item>
@@ -420,7 +421,8 @@
         <item>@string/day_sun</item>
     </string-array>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="streark_done">Done</string>
+    <string name="drawer_statistical">Statistical</string>
 </resources>
