@@ -59,6 +59,7 @@ import com.google.android.gms.tagmanager.DataLayer;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
@@ -1145,13 +1146,27 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogTip() {
         try {
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String pop_up_maxnum;
             String popup_text;
             String popup_url = LazzyBeeShare.EMPTY;
             if (container == null) {
                 popup_text = null;
+                Log.d(TAG, "ContainerHolderSingleton Null");
             } else {
-                popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
-                popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+                pop_up_maxnum = container.getString(LazzyBeeShare.POPUP_MAXNUM);
+                if (pop_up_maxnum == null || pop_up_maxnum.equals(LazzyBeeShare.EMPTY)) {
+                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
+                    popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+                    Log.d(TAG, "pop_up_maxnum Null");
+                } else {
+
+                    Log.d(TAG, "pop_up_maxnum:" + pop_up_maxnum);
+                    int number = LazzyBeeShare.showRandomInteger(1, Integer.valueOf(pop_up_maxnum), new Random());
+                    Log.d(TAG, "Random pop:" + number);
+                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT + number);
+                    popup_url = container.getString(LazzyBeeShare.POPUP_URL + number);
+                    Log.d(TAG, "popup_text:" + popup_text + ",popup_url:" + popup_url);
+                }
 
             }
             if (popup_text != null) {
