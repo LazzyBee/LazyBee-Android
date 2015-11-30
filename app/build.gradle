@@ -64,4 +64,6 @@ dependencies {
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:support-v4:22.2.1'
+
+    compile 'com.github.lecho:hellocharts-android:v1.5.8'
 }
