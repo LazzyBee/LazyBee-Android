@@ -195,6 +195,7 @@
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
         <item>@string/drawer_subject</item>
+        <item>@string/drawer_statistical</item>
         <item>@string/drawer_line</item>
 
         <item>@string/drawer_dictionary</item>
@@ -281,6 +282,8 @@
     <string name="save">Lưu</string>
     <string name="streark_done">Xong</string>
     <string name="drawer_statistical">Thống kê</string>
+    <string name="dialog_statistical_level">Cấp độ</string>
+    <string name="dialog_title_statistics" >Quá trình học tập</string>
 
 
     <string-array name="subjects">
