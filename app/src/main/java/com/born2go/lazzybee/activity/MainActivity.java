@@ -45,6 +45,7 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.fragment.DialogHelp;
+import com.born2go.lazzybee.fragment.DialogStatistics;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -521,11 +522,19 @@ public class MainActivity extends AppCompatActivity
             case LazzyBeeShare.DRAWER_HELP_INDEX:
                 _showHelp();
                 break;
+            case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
+                _showStatistical();
+                break;
             default:
                 break;
         }
 
 
+    }
+
+    private void _showStatistical() {
+        DialogStatistics dialogStatistics = new DialogStatistics(context);
+        dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
     }
 
     private void showSelectSubject() {
