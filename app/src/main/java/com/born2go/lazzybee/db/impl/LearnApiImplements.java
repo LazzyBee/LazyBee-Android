@@ -1163,6 +1163,23 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "_addCardIdToQueueList:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         db.close();
 
+        //Check card in comming list
+        //get String Incoming list
+        String list100Card = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+
+        //define list
+        List<String> defineListCard100 = _getListCardIdFromStringArray(list100Card);
+
+        //Check contain
+        if (defineListCard100.contains(card.getId())) {
+            //Remove
+            defineListCard100.remove(card.getId());
+            //save list 100
+            saveIncomingCardIdList(defineListCard100);
+            Log.d(TAG, "Card is contain List 100 card");
+        } else {
+            Log.d(TAG, "Card NOT contain List 100 card");
+        }
 
     }
 
