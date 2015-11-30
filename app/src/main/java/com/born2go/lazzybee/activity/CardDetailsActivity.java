@@ -104,16 +104,16 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             card = learnApiImplements._getCardByID(cardID);
             setTitle(card.getQuestion());
 
-            if (itemFavorite != null) {
-                //load favorite
-                if (card.getStatus() == 1) {
-                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                    itemFavorite.setTitle(context.getString(R.string.action_favorite));
-                } else {
-                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                    itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-                }
-            }
+//            if (itemFavorite != null) {
+//                //load favorite
+//                if (card.getStatus() == 1) {
+//                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                    itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//                } else {
+//                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                    itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//                }
+//            }
             PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
@@ -178,25 +178,25 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
-        _initAndLoadFavorite(menu);
+       // _initAndLoadFavorite(menu);
         _defineSearchView(menu);
 
         return true;
     }
 
     private void _initAndLoadFavorite(Menu menu) {
-        itemFavorite = menu.findItem(R.id.action_favorite);
+       // itemFavorite = menu.findItem(R.id.action_favorite);
 
-        if (card != null) {
-            //load favorite
-            if (card.getStatus() == 1) {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
-        }
+//        if (card != null) {
+//            //load favorite
+//            if (card.getStatus() == 1) {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
+//        }
     }
 
     private void _defineSearchView(Menu menu) {
@@ -289,10 +289,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             case R.id.action_share:
                 _shareCard();
                 return true;
-            case R.id.action_favorite:
-
-                _addCardToFavorite();
-                return true;
+//            case R.id.action_favorite:
+//
+//                //_addCardToFavorite();
+//                return true;
             case R.id.action_report:
                 _reportCard();
                 return true;
@@ -345,14 +345,14 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             int statusFavrite = 0;
             //Set icon drawer
-            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
-                statusFavrite = 1;
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
+//            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
+//                statusFavrite = 1;
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
 
             //set status card and Update card
             card.setStatus(statusFavrite);

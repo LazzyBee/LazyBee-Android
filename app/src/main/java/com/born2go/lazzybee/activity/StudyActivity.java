@@ -438,19 +438,19 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     private void _initAndLoadFavorite(Menu menu) {
         btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
-        itemFavorite = menu.findItem(R.id.action_favorite);
-
-        btnBackBeforeCard.setVisible(false);
-        if (currentCard != null) {
-            //load favorite
-            if (currentCard.getStatus() == 1) {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
-        }
+//        itemFavorite = menu.findItem(R.id.action_favorite);
+//
+//        btnBackBeforeCard.setVisible(false);
+//        if (currentCard != null) {
+//            //load favorite
+//            if (currentCard.getStatus() == 1) {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
+//        }
     }
 
     private void _defineSearchView(Menu menu) {
@@ -568,9 +568,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case R.id.action_share:
                 _shareCard();
                 return true;
-            case R.id.action_favorite:
-                _addCardToFavorite();
-                return true;
+//            case R.id.action_favorite:
+//                //_addCardToFavorite();
+//                return true;
             case R.id.action_goto_dictionary:
                 _gotoDictionnary();
                 return true;
@@ -604,14 +604,14 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         try {
             int statusFavrite = 0;
             //Set icon drawer
-            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
-                statusFavrite = 1;
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
+//            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
+//                statusFavrite = 1;
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
 
             //set status card and Update card
             currentCard.setStatus(statusFavrite);
@@ -900,16 +900,16 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 _nextDueCard();
                 break;
         }
-        if (itemFavorite != null) {
-            //load favorite
-            if (currentCard.getStatus() == 1) {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
-        }
+//        if (itemFavorite != null) {
+//            //load favorite
+//            if (currentCard.getStatus() == 1) {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
+//        }
     }
 
     /**
