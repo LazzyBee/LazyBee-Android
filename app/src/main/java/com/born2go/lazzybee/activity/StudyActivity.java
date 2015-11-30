@@ -990,7 +990,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), 10);
 
             //get  next Ivl String List
-            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB);
+            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB,context);
             String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN], getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
             String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD], getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
 

@@ -1,5 +1,8 @@
 package com.born2go.lazzybee.algorithms;
 
+import android.content.Context;
+
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 
 /**
@@ -32,32 +35,32 @@ public class CardSched {
     /*
     Return string of next time to review corresponded to ease level
      */
-    public String[] nextIvlStrLst(Card card) {
+    public String[] nextIvlStrLst(Card card,Context context) {
         String ret[] = new String[4];
         for (int i = 0; i < 4; i++){
-            ret[i] = _nextIvlStr(card, i);
+            ret[i] = _nextIvlStr(card, i,context);
         }
         return ret;
     }
     /*
     Return string of next time to review corresponded to ease level
      */
-    public String _nextIvlStr(Card card, int ease) {
+    public String _nextIvlStr(Card card, int ease,Context context) {
         String str;
         int ivl = nextIvlBySeconds(card, ease);
 
         if (ivl < SECONDS_PERDAY)
-            str =  "< 10min";
+            str =  "< 10"+context.getString(R.string.min);
         else {
             int day = ivl / SECONDS_PERDAY;
             if (day <= 30)
-                str = Math.round(day) + " day";
+                str = Math.round(day) + " "+context.getString(R.string.day);
             else {
                 double month = (double) day / 30;
-                str = String.format("%.1f", month) + " month";
+                str = String.format("%.1f", month) + " "+context.getString(R.string.month);
                 if (month > 12) {
                     double year = (double) day / 365;
-                    str = String.format("%.1f",year) + " year";
+                    str = String.format("%.1f",year) + " "+context.getString(R.string.year);
                 }
             }
         }

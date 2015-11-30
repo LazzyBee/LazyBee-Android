@@ -284,6 +284,10 @@
     <string name="drawer_statistical">Thống kê</string>
     <string name="dialog_statistical_level">Cấp độ</string>
     <string name="dialog_title_statistics" >Quá trình học tập</string>
+    <string name="min">\ \/phút</string>
+    <string name="day">ngày</string>
+    <string name="month">tháng</string>
+    <string name="year">năm</string>
 
 
     <string-array name="subjects">
