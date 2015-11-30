@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Hue on 6/29/2015.
@@ -150,6 +151,9 @@ public class LazzyBeeShare {
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
     public static String BASE_URL_DB = "base_url_db";
     public static String ADV_ENABLE = "adv_enable";
+
+
+    public static String POPUP_MAXNUM = "pop_up_maxnum";
     public static String POPUP_TEXT = "popup_text";
     public static String POPUP_URL = "popup_url";
 
@@ -733,5 +737,17 @@ public class LazzyBeeShare {
         //Add one day's time to the beginning of the day.
         //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
         return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
+    }
+
+    public static int showRandomInteger(int aStart, int aEnd, Random aRandom) {
+        if (aStart > aEnd) {
+            throw new IllegalArgumentException("Start cannot exceed End.");
+        }
+        //get the range, casting to long to avoid overflow problems
+        long range = (long) aEnd - (long) aStart + 1;
+        // compute a fraction of the range, 0 <= frac < range
+        long fraction = (long) (range * aRandom.nextDouble());
+        int randomNumber = (int) (fraction + aStart);
+        return randomNumber;
     }
 }
