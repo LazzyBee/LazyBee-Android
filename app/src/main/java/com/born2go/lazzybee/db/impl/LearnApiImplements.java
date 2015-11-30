@@ -1535,4 +1535,13 @@ public class LearnApiImplements implements LearnApi {
         db_insert.close();
 
     }
+
+    public List<Integer> _getListCountCardbyLevel() {
+        List<Integer> data = new ArrayList<Integer>();
+        for (int i = 1; i < 7; i++) {
+            String count_card_learner_by_level = "select count(id) from vocabulary where vocabulary.queue>=1 and level =" + i;
+            data.add(_queryCount(count_card_learner_by_level));
+        }
+        return data;
+    }
 }
