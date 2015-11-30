@@ -1,6 +1,8 @@
 package com.born2go.lazzybee;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
@@ -11,6 +13,7 @@ public class LazzyBeeApplication extends Application {
 
     public LazzyBeeApplication() {
         super();
+
     }
 
     @Override
@@ -25,4 +28,9 @@ public class LazzyBeeApplication extends Application {
         LazzyBeeSingleton.initInstance(getApplicationContext());
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 }
