@@ -1406,7 +1406,7 @@ public class LearnApiImplements implements LearnApi {
 
 
     public List<Integer> _getListDayStudyComplete() {
-        String query = "SELECT streak.day FROM streak ORDER by streak.day DESC LIMIT 6";
+        String query = "SELECT streak.day FROM streak where streak.day > " + ((LazzyBeeShare.getStartOfDayInMillis() / 1000) - (86400 * 6)) + " ORDER by streak.day DESC LIMIT 6";
         List<Integer> dayCompleteStudys = new ArrayList<Integer>();
 //        int startOfDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
 //        dayCompleteStudys.add(startOfDay - (84600 * 12));
@@ -1430,6 +1430,7 @@ public class LearnApiImplements implements LearnApi {
         }
         Log.i(TAG, "_getListDayStudyComplete: \t Query String: " + query + "\n");
         db.close();
+
         return dayCompleteStudys;
     }
 
@@ -1542,11 +1543,6 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Integer> _getListCountCardbyLevel() {
-        String checkTableExit = "SELECT count(name) FROM sqlite_master WHERE type ='table' AND name='" + TABLE_SUGGESTION + "';";
-        if (_queryCount(checkTableExit) == 0) {
-            SQLiteDatabase db_create = this.dataBaseHelper.getReadableDatabase();
-            db_create.execSQL(CREATE_TABLE_SUGGESTION);
-        }
         List<Integer> data = new ArrayList<Integer>();
         for (int i = 1; i < 7; i++) {
             String count_card_learner_by_level = "select count(id) from vocabulary where vocabulary.queue>=1 and level =" + i;
@@ -1554,5 +1550,5 @@ public class LearnApiImplements implements LearnApi {
         }
         return data;
     }
-    
+
 }
