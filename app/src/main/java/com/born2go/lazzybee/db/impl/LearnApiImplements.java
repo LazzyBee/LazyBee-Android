@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -1447,10 +1448,14 @@ public class LearnApiImplements implements LearnApi {
         ContentValues values = new ContentValues();
         values.put("day", day);
         SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
-        long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
-        Log.i(TAG, "_insetStreak\tInsert:day=" + day);
-        db_insert.close();
-        return (int) long_insert_results;
+        try {
+            long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
+            Log.i(TAG, "_insetStreak\tInsert:day=" + day);
+            db_insert.close();
+            return (int) long_insert_results;
+        } catch (SQLiteException e) {
+            return (int) -1;
+        }
 
 
     }
@@ -1537,6 +1542,11 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Integer> _getListCountCardbyLevel() {
+        String checkTableExit = "SELECT count(name) FROM sqlite_master WHERE type ='table' AND name='" + TABLE_SUGGESTION + "';";
+        if (_queryCount(checkTableExit) == 0) {
+            SQLiteDatabase db_create = this.dataBaseHelper.getReadableDatabase();
+            db_create.execSQL(CREATE_TABLE_SUGGESTION);
+        }
         List<Integer> data = new ArrayList<Integer>();
         for (int i = 1; i < 7; i++) {
             String count_card_learner_by_level = "select count(id) from vocabulary where vocabulary.queue>=1 and level =" + i;
@@ -1544,4 +1554,5 @@ public class LearnApiImplements implements LearnApi {
         }
         return data;
     }
+    
 }
