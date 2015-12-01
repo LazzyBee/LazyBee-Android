@@ -990,7 +990,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), 10);
 
             //get  next Ivl String List
-            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB,context);
+            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
             String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN], getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
             String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD], getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
 
@@ -1036,8 +1036,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             //Show item BackBeroreCard when answer
             btnBackBeforeCard.setVisible(true);
 
-            //Check Contains and Remove
-            _checkContainsAndRemove(cardListAddDueToDay);
 
             if (currentQueue < QUEUE_NEW_CRAM0) {//Something's wrong???
                 Log.i(TAG, "_answerCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
@@ -1089,8 +1087,12 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     " to queue " + beforeCard.getQueue() + " currentQueue:" + currentQueue);
 
             if (easy == Card.EASE_AGAIN) {
-
-                againList.remove(currentCard);
+                //Check Contains and Remove
+                if (againList.contains(currentCard)) {
+                    Log.i(TAG, "Card Contains cardList");
+                    //remove current Card
+                    againList.remove(currentCard);
+                }
                 //set Due for again card = 600 second(10 minute)
                 currentCard.setDue(curren_time + 600);
 
@@ -1101,6 +1103,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 int countAgain = againList.size();
                 lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
             } else if (easy > Card.EASE_AGAIN) {
+                //Check Contains and Remove
+                _checkContainsAndRemove(cardListAddDueToDay);
                 //Add currentCard to DueList
                 cardListAddDueToDay.add(currentCard);
             }
@@ -1355,6 +1359,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     protected void onResume() {
         super.onResume();
         LazzyBeeShare._cancelNotification(context);
+        _setUpStudy();
+        _showBtnAnswer();
     }
 
     @Override
