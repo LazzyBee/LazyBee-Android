@@ -123,7 +123,7 @@ public class SearchActivity extends AppCompatActivity implements
                     Card card = (Card) lbQuestion.getTag();
                     String cardID = String.valueOf(card.getId());
                     if (card.getId() > 0) {
-                        _optionList(card);
+                       // _optionList(card);
                     } else {
                         Log.w(TAG, "card.getId()==0");
                     }
