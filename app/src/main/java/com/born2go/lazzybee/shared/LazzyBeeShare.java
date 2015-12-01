@@ -167,6 +167,9 @@ public class LazzyBeeShare {
     public static String MyPREFERENCES = "LazzyBee";
     public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
+    public static String QUEUE_LIST = "queue_List";
+
+
 
     /**
      * Init data demo List Course
