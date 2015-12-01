@@ -55,14 +55,14 @@ public class DialogStatistics extends DialogFragment {
         try {
             _initChart(view);
             _initStreakCount(view);
-            view.findViewById(R.id.mClose).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
         } catch (Exception e) {
         }
+        view.findViewById(R.id.mClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
         return view;
     }
@@ -86,6 +86,7 @@ public class DialogStatistics extends DialogFragment {
 
     private void generateDefaultData() {
         List<Integer> listCountCardbyLevel=LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
+
 
         int numSubcolumns = 1;
         int numColumns = 6;
