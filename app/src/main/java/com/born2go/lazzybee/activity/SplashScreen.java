@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -170,6 +171,11 @@ public class SplashScreen extends Activity {
         }
 
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        if (!learnApiImplements.checkTableExist(LearnApiImplements.TABLE_STREAK)) {
+            SQLiteDatabase db_create = myDbHelper.getReadableDatabase();
+            db_create.execSQL(LearnApiImplements.CREATE_TABLE_STREAK);
+        }
+
     }
 
     private void _updateVersionDB() {
