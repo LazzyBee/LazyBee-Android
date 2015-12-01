@@ -153,7 +153,7 @@ public class LazzyBeeShare {
     public static String ADV_ENABLE = "adv_enable";
 
 
-    public static String POPUP_MAXNUM = "pop_up_maxnum";
+    public static String POPUP_MAXNUM = "popup_maxnum";
     public static String POPUP_TEXT = "popup_text";
     public static String POPUP_URL = "popup_url";
 
