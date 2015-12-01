@@ -2,7 +2,6 @@ package com.born2go.lazzybee.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -14,9 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -178,14 +175,14 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
-       // _initAndLoadFavorite(menu);
+        // _initAndLoadFavorite(menu);
         _defineSearchView(menu);
 
         return true;
     }
 
     private void _initAndLoadFavorite(Menu menu) {
-       // itemFavorite = menu.findItem(R.id.action_favorite);
+        // itemFavorite = menu.findItem(R.id.action_favorite);
 
 //        if (card != null) {
 //            //load favorite
@@ -379,34 +376,43 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     private void _addCardToLearn() {
         try {
-            if (card == null)
-                card = learnApiImplements._getCardByID(cardId);
-            // Instantiate an AlertDialog.Builder with its constructor
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+            String queue_list = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.QUEUE_LIST);
+            List<String> cardIDs = learnApiImplements._getListCardIdFromStringArray(queue_list);
+            if (cardIDs.contains(cardId)) {
+                Toast.makeText(context,getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+            } else {
+                if (card == null)
+                    card = learnApiImplements._getCardByID(cardId);
+                learnApiImplements._addCardIdToQueueList(card);
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+            }
 
-            // Chain together various setter methods to set the dialog characteristics
-            builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
-                    .setTitle(getString(R.string.dialog_title_add_to_learn));
 
-            // Add the buttons
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //Update Queue_list in system table
-                    learnApiImplements._addCardIdToQueueList(card);
-                    Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+//            // Instantiate an AlertDialog.Builder with its constructor
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//
+//            // Chain together various setter methods to set the dialog characteristics
+//            builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
+//                    .setTitle(getString(R.string.dialog_title_add_to_learn));
+//
+//            // Add the buttons
+//            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    //Update Queue_list in system table
+//
+//
+//                }
+//            });
+//            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    // User cancelled the dialog
+//                    dialog.cancel();
+//                }
+//            });
+//            // Get the AlertDialog from create()
+//            AlertDialog dialog = builder.create();
 
-                }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
-                    dialog.cancel();
-                }
-            });
-            // Get the AlertDialog from create()
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
+           // dialog.show();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
