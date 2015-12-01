@@ -663,7 +663,7 @@ public class LearnApiImplements implements LearnApi {
         return cardList;
     }
 
-    List<String> _getListCardIdFromStringArray(String value) {
+    public List<String> _getListCardIdFromStringArray(String value) {
         List<String> cardListId = new ArrayList<String>();
         try {
             //Pass string value to object
