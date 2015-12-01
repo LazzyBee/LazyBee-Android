@@ -73,6 +73,7 @@ public class SettingActivity extends AppCompatActivity {
 
         mRecyclerViewSettings.setLayoutManager(gridLayoutManager);
         mRecyclerViewSettings.setAdapter(recyclerViewSettingListAdapter);
+        setTitle(R.string.action_settings);
     }
 
 

@@ -54,7 +54,7 @@
 
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
-    <string name="lang_english">Tiếng anh</string>
+    <!--<string name="lang_english">Tiếng anh</string>-->
     <string name="lang_viet">Tiếng việt</string>
     <string name="dialog_message_restart_app">Ứng dụng sẽ khởi động lại</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>
@@ -81,7 +81,7 @@
     <string name="setting_check_update">Kiểm tra cập nhật</string>
     <string name="setting_auto_check_update">Tự động kiểm tra cập nhật</string>
     <string name="setting_debug_info">Thông tin lỗi</string>
-    <string name="setting_language">Ngôn ngữ</string>
+    <string name="setting_language">Ngôn ngữ/Language</string>
     <string name="setting_limit_card_number">%d Thẻ</string>
 
     <string name="message_congratulations_with_tip" formatted="false">Bấm vào %1s để học tiếp,bấm vào %2s để xem lại thẻ đã học</string>
@@ -103,7 +103,7 @@
     <string name="speech_rate_very_fast">Rất nhanh</string>
 
     <string name="dialog_title_change_speech_rate">Thay đổi tốc độ đọc</string>
-    <string name="message_action_add_card_to_learn_complete">Add card %s to learn</string>
+    <string name="message_action_add_card_to_learn_complete">Thêm  thẻ %s vào học</string>
     <!-- <string name="notification_message">Học từ vựng tiếng Anh nào!</string>-->
 
 
@@ -195,6 +195,7 @@
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
         <item>@string/drawer_subject</item>
+        <item>@string/drawer_statistical</item>
         <item>@string/drawer_line</item>
 
         <item>@string/drawer_dictionary</item>
@@ -203,6 +204,8 @@
         <item>@string/drawer_setting</item>
         <!--<item>@string/drawer_about</item>-->
         <item>@string/drawer_help</item>
+        <item>@string/drawer_line</item>
+        <item>@string/setting_about_message</item>
     </string-array>
 
     <string-array name="speech_rate">
@@ -264,12 +267,44 @@
     <string name="study_again">Học lại</string>
     <string name="study_new">Từ mới </string>
     <string name="study_review">Ôn lại</string>
+    <string name="title_dialog_daily_target_completed">Hoàn thành mục tiêu hôm nay</string>
+    <string name="day_mon">T2</string>
+    <string name="day_tue">T3</string>
+    <string name="day_wed">T4</string>
+    <string name="day_thu">T5</string>
+    <string name="day_fri">T6</string>
+    <string name="day_sat">T7</string>
+    <string name="day_sun">CN</string>
+    <string name="streak_day">ngày</string>
+    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm \"Học thêm\" để học nếu bạn muốn.</string>
+    <string name="title_dialog_user_note">Ghi chú</string>
+    <string name="hint_user_note" >Thêm ghi chú tại đây!</string>
+    <string name="save">Lưu</string>
+    <string name="streark_done">Xong</string>
+    <string name="drawer_statistical">Thống kê</string>
+    <string name="dialog_statistical_level">Cấp độ</string>
+    <string name="dialog_title_statistics" >Quá trình học tập</string>
+    <string name="min">\ \/phút</string>
+    <string name="day">ngày</string>
+    <string name="month">tháng</string>
+    <string name="year">năm</string>
+
 
     <string-array name="subjects">
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
+    </string-array>
+
+    <string-array name="days" >
+        <item>@string/day_mon</item>
+        <item>@string/day_tue</item>
+        <item>@string/day_wed</item>
+        <item>@string/day_thu</item>
+        <item>@string/day_fri</item>
+        <item>@string/day_sat</item>
+        <item>@string/day_sun</item>
     </string-array>
 
 

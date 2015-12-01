@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Hue on 6/29/2015.
@@ -78,6 +79,8 @@ public class LazzyBeeShare {
 
     public static final int DRAWER_MAJOR_INDEX = 6;
     public static final int DRAWER_HELP_INDEX = 7;
+    public static final int DRAWER_STATISTICAL_INDEX = 8;
+
     public static final int CODE_COMPLETE_STUDY_RESULTS_1000 = 1000;
     public static final int CODE_SEARCH_RESULT = 1001;
     public static final String NOTIFICATION_MESSAGE = "n_message";
@@ -98,6 +101,7 @@ public class LazzyBeeShare {
     public static final int GOTO_SEARCH_CODE = 0;
     public static final String NOTIFY_TEXT = "notify_text";
     public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
+    public static final String KEY_FIRST_RUN_APP = "first_run_application";
 
 
     private static boolean DEBUG = true;
@@ -129,7 +133,7 @@ public class LazzyBeeShare {
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
     public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
-    public static final int DEFAULT_MY_LEVEL = 1;
+    public static final int DEFAULT_MY_LEVEL = 2;
 
 
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
@@ -147,6 +151,9 @@ public class LazzyBeeShare {
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
     public static String BASE_URL_DB = "base_url_db";
     public static String ADV_ENABLE = "adv_enable";
+
+
+    public static String POPUP_MAXNUM = "pop_up_maxnum";
     public static String POPUP_TEXT = "popup_text";
     public static String POPUP_URL = "popup_url";
 
@@ -159,6 +166,9 @@ public class LazzyBeeShare {
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
     public static String MyPREFERENCES = "LazzyBee";
     public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
+
+    public static String QUEUE_LIST = "queue_List";
+
 
 
     /**
@@ -189,8 +199,35 @@ public class LazzyBeeShare {
 
     /**
      * init HTML question
+     * <p/>
+     * <!DOCTYPE html>
+     * <html>
+     * <head>
+     * <meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\name=\"viewport\">
+     * </head>
+     * <body onload='question.playQuestion()'>
+     * <div style='width:100%'>
+     * <div style='float:left;width:90%;'>
+     * [it]
+     * <center><strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>question</strong></center>
+     * <p/>
+     * </div>
+     * <div style='float:left;width:10%'>
+     * <a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>
+     * </div>
+     * </div>
+     * </body>
+     * </html>
      */
     public static String _getQuestionDisplay(Context context, String question) {
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        String mySubject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+        if (mySubject == null)
+            mySubject = "common";
+        else if (mySubject.equals(EMPTY)) {
+            mySubject = "common";
+        }
+        Log.i(TAG, "mySubject:" + mySubject);
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
@@ -200,12 +237,20 @@ public class LazzyBeeShare {
                         "</head>\n" +
                         "<body onload='question.playQuestion()'>\n" +
                         "<div style='width:100%'>\n" +
-                        "<div style='float:left;width:90%;text-align: center;'>\n" +
-                        "<strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>" + question + "</strong>\n" +
-                        "</div>\n" +
-                        "<div style='float:left;width:10%'>\n" +
-                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
-                        "</div>\n" +
+
+                        "<div style='float:left;width: 90%;text-align: center;'>" +
+                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt;font-weight: bold;'>" + question + "</span>" +
+                        "<br><span>" + (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) + "</span>" +
+                        "</div>" +
+                        "<div style='float:left;width: 10%;padding-top: 10px;text-align: end;'><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></div>" +
+//                        "<div style='float:left;width:90%;'>\n" +
+//                        (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) +
+//                        "<center><strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>" + question + "</strong></center>\n" +
+//                        "</div>\n" +
+//                        "<div style='float:left;width:10%'>\n" +
+//                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
+//                        "</div>\n" +
+
                         "</div>\n" +
                         "</body>\n" +
                         "</html>";
@@ -311,13 +356,15 @@ public class LazzyBeeShare {
         String meaningDOWN;
         if (!POSITION_MEANING) {
             meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                    "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
                     "</div>";
             meaningDOWN = EMPTY;
         } else {
             meaningUP = EMPTY;
             meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
+                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                    "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
                     "</div>";
         }
         html = "\n<html>\n" +
@@ -355,7 +402,7 @@ public class LazzyBeeShare {
                 "       </div>\n" +
 
                 "       <div style=\"float:left;width:100%\">\n" +
-                "            <div style=\"float:left;width:100%\"><strong>" + _example + "</strong></div>\n" +
+                "            <div style=\"float:left;width:100%\"><strong>" + String.valueOf((example.equals(EMPTY)) ? EMPTY : _example) + "</strong></div>\n" +
                 "           <div style=\"float:left;width:90%\">\n" +
                 "               " + example + "\n" +
                 "           </div>\n" +
@@ -382,10 +429,11 @@ public class LazzyBeeShare {
                     "</html>\n";
         }
         html += debug;
-        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html);
+        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html.toString());
 
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());
+
         return html;
 
     }
@@ -487,10 +535,23 @@ public class LazzyBeeShare {
                     + "\t" + context.getClass().getName() + ":" + e.getMessage();
             Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
             Log.e(TAG, messageError);
-           // e.printStackTrace();
+            e.printStackTrace();
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
         }
+    }
+
+    public static String getHTMLButtonAnswer(Context context, String ivlStr, String strLevel, int color) {
+        String btnanswer_string =
+                "<font color='" + ((color == R.color.color_level_btn_answer) ? context.getResources().getColor(R.color.white) :
+                        context.getResources().getColor(R.color.color_level_btn_answer_disable)) + "'>"
+                        + ivlStr + "</font>" +
+                        "<br/>" +
+                        "<font color='" + context.getResources().getColor(color) + "'>" + strLevel.toUpperCase() + "</font>";
+        //Log.i(TAG, "Button Answer string:" + btnanswer_string);
+        return btnanswer_string;
+
+
     }
 
     /*
@@ -679,5 +740,17 @@ public class LazzyBeeShare {
         //Add one day's time to the beginning of the day.
         //24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 1 day
         return (int) ((getStartOfDayInMillis() / 1000) + (24 * 60 * 60));
+    }
+
+    public static int showRandomInteger(int aStart, int aEnd, Random aRandom) {
+        if (aStart > aEnd) {
+            throw new IllegalArgumentException("Start cannot exceed End.");
+        }
+        //get the range, casting to long to avoid overflow problems
+        long range = (long) aEnd - (long) aStart + 1;
+        // compute a fraction of the range, 0 <= frac < range
+        long fraction = (long) (range * aRandom.nextDouble());
+        int randomNumber = (int) (fraction + aStart);
+        return randomNumber;
     }
 }

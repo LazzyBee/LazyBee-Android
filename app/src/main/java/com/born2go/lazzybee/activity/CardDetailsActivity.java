@@ -2,14 +2,18 @@ package com.born2go.lazzybee.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.BaseColumns;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -61,6 +65,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     WebView mWebViewLeadDetails;
     CardView mCardViewAdv;
     CardView mCardViewViewPager;
+    private String carID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        _displayCard();
+        _displayCard(getCarID());
 
         _initAdView();
 
@@ -90,23 +95,22 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     }
 
-    private void _displayCard() {
+    private void _displayCard(String cardID) {
         try {
-            cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
-            card = learnApiImplements._getCardByID(cardId);
 
+            card = learnApiImplements._getCardByID(cardID);
             setTitle(card.getQuestion());
 
-            if (itemFavorite != null) {
-                //load favorite
-                if (card.getStatus() == 1) {
-                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                    itemFavorite.setTitle(context.getString(R.string.action_favorite));
-                } else {
-                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                    itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-                }
-            }
+//            if (itemFavorite != null) {
+//                //load favorite
+//                if (card.getStatus() == 1) {
+//                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                    itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//                } else {
+//                    itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                    itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//                }
+//            }
             PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
@@ -145,7 +149,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
                 mAdView.loadAd(adRequest);
-                ((LinearLayout)findViewById(R.id.adView)).addView(mAdView);
+                ((LinearLayout) findViewById(R.id.adView)).addView(mAdView);
 
                 mCardViewAdv.setVisibility(View.VISIBLE);
                 //
@@ -171,26 +175,95 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-        searchView.setQueryHint(getString(R.string.hint_search));
-        itemFavorite = menu.findItem(R.id.action_favorite);
-        if (card != null) {
-            //load favorite
-            if (card.getStatus() == 1) {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
-        }
+        // _initAndLoadFavorite(menu);
+        _defineSearchView(menu);
 
         return true;
+    }
+
+    private void _initAndLoadFavorite(Menu menu) {
+        // itemFavorite = menu.findItem(R.id.action_favorite);
+
+//        if (card != null) {
+//            //load favorite
+//            if (card.getStatus() == 1) {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
+//        }
+    }
+
+    private void _defineSearchView(Menu menu) {
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
+        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+
+        if (autoCompleteTextView != null) {
+            int color = Color.parseColor("#ffffffff");
+            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+
+            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+            autoCompleteTextView.setTextColor(R.color.grey_600);
+        }
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand");
+                return true;
+            }
+
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = searchView.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+
+                        _displayCard(cardID);
+
+                        //call back actionbar
+                        searchItem.collapseActionView();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, e);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -213,10 +286,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             case R.id.action_share:
                 _shareCard();
                 return true;
-            case R.id.action_favorite:
-
-                _addCardToFavorite();
-                return true;
+//            case R.id.action_favorite:
+//
+//                //_addCardToFavorite();
+//                return true;
             case R.id.action_report:
                 _reportCard();
                 return true;
@@ -269,14 +342,14 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             int statusFavrite = 0;
             //Set icon drawer
-            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
-                statusFavrite = 1;
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-            } else {
-                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-            }
+//            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
+//                statusFavrite = 1;
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
+//            } else {
+//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
+//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
+//            }
 
             //set status card and Update card
             card.setStatus(statusFavrite);
@@ -303,34 +376,43 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     private void _addCardToLearn() {
         try {
-            if (card == null)
-                card = learnApiImplements._getCardByID(cardId);
-            // Instantiate an AlertDialog.Builder with its constructor
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+            String queue_list = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.QUEUE_LIST);
+            List<String> cardIDs = learnApiImplements._getListCardIdFromStringArray(queue_list);
+            if (cardIDs.contains(cardId)) {
+                Toast.makeText(context,getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+            } else {
+                if (card == null)
+                    card = learnApiImplements._getCardByID(cardId);
+                learnApiImplements._addCardIdToQueueList(card);
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+            }
 
-            // Chain together various setter methods to set the dialog characteristics
-            builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
-                    .setTitle(getString(R.string.dialog_title_add_to_learn));
 
-            // Add the buttons
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //Update Queue_list in system table
-                    learnApiImplements._addCardIdToQueueList(card);
-                    Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+//            // Instantiate an AlertDialog.Builder with its constructor
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+//
+//            // Chain together various setter methods to set the dialog characteristics
+//            builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
+//                    .setTitle(getString(R.string.dialog_title_add_to_learn));
+//
+//            // Add the buttons
+//            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    //Update Queue_list in system table
+//
+//
+//                }
+//            });
+//            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    // User cancelled the dialog
+//                    dialog.cancel();
+//                }
+//            });
+//            // Get the AlertDialog from create()
+//            AlertDialog dialog = builder.create();
 
-                }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
-                    dialog.cancel();
-                }
-            });
-            // Get the AlertDialog from create()
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
+           // dialog.show();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
@@ -381,6 +463,16 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    public String getCarID() {
+        try {
+            cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
+        } catch (Exception e) {
+            cardId = LazzyBeeShare.EMPTY;
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
+        return cardId;
     }
 
     class PackageCardPageAdapter extends PagerAdapter {

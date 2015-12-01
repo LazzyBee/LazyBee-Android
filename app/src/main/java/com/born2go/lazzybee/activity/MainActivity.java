@@ -1,14 +1,21 @@
 package com.born2go.lazzybee.activity;
 
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.provider.BaseColumns;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,6 +44,8 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.fragment.DialogHelp;
+import com.born2go.lazzybee.fragment.DialogStatistics;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -51,6 +59,7 @@ import com.google.android.gms.tagmanager.DataLayer;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
@@ -232,6 +241,13 @@ public class MainActivity extends AppCompatActivity
             _checkUpdate();
         }
         LazzyBeeShare._cancelNotification(context);
+        boolean first_run_app = sharedpreferences.getBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, false);
+        if (!first_run_app) {
+            _showHelp();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).commit();
+        }
+
+
     }
 
 
@@ -445,6 +461,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         _initNavigationDrawerFragment(toolbar);
+
     }
 
 
@@ -506,11 +523,19 @@ public class MainActivity extends AppCompatActivity
             case LazzyBeeShare.DRAWER_HELP_INDEX:
                 _showHelp();
                 break;
+            case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
+                _showStatistical();
+                break;
             default:
                 break;
         }
 
 
+    }
+
+    private void _showStatistical() {
+        DialogStatistics dialogStatistics = new DialogStatistics(context);
+        dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
     }
 
     private void showSelectSubject() {
@@ -535,11 +560,11 @@ public class MainActivity extends AppCompatActivity
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.select_subject_title));
-        final CharSequence[] items = context.getResources().getStringArray(R.array.subjects);
+        final CharSequence[] subjects = context.getResources().getStringArray(R.array.subjects);
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
 
         final int[] seleted_index = {0};
-        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(subjects, index, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 seleted_index[0] = item;
 
@@ -553,11 +578,21 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "seleted_index:" + index);
                 String subjectSelected = String.valueOf(items_value[index]);
 
-                //save my subject
+                //save my subjects
                 dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
 
                 //reset incomming list
                 dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //save my subjects
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
+
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdList();
                 dialog.cancel();
             }
         });
@@ -578,24 +613,25 @@ public class MainActivity extends AppCompatActivity
         this.startActivity(intent);
     }
 
-    private void _showHelp() {
+    private void _showDialogWithMessage(String message) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-        View viewDialog = View.inflate(context, R.layout.webview_help, null);
-        WebView mWebViewHelp = (WebView) viewDialog.findViewById(R.id.mWebViewHelp);
-        FloatingActionButton mFloatClose = (FloatingActionButton) viewDialog.findViewById(R.id.mFloatClose);
-        mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
-        builder.setView(viewDialog);
-
+        builder.setTitle("Ops!");
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 
         dialog.show();
-        mFloatClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.hide();
-            }
-        });
+    }
+
+    private void _showHelp() {
+        DialogHelp dialogHelp = new DialogHelp();
+        dialogHelp.show(getSupportFragmentManager(), DialogHelp.TAG);
     }
 
     private void _gotoAddCourse() {
@@ -625,42 +661,87 @@ public class MainActivity extends AppCompatActivity
             // Inflate menu to add items to action bar if it is present.
             inflater.inflate(R.menu.main, menu);
             // Associate searchable configuration with the SearchView
-            searchView =
-                    (SearchView) menu.findItem(R.id.menu_search).getActionView();
-            searchView.setOnSearchClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getSupportActionBar().setDisplayShowTitleEnabled(false);
-                }
-            });
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
-                    _restoreActionBar();
-                    return false;
-                }
-            });
-            searchView.setQueryHint(getString(R.string.hint_search));
-
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    _gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    //Toast.makeText(getBaseContext(), newText,Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            });
-
+            _defineSearchView(menu);
             _restoreActionBar();
-            // return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void _defineSearchView(Menu menu) {
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.menu_search);
+        searchView =
+                (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
+        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+
+        if (autoCompleteTextView != null) {
+            int color = Color.parseColor("#ffffffff");
+            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+
+            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+            autoCompleteTextView.setTextColor(R.color.grey_600);
+        }
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand");
+                return true;
+            }
+
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = searchView.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+
+                        _gotoCardDetailbyCardId(cardID);
+
+                        //call back actionbar
+                        searchItem.collapseActionView();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, e);
+                }
+                return true;
+            }
+        });
+    }
+
+    private void _gotoCardDetailbyCardId(String cardId) {
+        Intent intent = new Intent(this, CardDetailsActivity.class);
+        intent.putExtra(LazzyBeeShare.CARDID, cardId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
     @Override
@@ -695,14 +776,9 @@ public class MainActivity extends AppCompatActivity
 //                _checkUpdate();
 //
 //                break;
-            //case R.id.action_search:
-            //Search
-//                Toast.makeText(this, getString(R.string.action_search), Toast.LENGTH_SHORT).show();
-//                _setUpSearchActionBar();
-//                _gotoSeachOrDictionary("a");
-            //
-//                mSearchView.setIconified(false);
-            //break;
+//            case R.id.menu_search:
+//                onSearchRequested();
+//            break;
         }
 
 
@@ -899,7 +975,22 @@ public class MainActivity extends AppCompatActivity
         if (countCardNoLearn == 0) {
             Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         }
-        _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+        int check = dataBaseHelper._checkListTodayExit();
+        int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
+
+        if (total == 0)
+            total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+
+        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
+        int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+
+        check = check + countDue + countAgain;
+        Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
+        if (check == -1 || check == -2 || check > 0) {
+            _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+        } else if (check == 0) {
+            _showDialogWithMessage(getString(R.string.congratulations_learnmore));
+        }
     }
 
     private void _gotoStudy(int type) {
@@ -935,7 +1026,22 @@ public class MainActivity extends AppCompatActivity
             // int finish = _checkCompleteLearn();
             Log.i(TAG, "Complete code:" + complete);
             if (complete == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-                _learnMore();
+                int check = dataBaseHelper._checkListTodayExit();
+                int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
+
+                if (total == 0)
+                    total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+
+                int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
+                int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+
+                check = check + countDue + countAgain;
+                Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
+                if (check == -1 || check == -2 || check > 0) {
+                    _showDialogWithMessage(getString(R.string.message_you_not_complete));
+                } else if (check == 0) {
+                    _learnMore();
+                }
             } else {
 //                Snackbar.make(container, getString(R.string.message_you_not_complete), Snackbar.LENGTH_LONG)
 //                        .show();
@@ -1040,13 +1146,27 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogTip() {
         try {
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String pop_up_maxnum;
             String popup_text;
             String popup_url = LazzyBeeShare.EMPTY;
             if (container == null) {
                 popup_text = null;
+                Log.d(TAG, "ContainerHolderSingleton Null");
             } else {
-                popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
-                popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+                pop_up_maxnum = container.getString(LazzyBeeShare.POPUP_MAXNUM);
+                if (pop_up_maxnum == null || pop_up_maxnum.equals(LazzyBeeShare.EMPTY)) {
+                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
+                    popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+                    Log.d(TAG, "pop_up_maxnum Null");
+                } else {
+
+                    Log.d(TAG, "pop_up_maxnum:" + pop_up_maxnum);
+                    int number = LazzyBeeShare.showRandomInteger(1, Integer.valueOf(pop_up_maxnum), new Random());
+                    Log.d(TAG, "Random pop:" + number);
+                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT + number);
+                    popup_url = container.getString(LazzyBeeShare.POPUP_URL + number);
+                    Log.d(TAG, "popup_text:" + popup_text + ",popup_url:" + popup_url);
+                }
 
             }
             if (popup_text != null) {

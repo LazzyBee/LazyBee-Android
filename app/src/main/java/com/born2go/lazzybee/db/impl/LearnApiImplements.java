@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -16,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,19 +57,15 @@ public class LearnApiImplements implements LearnApi {
     private static final String KEY_CARD_JSON = "card";
     public static final String KEY_L_VN = "l_vn";
     public static final String KEY_L_EN = "l_en";
-
-
-    String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
-
-    String outputPattern = "dd-MM-yyyy";
-
-    SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-    SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+    public static final String TABLE_STREAK = "streak";
+    public static final String CREATE_TABLE_STREAK = "CREATE TABLE " + TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
+    private static final String KEY_USER_NOTE = "user_note";
 
     Context context;
     DataBaseHelper dataBaseHelper;
 
     private Random randomGenerator;
+
 
     public LearnApiImplements(Context context) {
         this.context = context;
@@ -111,6 +107,7 @@ public class LearnApiImplements implements LearnApi {
             "vocabulary.l_en,vocabulary.l_vn";
     private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers," +
             "vocabulary.queue,vocabulary.level";
+    private String selectSucgetioList = "vocabulary.id,vocabulary.question,vocabulary.answers";
 
 
     /**
@@ -143,47 +140,48 @@ public class LearnApiImplements implements LearnApi {
         Card card = new Card();
         //get data from sqlite
         card.setId(cursor.getInt(CARD_INDEX_ID));
-
         card.setQuestion(cursor.getString(CARD_INDEX_QUESTION));
         card.setAnswers(cursor.getString(CARD_INDEX_ANSWER));
-        card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
-        card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
-        if (type == 0) {
-            card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
-            card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
-            card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
+        if (type < 2) {
+            card.setQueue(cursor.getInt(CARD_INDEX_QUEUE));
+            card.setLevel(cursor.getInt(CARD_INDEX_LEVEL));
+            if (type == 0) {
+                card.setPackage(cursor.getString(CARD_INDEX_PACKAGE));
+                card.setCategories(cursor.getString(CARD_INDEX_CATRGORIES));
+                card.setSubcat(cursor.getString(CARD_INDEX_SUBCAT));
 
 
-            if (cursor.getString(CARD_INDEX_STATUS) != null) {
-                card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
-            } else {
-                card.setStatus(0);
-            }
+                if (cursor.getString(CARD_INDEX_STATUS) != null) {
+                    card.setStatus(cursor.getInt(CARD_INDEX_STATUS));
+                } else {
+                    card.setStatus(0);
+                }
 
-            card.setDue(cursor.getLong(CARD_INDEX_DUE));
+                card.setDue(cursor.getLong(CARD_INDEX_DUE));
 
-            card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
-            card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
-            card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
-            card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
+                card.setRev_count(cursor.getInt(CARD_INDEX_REV_COUNT));
+                card.setUser_note(cursor.getString(CARD_INDEX_USER_NOTE));
+                card.setLast_ivl(cursor.getInt(CARD_INDEX_LAST_IVL));
+                card.setFactor(cursor.getInt(CARD_INDEX_E_FACTOR));
 
-            if (cursor.getString(CARD_INDEX_GID) != null) {
-                card.setgId(cursor.getLong(CARD_INDEX_GID));
-            } else {
-                card.setgId(0);
-            }
-            try {
-                if (cursor.getString(CARD_INDEX_L_EN) != null)
-                    card.setL_en(cursor.getString(CARD_INDEX_L_EN));
+                if (cursor.getString(CARD_INDEX_GID) != null) {
+                    card.setgId(cursor.getLong(CARD_INDEX_GID));
+                } else {
+                    card.setgId(0);
+                }
+                try {
+                    if (cursor.getString(CARD_INDEX_L_EN) != null)
+                        card.setL_en(cursor.getString(CARD_INDEX_L_EN));
 
-                if (cursor.getString(CARD_INDEX_L_VN) != null)
-                    card.setL_vn(cursor.getString(CARD_INDEX_L_VN));
+                    if (cursor.getString(CARD_INDEX_L_VN) != null)
+                        card.setL_vn(cursor.getString(CARD_INDEX_L_VN));
 
-            } catch (Exception e) {
-                Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
-                card.setL_vn(LazzyBeeShare.EMPTY);
-                card.setL_en(LazzyBeeShare.EMPTY);
+                } catch (Exception e) {
+                    Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
+                    card.setL_vn(LazzyBeeShare.EMPTY);
+                    card.setL_en(LazzyBeeShare.EMPTY);
 
+                }
             }
         }
         return card;
@@ -654,7 +652,7 @@ public class LearnApiImplements implements LearnApi {
         return cardList;
     }
 
-    List<String> _getListCardIdFromStringArray(String value) {
+    public List<String> _getListCardIdFromStringArray(String value) {
         List<String> cardListId = new ArrayList<String>();
         try {
             //Pass string value to object
@@ -1154,6 +1152,23 @@ public class LearnApiImplements implements LearnApi {
         Log.i(TAG, "_addCardIdToQueueList:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         db.close();
 
+        //Check card in comming list
+        //get String Incoming list
+        String list100Card = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+
+        //define list
+        List<String> defineListCard100 = _getListCardIdFromStringArray(list100Card);
+
+        //Check contain
+        if (defineListCard100.contains(card.getId())) {
+            //Remove
+            defineListCard100.remove(card.getId());
+            //save list 100
+            saveIncomingCardIdList(defineListCard100);
+            Log.d(TAG, "Card is contain List 100 card");
+        } else {
+            Log.d(TAG, "Card NOT contain List 100 card");
+        }
 
     }
 
@@ -1257,6 +1272,7 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int executeQuery(String query) {
+        Log.d(TAG, "executeQuery:" + query);
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
         try {
             db.execSQL(query);
@@ -1394,5 +1410,102 @@ public class LearnApiImplements implements LearnApi {
         }
     }
 
+
+    public List<Integer> _getListDayStudyComplete() {
+        String query = "SELECT streak.day FROM streak where streak.day > " + ((LazzyBeeShare.getStartOfDayInMillis() / 1000) - (86400 * 6)) + " ORDER by streak.day DESC LIMIT 6";
+        List<Integer> dayCompleteStudys = new ArrayList<Integer>();
+//        int startOfDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+//        dayCompleteStudys.add(startOfDay - (84600 * 12));
+//        dayCompleteStudys.add(startOfDay - (84600 * 14));
+//        dayCompleteStudys.add(startOfDay - (84600 * 3));
+//        dayCompleteStudys.add(startOfDay - (84600 * 13));
+//        dayCompleteStudys.add(startOfDay - (84600 * 15));
+//        dayCompleteStudys.add(startOfDay - (84600 * 17));
+//        dayCompleteStudys.add(startOfDay - 84600);
+
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0) {
+                do {
+                    dayCompleteStudys.add(cursor.getInt(0));
+
+                } while (cursor.moveToNext());
+            }
+        }
+        Log.i(TAG, "_getListDayStudyComplete: \t Query String: " + query + "\n");
+        db.close();
+
+        return dayCompleteStudys;
+    }
+
+    public int _getCountStreak() {
+        String selectbyIDQuery = "SELECT count(day) FROM " + TABLE_STREAK;
+        return _queryCount(selectbyIDQuery);
+    }
+
+    public int _insetStreak() {
+        int day = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        ContentValues values = new ContentValues();
+        values.put("day", day);
+        SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
+        try {
+            long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
+            Log.i(TAG, "_insetStreak\tInsert:day=" + day);
+            db_insert.close();
+            return (int) long_insert_results;
+        } catch (SQLiteException e) {
+            return (int) -1;
+        }
+
+
+    }
+
+    public void _updateUserNoteCard(Card card) {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        if (card.getUser_note() != null)
+
+            values.put(KEY_USER_NOTE, card.getUser_note());
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
+                new String[]{card.getQuestion()});
+        Log.i(TAG, "_updateUserNoteCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
+
+        db.close();
+    }
+
+    public List<Card> _suggestionCard(String query) {
+        String likeQuery = "SELECT  " + selectSucgetioList + " FROM " + TABLE_VOCABULARY + " WHERE "
+                + KEY_QUESTION + " like '" + query + "%' OR "
+                + KEY_QUESTION + " like '% " + query + "%'"
+                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+
+        List<Card> datas = new ArrayList<Card>();
+        //Seach card
+        if (query != null || query.length() > 1)
+            datas = _getListCardQueryString(likeQuery, 2);
+        return datas;
+    }
+
+
+    public List<Integer> _getListCountCardbyLevel() {
+        List<Integer> data = new ArrayList<Integer>();
+        for (int i = 1; i < 7; i++) {
+            String count_card_learner_by_level = "select count(id) from vocabulary where vocabulary.queue>=1 and level =" + i;
+            data.add(_queryCount(count_card_learner_by_level));
+        }
+        return data;
+    }
+
+    public boolean checkTableExist(String tableName) {
+        String checkTableExit = "SELECT count(name) FROM sqlite_master WHERE type ='table' AND name='" + tableName + "';";
+        if (_queryCount(checkTableExit) == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 }

@@ -7,18 +7,18 @@
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         android:title="@string/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="collapseActionView|always" />
     <item
         android:id="@+id/action_back_before_card"
         android:icon="@drawable/ic_action_undo"
         android:title="@string/action_back_before_card"
         app:showAsAction="always"
         />
-    <item
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/ic_action_not_important"
-        android:title="@string/action_not_favorite"
-        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/action_favorite"-->
+        <!--android:icon="@drawable/ic_action_not_important"-->
+        <!--android:title="@string/action_not_favorite"-->
+        <!--app:showAsAction="ifRoom" />-->
 
     <item
         android:id="@+id/action_share"

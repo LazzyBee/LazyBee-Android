@@ -76,7 +76,7 @@
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
-    <string name="lang_english">English</string>
+    <string name="lang_english" translatable="false">English</string>
     <string name="lang_viet">Vietnamse</string>
 
     <!--Dialog restart app-->
@@ -275,6 +275,7 @@
         <item>@string/drawer_title_course</item>
         <item>English Word</item>
         <item>@string/drawer_subject</item>
+        <item>@string/drawer_statistical</item>
         <item>@string/drawer_line</item>
 
         <item>@string/drawer_dictionary</item>
@@ -283,6 +284,8 @@
         <item>@string/drawer_setting</item>
         <!--<item>@string/drawer_about</item>-->
         <item>@string/drawer_help</item>
+        <item>@string/drawer_line</item>
+        <item>@string/setting_about_message</item>
     </string-array>
 
     <string-array name="speech_rate">
@@ -394,4 +397,36 @@
         <item>7761c5785b548881</item>
     </string-array>
 
+    <string name="title_dialog_daily_target_completed">Daily target completed</string>
+    <string name="day_mon">Mon</string>
+    <string name="day_tue">Tue</string>
+    <string name="day_wed">Wed</string>
+    <string name="day_thu">Thu</string>
+    <string name="day_fri">Fri</string>
+    <string name="day_sat">Sat</string>
+    <string name="day_sun">Sun</string>
+    <string name="streak_day">days</string>
+    <string name="congratulations_learnmore">There is no more word to learn today. Click \"Learn more\" if you really want to learn more.</string>
+    <string name="title_dialog_user_note">User note</string>
+    <string name="hint_user_note">Add note here!</string>
+    <string name="save">Save</string>
+
+    <string-array name="days">
+        <item>@string/day_mon</item>
+        <item>@string/day_tue</item>
+        <item>@string/day_wed</item>
+        <item>@string/day_thu</item>
+        <item>@string/day_fri</item>
+        <item>@string/day_sat</item>
+        <item>@string/day_sun</item>
+    </string-array>
+
+    <string name="streark_done">Done</string>
+    <string name="drawer_statistical">Statistical</string>
+    <string name="dialog_statistical_level">Level</string>
+    <string name="dialog_title_statistics" >Learning progress</string>
+    <string name="min">min</string>
+    <string name="day">day</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
 </resources>

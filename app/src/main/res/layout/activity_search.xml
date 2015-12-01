@@ -1,40 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    tools:context="com.born2go.lazzybee.activity.SearchActivity"
-
-    android:id="@+id/main">
-    <TextView
+    android:orientation="vertical"
+    tools:context="com.born2go.lazzybee.activity.SearchActivity">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/tool_bar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/result"
-        android:id="@+id/lbResultCount"
-        android:textColor="@color/textcolorPrimary"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    <view
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="android.support.v7.widget.RecyclerView"
-        android:id="@+id/mRecyclerViewSearchResults"
-        android:layout_weight="1"
-        android:layout_below="@+id/lbResultCount"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:id="@+id/lbResultCount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/result"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/textcolorPrimary" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/lbMessageNotFound"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:textColor="@color/grey_600" />
+        <view
+            android:id="@+id/mRecyclerViewSearchResults"
+            class="android.support.v7.widget.RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/lbResultCount"
+            android:layout_weight="1" />
 
+        <TextView
+            android:id="@+id/lbMessageNotFound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey_600"
+            android:visibility="gone" />
 
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

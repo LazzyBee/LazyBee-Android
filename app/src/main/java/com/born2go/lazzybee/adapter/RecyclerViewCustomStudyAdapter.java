@@ -128,7 +128,7 @@ public class RecyclerViewCustomStudyAdapter extends
         String strlevel = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
         int level;
         if (strlevel == null) {
-            level = 2;
+            level = LazzyBeeShare.DEFAULT_MY_LEVEL;
         } else {
             level = Integer.valueOf(strlevel);
         }

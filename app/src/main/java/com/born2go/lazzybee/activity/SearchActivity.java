@@ -4,13 +4,21 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.BaseColumns;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,18 +70,19 @@ public class SearchActivity extends AppCompatActivity implements
         _initLazzyBeeSingleton();
 
         _initRecyclerViewSearchResults();
-
-        //get query text in Intent
-        query_text = getIntent().getStringExtra(QUERY_TEXT);
-        display_type = getIntent().getIntExtra(DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
         //Search by text
-        // _search(query_text);
         handleIntent(getIntent());
 
         //Show Home as Up
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        _initActonBar();
 
         _trackerApplication();
+
+    }
+    private void _initActonBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -114,7 +123,7 @@ public class SearchActivity extends AppCompatActivity implements
                     Card card = (Card) lbQuestion.getTag();
                     String cardID = String.valueOf(card.getId());
                     if (card.getId() > 0) {
-                        _optionList(card);
+                       // _optionList(card);
                     } else {
                         Log.w(TAG, "card.getId()==0");
                     }
@@ -145,13 +154,81 @@ public class SearchActivity extends AppCompatActivity implements
         MenuInflater inflater = getMenuInflater();
         // Inflate menu to add items to action bar if it is present.
         inflater.inflate(R.menu.menu_search, menu);
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        search = (SearchView) menu.findItem(R.id.search).getActionView();
-        search.setQueryHint(getString(R.string.hint_search));
-        Log.i(TAG, "Query search:" + query_text);
+        _defineSearchView(menu);
+        return true;
+    }
+
+    private void _defineSearchView(Menu menu) {
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        search =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
+        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
+
+        if (autoCompleteTextView != null) {
+            int color = Color.parseColor("#ffffffff");
+            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+
+            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+            autoCompleteTextView.setTextColor(R.color.grey_600);
+        }
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand");
+                return true;
+            }
+
+        });
+        search.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = search.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+
+                        _gotoCardDetail(cardID);
+
+                        //call back actionbar
+                        searchItem.collapseActionView();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, e);
+                }
+                return true;
+            }
+        });
+
         if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
+            query_text = getIntent().getStringExtra(SearchManager.QUERY);
             search.setQuery(query_text, false);
             search.setIconified(false);
             search.clearFocus();
@@ -159,8 +236,6 @@ public class SearchActivity extends AppCompatActivity implements
             search.setQuery(LazzyBeeShare.EMPTY, false);
             search.setIconified(true);
         }
-        _search(query_text, display_type, true);
-
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
@@ -172,7 +247,8 @@ public class SearchActivity extends AppCompatActivity implements
 //                Toast.makeText(getBaseContext(), query,
 //                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
-                _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, true);
+                Log.i(TAG, "Vao day tiep");
+                //  _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, true);
                 return false;
             }
 
@@ -183,7 +259,6 @@ public class SearchActivity extends AppCompatActivity implements
                 return false;
             }
         });
-        return true;
     }
 
 
@@ -216,24 +291,36 @@ public class SearchActivity extends AppCompatActivity implements
 
     @Override
     protected void onNewIntent(Intent intent) {
+        setIntent(intent);
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
+        display_type = intent.getIntExtra(DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
+        Log.d(TAG, "display_type=" + display_type);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.d(TAG, "ACTION_SEARCH");
             query_text = intent.getStringExtra(SearchManager.QUERY);
-            _search(query_text, display_type, true);
+            Log.d(TAG, "query:" + query_text);
+            display_type = LazzyBeeShare.GOTO_SEARCH_CODE;
+            if (search != null)
+                search.setQuery(query_text, false);
         }
+        _search(query_text, display_type, true);
     }
 
     private void _search(String query, int display_type, boolean suggestion) {
         //use the query_text to search
-        Log.i(TAG, "query_text:" + query);
+        Log.d(TAG, "query_text:" + query);
+
         try {
             query_text = query;
-            if (query.equals(LazzyBeeShare.EMPTY)) {
+            if (query == null) {
                 lbResultCount.setVisibility(View.GONE);
                 List<Card> cardList = new ArrayList<Card>();
+                if (display_type == LazzyBeeShare.GOTO_DICTIONARY_CODE) {
+                    cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                }
                 setAdapterListCard(cardList);
             } else if (query != null || query.length() > 0) {
                 List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
@@ -241,7 +328,6 @@ public class SearchActivity extends AppCompatActivity implements
                 Log.i(TAG, "Search result_count:" + result_count);
                 if (result_count > 0) {
                     lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
-
                     mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
                     lbMessageNotFound.setVisibility(View.GONE);
 
