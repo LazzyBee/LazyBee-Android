@@ -422,7 +422,7 @@
     </string-array>
 
     <string name="streark_done">Done</string>
-    <string name="drawer_statistical">Statistical</string>
+    <string name="drawer_statistical">Statistic</string>
     <string name="dialog_statistical_level">Level</string>
     <string name="dialog_title_statistics" >Learning progress</string>
     <string name="min">min</string>
