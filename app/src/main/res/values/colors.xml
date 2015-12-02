@@ -36,7 +36,7 @@
 
     <color name="color_level_btn_answer">#FFC82F</color>
     <color name="color_level_btn_answer_disable">#757575</color>
-    
+    <color name="sliding_tab_color" >#3C9F1E</color>
 
 
 </resources>
