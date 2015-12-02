@@ -2,7 +2,6 @@ package com.born2go.lazzybee.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -10,29 +9,21 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.speech.tts.TextToSpeech;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,6 +32,7 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
+import com.born2go.lazzybee.adapter.StudySwipePage;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -75,7 +67,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     LinearLayout container;
 
     LinearLayout mLayoutButton;
-    WebView mWebViewLeadDetails;
+    //WebView mWebViewLeadDetails;
 
     MenuItem itemFavorite;
     MenuItem btnBackBeforeCard;
@@ -105,6 +97,15 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     boolean learn_more;
     int completeStudy = 0;
     TextView lbTagetActionStudy;
+
+    ViewPager mViewPager;
+
+    View view_study_button;
+    View view_study_count;
+
+    MenuItem itemIgnore;
+    MenuItem itemLearn;
+    private int currentPage = 0;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -341,8 +342,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     private void _initView() {
         container = (LinearLayout) findViewById(R.id.container);
-        mWebViewLeadDetails = (WebView) findViewById(R.id.mWebViewLeadDetaisl);
-
         //init button
         mShowAnswer = (RelativeLayout) findViewById(R.id.mShowAnswer);
 
@@ -365,61 +364,51 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         lbTagetActionStudy = (TextView) findViewById(R.id.lbTagetActionStudy);
 
-        FloatingActionButton mFloatActionButtonUserNote = (FloatingActionButton) findViewById(R.id.mFloatActionButtonUserNote);
-
-        mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        view_study_button = findViewById(R.id.view_study_button);
+        view_study_count = findViewById(R.id.view_study_count);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                _showCardNote(currentCard);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.d(TAG, "State:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                _setDisplayPageByPosition(position);
+                currentPage = position;
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
-//        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-//        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-
-        TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
-        lbTipHelp.setText("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + getString(R.string.message_hellp_study) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
-        lbTipHelp.setSelected(true);
-        //lbTipHelp.setTypeface(null, Typeface.BOLD);
-        lbTipHelp.setSingleLine();
-        lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        lbTipHelp.setHorizontallyScrolling(true);
-
-
     }
 
-    private void _showCardNote(final Card currentCard) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
-
-        View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
-        final EditText txtUserNote = (EditText) viewDialog.findViewById(R.id.txtUserNote);
-
-        txtUserNote.setText(currentCard.getUser_note());
-
-        builder.setView(viewDialog);
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String user_note = txtUserNote.getText().toString();
-                if (!user_note.isEmpty()) {
-                    currentCard.setUser_note(user_note);
-                    dataBaseHelper._updateUserNoteCard(currentCard);
-                }
-                dialog.dismiss();
+    private void _setDisplayPageByPosition(int position) {
+        if (position == 0) {
+            setTitle(R.string.title_activity_study);
+            view_study_button.setVisibility(View.VISIBLE);
+            view_study_count.setVisibility(View.VISIBLE);
+            itemLearn.setVisible(true);
+            itemIgnore.setVisible(true);
+            if (beforeCard != null) {
+                btnBackBeforeCard.setVisible(true);
+            } else {
+                btnBackBeforeCard.setVisible(false);
             }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        // Get the AlertDialog from create()
-        final AlertDialog dialog = builder.create();
 
-        dialog.show();
-
+        } else {
+            setTitle(currentCard.getQuestion());
+            view_study_button.setVisibility(View.GONE);
+            view_study_count.setVisibility(View.GONE);
+            itemLearn.setVisible(false);
+            itemIgnore.setVisible(false);
+            btnBackBeforeCard.setVisible(false);
+        }
     }
-
 
     public void onlbTipHelpClick(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_lazzybee_website)));
@@ -431,26 +420,18 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_study, menu);
-        _initAndLoadFavorite(menu);
+        _initMenuItem(menu);
         _defineSearchView(menu);
         return true;
     }
 
-    private void _initAndLoadFavorite(Menu menu) {
+    private void _initMenuItem(Menu menu) {
         btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
-//        itemFavorite = menu.findItem(R.id.action_favorite);
-//
-//        btnBackBeforeCard.setVisible(false);
-//        if (currentCard != null) {
-//            //load favorite
-//            if (currentCard.getStatus() == 1) {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-//            } else {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-//            }
-//        }
+        btnBackBeforeCard.setVisible(false);
+        itemIgnore = menu.findItem(R.id.action_ignore);
+        itemLearn = menu.findItem(R.id.action_learnt);
+        MenuItem itemDictionary = menu.findItem(R.id.action_goto_dictionary);
+        itemDictionary.setVisible(false);
     }
 
     private void _defineSearchView(Menu menu) {
@@ -544,7 +525,11 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case android.R.id.home:
                 // I do not want this...
                 // Home as up button is to navigate to Home-Activity not previous acitivity
-                super.onBackPressed();
+                if (mViewPager.getCurrentItem() == 0) {
+                    super.onBackPressed();
+                } else {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+                }
                 return true;
             case R.id.action_learnt:
                 Log.i(TAG, "_learntCard question:" + currentCard.getQuestion());
@@ -568,9 +553,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             case R.id.action_share:
                 _shareCard();
                 return true;
-//            case R.id.action_favorite:
-//                //_addCardToFavorite();
-//                return true;
             case R.id.action_goto_dictionary:
                 _gotoDictionnary();
                 return true;
@@ -597,28 +579,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         intent.putExtra(LazzyBeeShare.CARDID, String.valueOf(currentCard.getId()));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-    }
-
-
-    private void _addCardToFavorite() {
-        try {
-            int statusFavrite = 0;
-            //Set icon drawer
-//            if (itemFavorite.getTitle().toString().equals(getString(R.string.action_not_favorite))) {
-//                statusFavrite = 1;
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-//            } else {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-//            }
-
-            //set status card and Update card
-            currentCard.setStatus(statusFavrite);
-            dataBaseHelper._updateCard(currentCard);
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
-        }
     }
 
     private void _shareCard() {
@@ -777,7 +737,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                             "\t queue:" + currentCard.getQueue() + " due:" + currentCard.getDue());
 
                     _showBtnAnswer();
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), currentCard.getQueue());
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), currentCard.getQueue(), 0);
                 }
                 Log.i(TAG, "_backToBeforeCard()\t" + getString(R.string.number_row_updated, results_num));
                 // Toast.makeText(context, getString(R.string.number_row_updated, results_num), Toast.LENGTH_SHORT).show();
@@ -900,16 +860,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 _nextDueCard();
                 break;
         }
-//        if (itemFavorite != null) {
-//            //load favorite
-//            if (currentCard.getStatus() == 1) {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-//            } else {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-//            }
-//        }
     }
 
     /**
@@ -920,13 +870,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
      * Define JavaScrip to Speek Text.
      */
     private void _showFirstCard() {
-        //Setting webview
-        WebSettings ws = mWebViewLeadDetails.getSettings();
-        ws.setJavaScriptEnabled(true);
-
-        //Inject native handle to web element
-        _addJavascriptInterfaceQuestionAndAnswer();
-
         //Load first card
         if (dueList.size() > 0) {
             //Load first card is Due card
@@ -939,14 +882,13 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             _nextNewCard();
         }
 
+
     }
 
     public void onbtnShowAnswerClick(View view) {
         //Set flag Display State
         answerDisplay = true;
         _showAnswer();
-//        _initShowcaseShowAnswer();
-
     }
 
 
@@ -987,7 +929,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
 
             //Show answer question
-            _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), 10);
+            _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), 10, 1);
 
             //get  next Ivl String List
             String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
@@ -1007,10 +949,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
             btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
             btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
-
-//            btnHard1.setText(Html.fromHtml(ivlStrList[Card.EASE_HARD] + "<br/>" + getString(R.string.EASE_HARD)));
-//            btnGood2.setText(Html.fromHtml(ivlStrList[Card.EASE_GOOD] + "<br/>" + getString(R.string.EASE_GOOD)));
-//            btnEasy3.setText(Html.fromHtml(ivlStrList[Card.EASE_EASY] + "<br/>" + getString(R.string.EASE_EASY)));
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -1130,50 +1068,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         Log.i(TAG, "-----------------------END-----------------------------");
     }
 
-    private void _addJavascriptInterfaceQuestionAndAnswer() {
-        String sp = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_SPEECH_RATE);
-        float speechRate = 1.0f;
-        if (sp != null) {
-            speechRate = Float.valueOf(sp);
-        }
-        //addJavascriptInterface play question
-        final float finalSpeechRate = speechRate;
-        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectQuestion() {
-            @JavascriptInterface
-            public void playQuestion() {
-                //get text to Speak
-                String toSpeak = currentCard.getQuestion();
-
-                //Speak text
-                LazzyBeeShare._speakText(toSpeak, finalSpeechRate);
-
-                //textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, "question");
-        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExplain() {
-            @JavascriptInterface
-            public void speechExplain() {
-                //get answer json
-                String answer = currentCard.getAnswers();
-                String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
-
-                //Speak text
-                LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
-            }
-        }, "explain");
-        mWebViewLeadDetails.addJavascriptInterface(new LazzyBeeShare.JsObjectExample() {
-            @JavascriptInterface
-            public void speechExample() {
-                //get answer json
-                String answer = currentCard.getAnswers();
-                String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
-
-                //Speak text
-                LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
-            }
-        }, "example");
-    }
-
     private void _checkContainsAndRemove(List<Card> cardLis) {
         if (cardLis.contains(currentCard)) {
             Log.i(TAG, "Card Contains cardList");
@@ -1190,7 +1084,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             //get next new card
             currentCard = todayList.get(0);
             //Display question
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), QUEUE_NEW_CRAM0);
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), QUEUE_NEW_CRAM0, 0);
         } else if (againList.size() > 0) {
             Log.i(TAG, "_nextNewCard:Next card is Again card");
             _nextAgainCard();
@@ -1212,7 +1106,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             currentCard = dueList.get(0);
 
             //Display next card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2);
+            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_REV2, 0);
 
         } else if (todayList.size() > 0) {
             Log.i(TAG, "_nextDueCard:Next card is new card");
@@ -1249,7 +1143,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 Log.i(TAG, "_nextAgainCard:Next card is again card 2");
 
                 //Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()), Card.QUEUE_LNR1, 0);
             } else {
                 Log.i(TAG, "_nextAgainCard:Next card is due card 1");
                 _nextDueCard();
@@ -1268,14 +1162,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     /**
      * Load string Html
      */
-    private void _loadWebView(String questionDisplay, int queue) {
-        //Clear View
-        if (Build.VERSION.SDK_INT < 18) {
-            mWebViewLeadDetails.clearView();
-        } else {
-            mWebViewLeadDetails.loadUrl("about:blank");
-        }
-
+    private void _loadWebView(String questionDisplay, int queue, int type) {
         if (queue == QUEUE_NEW_CRAM0) {
             //set BackBackground color
             lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
@@ -1306,9 +1193,11 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         lbTagetActionStudy.setVisibility(View.GONE);
 
-        //Set Data
-        mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
+        //Set Data
+        //mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+        StudySwipePage studySwipePage = new StudySwipePage(context, currentCard, type);
+        mViewPager.setAdapter(studySwipePage);
     }
 
     private void _showBtnAnswer() {
@@ -1322,10 +1211,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         btnGood2.setEnabled(true);
         btnEasy3.setEnabled(true);
-
-//        btnGood2.setText(Html.fromHtml(LazzyBeeShare.getHTMLButtonAnswer(context, btnGood2.getTag().toString(), getString(R.string.EASE_GOOD), R.color.color_level_btn_answer)));
-//        btnEasy3.setText(Html.fromHtml(LazzyBeeShare.getHTMLButtonAnswer(context, btnEasy3.getTag().toString(), getString(R.string.EASE_EASY), R.color.color_level_btn_answer)));
-
     }
 
 
@@ -1338,11 +1223,14 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 //Update Success reload data
                 if (answerDisplay) {
                     //Load answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10);
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card), 10, 1);
+
                 } else {
                     //Load question
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card.getQuestion()), card.getQueue());
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card.getQuestion()), card.getQueue(), 0);
                 }
+                //set current Page
+                mViewPager.setCurrentItem(currentPage);
 
                 //Update Card form DB
                 dataBaseHelper._updateCardFormServer(card);
@@ -1359,8 +1247,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     protected void onResume() {
         super.onResume();
         LazzyBeeShare._cancelNotification(context);
-        _setUpStudy();
-        _showBtnAnswer();
     }
 
     @Override
@@ -1376,4 +1262,14 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         setResult(completeStudy, new Intent());
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mViewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        }
+    }
+
 }
