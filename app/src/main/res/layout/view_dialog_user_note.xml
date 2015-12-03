@@ -6,7 +6,7 @@
     android:paddingRight="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    >
+    android:minHeight="200dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -33,7 +33,6 @@
         android:textColor="#030303"
         android:hint="@string/hint_user_note"
         android:textColorHint="@color/grey_600"
-        android:background="@color/grey_300"
         android:clickable="false"
         android:layout_gravity="left|top"
         android:scrollbars="vertical"
