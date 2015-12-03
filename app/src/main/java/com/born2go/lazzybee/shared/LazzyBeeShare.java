@@ -525,7 +525,7 @@ public class LazzyBeeShare {
                                 "</html>";
             }
         }
-        Log.i(TAG, html);
+        //Log.i(TAG, html);
         return html;
     }
 
