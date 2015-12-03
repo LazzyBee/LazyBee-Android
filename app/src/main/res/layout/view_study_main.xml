@@ -7,76 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="com.born2go.lazzybee.fragment.FragmentStudy">
-    <!--New-Again-Due-->
-    <!--<android.support.v7.widget.CardView-->
-    <!--android:id="@+id/mCountStudy"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginBottom="@dimen/cardview_study_margin_bottom"-->
-    <!--android:layout_marginLeft="@dimen/cardview_study_margin_left"-->
-    <!--android:layout_marginRight="@dimen/cardview_study_margin_right"-->
-    <!--android:layout_marginTop="@dimen/cardview_count_study_margin_top">-->
 
-    <!--<RelativeLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="30dp">-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:orientation="horizontal">-->
-
-
-    <!--<TextView-->
-    <!--android:id="@+id/lbCountTotalVocabulary"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_gravity="center_vertical"-->
-    <!--android:layout_marginLeft="16dp"-->
-    <!--android:layout_marginRight="16dp"-->
-    <!--android:text="0"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:textColor="@color/card_new_color" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/lbCountAgainInday"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_gravity="center_vertical"-->
-    <!--android:layout_marginRight="16dp"-->
-    <!--android:text="0"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:textColor="@color/card_again_color" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/lbAgainDue"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_gravity="center_vertical"-->
-    <!--android:text="0"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:textColor="@color/card_due_color" />-->
-
-    <!--</LinearLayout>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/lbTagetActionStudy"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_marginRight="16dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:text="New Text"-->
-    <!--android:textColor="#d91e1e" />-->
-
-    <!--</RelativeLayout>-->
-
-    <!--</android.support.v7.widget.CardView>-->
-    <!--WebView-->
+    <include layout="@layout/view_study_count" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/mDisplay"
@@ -112,6 +44,8 @@
                 android:src="@drawable/ic_insert_drive_file_white_48dp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+    <include layout="@layout/view_study_button"/>
 
     <android.support.v7.widget.CardView
         android:id="@+id/mCardViewHelpandAdMod"
