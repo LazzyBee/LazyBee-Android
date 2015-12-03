@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,7 +17,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
@@ -120,6 +121,9 @@ public class StudySwipePage extends PagerAdapter {
 
     private void _initAdView(CardView mDetailsCardViewAdv) {
         try {
+            String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            Log.i(TAG, "My android_id:" + android_id);
+
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String adb_ennable;
@@ -138,33 +142,28 @@ public class StudySwipePage extends PagerAdapter {
                 advId = context.getString(R.string.banner_ad_unit_id);
             }
 
-            Log.i(TAG, "AdUnitId:" + admob_pub_id + "/" + adv_dictionary_id);
+            Log.d(TAG, "AdUnitId:" + admob_pub_id + "/" + adv_dictionary_id);
             if (adb_ennable.equals(LazzyBeeShare.YES)) {
+
                 AdView mAdView = new AdView(context);
                 AdRequest adRequest = new AdRequest.Builder()
                         .addTestDevice(context.getResources().getStringArray(R.array.devices)[0])
                         .addTestDevice(context.getResources().getStringArray(R.array.devices)[1])
+                        .addTestDevice(context.getResources().getStringArray(R.array.devices)[2])
                         .build();
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
                 mAdView.loadAd(adRequest);
 
-                ((LinearLayout) mDetailsCardViewAdv.findViewById(R.id.adView)).addView(mAdView);
+                RelativeLayout relativeLayout = ((RelativeLayout) mDetailsCardViewAdv.findViewById(R.id.adView));
+                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                relativeLayout.addView(mAdView, adViewCenter);
 
                 mDetailsCardViewAdv.setVisibility(View.VISIBLE);
-                //
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        250, 1f);
-                mDetailsCardViewAdv.setLayoutParams(param);
+
             } else {
                 mDetailsCardViewAdv.setVisibility(View.GONE);
-                //
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT, 0f);
-                mDetailsCardViewAdv.setLayoutParams(param);
-
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
