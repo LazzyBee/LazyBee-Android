@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,12 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
@@ -34,13 +39,15 @@ import com.google.android.gms.tagmanager.Container;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
+
 /**
  * Created by Hue on 12/2/2015.
  */
 public class StudySwipePage extends PagerAdapter {
     private static final String TAG = "StudySwipePage";
     private Context context;
-    private Card card;
+    Card currentCard;
     //CardView mDetailsCardViewViewPager;
     CardView mDetailsCardViewAdv;
     LearnApiImplements learnApiImplements;
@@ -48,12 +55,20 @@ public class StudySwipePage extends PagerAdapter {
     WebView mDetailsWebViewLeadDetails;
     ViewPager mDetailsViewPager;
     private int type;
+    private int queue;
+    private int[] counts;
+    CardSched cardSched;
 
-    public StudySwipePage(Context context, Card card, int type) {
-        this.context = context;
-        this.card = card;
+    boolean answerDisplay = false;
+
+    public StudySwipePage(Context context, Card card, int queue, int type, int[] counts) {
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        cardSched = new CardSched();
+        this.context = context;
+        this.currentCard = card;
         this.type = type;
+        this.queue = queue;
+        this.counts = counts;
     }
 
     @Override
@@ -85,19 +100,16 @@ public class StudySwipePage extends PagerAdapter {
 
     private void _defineStudyView(View view) {
         try {
-            WebView mStudyWebView = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
-            WebSettings ws = mStudyWebView.getSettings();
-            ws.setJavaScriptEnabled(true);
-            _addJavascriptInterface(mStudyWebView, card);
-            String display = (type == 0) ? LazzyBeeShare._getQuestionDisplay(context, card.getQuestion()) : LazzyBeeShare.getAnswerHTML(context, card);
-            mStudyWebView.loadDataWithBaseURL(LazzyBeeShare.ASSETS, display, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+            _defineStudyCount(view);
+            _defineStudyWebView(view);
+            _defineStudyButton(view);
 
             FloatingActionButton mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
             mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    _showCardNote(card);
+                    _showCardNote(currentCard);
                 }
             });
         } catch (Exception e) {
@@ -106,13 +118,95 @@ public class StudySwipePage extends PagerAdapter {
 
     }
 
+    private void _defineStudyWebView(View view) {
+        WebView mStudyWebView = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
+        WebSettings ws = mStudyWebView.getSettings();
+        ws.setJavaScriptEnabled(true);
+        _addJavascriptInterface(mStudyWebView, currentCard);
+        String display = (type == 0) ? LazzyBeeShare._getQuestionDisplay(context, currentCard.getQuestion()) : LazzyBeeShare.getAnswerHTML(context, currentCard);
+        mStudyWebView.loadDataWithBaseURL(LazzyBeeShare.ASSETS, display, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+    }
+
+    private void _defineStudyCount(View view) {
+        Log.d(TAG, "queue:" + queue);
+        TextView lbCountNew = (TextView) view.findViewById(R.id.lbCountTotalVocabulary);
+        TextView lbCountAgain = (TextView) view.findViewById(R.id.lbCountAgainInday);
+        TextView lbCountDue = (TextView) view.findViewById(R.id.lbAgainDue);
+        //set again count
+        lbCountAgain.setText(context.getString(R.string.study_again) + ": " + String.valueOf(counts[1]));
+        lbCountAgain.setTag(counts[1]);
+        //set new Count
+        lbCountNew.setText(context.getString(R.string.study_new) + ": " + String.valueOf(counts[0]));
+        lbCountNew.setTag(counts[0]);
+        //set Due Count
+        lbCountDue.setText(context.getString(R.string.study_review) + ": " + String.valueOf(counts[2]));
+        lbCountDue.setTag(counts[2]);
+        if (queue == QUEUE_NEW_CRAM0) {
+            //set BackBackground color
+            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        } else if (queue == Card.QUEUE_LNR1) {
+            //set BackBackground color
+            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+
+        } else if (queue == Card.QUEUE_REV2) {
+            //set BackBackground color
+            lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+        } else {
+
+        }
+    }
+
+    private void _defineStudyButton(View view) {
+        final RelativeLayout mShowAnswer = (RelativeLayout) view.findViewById(R.id.mShowAnswer);
+
+        final TextView btnShowAnswer = (TextView) view.findViewById(R.id.btnShowAnswer);
+        final LinearLayout mLayoutButton = (LinearLayout) view.findViewById(R.id.mLayoutButton);
+
+        TextView btnAgain0 = (TextView) view.findViewById(R.id.btnAgain0);
+        TextView btnHard1 = (TextView) view.findViewById(R.id.btnHard1);
+        TextView btnGood2 = (TextView) view.findViewById(R.id.btnGood2);
+        TextView btnEasy3 = (TextView) view.findViewById(R.id.btnEasy3);
+        if (type == 0) {
+
+        } else if (type == 1) {
+            mShowAnswer.setVisibility(View.GONE);
+            btnShowAnswer.setVisibility(View.GONE);
+            mLayoutButton.setVisibility(View.VISIBLE);
+            String[] ivlStrList = cardSched.nextIvlStrLst(currentCard, context);
+            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN], context.getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
+            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD], context.getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
+
+            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD], context.getString(R.string.EASE_GOOD), (currentCard.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY], context.getString(R.string.EASE_EASY), (currentCard.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+            //set text btn
+            btnAgain0.setText(Html.fromHtml(text_btnAgain));
+            btnHard1.setText(Html.fromHtml(text_btnHard1));
+            btnGood2.setText(Html.fromHtml(text_btnGood2));
+            btnEasy3.setText(Html.fromHtml(text_btnEasy3));
+
+
+            btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
+            btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
+            btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
+            btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
+        }
+    }
+
+
+
     private void _defineDetailsView(View view) {
         try {
             // mDetailsCardViewViewPager = (CardView) view.findViewById(R.id.mCardViewViewPager);
             mDetailsCardViewAdv = (CardView) view.findViewById(R.id.mCardViewAdv);
             mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
             mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-            _displayCard(card);
+            _displayCard(currentCard);
             _initAdView(mDetailsCardViewAdv);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -338,4 +432,5 @@ public class StudySwipePage extends PagerAdapter {
         dialog.show();
 
     }
+
 }

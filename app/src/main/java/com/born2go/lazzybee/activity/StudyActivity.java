@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -16,16 +15,13 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,23 +62,22 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     TextToSpeech textToSpeech;
     LinearLayout container;
 
-    LinearLayout mLayoutButton;
+//    LinearLayout mLayoutButton;
     //WebView mWebViewLeadDetails;
 
-    MenuItem itemFavorite;
     MenuItem btnBackBeforeCard;
 
-    TextView btnAgain0, btnHard1, btnGood2, btnEasy3;
-    TextView lbCountNew;
-    TextView btnShowAnswer;
+//    TextView btnShowAnswer;
+//    TextView btnAgain0, btnHard1, btnGood2, btnEasy3;
+//
+//    TextView lbCountNew;
+//    TextView lbCountAgain;
+//    TextView lbCountDue;
 
-    TextView lbCountAgain;
-    TextView lbCountDue;
+//    CardView mCountStudy;
 
-    CardView mCountStudy;
-
-    CardView mCardViewHelpandAdMod;
-    RelativeLayout mShowAnswer;
+  //  CardView mCardViewHelpandAdMod;
+    //RelativeLayout mShowAnswer;
 
     List<Card> todayList = new ArrayList<Card>();
     List<Card> againList = new ArrayList<Card>();
@@ -100,8 +95,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     ViewPager mViewPager;
 
-    View view_study_button;
-    View view_study_count;
+//    View view_study_button;
+//    View view_study_count;
 
     MenuItem itemIgnore;
     MenuItem itemLearn;
@@ -201,14 +196,14 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             if (check_learn) {
                 _showFirstCard();
                 //set again count
-                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
-                lbCountAgain.setTag(againCount);
-                //set new Count
-                lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(todayCount));
-                lbCountNew.setTag(todayCount);
-                //set Due Count
-                lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(dueCount));
-                lbCountDue.setTag(dueCount);
+//                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
+//                lbCountAgain.setTag(againCount);
+//                //set new Count
+//                lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(todayCount));
+//                lbCountNew.setTag(todayCount);
+//                //set Due Count
+//                lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(dueCount));
+//                lbCountDue.setTag(dueCount);
             } else {
                 Log.i(TAG, "_completeLean");
                 _completeLean(false);
@@ -342,31 +337,31 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
     private void _initView() {
         container = (LinearLayout) findViewById(R.id.container);
-        //init button
-        mShowAnswer = (RelativeLayout) findViewById(R.id.mShowAnswer);
-
-        btnShowAnswer = (TextView) findViewById(R.id.btnShowAnswer);
-        mLayoutButton = (LinearLayout) findViewById(R.id.mLayoutButton);
-
-        btnAgain0 = (TextView) findViewById(R.id.btnAgain0);
-        btnHard1 = (TextView) findViewById(R.id.btnHard1);
-        btnGood2 = (TextView) findViewById(R.id.btnGood2);
-        btnEasy3 = (TextView) findViewById(R.id.btnEasy3);
+//        //init button
+//        mShowAnswer = (RelativeLayout) findViewById(R.id.mShowAnswer);
+//
+//        btnShowAnswer = (TextView) findViewById(R.id.btnShowAnswer);
+//        mLayoutButton = (LinearLayout) findViewById(R.id.mLayoutButton);
+//
+//        btnAgain0 = (TextView) findViewById(R.id.btnAgain0);
+//        btnHard1 = (TextView) findViewById(R.id.btnHard1);
+//        btnGood2 = (TextView) findViewById(R.id.btnGood2);
+//        btnEasy3 = (TextView) findViewById(R.id.btnEasy3);
 
         //init lbCount
-        lbCountNew = (TextView) findViewById(R.id.lbCountTotalVocabulary);
-        lbCountAgain = (TextView) findViewById(R.id.lbCountAgainInday);
-        lbCountDue = (TextView) findViewById(R.id.lbAgainDue);
+//        lbCountNew = (TextView) findViewById(R.id.lbCountTotalVocabulary);
+//        lbCountAgain = (TextView) findViewById(R.id.lbCountAgainInday);
+//        lbCountDue = (TextView) findViewById(R.id.lbAgainDue);
 
-        mCountStudy = (CardView) findViewById(R.id.mCountStudy);
+//        mCountStudy = (CardView) findViewById(R.id.mCountStudy);
 
-        mCardViewHelpandAdMod = (CardView) findViewById(R.id.mCardViewHelpandAdMod);
+       // mCardViewHelpandAdMod = (CardView) findViewById(R.id.mCardViewHelpandAdMod);
 
-        lbTagetActionStudy = (TextView) findViewById(R.id.lbTagetActionStudy);
+//        lbTagetActionStudy = (TextView) findViewById(R.id.lbTagetActionStudy);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        view_study_button = findViewById(R.id.view_study_button);
-        view_study_count = findViewById(R.id.view_study_count);
+//        view_study_button = findViewById(R.id.view_study_button);
+//        view_study_count = findViewById(R.id.view_study_count);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -390,8 +385,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _setDisplayPageByPosition(int position) {
         if (position == 0) {
             setTitle(R.string.title_activity_study);
-            view_study_button.setVisibility(View.VISIBLE);
-            view_study_count.setVisibility(View.VISIBLE);
             itemLearn.setVisible(true);
             itemIgnore.setVisible(true);
             if (beforeCard != null) {
@@ -402,8 +395,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
         } else {
             setTitle(currentCard.getQuestion());
-            view_study_button.setVisibility(View.GONE);
-            view_study_count.setVisibility(View.GONE);
             itemLearn.setVisible(false);
             itemIgnore.setVisible(false);
             btnBackBeforeCard.setVisible(false);
@@ -630,7 +621,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                             }
                         }
 
-                        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
+                        //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
 
                         //setDue and set Lat_itv to default =0
 //                    beforeCard.setDue(0l);
@@ -655,7 +646,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
 
                         //Set new count
                         int countNew = todayList.size();
-                        lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
+                        // lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
 
                         break;
                     case Card.QUEUE_LNR1:
@@ -671,7 +662,7 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                                 break;
                             }
                         }
-                        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
+                        //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(againList.size()));
 
                         //Define clone againList
                         List<Card> cloneAgainList = new ArrayList<Card>(againList);
@@ -691,8 +682,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         }
 
                         //Set new count
-                        int countAgain = againList.size();
-                        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+                        // int countAgain = againList.size();
+                        //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
 
                         break;
                     case Card.QUEUE_REV2:
@@ -716,8 +707,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         }
 
                         //Set new count
-                        int countDue = dueList.size();
-                        lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
+                        //int countDue = dueList.size();
+                        //lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
 
                         break;
                 }
@@ -768,11 +759,11 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             //Show item BackBeroreCard when answer
             btnBackBeforeCard.setVisible(false);
 
-            if (btnShowAnswer.getVisibility() == View.GONE) {
-                mShowAnswer.setVisibility(View.VISIBLE);
-                btnShowAnswer.setVisibility(View.VISIBLE);
-                mLayoutButton.setVisibility(View.GONE);
-            }
+//            if (btnShowAnswer.getVisibility() == View.GONE) {
+//                mShowAnswer.setVisibility(View.VISIBLE);
+//                btnShowAnswer.setVisibility(View.VISIBLE);
+//                mLayoutButton.setVisibility(View.GONE);
+//            }
             //Define card form server
             Card card = dataBaseHelper._getCardByID(String.valueOf(currentCard.getId()));
             int currentQueue = card.getQueue();
@@ -787,8 +778,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         //Remove index 0
                         todayList.remove(0);
                     }
-                    int countNew = todayList.size();
-                    lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
+                    // int countNew = todayList.size();
+                    //lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
                     break;
                 case Card.QUEUE_LNR1:
                     Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_LNR1");
@@ -798,8 +789,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         //Remove index 0
                         todayList.remove(0);
                     }
-                    int countAgain = againList.size();
-                    lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+                    // int countAgain = againList.size();
+                    //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
                     break;
                 case Card.QUEUE_REV2:
                     Log.i(TAG, "_learntorIgnoreCardbyQueue QUEUE_REV2");
@@ -809,8 +800,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         //Remove index 0
                         todayList.remove(0);
                     }
-                    int countDue = dueList.size();
-                    lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
+                    //int countDue = dueList.size();
+                    //lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
                     break;
             }
 
@@ -895,7 +886,6 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     public void onbtnAgainClick(View view) {
         _showBtnAnswer();
         _answerCard(Card.EASE_AGAIN);
-
     }
 
     public void onbtnHardClick(View view) {
@@ -919,9 +909,9 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
     private void _showAnswer() {
         try {
             //hide btnShowAnswer and show mLayoutButton
-            mShowAnswer.setVisibility(View.GONE);
-            btnShowAnswer.setVisibility(View.GONE);
-            mLayoutButton.setVisibility(View.VISIBLE);
+//            mShowAnswer.setVisibility(View.GONE);
+//            btnShowAnswer.setVisibility(View.GONE);
+//            mLayoutButton.setVisibility(View.VISIBLE);
             //Define get card
             Card card = currentCard;
 
@@ -929,26 +919,26 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
 
             //Show answer question
-            _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), 10, 1);
+            _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), card.getQueue(), 1);
 
             //get  next Ivl String List
-            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
-            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN], getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
-            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD], getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
-
-            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD], getString(R.string.EASE_GOOD), (card.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
-            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY], getString(R.string.EASE_EASY), (card.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
-            //set text btn
-            btnAgain0.setText(Html.fromHtml(text_btnAgain));
-            btnHard1.setText(Html.fromHtml(text_btnHard1));
-            btnGood2.setText(Html.fromHtml(text_btnGood2));
-            btnEasy3.setText(Html.fromHtml(text_btnEasy3));
-
-
-            btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
-            btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
-            btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
-            btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
+//            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
+//            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN], getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
+//            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD], getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
+//
+//            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD], getString(R.string.EASE_GOOD), (card.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+//            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY], getString(R.string.EASE_EASY), (card.getQueue() == Card.QUEUE_LNR1) ? R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+//            //set text btn
+//            btnAgain0.setText(Html.fromHtml(text_btnAgain));
+//            btnHard1.setText(Html.fromHtml(text_btnHard1));
+//            btnGood2.setText(Html.fromHtml(text_btnGood2));
+//            btnEasy3.setText(Html.fromHtml(text_btnEasy3));
+//
+//
+//            btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
+//            btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
+//            btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
+//            btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -986,8 +976,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     //Remove index 0
                     todayList.remove(0);
                 }
-                int countNew = todayList.size();
-                lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
+                //int countNew = todayList.size();
+                //lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
 
             } else if (currentQueue == Card.QUEUE_LNR1) {
                 if (easy > Card.EASE_AGAIN) {
@@ -997,8 +987,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                         //Remove index 0
                         againList.remove(0);
                     }
-                    int countAgain = againList.size();
-                    lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+                    //int countAgain = againList.size();
+                    //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
                 }
             } else if (currentQueue == Card.QUEUE_REV2) {
                 //reset new card due
@@ -1008,8 +998,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                     dueList.remove(0);
 
                 }
-                int countDue = dueList.size();
-                lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
+                ///int countDue = dueList.size();
+                //lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
             }
 
             Log.i(TAG, "_answerCard Before Update Card " + currentCard.getQuestion() +
@@ -1038,8 +1028,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
                 againList.add(currentCard);
 
                 //reset count Againt
-                int countAgain = againList.size();
-                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+//                int countAgain = againList.size();
+//                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
             } else if (easy > Card.EASE_AGAIN) {
                 //Check Contains and Remove
                 _checkContainsAndRemove(cardListAddDueToDay);
@@ -1136,8 +1126,8 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
             Log.i(TAG, "_nextAgainCard:" + current_time + ":" + due);
             //Check due<current_time
             if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {
-                btnGood2.setEnabled(false);
-                btnEasy3.setEnabled(false);
+//                btnGood2.setEnabled(false);
+//                btnEasy3.setEnabled(false);
 
 
                 Log.i(TAG, "_nextAgainCard:Next card is again card 2");
@@ -1163,40 +1153,44 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
      * Load string Html
      */
     private void _loadWebView(String questionDisplay, int queue, int type) {
-        if (queue == QUEUE_NEW_CRAM0) {
-            //set BackBackground color
-            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-            lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            lbTagetActionStudy.setText("New");
-            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_new_color));
-            lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-
-        } else if (queue == Card.QUEUE_LNR1) {
-            //set BackBackground color
-            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-            lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-            lbTagetActionStudy.setText("Again");
-            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_again_color));
-            lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        } else if (queue == Card.QUEUE_REV2) {
-            //set BackBackground color
-            lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-            lbTagetActionStudy.setText("Review");
-            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_due_color));
-
-        } else if (queue == 10) {
-        }
-        lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        lbTagetActionStudy.setVisibility(View.GONE);
+//        if (queue == QUEUE_NEW_CRAM0) {
+//            //set BackBackground color
+//            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+//            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+//            lbCountNew.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//            lbTagetActionStudy.setText("New");
+//            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_new_color));
+//            lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//
+//        } else if (queue == Card.QUEUE_LNR1) {
+//            //set BackBackground color
+//            lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+//            lbCountAgain.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+//            lbTagetActionStudy.setText("Again");
+//            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_again_color));
+//            lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//        } else if (queue == Card.QUEUE_REV2) {
+//            //set BackBackground color
+//            lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//            lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+//            lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
+//            lbTagetActionStudy.setText("Review");
+//            lbTagetActionStudy.setTextColor(getResources().getColor(R.color.card_due_color));
+//
+//        } else if (queue == 10) {
+//        }
+//        lbTagetActionStudy.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//        lbTagetActionStudy.setVisibility(View.GONE);
 
 
         //Set Data
         //mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-        StudySwipePage studySwipePage = new StudySwipePage(context, currentCard, type);
+        int newCount = todayList.size();
+        int againCount = againList.size();
+        int dueCount = dueList.size();
+        int counts[] = {newCount, againCount, dueCount};
+        StudySwipePage studySwipePage = new StudySwipePage(context, currentCard, queue, type, counts);
         mViewPager.setAdapter(studySwipePage);
     }
 
@@ -1205,12 +1199,12 @@ public class StudyActivity extends AppCompatActivity implements GetCardFormServe
         answerDisplay = false;
 
         //show btnShowAnswer and hide btnAgain0
-        mShowAnswer.setVisibility(View.VISIBLE);
-        btnShowAnswer.setVisibility(View.VISIBLE);
-        mLayoutButton.setVisibility(View.GONE);
+//        mShowAnswer.setVisibility(View.VISIBLE);
+//        btnShowAnswer.setVisibility(View.VISIBLE);
+        //mLayoutButton.setVisibility(View.GONE);
 
-        btnGood2.setEnabled(true);
-        btnEasy3.setEnabled(true);
+//        btnGood2.setEnabled(true);
+//        btnEasy3.setEnabled(true);
     }
 
 
