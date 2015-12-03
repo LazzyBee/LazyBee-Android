@@ -65,7 +65,8 @@
                 android:layout_marginRight="16dp"
                 android:gravity="center_vertical"
                 android:text="New Text"
-                android:textColor="#d91e1e" />
+                android:textColor="#d91e1e"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
