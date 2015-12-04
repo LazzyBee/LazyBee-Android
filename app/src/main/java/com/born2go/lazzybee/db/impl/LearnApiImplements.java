@@ -1491,8 +1491,10 @@ public class LearnApiImplements implements LearnApi {
 
 
     public List<Integer> _getListCountCardbyLevel() {
+        //get max level
+        int maxlevel = _queryCount("SELECT max(level) FROM vocabulary");
         List<Integer> data = new ArrayList<Integer>();
-        for (int i = 1; i < 7; i++) {
+        for (int i = 1; i <= maxlevel; i++) {
             String count_card_learner_by_level = "select count(id) from vocabulary where vocabulary.queue>=1 and level =" + i;
             data.add(_queryCount(count_card_learner_by_level));
         }

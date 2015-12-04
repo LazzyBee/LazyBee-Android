@@ -85,11 +85,7 @@ public class DialogStatistics extends DialogFragment {
     }
 
     private void generateDefaultData() {
-        List<Integer> listCountCardbyLevel=LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
-
-
-        int numSubcolumns = 1;
-        int numColumns = 6;
+        List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
@@ -102,15 +98,17 @@ public class DialogStatistics extends DialogFragment {
 
         for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
             values = new ArrayList<SubcolumnValue>();
-            int count=listCountCardbyLevel.get(i);
-            axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
-            axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
-            values.add(new SubcolumnValue(count, ChartUtils.pickColor()));
+            int count = listCountCardbyLevel.get(i);
+            if (count > 0) {
+                axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
+                axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
+                values.add(new SubcolumnValue(count, ChartUtils.pickColor()));
 
-            Column column = new Column(values);
-            column.setHasLabels(hasLabels);
-            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-            columns.add(column);
+                Column column = new Column(values);
+                column.setHasLabels(hasLabels);
+                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+                columns.add(column);
+            }
         }
         data = new ColumnChartData(columns);
 
@@ -123,6 +121,7 @@ public class DialogStatistics extends DialogFragment {
         data.setAxisXTop(axisTop);
 
         chart.setColumnChartData(data);
+
 
     }
 
