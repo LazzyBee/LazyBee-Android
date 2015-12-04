@@ -44,16 +44,28 @@
         <lecho.lib.hellocharts.view.ColumnChartView
             android:id="@+id/chart"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="230dp" />
 
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             layout="@layout/count_streak"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/mCount"
+            android:layout_above="@+id/btnShared"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/chart"
-            android:layout_marginTop="10dp"
-            android:id="@+id/mCount" />
+            android:layout_marginTop="10dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_share"
+            android:id="@+id/btnShared"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"
+            android:textColor="#ffffff" />
     </RelativeLayout>
+
 </LinearLayout>
