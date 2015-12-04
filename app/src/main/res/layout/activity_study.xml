@@ -1,234 +1,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
 
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_300"
     android:orientation="vertical"
-    tools:context="com.born2go.lazzybee.activity.StudyActivity"
-    android:id="@+id/container">
-    <!--<fragment-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:name="com.born2go.lazzybee.fragment.FragmentStudy"-->
-    <!--android:id="@+id/fragmentStudy"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!-- />-->
+    tools:context="com.born2go.lazzybee.activity.StudyActivity">
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/tool_bar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-
-    <com.born2go.lazzybee.view.SlidingTabLayout
-        android:id="@+id/sliding_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:elevation="2dp"
-        android:visibility="gone" />
-
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.born2go.lazzybee.adapter.CustomViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:visibility="gone" />
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context="com.born2go.lazzybee.fragment.FragmentStudy">
-        <!--New-Again-Due-->
-        <android.support.v7.widget.CardView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-            android:layout_marginLeft="@dimen/cardview_study_margin_left"
-            android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginTop="@dimen/cardview_count_study_margin_top"
-            android:id="@+id/mCountStudy">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
+        android:layout_height="match_parent"
+        />
 
 
-
-                    <TextView
-                        android:id="@+id/lbCountTotalVocabulary"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:text="0"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/card_new_color"
-                        android:layout_marginRight="16dp"
-                        android:layout_gravity="center_vertical" />
-
-                    <TextView
-                        android:id="@+id/lbCountAgainInday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="0"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/card_again_color"
-                        android:layout_marginRight="16dp"
-                        android:layout_gravity="center_vertical" />
-
-                    <TextView
-                        android:id="@+id/lbAgainDue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="0"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/card_due_color"
-                        android:layout_gravity="center_vertical" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:text="New Text"
-                    android:id="@+id/lbTagetActionStudy"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:textColor="#d91e1e"
-                    android:layout_marginRight="16dp" />
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-        <!--WebView-->
-
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-            android:layout_marginLeft="@dimen/cardview_study_margin_left"
-            android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginTop="@dimen/cardview_study_margin_top"
-            android:layout_weight="1"
-            card_view:cardCornerRadius="4dp"
-            android:id="@+id/mDisplay">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1">
-
-                <WebView
-                    android:id="@+id/mWebViewLeadDetaisl"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <android.support.design.widget.FloatingActionButton
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mFloatActionButtonUserNote"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="50dp"
-                    android:src="@drawable/ic_insert_drive_file_white_48dp" />
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-            android:layout_marginLeft="@dimen/cardview_study_margin_left"
-            android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginTop="@dimen/cardview_study_margin_top"
-            android:id="@+id/mCardViewHelpandAdMod"
-            android:visibility="gone">
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/adView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:onClick="onlbTipHelpClick">
-                <TextView
-                    android:id="@+id/lbTipHelp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:cursorVisible="false"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollbars="horizontal"
-                    android:singleLine="true"
-                    android:text="@string/message_hellp_study"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/blue_500" />
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-            android:layout_marginLeft="@dimen/cardview_study_margin_left"
-            android:layout_marginRight="@dimen/cardview_study_margin_right"
-            android:layout_marginTop="@dimen/cardview_study_margin_top"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/button_green_color"
-                    android:id="@+id/mShowAnswer"
-                    android:onClick="onbtnShowAnswerClick">
-
-                    <TextView
-                        android:id="@+id/btnShowAnswer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onbtnShowAnswerClick"
-                        android:text="@string/show_answer"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@color/button_green_color"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/white"/>
-                </RelativeLayout>
-                <include layout="@layout/view_button_answer"/>
-
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-    </LinearLayout>
 
 </LinearLayout>
