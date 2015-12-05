@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -64,6 +66,11 @@ public class DialogStatistics extends DialogFragment {
         try {
             _initChart(view);
             _initStreakCount(view);
+
+            //Play media
+            MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.magic);
+            mediaPlayer.start();
+
             Button btnShare = (Button) view.findViewById(R.id.btnShared);
             btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -139,21 +146,26 @@ public class DialogStatistics extends DialogFragment {
         for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
             values = new ArrayList<SubcolumnValue>();
             int count = listCountCardbyLevel.get(i);
+
+            axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
+            axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
             if (count > 0) {
-                axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
-                axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
                 values.add(new SubcolumnValue(count, ChartUtils.pickColor()));
-
-                Column column = new Column(values);
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                columns.add(column);
             }
-        }
-        data = new ColumnChartData(columns);
+            Column column = new Column(values);
 
+            column.setHasLabels(hasLabels);
+            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+
+            columns.add(column);
+
+        }
+
+        data = new ColumnChartData(columns);
         Axis axeX = new Axis(axisXValues);
         Axis axisTop = new Axis(axisTopValues).setHasLines(true);
+        axeX.setTextColor(R.color.text_color_number_count_card_by_level);
+        axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
         axeX.setHasLines(true);
         axeX.setName(context.getString(R.string.dialog_statistical_level));
         data.setAxisXBottom(axeX);
@@ -161,6 +173,17 @@ public class DialogStatistics extends DialogFragment {
         data.setAxisXTop(axisTop);
 
         chart.setColumnChartData(data);
+        chart.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
+            @Override
+            public void onValueSelected(int i, int i1, SubcolumnValue subcolumnValue) {
+
+            }
+
+            @Override
+            public void onValueDeselected() {
+
+            }
+        });
 
 
     }
