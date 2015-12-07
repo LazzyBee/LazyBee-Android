@@ -172,7 +172,6 @@ public class LazzyBeeShare {
     public static String QUEUE_LIST = "queue_List";
 
 
-
     /**
      * Init data demo List Course
      */
@@ -221,7 +220,7 @@ public class LazzyBeeShare {
      * </body>
      * </html>
      */
-    public static String _getQuestionDisplay(Context context, String question) {
+    public static String _getQuestionDisplay(Context context, Card card) {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String mySubject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
         if (mySubject == null)
@@ -230,6 +229,10 @@ public class LazzyBeeShare {
             mySubject = "common";
         }
         Log.i(TAG, "mySubject:" + mySubject);
+        boolean containPakage = false;
+        if (card.getPackage().contains(mySubject)) {
+            containPakage = true;
+        }
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
@@ -241,8 +244,10 @@ public class LazzyBeeShare {
                         "<div style='width:100%'>\n" +
 
                         "<div style='float:left;width: 90%;text-align: center;'>" +
-                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt;font-weight: bold;'>" + question + "</span>" +
-                        "<br><span>" + (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) + "</span>" +
+                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt;font-weight: bold;'>" + card.getQuestion() + "</span>" +
+
+                        (containPakage ? "<br><span>" + (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) + "</span>" : "") +
+
                         "</div>" +
                         "<div style='float:left;width: 10%;padding-top: 10px;text-align: end;'><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></div>" +
 //                        "<div style='float:left;width:90%;'>\n" +
@@ -534,7 +539,7 @@ public class LazzyBeeShare {
     public static void showErrorOccurred(Context context, Exception e) {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
-            + "\t" + context.getClass().getName() + ":" + e.getMessage();
+                    + "\t" + context.getClass().getName() + ":" + e.getMessage();
             final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
             String android_id = Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
