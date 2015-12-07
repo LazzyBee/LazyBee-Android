@@ -142,11 +142,11 @@ public class DialogStatistics extends DialogFragment {
         List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
         //Gestion of the two axes for the graphic
 
-
+        int total = 0;
         for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
             values = new ArrayList<SubcolumnValue>();
             int count = listCountCardbyLevel.get(i);
-
+            total += count;
             axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
             axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
             if (count > 0) {
@@ -164,6 +164,7 @@ public class DialogStatistics extends DialogFragment {
         data = new ColumnChartData(columns);
         Axis axeX = new Axis(axisXValues);
         Axis axisTop = new Axis(axisTopValues).setHasLines(true);
+        axisTop.setName(context.getString(R.string.dialog_statistical_total,total));
         axeX.setTextColor(R.color.text_color_number_count_card_by_level);
         axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
         axeX.setHasLines(true);

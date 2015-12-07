@@ -432,4 +432,5 @@
     <string name="day">day</string>
     <string name="month">month</string>
     <string name="year">year</string>
+    <string name="dialog_statistical_total">Total: %d</string>
 </resources>
