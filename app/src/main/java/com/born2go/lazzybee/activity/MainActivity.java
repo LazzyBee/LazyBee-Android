@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -539,60 +540,128 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSelectSubject() {
+        View mSelectMajor = View.inflate(context, R.layout.view_select_major, null);
+        final CheckBox cbIt = (CheckBox) mSelectMajor.findViewById(R.id.cbIt);
+        final CheckBox cbEconomy = (CheckBox) mSelectMajor.findViewById(R.id.cbEconomy);
+        final CheckBox cbScience = (CheckBox) mSelectMajor.findViewById(R.id.cbScience);
+        final CheckBox cbMedicine = (CheckBox) mSelectMajor.findViewById(R.id.cbMedicine);
+
         //get my subbject
         String my_subject = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
-
-        //define index
-        int index = 0;
+        final int index;
         if (my_subject == null) {
             index = -1;
         } else if (my_subject.equals(getString(R.string.subject_it_value))) {
             index = 0;
+            cbIt.setChecked(true);
         } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
             index = 1;
+            cbEconomy.setChecked(true);
         } else if (my_subject.equals(getString(R.string.subject_science_value))) {
             index = 2;
+            cbScience.setChecked(true);
         } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
             index = 3;
+            cbMedicine.setChecked(true);
         } else {
             index = -1;
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.select_subject_title));
-        final CharSequence[] subjects = context.getResources().getStringArray(R.array.subjects);
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
-
         final int[] seleted_index = {0};
-        builder.setSingleChoiceItems(subjects, index, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                seleted_index[0] = item;
-
+        final int[] checker = {-1};
+        cbIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    // Put some meat on the sandwich
+                    cbEconomy.setChecked(false);
+                    cbScience.setChecked(false);
+                    cbMedicine.setChecked(false);
+                    checker[0] = 0;
+                } else {
+                    checker[0] = -2;
+                }
             }
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        cbEconomy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    // Put some meat on the sandwich
+                    cbIt.setChecked(false);
+                    cbScience.setChecked(false);
+                    cbMedicine.setChecked(false);
+                    checker[0] = 1;
+                } else {
+                    checker[0] = -2;
+                }
+            }
+        });
+        cbScience.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    // Put some meat on the sandwich
+                    cbIt.setChecked(false);
+                    cbEconomy.setChecked(false);
+                    cbMedicine.setChecked(false);
+                    checker[0] = 2;
+                } else {
+                    checker[0] = -2;
+                }
+            }
+        });
+        cbMedicine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    // Put some meat on the sandwich
+                    cbIt.setChecked(false);
+                    cbEconomy.setChecked(false);
+                    cbScience.setChecked(false);
+                    checker[0] = 3;
+                } else {
+                    checker[0] = -2;
+                }
+            }
+        });
+        builder.setView(mSelectMajor);
+
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+                String subjectSelected;
+                if (checker[0] > -1) {
+                    subjectSelected = String.valueOf(items_value[checker[0]]);
+                    //save my subjects
+                    dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
 
-                int index = seleted_index[0];
-                Log.i(TAG, "seleted_index:" + index);
-                String subjectSelected = String.valueOf(items_value[index]);
+                    //reset incomming list
+                    dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                } else if (checker[0] == -2) {
+                    //save my subjects
+                    dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
 
-                //save my subjects
-                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
-
-                //reset incomming list
-                dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                    //reset incomming list
+                    dataBaseHelper._initIncomingCardIdList();
+                }
                 dialog.cancel();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //save my subjects
-                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
-
-                //reset incomming list
-                dataBaseHelper._initIncomingCardIdList();
+//                //save my subjects
+//                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
+//
+//                //reset incomming list
+//                dataBaseHelper._initIncomingCardIdList();
                 dialog.cancel();
             }
         });
