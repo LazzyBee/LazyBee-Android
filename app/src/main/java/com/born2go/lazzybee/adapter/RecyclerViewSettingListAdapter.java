@@ -832,9 +832,11 @@ public class RecyclerViewSettingListAdapter extends
     public void processFinish(int code) {
         if (code == 1) {
             //Dowload and update Complete
-            if (!_checkUpdate()) {
+            if (!learnApiImplements._checkUpdateDataBase()) {
                 Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
                 _reloadRecylerView();
+            } else {
+                _downloadFile();
             }
 
         } else {

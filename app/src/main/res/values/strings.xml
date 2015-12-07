@@ -368,7 +368,7 @@
     <string name="subject_medical">Medicine</string>
 
     <string name="subject_it_value">it</string>
-    <string name="subject_economy_value">economy</string>
+    <string name="subject_economy_value">economic</string>
     <string name="subject_science_value">science</string>
     <string name="subject_medical_value">medicine</string>
 
@@ -395,6 +395,9 @@
     <string-array name="devices_dev_id" translatable="false">
         <item>b6fe9200bf21fe7e</item>
         <item>7761c5785b548881</item>
+        <item>b5a8fa6f8c1ba689</item><!--A890-->
+        <item>501847cbba33a2e</item><!--A820-->
+
     </string-array>
 
     <string name="title_dialog_daily_target_completed">Daily target completed</string>

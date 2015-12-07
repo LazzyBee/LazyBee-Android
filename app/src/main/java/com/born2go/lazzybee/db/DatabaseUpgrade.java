@@ -37,7 +37,7 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
 
 
     public List<Card> _getAllCard() {
-        String selectQuery = "SELECT id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.level,vocabulary.l_en,vocabulary.l_vn FROM vocabulary where vocabulary.l_en notnull and l_vn notnull";
+        String selectQuery = "SELECT id,vocabulary.question,vocabulary.answers,vocabulary.package,vocabulary.level,vocabulary.l_en,vocabulary.l_vn FROM vocabulary";
 
         return _getListCardQueryString(selectQuery);
     }
