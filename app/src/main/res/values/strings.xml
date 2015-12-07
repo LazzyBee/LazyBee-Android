@@ -112,7 +112,7 @@
     <string name="setting_total_learn_per_day">Total card per day</string>
 
     <string name="setting_about">About</string>
-    <string name="setting_update_title">Update</string>
+    <string name="setting_update_title">Update Database</string>
     <string name="setting_notification">Notification</string>
     <string name="setting_check_update">Check update</string>
     <string name="setting_auto_check_update">Auto check update</string>
@@ -361,7 +361,7 @@
     <string name="message_updated">Updated</string>
     <string name="swipe_action_ignore">Ignore</string>
     <string name="swipe_action_learned">Learned</string>
-    <string name="drawer_subject">Subject</string>
+    <string name="drawer_subject">Major</string>
     <string name="subject_it">IT</string>
     <string name="subject_economy">Economy</string>
     <string name="subject_science">Science</string>
@@ -372,7 +372,7 @@
     <string name="subject_science_value">science</string>
     <string name="subject_medical_value">medicine</string>
 
-    <string name="select_subject_title">Select subject</string>
+    <string name="select_subject_title">Select major</string>
     <string name="drawer_help">Help</string>
 
     <string name="study_again">Again</string>
