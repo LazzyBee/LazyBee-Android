@@ -93,7 +93,7 @@ public class LazzyBeeShare {
     public static final String YES = "yes";
     public static final String NO = "no";
     public static final String LINK_CARD_IN_SERVER = "http://www.lazzybee.com/library/#dictionary/";
-    public static final Object DEFAULT_TIME_NOTIFICATION = "8:0";
+    public static final Object DEFAULT_TIME_NOTIFICATION = "08:00";
     public static final String KEY_SETTING_HOUR_NOTIFICATION = "hour_notification";
     public static final String KEY_SETTING_MINUTE_NOTIFICATION = "minute_notification";
     public static final int DEFAULT_VERSION_DB = 1;
