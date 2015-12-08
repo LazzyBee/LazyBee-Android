@@ -374,6 +374,7 @@ public class LazzyBeeShare {
                     "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
                     "</div>";
         }
+
         html = "\n<html>\n" +
                 "<head>\n" +
                 "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
@@ -384,7 +385,7 @@ public class LazzyBeeShare {
 
                 "       <div style='float:left;width:90%;text-align: center;'>\n" +
                 "           <strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "'>" + card.getQuestion() + "</strong><br>\n" +
-                "           <font size='3'>" + pronoun + "</font><br>\n" +
+                "           <font size='3'>" + (pronoun.equals(String.valueOf("//")) ? EMPTY : pronoun) + "</font><br>\n" +
 //                "           <font size='4' color='blue'><em>" + meaning + "</em></font>\n" +
                 "       </div>\n" +
                 "       <div style='float:left;width:10%'>\n" +
