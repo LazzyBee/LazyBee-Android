@@ -13,6 +13,7 @@ import android.util.Log;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.SplashScreen;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.Container;
 
@@ -73,7 +74,11 @@ public class NotificationReceiver extends BroadcastReceiver {
         mBuilder.setContentIntent(pendingIntent);
 
         //Noti Notification
-        notificationManager.notify(id, mBuilder.build());
+        String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+        if (onoffNotification.equals(LazzyBeeShare.ON))
+            notificationManager.notify(id, mBuilder.build());
+        else
+            Log.i(TAG, "Off notification");
 
     }
 
