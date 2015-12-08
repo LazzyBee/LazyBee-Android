@@ -436,7 +436,7 @@ public class LazzyBeeShare {
                     "</html>\n";
         }
         html += debug;
-        Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html.toString());
+        //Log.w(TAG, "_getAnswerHTMLwithPackage: HTML return=" + html.toString());
 
         //System.out.print("\n_getAnswerHTMLwithPackage: HTML return=" + html);
         //  Log.i(TAG, "Error:" + e.getMessage());

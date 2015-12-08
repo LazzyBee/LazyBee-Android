@@ -119,7 +119,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     public void setCard(Card card) {
-        Log.d("DetailsView:", "dsadadad:" + card.toString());
+        // Log.d("DetailsView:", "dsadadad:" + card.toString());
         this.card = card;
         _displayCard(card);
     }
