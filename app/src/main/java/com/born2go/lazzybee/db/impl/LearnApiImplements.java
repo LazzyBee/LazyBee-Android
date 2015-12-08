@@ -272,14 +272,14 @@ public class LearnApiImplements implements LearnApi {
 
                 List<Card> cards = _getListCardFromStringArray(value);
                 //Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
-                randomGenerator = new Random();
+                //randomGenerator = new Random();
 
                 for (int i = 0; i < number; i++) {
-                    int index = randomGenerator.nextInt(cards.size());
-                    datas.add(cards.get(index));
-                    cards.remove(cards.get(index));
+                    // int index = randomGenerator.nextInt(cards.size());
+                    datas.add(cards.get(i));
+                    cards.remove(cards.get(i));
                 }
-                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cards.size());
+                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cards.size() );
                 //remove
                 //cards.removeAll(datas);
                 _insertOrUpdatePreFetchNewCardList(cards);
@@ -977,7 +977,7 @@ public class LearnApiImplements implements LearnApi {
 
         String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
                 " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level >= " +
-                myLevel + " AND package like '%," + subject + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+                myLevel + " AND package like '%," + subject + ",%' LIMIT " + limit;
         cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
         int count = cardIds.size();
@@ -987,7 +987,7 @@ public class LearnApiImplements implements LearnApi {
             select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
                     " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
                     myLevel + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
-                    + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+                    + ",%' LIMIT " + limit;
             cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
         }
 
@@ -996,7 +996,7 @@ public class LearnApiImplements implements LearnApi {
             myLevel++;
             select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
                     " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
-                    myLevel + " AND package like '%," + subject + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+                    myLevel + " AND package like '%," + subject + ",%'  LIMIT " + limit;
 
             Log.i(TAG, "initIncomingListwithSubject: Level " + myLevel +
                     ", target = " + limit);
@@ -1007,7 +1007,7 @@ public class LearnApiImplements implements LearnApi {
                 select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
                         " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
                         myLevel + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
-                        + ",%' ORDER BY vocabulary.question LIMIT " + limit;
+                        + ",%' LIMIT " + limit;
                 cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
             }
         }
@@ -1028,14 +1028,14 @@ public class LearnApiImplements implements LearnApi {
                 myLevel = 2;
             int limit = 100;
             String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " ORDER BY vocabulary.question" + " LIMIT " + limit;
+                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + "" + " LIMIT " + limit;
             cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
             while (cardIds.size() < limit) {
                 limit = limit - cardIds.size();
                 myLevel++;
                 select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " ORDER BY vocabulary.question" + " LIMIT " + limit;
+                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " " + " LIMIT " + limit;
                 Log.i(TAG, "_initIncomingCardIdListbyLevel: Level " + myLevel +
                         ", target = " + limit);
                 cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
