@@ -344,7 +344,7 @@
     <string name="dictionary_lazzybee" translatable="false">LazzyBee</string>
 
     <string name="setting_set_time_notification">Notification time: %s</string>
-    <string name="title_activity_custom_study_setting" translatable="false">Custom Study</string>
+    <string name="title_activity_custom_study_setting">Custom Study</string>
 
     <string name="setting_custom_study">Custom Study</string>
 

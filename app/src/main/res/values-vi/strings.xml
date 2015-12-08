@@ -288,6 +288,7 @@
     <string name="day">ngày</string>
     <string name="month">tháng</string>
     <string name="year">năm</string>
+    <string name="title_activity_custom_study_setting">Thiết lập học</string>
 
 
     <string-array name="subjects">

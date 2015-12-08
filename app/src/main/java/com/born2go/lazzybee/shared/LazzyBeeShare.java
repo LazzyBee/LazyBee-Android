@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.util.Log;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -532,10 +534,15 @@ public class LazzyBeeShare {
     public static void showErrorOccurred(Context context, Exception e) {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
-                    + "\t" + context.getClass().getName() + ":" + e.getMessage();
-            Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
-            Log.e(TAG, messageError);
-            e.printStackTrace();
+            + "\t" + context.getClass().getName() + ":" + e.getMessage();
+            final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
+            String android_id = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            if (devices.contains(android_id)) {
+                Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, messageError);
+                e.printStackTrace();
+            }
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
         }
