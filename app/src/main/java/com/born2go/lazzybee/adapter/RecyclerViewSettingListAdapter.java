@@ -348,6 +348,7 @@ public class RecyclerViewSettingListAdapter extends
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String value;
                 if (isChecked) {
+                    txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
                     value = LazzyBeeShare.ON;
                     mSetUpNotification.setVisibility(View.VISIBLE);
                     LazzyBeeShare._setUpNotification(context, 0, 0);
