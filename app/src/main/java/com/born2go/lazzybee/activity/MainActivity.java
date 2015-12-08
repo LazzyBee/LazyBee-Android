@@ -685,7 +685,7 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogWithMessage(String message) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle("Ops!");
-        builder.setMessage(message);
+        builder.setMessage(Html.fromHtml(message));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -1058,7 +1058,8 @@ public class MainActivity extends AppCompatActivity
         if (check == -1 || check == -2 || check > 0) {
             _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
         } else if (check == 0) {
-            _showDialogWithMessage(getString(R.string.congratulations_learnmore));
+            String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
+            _showDialogWithMessage(message);
         }
     }
 
