@@ -587,39 +587,45 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 return;
             }
             if (currentQueue == QUEUE_NEW_CRAM0) {
-                //reset new card count
-                boolean remove = todayList.remove(currentCard);
-                if (!remove) {
-                    //Remove index 0
-                    todayList.remove(0);
-                }
-                //int countNew = todayList.size();
-                //lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
-                _setCountNew();
-
-            } else if (currentQueue == Card.QUEUE_LNR1) {
-                if (easy > Card.EASE_AGAIN) {
-                    //reset new card again
-                    boolean remove = againList.remove(currentCard);
+                if(todayList.contains(currentCard)){
+                    //reset new card count
+                    boolean remove = todayList.remove(currentCard);
                     if (!remove) {
                         //Remove index 0
-                        againList.remove(0);
+                        todayList.remove(0);
                     }
-                    //int countAgain = againList.size();
-                    //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
-                    _setCountAgain();
+                    //int countNew = todayList.size();
+                    //lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
+                    _setCountNew();
+                }
+            } else if (currentQueue == Card.QUEUE_LNR1) {
+                if (easy > Card.EASE_AGAIN) {
+                    if(againList.contains(currentCard)){
+                        //reset new card again
+                        boolean remove = againList.remove(currentCard);
+                        if (!remove) {
+                            //Remove index 0
+                            againList.remove(0);
+                        }
+                        //int countAgain = againList.size();
+                        //lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+                        _setCountAgain();
+                    }
                 }
             } else if (currentQueue == Card.QUEUE_REV2) {
-                //reset new card due
-                boolean remove = dueList.remove(currentCard);
-                if (!remove) {
-                    //Remove index 0
-                    dueList.remove(0);
+                if (dueList.contains(currentCard)){
+                    //reset new card due
+                    boolean remove = dueList.remove(currentCard);
+                    if (!remove) {
+                        //Remove index 0
+                        dueList.remove(0);
 
+                    }
+                    ///int countDue = dueList.size();
+                    //lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
+                    _setCountDue();
                 }
-                ///int countDue = dueList.size();
-                //lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
-                _setCountDue();
+
             }
 
             Log.i(TAG, "_answerCard Before Update Card " + currentCard.getQuestion() +

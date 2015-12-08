@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudyActivity extends AppCompatActivity
-        implements  ICompleteSutdy, OnStudyViewListener {
+        implements ICompleteSutdy, OnStudyViewListener {
 
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
@@ -91,89 +91,23 @@ public class StudyActivity extends AppCompatActivity
         _initActonBar();
         _initDatabase();
         _trackerApplication();
+
         _initView();
-        _setUpStudy();
+        _definePagerStudy();
 
     }
 
 
-    private void _setUpStudy() {
+    private void _definePagerStudy() {
         try {
             //get lean_more form intern
             learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
-
-            //get custom setting study
-            int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-            int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
-
-            //get card due today & agin
-            againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
-            dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
-
-            //Define Count due
-            int dueCount = dueList.size();
-
-            //get new random card list to day
-            //int newCount =
-            //if (newCount > 0)
-            //  todayList = dataBaseHelper._getRandomCard(newCount);
-            if (dueCount == 0) {
-                Log.i(TAG, "_setUpStudy()  dueCount == 0");
-            } else {
-
-                Log.i(TAG, "_setUpStudy()  dueCount != 0");
-
-                if (dueCount < total_learn_per_day) {
-
-                    Log.i(TAG, "_setUpStudy()  dueCount < total_learn_per_day");
-
-                    if (total_learn_per_day - dueCount < limit_today) {
-
-                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount < limit_today");
-                        limit_today = total_learn_per_day - dueCount;
-
-                    } else if (total_learn_per_day - dueCount > limit_today) {
-
-                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount > limit_today");
-                    }
-                } else if (dueCount >= total_learn_per_day) {
-
-                    Log.i(TAG, "_setUpStudy()  dueCount >= total_learn_per_day");
-                    limit_today = 0;
-                }
-                learn_more = false;
-            }
-
-            //Define todayList
-            todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
-
-            //Define count card
-            int againCount = againList.size();
-            int todayCount = todayList.size();
-
-            Log.i(TAG, "againCount:" + againCount);
-            Log.i(TAG, "todayCount:" + todayCount);
-            Log.i(TAG, "dueCount:" + dueCount + ",limit:" + dueCount + ",today:" + todayCount);
-
-            //Define check_learn
-            //check_learn==true Study
-            //check_learn==false Complete Study
-            boolean check_learn = againCount > 0 || dueCount > 0 || todayCount > 0;
-
-            Log.i(TAG, "check_learn:" + (check_learn));
-
-            if (check_learn) {
-                pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-                mViewPager.setAdapter(pagerAdapter);
-            } else {
-                Log.i(TAG, "_completeLean");
-                _completeLean(false);
-            }
+            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+            mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
-
 
 
     private void _initActonBar() {
@@ -250,7 +184,6 @@ public class StudyActivity extends AppCompatActivity
     }
 
 
-
     private void _initView() {
         container = (LinearLayout) findViewById(R.id.container);
         mViewPager = (CustomViewPager) findViewById(R.id.viewpager);
@@ -261,6 +194,7 @@ public class StudyActivity extends AppCompatActivity
                 //Log.d(TAG, "State:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
 
             }
+
             @Override
             public void onPageSelected(int position) {
                 _setDisplayPageByPosition(position);
@@ -296,7 +230,6 @@ public class StudyActivity extends AppCompatActivity
         _defineSearchView(menu);
         return true;
     }
-
 
 
     private void _defineSearchView(Menu menu) {
