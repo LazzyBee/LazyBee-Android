@@ -976,7 +976,7 @@ public class LearnApiImplements implements LearnApi {
         String subCommon = "common";
 
         String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
+                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level >= " +
                 myLevel + " AND package like '%," + subject + ",%' ORDER BY vocabulary.question LIMIT " + limit;
         cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
