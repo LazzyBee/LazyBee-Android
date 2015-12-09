@@ -247,7 +247,7 @@
 
     <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>
     <string name="action_report">Góp ý</string>
-    <string name="drawer_dictionary">Từ diển</string>
+    <string name="drawer_dictionary">Từ điển</string>
     <string name="position_meaning_down">Dưới</string>
     <string name="message_total_card_incoming">Tổng số:</string>
     <string name="english_word">Học từ vựng tiếng Anh</string>
