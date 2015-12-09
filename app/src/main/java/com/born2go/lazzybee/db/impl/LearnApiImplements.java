@@ -1381,6 +1381,10 @@ public class LearnApiImplements implements LearnApi {
         if (settingMyLevel == null) {
             if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MY_LEVEL) {
                 return LazzyBeeShare.DEFAULT_MY_LEVEL;
+            } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION) {
+                return LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION;
+            }else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION) {
+                return LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION;
             } else
                 return 0;
         } else {
