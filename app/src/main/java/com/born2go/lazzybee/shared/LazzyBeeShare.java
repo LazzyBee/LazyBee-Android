@@ -107,6 +107,7 @@ public class LazzyBeeShare {
     public static final int DEFAULT_HOUR_NOTIFICATION = 13;
     public static final int DEFAULT_MINUTE_NOTIFICATION = 30;
     public static final int MAX_NEW_PRE_DAY = 50;
+    public static final int SECONDS_PERDAY = 86400;
 
 
     private static boolean DEBUG = true;

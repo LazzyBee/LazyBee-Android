@@ -1446,8 +1446,42 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int _getCountStreak() {
-        String selectbyIDQuery = "SELECT count(day) FROM " + TABLE_STREAK;
-        return _queryCount(selectbyIDQuery);
+        int startOfday = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        String countStreak = "SELECT Count(day) FROM " + TABLE_STREAK + " where day = " + startOfday + " order by day desc";
+        if (_queryCount(countStreak) == 0) {
+            startOfday = (startOfday - LazzyBeeShare.SECONDS_PERDAY);
+        }
+        String selectbyIDQuery = "SELECT day FROM " + TABLE_STREAK + " where day <= " + startOfday + " order by day desc";
+        Log.d(TAG, "query:" + selectbyIDQuery);
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        List<Integer> streak_days = new ArrayList<Integer>();
+        //query for cursor
+        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    int streak_day = cursor.getInt(0);
+                    streak_days.add(streak_day);
+
+                } while (cursor.moveToNext());
+        }
+        int count = 0;
+        int streak_days_count = streak_days.size();
+        if (streak_days_count > 0) {
+            Log.d(TAG, "Streak day count:" + streak_days_count);
+            for (int i = 0; i < streak_days_count; i++) {
+                int streak_day = streak_days.get(i);
+                int perDay = (LazzyBeeShare.SECONDS_PERDAY * (i));//get day
+                Log.d(TAG, streak_day + "\t:\t" + (startOfday - perDay) + "\t,i:" + i);
+                if (streak_day == (startOfday - perDay)) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return count;
     }
 
     public int _insetStreak() {
