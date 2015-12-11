@@ -265,29 +265,31 @@ public class LearnApiImplements implements LearnApi {
             //limit learn more =5 row
             if (learnmore == true)
                 number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-            int countNewCard = _get100Card();
+            String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+            List<Card> cards = _getListCardFromStringArray(value);
+            Log.d(TAG, "incoming List Size:" + cards.size());
+            int countNewCard = cards.size();
+            if (countNewCard == 0) {//over 100 card
+                countNewCard = _initIncomingCardIdList();//define new incoming list
+                cards = _getListCardFromStringArray(value);
+            }
+            List<Card> cloneCard = new ArrayList<Card>();
+            cloneCard.addAll(cards);
             if (countNewCard > 0) {
-                //_getValueFromSystemByKey()
-                String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
-
-                List<Card> cards = _getListCardFromStringArray(value);
-                //Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
-                //randomGenerator = new Random();
-
-                for (int i = 0; i < number; i++) {
-                    // int index = randomGenerator.nextInt(cards.size());
-                    datas.add(cards.get(i));
-                    cards.remove(cards.get(i));
+                if (number > LazzyBeeShare.MAX_NEW_PRE_DAY) {//newCard > size MAX_NEW_PRE_DAY
+                    number = LazzyBeeShare.MAX_NEW_PRE_DAY;
                 }
-                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cards.size() );
+                for (int i = 0; i < number; i++) {
+                    Card card = cards.get(i);//define card
+                    datas.add(card);
+                    cloneCard.remove(card);
+                }
+                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cloneCard.size());
                 //remove
-                //cards.removeAll(datas);
-                _insertOrUpdatePreFetchNewCardList(cards);
+                _insertOrUpdatePreFetchNewCardList(cloneCard);
                 _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas, null));
-            } else {
 
             }
-
         }
 
 
@@ -932,7 +934,6 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public int _get100Card() {
-        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
         String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
         if (value != null) {
             try {
@@ -1383,7 +1384,7 @@ public class LearnApiImplements implements LearnApi {
                 return LazzyBeeShare.DEFAULT_MY_LEVEL;
             } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION) {
                 return LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION;
-            }else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION) {
+            } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION) {
                 return LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION;
             } else
                 return 0;

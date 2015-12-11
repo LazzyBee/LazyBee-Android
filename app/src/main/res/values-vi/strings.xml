@@ -290,6 +290,7 @@
     <string name="year">năm</string>
     <string name="title_activity_custom_study_setting">Thiết lập học</string>
     <string name="dialog_statistical_total">Tổng số: %d</string>
+    <string name="custom_study_eror_limit">Số thẻ</string>
 
 
     <string-array name="subjects">
