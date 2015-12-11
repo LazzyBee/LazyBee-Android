@@ -4,19 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -92,21 +96,15 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     boolean answerDisplay = false;
     boolean learn_more;
-    int completeStudy = 0;
-    //TextView lbTagetActionStudy;
 
 
-//    View view_study_button;
-//    View view_study_count;
-
-
-    private int currentPage = 0;
-    private String detailViewTag;
     private Intent intent;
     StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
 
     DetailsView detailsView;
     CustomViewPager mViewPager;
+
+    int widthStudyDisplay = -1, heightStudyDisplay = -1;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -256,7 +254,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
     }
 
-    private void _initView(View view) {
+    private void _initView(final View view) {
         container = (LinearLayout) view.findViewById(R.id.container);
         //init button
         mShowAnswer = (RelativeLayout) view.findViewById(R.id.mShowAnswer);
@@ -276,18 +274,101 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         mCountStudy = (CardView) view.findViewById(R.id.mCountStudy);
 
+        final CardView mDisplay = (CardView) view.findViewById(R.id.mDisplay);
+
+
         mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
+
+        //get widthStudyDisplay heightStudyDisplay display
+        ViewTreeObserver observer = mDisplay.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT < 16)
+                    mDisplay.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                else
+                    mDisplay.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                int width = mDisplay.getMeasuredWidth();
+                int height = mDisplay.getMeasuredHeight();
+
+                Log.d(TAG, "Display:" + width + "\t:\t" + height);
+                setDisplaySize(width, height);
+            }
+        });
 
         mCardViewHelpandAdMod = (CardView) view.findViewById(R.id.mCardViewHelpandAdMod);
 
-        FloatingActionButton mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
+        final FloatingActionButton mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
         mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener._displayUserNote(currentCard);
+                Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
             }
         });
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        final int densityDpi = (int) (metrics.density * 160f);
+        Log.d(TAG, "DPI:" + densityDpi);
+        mFloatActionButtonUserNote.setOnTouchListener(new View.OnTouchListener() {
+            public boolean shouldClick;
+            float dX, dY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        shouldClick = true;
+                        dX = (mFloatActionButtonUserNote.getX() - event.getRawX());
+                        dY = (mFloatActionButtonUserNote.getY() - event.getRawY());
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (shouldClick)
+                            mFloatActionButtonUserNote.performClick();//call click
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        shouldClick = false;
+                        float eX = (event.getRawX() + dX);//define position X
+                        float eY = (event.getRawY() + dY);//define position Y
+
+                        if (widthStudyDisplay > -1 && heightStudyDisplay > -1) {
+                            if (eX < 0) {
+                                eX = 0f;
+                            } else if (eX >= widthStudyDisplay - (widthStudyDisplay * 0.15)) {
+                                eX = (float) (widthStudyDisplay - (widthStudyDisplay * 0.2));
+                            }
+                            if (eY < 0) {
+                                eY = 0f;
+                            } else if (eY >= heightStudyDisplay - (heightStudyDisplay * 0.1)) {
+                                eY = (float) (heightStudyDisplay - (heightStudyDisplay * 0.15));
+                            }
+                        } else {
+                            Log.d(TAG, "WidthHeight =-1");
+                        }
+                        mFloatActionButtonUserNote.animate()//move button
+                                .x(eX)
+                                .y(eY)
+                                .setDuration(0)
+                                .start();
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            }
+
+        });
+
+    }
+
+    private void setDisplaySize(int width, int height) {
+        this.widthStudyDisplay = width;
+        this.heightStudyDisplay = height;
+
     }
 
     private void _initTextToSpeech() {
@@ -534,7 +615,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             //currentCard = cardFromDB;//set current card
 
-             Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
+            Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
             setDisplayCard(cardFromDB);
             //Show answer question
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB), card.getQueue(), 1);
@@ -589,45 +670,45 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 return;
             }
             if (currentQueue == QUEUE_NEW_CRAM0) {//queue=New
-                boolean containNew=false;
-                for (Card newCard:todayList){
-                    if(newCard.getQuestion().equals(currentCard.getQuestion())){//check currrentCard contain
+                boolean containNew = false;
+                for (Card newCard : todayList) {
+                    if (newCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
                         todayList.remove(newCard);
-                        containNew=true;
+                        containNew = true;
                         break;
                     }
                 }
-                if (containNew){
+                if (containNew) {
                     _setCountNew();
-                }else {
+                } else {
                     Log.i(TAG, "No contain in todayList");
                 }
             } else if (currentQueue == Card.QUEUE_LNR1) {//queue=Again
-                boolean containAgain=false;
-                for (Card againCard:againList){
-                    if(againCard.getQuestion().equals(currentCard.getQuestion())){//check currrentCard contain
+                boolean containAgain = false;
+                for (Card againCard : againList) {
+                    if (againCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
                         againList.remove(againCard);
-                        containAgain=true;
+                        containAgain = true;
                         break;
                     }
                 }
-                if (containAgain){
+                if (containAgain) {
                     _setCountAgain();
-                }else {
+                } else {
                     Log.i(TAG, "No contain in againList");
                 }
             } else if (currentQueue == Card.QUEUE_REV2) {//queue=Reiview
-                boolean containDue=false;
-                for (Card dueCard:dueList){
-                    if(dueCard.getQuestion().equals(currentCard.getQuestion())){//check currrentCard contain
+                boolean containDue = false;
+                for (Card dueCard : dueList) {
+                    if (dueCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
                         dueList.remove(dueCard);
-                        containDue=true;
+                        containDue = true;
                         break;
                     }
                 }
-                if (containDue){
+                if (containDue) {
                     _setCountDue();
-                }else {
+                } else {
                     Log.i(TAG, "No contain in dueList");
                 }
             }
