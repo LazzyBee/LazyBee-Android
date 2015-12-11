@@ -402,7 +402,6 @@ public class StudyActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            Log.d(TAG, "pageCount:" + pageCount);
             return pageCount;
         }
 
