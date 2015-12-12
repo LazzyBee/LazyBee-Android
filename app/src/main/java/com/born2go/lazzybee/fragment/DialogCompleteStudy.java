@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 
 public class DialogCompleteStudy extends DialogFragment {
@@ -101,42 +99,37 @@ public class DialogCompleteStudy extends DialogFragment {
         ArrayList<String> strings = new ArrayList<String>();
         strings.addAll(Arrays.asList(context.getResources().getStringArray(R.array.days)));
 
-        int startOfDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
-        Log.i("startOfDay:", "" + startOfDay);
-        List<Integer> dayCompleteStudys = LazzyBeeSingleton.learnApiImplements._getListDayStudyComplete();
-
-        Log.i("No sort:", "" + dayCompleteStudys.toString());
-
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        String day = LazzyBeeShare.EMPTY;
-
-        if (dayOfWeek > 1) {
-            day = strings.get(dayOfWeek - 2);
-        } else if (dayOfWeek == 1) {//Day of week ==1 -> Sunday
-            day = strings.get(6);
-        }
 
         ArrayList<String> weeks = _defineWeekbyDayOfWeek(dayOfWeek);
-        int countWeeks = 6;
+        int countStreak = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+        boolean[] showRings = null;
+        if (countStreak >= 7) {
+            showRings = new boolean[]{true, true, true, true, true, true, true};
+        } else if (countStreak == 6) {
+            showRings = new boolean[]{false, true, true, true, true, true, true};
+        } else if (countStreak == 5) {
+            showRings = new boolean[]{false, false, true, true, true, true, true};
+        } else if (countStreak == 4) {
+            showRings = new boolean[]{false, false, false, true, true, true, true};
+        } else if (countStreak == 3) {
+            showRings = new boolean[]{false, false, false, false, true, true, true};
+        } else if (countStreak == 2) {
+            showRings = new boolean[]{false, false, false, false, false, true, true};
+        } else if (countStreak == 1) {
+            showRings = new boolean[]{false, false, false, false, false, false, true};
+        }
         for (int i = 0; i < weeks.size(); i++) {
-            //
-            String _day = weeks.get(i);
 
-            //define day of week
-            int longDateOfWeek = startOfDay - (86400 * countWeeks--);
-            Log.i("longDateOfWeek", "" + longDateOfWeek);
+            String _day = weeks.get(i);//define dayOfWeek
+
             FrameLayout _mDayRing = (FrameLayout) inflater.inflate(R.layout.day_ring, null);
             ImageView _dayRing = (ImageView) _mDayRing.findViewById(R.id.dayRing);
             TextView _lbDay = (TextView) _mDayRing.findViewById(R.id.lbDay);
             _lbDay.setText(_day);
 
-            if (day.equals(_day)) {
-                _dayRing.setImageResource(R.drawable.day_ring);
-            } else if (dayCompleteStudys.contains(longDateOfWeek)) {
-                _dayRing.setImageResource(R.drawable.day_ring);
-            } else {
-                _dayRing.setImageResource(R.drawable.day_ring_gray);
-            }
+            boolean showRing = showRings[i];//define show ring
+            _dayRing.setImageResource(showRing ? R.drawable.day_ring : R.drawable.day_ring_gray);
 
             mDays.addView(_mDayRing);
         }
