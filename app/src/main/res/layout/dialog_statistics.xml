@@ -41,10 +41,29 @@
         android:paddingRight="16dp"
         android:paddingTop="8dp">
 
-        <lecho.lib.hellocharts.view.ColumnChartView
-            android:id="@+id/chart"
+        <RelativeLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="230dp" />
+            android:layout_height="230dp"
+            android:id="@+id/mChart">
+
+            <lecho.lib.hellocharts.view.ColumnChartView
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="230dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="lazzybee.com"
+                android:id="@+id/mlazzybee"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorPrimary"
+                android:visibility="invisible" />
+        </RelativeLayout>
 
         <include
             android:layout_width="wrap_content"
@@ -53,8 +72,7 @@
             android:id="@+id/mCount"
             android:layout_above="@+id/btnShared"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/chart"
-            android:layout_marginTop="10dp" />
+            android:layout_below="@+id/mChart" />
 
         <Button
             android:layout_width="wrap_content"

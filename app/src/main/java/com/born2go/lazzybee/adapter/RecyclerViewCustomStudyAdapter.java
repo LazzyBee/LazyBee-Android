@@ -373,21 +373,22 @@ public class RecyclerViewCustomStudyAdapter extends
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.title_change_position_meaning));
         final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
+        final CharSequence[] values = {LazzyBeeShare.UP, LazzyBeeShare.DOWN};
         int index = 0;
         String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG);
 
         if (value != null && value.equals(LazzyBeeShare.DOWN)) {
             index = 1;
-            lbLimit.setText(LazzyBeeShare.DOWN);
+            lbLimit.setText(context.getString(R.string.position_meaning_down));
         } else {
-            lbLimit.setText(LazzyBeeShare.UP);
+            lbLimit.setText(context.getString(R.string.position_meaning_up));
         }
 
 
         builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 //Update position
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, items[item].toString());
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, values[item].toString());
                 dialog.cancel();
                 _reloadRecylerView();
 

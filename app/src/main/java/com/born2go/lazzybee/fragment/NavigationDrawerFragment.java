@@ -145,11 +145,12 @@ public class NavigationDrawerFragment extends Fragment {
                             selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
                         } else if (o.equals(getString(R.string.drawer_subject))) {
                             selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
-                        }else if (o.equals(getString(R.string.drawer_help))) {
+                        } else if (o.equals(getString(R.string.drawer_help))) {
                             selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
-                        }else if (o.equals(getString(R.string.drawer_statistical))) {
+                        } else if (o.equals(getString(R.string.drawer_statistical))) {
                             selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
                         }
+                        recyclerViewDrawerListAdapter.notifyDataSetChanged();
                     }
                 })
         );

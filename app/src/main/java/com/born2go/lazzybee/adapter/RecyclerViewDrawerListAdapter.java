@@ -175,6 +175,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             super(itemView);
             this.view = itemView;
             this.viewType = viewType;
+
         }
     }
 }

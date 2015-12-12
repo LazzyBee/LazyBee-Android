@@ -76,7 +76,7 @@
     <string name="message_total_card_review">Tổng số thẻ đã học:</string>
     <string name="my_course">Khóa học của bạn</string>
     <string name="setting_about">About</string>
-    <string name="setting_update_title">Cập nhật</string>
+    <string name="setting_update_title">Cập nhật cở sở dữ liệu</string>
     <string name="setting_notification">Thông báo</string>
     <string name="setting_check_update">Kiểm tra cập nhật</string>
     <string name="setting_auto_check_update">Tự động kiểm tra cập nhật</string>
@@ -247,7 +247,7 @@
 
     <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>
     <string name="action_report">Góp ý</string>
-    <string name="drawer_dictionary">Từ diển</string>
+    <string name="drawer_dictionary">Từ điển</string>
     <string name="position_meaning_down">Dưới</string>
     <string name="message_total_card_incoming">Tổng số:</string>
     <string name="english_word">Học từ vựng tiếng Anh</string>
@@ -276,7 +276,7 @@
     <string name="day_sat">T7</string>
     <string name="day_sun">CN</string>
     <string name="streak_day">ngày</string>
-    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm \"Học thêm\" để học nếu bạn muốn.</string>
+    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm %s để học nếu bạn muốn.</string>
     <string name="title_dialog_user_note">Ghi chú</string>
     <string name="hint_user_note" >Thêm ghi chú tại đây!</string>
     <string name="save">Lưu</string>
@@ -289,6 +289,7 @@
     <string name="month">tháng</string>
     <string name="year">năm</string>
     <string name="title_activity_custom_study_setting">Thiết lập học</string>
+    <string name="dialog_statistical_total">Tổng số: %d</string>
 
 
     <string-array name="subjects">

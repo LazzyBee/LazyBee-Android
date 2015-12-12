@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp">
+
+    <CheckBox
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subject_it"
+        android:button="@null"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:id="@+id/cbIt"
+        android:textColor="@color/grey_900"
+        android:textSize="8pt" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subject_economy"
+        android:id="@+id/cbEconomy"
+        android:checked="false"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:button="@null"
+        android:clickable="false"
+        android:textColor="@color/grey_900"
+        android:textSize="8pt" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subject_science"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:button="@null"
+        android:id="@+id/cbScience"
+        android:textColor="@color/grey_900"
+        android:textSize="8pt" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subject_medical"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:button="@null"
+        android:id="@+id/cbMedicine"
+        android:singleLine="false"
+        android:textColor="@color/grey_900"
+        android:textSize="8pt" />
+</LinearLayout>

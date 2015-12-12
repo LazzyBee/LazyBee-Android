@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
@@ -44,6 +45,8 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 public class DialogStatistics extends DialogFragment {
 
     public static final String TAG = "DialogStatistics";
+    RelativeLayout mChart;
+    TextView mlazzybee;
     private ColumnChartView chart;
     private ColumnChartData data;
     private boolean hasAxes = true;
@@ -75,6 +78,7 @@ public class DialogStatistics extends DialogFragment {
             btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     screenViewChart();
                     _shareCard();
 
@@ -95,8 +99,8 @@ public class DialogStatistics extends DialogFragment {
     private void screenViewChart() {
         try {
             String mPath = Environment.getExternalStorageDirectory().toString() + "/statitis_scren.jpg";
-
-            View v1 = chart;
+            View v1 = mChart;
+            mlazzybee.setVisibility(View.VISIBLE);
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
             v1.setDrawingCacheEnabled(false);
@@ -109,13 +113,16 @@ public class DialogStatistics extends DialogFragment {
 
             outputStream.flush();
             outputStream.close();
+            mlazzybee.setVisibility(View.INVISIBLE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void _initChart(View view) {
+        mChart = (RelativeLayout) view.findViewById(R.id.mChart);
         chart = (ColumnChartView) view.findViewById(R.id.chart);
+        mlazzybee = (TextView) view.findViewById(R.id.mlazzybee);
         generateDefaultData();
     }
 
@@ -142,11 +149,11 @@ public class DialogStatistics extends DialogFragment {
         List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
         //Gestion of the two axes for the graphic
 
-
+        int total = 0;
         for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
             values = new ArrayList<SubcolumnValue>();
             int count = listCountCardbyLevel.get(i);
-
+            total += count;
             axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
             axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
             if (count > 0) {
@@ -164,8 +171,9 @@ public class DialogStatistics extends DialogFragment {
         data = new ColumnChartData(columns);
         Axis axeX = new Axis(axisXValues);
         Axis axisTop = new Axis(axisTopValues).setHasLines(true);
-        axeX.setTextColor(R.color.text_color_number_count_card_by_level);
-        axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
+        axisTop.setName(context.getString(R.string.dialog_statistical_total, total));
+//        axeX.setTextColor(R.color.text_color_number_count_card_by_level);
+//        axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
         axeX.setHasLines(true);
         axeX.setName(context.getString(R.string.dialog_statistical_level));
         data.setAxisXBottom(axeX);
