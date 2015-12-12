@@ -71,7 +71,7 @@
     <string name="dialog_message_setting_today_review_card_limit_by">Thay đổi số thẻ xem lại</string>
     <string name="setting_total_learn_per_day">Tổng số thẻ học trong một ngày</string>
     <string name="dialog_message_setting_total_card_learn_pre_day_by">Tổng số thẻ muốn học trong một ngày</string>
-    <string name="dialog_message_setting_today_new_card_limit_by">Thay đổi sô thẻ mới</string>
+    <string name="dialog_message_setting_today_new_card_limit_by">Thay đổi số thẻ mới</string>
     <string name="message_you_not_complete">Bạn chưa học xong bài hôm nay! Bấm để học</string>
     <string name="message_total_card_review">Tổng số thẻ đã học:</string>
     <string name="my_course">Khóa học của bạn</string>

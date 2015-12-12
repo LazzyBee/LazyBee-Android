@@ -338,7 +338,7 @@ public class RecyclerViewCustomStudyAdapter extends
                         } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
                             int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                             if (Integer.valueOf(limit) < total) {
-                                String erorr_message = "Limit > " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
+                                String erorr_message = context.getString(R.string.custom_study_eror_limit) + " > " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
                                 Log.e(TAG, erorr_message);
                                 lbEror.setText(erorr_message);
                             } else {
@@ -352,7 +352,7 @@ public class RecyclerViewCustomStudyAdapter extends
                         } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT) {
                             int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                             if (Integer.valueOf(limit) > total) {
-                                String erorr_message = "Limit < " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
+                                String erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
                                 Log.e(TAG, erorr_message);
                                 lbEror.setText(erorr_message);
                             } else {
