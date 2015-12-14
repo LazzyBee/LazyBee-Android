@@ -378,12 +378,15 @@
     <string name="study_again">Again</string>
     <string name="study_new">New </string>
     <string name="study_review">Review</string>
+    <string name="subject_ielts" translatable="false">Ielts</string>
+    <string name="subject_ielts_value" translatable="false">ielts</string>
 
     <string-array name="subjects">
         <item>@string/subject_it</item>
         <item>@string/subject_economy</item>
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
+        <item>@string/subject_ielts</item>
     </string-array>
 
     <string-array name="subjects_value" translatable="false">
@@ -391,6 +394,7 @@
         <item>@string/subject_economy_value</item>
         <item>@string/subject_science_value</item>
         <item>@string/subject_medical_value</item>
+        <item>@string/subject_ielts_value</item>
     </string-array>
     <string-array name="devices_dev_id" translatable="false">
         <item>b6fe9200bf21fe7e</item>
