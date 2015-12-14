@@ -55,8 +55,9 @@ public class DialogCompleteStudy extends DialogFragment {
         //set style
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         try {
-            _initStreakCount(view);
-            _initStreakDays(view, inflater);
+            int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+            _initStreakCount(view, count);
+            _initStreakDays(view, inflater, count);
 
             //Play media
             MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.magic);
@@ -78,9 +79,7 @@ public class DialogCompleteStudy extends DialogFragment {
         return view;
     }
 
-    private void _initStreakCount(View view) {
-        //get count
-        int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+    private void _initStreakCount(View view, int count) {
         //Define view
         View mCount = view.findViewById(R.id.mCount);
         TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
@@ -94,7 +93,7 @@ public class DialogCompleteStudy extends DialogFragment {
         streak_ring.startAnimation(a);
     }
 
-    private void _initStreakDays(View view, LayoutInflater inflater) {
+    private void _initStreakDays(View view, LayoutInflater inflater, int countStreak) {
         LinearLayout mDays = (LinearLayout) view.findViewById(R.id.mDays);
         ArrayList<String> strings = new ArrayList<String>();
         strings.addAll(Arrays.asList(context.getResources().getStringArray(R.array.days)));
@@ -102,7 +101,6 @@ public class DialogCompleteStudy extends DialogFragment {
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
         ArrayList<String> weeks = _defineWeekbyDayOfWeek(dayOfWeek);
-        int countStreak = LazzyBeeSingleton.learnApiImplements._getCountStreak();
         boolean[] showRings = null;
         if (countStreak >= 7) {
             showRings = new boolean[]{true, true, true, true, true, true, true};
