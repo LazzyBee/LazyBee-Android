@@ -72,13 +72,17 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setSound(alarmSound);
 
         mBuilder.setContentIntent(pendingIntent);
+        try {
+            //Noti Notification
+            String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+            if (onoffNotification.equals(LazzyBeeShare.ON))
+                notificationManager.notify(id, mBuilder.build());
+            else
+                Log.i(TAG, "Off notification");
+        } catch (Exception e) {
 
-        //Noti Notification
-        String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-        if (onoffNotification.equals(LazzyBeeShare.ON))
-            notificationManager.notify(id, mBuilder.build());
-        else
-            Log.i(TAG, "Off notification");
+        }
+
 
     }
 

@@ -433,4 +433,5 @@
     <string name="month">month</string>
     <string name="year">year</string>
     <string name="dialog_statistical_total">Total: %d</string>
+    <string name="custom_study_eror_limit">Limit</string>
 </resources>

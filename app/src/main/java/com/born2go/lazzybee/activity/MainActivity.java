@@ -205,8 +205,6 @@ public class MainActivity extends AppCompatActivity
         try {
             int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
             int minute = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
-            if (hour == 0)
-                hour = 8;//default time
             //Check currentTime
             Calendar currentCalendar = Calendar.getInstance();
             int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);

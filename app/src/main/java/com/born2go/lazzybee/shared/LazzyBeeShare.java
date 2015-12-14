@@ -93,7 +93,7 @@ public class LazzyBeeShare {
     public static final String YES = "yes";
     public static final String NO = "no";
     public static final String LINK_CARD_IN_SERVER = "http://www.lazzybee.com/library/#dictionary/";
-    public static final Object DEFAULT_TIME_NOTIFICATION = "08:00";
+    public static final Object DEFAULT_TIME_NOTIFICATION = "13:30";
     public static final String KEY_SETTING_HOUR_NOTIFICATION = "hour_notification";
     public static final String KEY_SETTING_MINUTE_NOTIFICATION = "minute_notification";
     public static final int DEFAULT_VERSION_DB = 1;
@@ -104,6 +104,10 @@ public class LazzyBeeShare {
     public static final String NOTIFY_TEXT = "notify_text";
     public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
     public static final String KEY_FIRST_RUN_APP = "first_run_application";
+    public static final int DEFAULT_HOUR_NOTIFICATION = 13;
+    public static final int DEFAULT_MINUTE_NOTIFICATION = 30;
+    public static final int MAX_NEW_PRE_DAY = 50;
+    public static final int SECONDS_PERDAY = 86400;
 
 
     private static boolean DEBUG = true;
@@ -711,8 +715,6 @@ public class LazzyBeeShare {
             if (time >= (getStartOfDayInMillis() / 1000) && time <= getEndOfDayInSecond()) {
                 nextday = true;
             }
-            if (hour == 0)
-                hour = 8;//default time
             //Check currentTime
             Calendar currentCalendar = Calendar.getInstance();
             int currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
@@ -766,4 +768,6 @@ public class LazzyBeeShare {
         int randomNumber = (int) (fraction + aStart);
         return randomNumber;
     }
+
+
 }

@@ -35,7 +35,6 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -308,6 +307,7 @@ public class RecyclerViewSettingListAdapter extends
         final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
         final TextView txtTimeNotification = (TextView) mSetUpNotification.findViewById(R.id.txtTimeNotification);
         String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+
         String hour_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         String minute_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         if (value == null) {
@@ -351,7 +351,7 @@ public class RecyclerViewSettingListAdapter extends
                     txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
                     value = LazzyBeeShare.ON;
                     mSetUpNotification.setVisibility(View.VISIBLE);
-                    LazzyBeeShare._setUpNotification(context, 0, 0);
+                    LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
                 } else {
                     value = LazzyBeeShare.OFF;
                     mSetUpNotification.setVisibility(View.GONE);
@@ -360,15 +360,17 @@ public class RecyclerViewSettingListAdapter extends
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
             }
         });
-        mCardView.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener mSOnclick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(context, R.string.setting_auto_check_update, Toast.LENGTH_SHORT).show();
                 String value;
                 if (!mSwitch.isChecked()) {
                     mSwitch.setChecked(true);
                     value = LazzyBeeShare.ON;
                     mSetUpNotification.setVisibility(View.VISIBLE);
+                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION));
+                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION));
                 } else {
                     mSwitch.setChecked(false);
                     value = LazzyBeeShare.OFF;
@@ -376,16 +378,15 @@ public class RecyclerViewSettingListAdapter extends
                 }
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
             }
-        });
+        };
+        mCardView.setOnClickListener(mSOnclick);
+
         mSetUpNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
                 int hour = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
                 int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
-                if (hour == 0)
-                    hour = 8;
-
+                Log.d(TAG, hour + ":" + minute);
                 // Create a new instance of TimePickerDialog and return it
                 CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override

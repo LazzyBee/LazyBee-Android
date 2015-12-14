@@ -265,29 +265,31 @@ public class LearnApiImplements implements LearnApi {
             //limit learn more =5 row
             if (learnmore == true)
                 number = _getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-            int countNewCard = _get100Card();
+            String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+            List<Card> cards = _getListCardFromStringArray(value);
+            Log.d(TAG, "incoming List Size:" + cards.size());
+            int countNewCard = cards.size();
+            if (countNewCard == 0) {//over 100 card
+                countNewCard = _initIncomingCardIdList();//define new incoming list
+                cards = _getListCardFromStringArray(value);
+            }
+            List<Card> cloneCard = new ArrayList<Card>();
+            cloneCard.addAll(cards);
             if (countNewCard > 0) {
-                //_getValueFromSystemByKey()
-                String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
-
-                List<Card> cards = _getListCardFromStringArray(value);
-                //Log.d(TAG, "_getRandomCard: cards toArray:" + cards.toString());
-                //randomGenerator = new Random();
-
-                for (int i = 0; i < number; i++) {
-                    // int index = randomGenerator.nextInt(cards.size());
-                    datas.add(cards.get(i));
-                    cards.remove(cards.get(i));
+                if (number > LazzyBeeShare.MAX_NEW_PRE_DAY) {//newCard > size MAX_NEW_PRE_DAY
+                    number = LazzyBeeShare.MAX_NEW_PRE_DAY;
                 }
-                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cards.size() );
+                for (int i = 0; i < number; i++) {
+                    Card card = cards.get(i);//define card
+                    datas.add(card);
+                    cloneCard.remove(card);
+                }
+                Log.d(TAG, "_getRandomCard: -cards toArray after remove cards size=" + cloneCard.size());
                 //remove
-                //cards.removeAll(datas);
-                _insertOrUpdatePreFetchNewCardList(cards);
+                _insertOrUpdatePreFetchNewCardList(cloneCard);
                 _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(datas, null));
-            } else {
 
             }
-
         }
 
 
@@ -932,7 +934,6 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public int _get100Card() {
-        int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
         String value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
         if (value != null) {
             try {
@@ -1381,6 +1382,10 @@ public class LearnApiImplements implements LearnApi {
         if (settingMyLevel == null) {
             if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MY_LEVEL) {
                 return LazzyBeeShare.DEFAULT_MY_LEVEL;
+            } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION) {
+                return LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION;
+            } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION) {
+                return LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION;
             } else
                 return 0;
         } else {
@@ -1441,8 +1446,42 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int _getCountStreak() {
-        String selectbyIDQuery = "SELECT count(day) FROM " + TABLE_STREAK;
-        return _queryCount(selectbyIDQuery);
+        int startOfday = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        String countStreak = "SELECT Count(day) FROM " + TABLE_STREAK + " where day = " + startOfday + " order by day desc";
+        if (_queryCount(countStreak) == 0) {
+            startOfday = (startOfday - LazzyBeeShare.SECONDS_PERDAY);
+        }
+        String selectbyIDQuery = "SELECT day FROM " + TABLE_STREAK + " where day <= " + startOfday + " order by day desc";
+        Log.d(TAG, "query:" + selectbyIDQuery);
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        List<Integer> streak_days = new ArrayList<Integer>();
+        //query for cursor
+        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0)
+                do {
+                    int streak_day = cursor.getInt(0);
+                    streak_days.add(streak_day);
+
+                } while (cursor.moveToNext());
+        }
+        int count = 0;
+        int streak_days_count = streak_days.size();
+        if (streak_days_count > 0) {
+            Log.d(TAG, "Streak day count:" + streak_days_count);
+            for (int i = 0; i < streak_days_count; i++) {
+                int streak_day = streak_days.get(i);
+                int perDay = (LazzyBeeShare.SECONDS_PERDAY * (i));//get day
+                Log.d(TAG, streak_day + "\t:\t" + (startOfday - perDay) + "\t,i:" + i);
+                if (streak_day == (startOfday - perDay)) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return count;
     }
 
     public int _insetStreak() {

@@ -147,6 +147,7 @@ public class DialogStatistics extends DialogFragment {
 
         List<AxisValue> axisXValues = new ArrayList<AxisValue>();
         List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
+        List<AxisValue> axisYValues = new ArrayList<AxisValue>();
         //Gestion of the two axes for the graphic
 
         int total = 0;
@@ -155,9 +156,13 @@ public class DialogStatistics extends DialogFragment {
             int count = listCountCardbyLevel.get(i);
             total += count;
             axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
+
             axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
             if (count > 0) {
-                values.add(new SubcolumnValue(count, ChartUtils.pickColor()));
+                SubcolumnValue valueColum =
+                        new SubcolumnValue(count, ChartUtils.pickColor()).setLabel(String.valueOf(count));//define Subcolum
+                
+                values.add(valueColum);
             }
             Column column = new Column(values);
 
@@ -167,19 +172,19 @@ public class DialogStatistics extends DialogFragment {
             columns.add(column);
 
         }
+        axisYValues.add(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total)));
 
         data = new ColumnChartData(columns);
         Axis axeX = new Axis(axisXValues);
         Axis axisTop = new Axis(axisTopValues).setHasLines(true);
         axisTop.setName(context.getString(R.string.dialog_statistical_total, total));
-//        axeX.setTextColor(R.color.text_color_number_count_card_by_level);
-//        axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
+        axeX.setTextColor(R.color.text_color_number_count_card_by_level);
+        axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
         axeX.setHasLines(true);
         axeX.setName(context.getString(R.string.dialog_statistical_level));
         data.setAxisXBottom(axeX);
 
         data.setAxisXTop(axisTop);
-
         chart.setColumnChartData(data);
         chart.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
             @Override
