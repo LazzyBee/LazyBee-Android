@@ -38,33 +38,24 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
     protected Card doInBackground(Card... params) {
         //Call Api Update card
         Log.i(TAG, "Question:" + params[0].getQuestion());
-        //Define q
-        String q = params[0].getQuestion();
 
-        Log.i(TAG, "q:" + q + ",gId:" + params[0].getgId());
+        String q = params[0].getQuestion(); //Define q
+        long gId = params[0].getgId(); //Define gId
 
-        //Voca voca = connectGdatabase._getGdatabase_byQ(q.replaceAll("\\s+", "") /*Remove remove special characters*/);
+        Log.d(TAG, "q:" + q + ",gId:" + gId);
 
-        //Get voca in Server
-        Voca voca = connectGdatabase._getGdatabase_byQ(q);
-        if (voca != null) {
-            Log.i(TAG, "get voca by question:" + q);
-            return defineCardbyVoca(params[0], voca);
-        } else if (params[0].getgId() > 0) {
-            Log.i(TAG, "get voca by gID:" + params[0].getgId());
-            //get voca by gID
-            voca = connectGdatabase._getGdatabase_byID(params[0].getgId());
-            if (voca != null) {
-                return defineCardbyVoca(params[0], voca);
-            } else {
-                return null;
-            }
+        Voca voca;//Define voca
+        
+        if (gId > 0) {
+            voca = connectGdatabase._getGdatabase_byID(gId);//get voca by gID
         } else {
-            Log.i(TAG, "get voca null");
+            voca = connectGdatabase._getGdatabase_byQ(q);//get voca by question
+        }
+        if (voca != null) {
+            return defineCardbyVoca(params[0], voca);
+        } else {
             return null;
         }
-
-
     }
 
     private Card defineCardbyVoca(Card _card, Voca voca) {
