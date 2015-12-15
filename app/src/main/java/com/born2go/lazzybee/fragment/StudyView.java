@@ -96,6 +96,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     boolean answerDisplay = false;
     boolean learn_more;
+    FloatingActionButton mFloatActionButtonUserNote;
 
 
     private Intent intent;
@@ -148,6 +149,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 answerDisplay = true;
                 _showAnswer();
                 mListener.setCurrentCard(currentCard);
+                mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+
 
             }
         };
@@ -300,7 +303,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         mCardViewHelpandAdMod = (CardView) view.findViewById(R.id.mCardViewHelpandAdMod);
 
-        final FloatingActionButton mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
+        mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
         mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -753,6 +756,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                         " to queue " + beforeCard.getQueue());
 
                 _nextCard(currentQueue);//next Card by Queue
+                mFloatActionButtonUserNote.setVisibility(View.GONE );
 
             } else {
                 Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");

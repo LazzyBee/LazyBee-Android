@@ -347,6 +347,8 @@ public class LazzyBeeShare {
                 meaning = commonObj.getString("meaning");
                 explain = commonObj.getString("explain");
                 example = commonObj.getString("example");
+
+
             } else {
                 _example = EMPTY;
                 _explain = EMPTY;
@@ -368,16 +370,19 @@ public class LazzyBeeShare {
         if (!POSITION_MEANING) {
             meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
                     "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                    "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
+                    "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
                     "</div>";
             meaningDOWN = EMPTY;
+           // Log.d(TAG, "meaningUP:" + meaningUP);
         } else {
             meaningUP = EMPTY;
             meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
                     "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                    "<font size='4' color='blue'>" + "<em>" + Html.fromHtml(meaning).toString() + "</em></font>\n" +
+                    "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
                     "</div>";
+           // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
         }
+
 
         html = "\n<html>\n" +
                 "<head>\n" +
