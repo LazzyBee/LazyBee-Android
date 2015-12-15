@@ -105,7 +105,7 @@ public class RecyclerViewSettingListAdapter extends
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
         ImageView imageView = (ImageView) view.findViewById(R.id.imgGoto);
 
-        Log.i(TAG, "Setting Name:" + setting);
+        // Log.i(TAG, "Setting Name:" + setting);
 
 
         try {
@@ -134,21 +134,21 @@ public class RecyclerViewSettingListAdapter extends
                     getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
 
                 } else if (setting.equals(context.getString(R.string.setting_check_update))) {
+                    //check Update
                     lbLimit.setVisibility(View.GONE);
+                    if (                                                                                                         learnApiImplements._checkUpdateDataBase()) {
+                        imageView.setVisibility(View.VISIBLE);
+                        imageView.setImageResource(R.drawable.ic_action_about_red);
+                    } else {
+                        imageView.setVisibility(View.GONE);
+                    }
                     _onClickCheckUpdate(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_language))) {
                     lbLimit.setVisibility(View.GONE);
                     changeLanguage(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_about))) {
 
-                }
-//                else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
-//
-//                    lbLimit.setVisibility(View.VISIBLE);
-//                    _showDialogChangeSpeechRate(mCardView, lbLimit);
-//
-//                }
-                else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
+                } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                     lbLimit.setVisibility(View.GONE);
                     _resetCache(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_export_database))) {
@@ -797,7 +797,6 @@ public class RecyclerViewSettingListAdapter extends
         } else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
-                || setting.equals(context.getString(R.string.setting_check_update))
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
@@ -824,6 +823,9 @@ public class RecyclerViewSettingListAdapter extends
 
             return TYPE_SETTING_NOTIFICATION;
         else if (setting.equals(context.getString(R.string.setting_custom_study)))
+
+            return TYPE_SETTING_NAME;
+        else if (setting.equals(context.getString(R.string.setting_check_update)))
 
             return TYPE_SETTING_NAME;
         else
