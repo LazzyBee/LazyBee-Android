@@ -138,7 +138,7 @@ public class RecyclerViewSettingListAdapter extends
                     lbLimit.setVisibility(View.GONE);
                     if (                                                                                                         learnApiImplements._checkUpdateDataBase()) {
                         imageView.setVisibility(View.VISIBLE);
-                        imageView.setImageResource(R.drawable.ic_action_about_red);
+                        imageView.setImageResource(R.drawable.ic_action_about_green);
                     } else {
                         imageView.setVisibility(View.GONE);
                     }
