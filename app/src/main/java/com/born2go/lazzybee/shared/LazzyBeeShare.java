@@ -373,14 +373,14 @@ public class LazzyBeeShare {
                     "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
                     "</div>";
             meaningDOWN = EMPTY;
-           // Log.d(TAG, "meaningUP:" + meaningUP);
+            // Log.d(TAG, "meaningUP:" + meaningUP);
         } else {
             meaningUP = EMPTY;
             meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
                     "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
                     "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
                     "</div>";
-           // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+            // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
         }
 
 
@@ -481,41 +481,34 @@ public class LazzyBeeShare {
 
     public static String getDictionaryHTML(String l_vn) {
         String html =
-                "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<style>\n" +
-                        ".outer {\n" +
-                        "    display: table;\n" +
-                        "    position: absolute;\n" +
-                        "    height: 100%;\n" +
-                        "    width: 100%;\n" +
-                        "}\n" +
-                        "\n" +
+                "<html><head><style>.outer {\n" +
+                        "display: table;\n" +
+                        "position: absolute;\n" +
+                        "height: 100%;\n" +
+                        "width: 100%;\n" +
+                        "} \n" +
                         ".middle {\n" +
-                        "    display: table-cell;\n" +
-                        "    vertical-align: middle;\n" +
+                        "display: table-cell;\n" +
+                        "vertical-align: middle;                        \n" +
                         "}\n" +
-                        "\n" +
                         ".inner {\n" +
-                        "    margin-left: auto;\n" +
-                        "    margin-right: auto; \n" +
-                        "  \n" +
-                        "    width: /*whatever width you want*/;\n" +
+                        "margin-left: auto;\n" +
+                        "margin-right: auto;                        \n" +
+                        "width: /*whatever width you want*/;\n" +
                         "}\n" +
-                        "</style>\n" +
-                        "<body>\n" +
-                        "<div class=\"outer\">\n" +
-                        "<div class=\"middle\">\n" +
-                        "<div class=\"inner\">\n" +
-                        "<center>\n" +
-                        "<h1><img src='ic_cloud_96.png'></h1>" +
-                        "<p>Database updating...</p>" +
-                        "<center>\n" +
-                        "</div>\n" +
-                        "</div>\n" +
-                        "</div>\n" +
-                        "</body>\n" +
-                        "</html>";
+                        "                        </style>\n" +
+                        "                        </head><body>\n" +
+                        "                        <div class=\"outer\">\n" +
+                        "                        <div class=\"middle\">\n" +
+                        "                        <div class=\"inner\" style=\"text-align: center;font-family: sans-serif;\">\n" +
+                        "<img src=\"cloud_blue.png\" style=\"height: 120px;\">\n" +
+                        "<h3>Oops</h3>\n" +
+                        "<h4 style=\"color: darkgray; \">Database updating</h4>\n" +
+                        "</div> \n" +
+                        "                        </div>\n" +
+                        "                        </div>\n" +
+                        "                        \n" +
+                        "                       </body></html>";
         if (l_vn != null) {
             if (l_vn.length() > 0) {
                 html =
