@@ -480,53 +480,61 @@ public class MainActivity extends AppCompatActivity
      * @param toolbar
      */
     private void _initNavigationDrawerFragment(Toolbar toolbar) {
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        try {
+            mNavigationDrawerFragment = (NavigationDrawerFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        mTitle = getTitle();
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        // drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            // drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer, toolbar,
-                drawerLayout);
+            // Set up the drawer.
+            mNavigationDrawerFragment.setUp(
+                    R.id.navigation_drawer, toolbar,
+                    drawerLayout);
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        switch (position) {
-            case LazzyBeeShare.DRAWER_ABOUT_INDEX:
-                //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
-                _gotoAbout();
-                break;
-            case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
-                //_gotoAddCourse();
-                Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
-                break;
-            case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
-                _gotoSetting();
-                break;
-            case LazzyBeeShare.DRAWER_USER_INDEX:
-                //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
-                break;
-            case LazzyBeeShare.DRAWER_COURSE_INDEX:
-                break;
-            case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
-                _gotoDictionary();
-                break;
-            case LazzyBeeShare.DRAWER_MAJOR_INDEX:
-                showSelectSubject();
-                break;
-            case LazzyBeeShare.DRAWER_HELP_INDEX:
-                _showHelp();
-                break;
-            case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
-                _showStatistical();
-                break;
-            default:
-                break;
+        try {
+            switch (position) {
+                case LazzyBeeShare.DRAWER_ABOUT_INDEX:
+                    //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+                    _gotoAbout();
+                    break;
+                case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
+                    //_gotoAddCourse();
+                    Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+                    break;
+                case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
+                    _gotoSetting();
+                    break;
+                case LazzyBeeShare.DRAWER_USER_INDEX:
+                    //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
+                    break;
+                case LazzyBeeShare.DRAWER_COURSE_INDEX:
+                    break;
+                case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
+                    _gotoDictionary();
+                    break;
+                case LazzyBeeShare.DRAWER_MAJOR_INDEX:
+                    showSelectSubject();
+                    break;
+                case LazzyBeeShare.DRAWER_HELP_INDEX:
+                    _showHelp();
+                    break;
+                case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
+                    _showStatistical();
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
 
 
@@ -740,16 +748,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            MenuInflater inflater = getMenuInflater();
-            // Inflate menu to add items to action bar if it is present.
-            inflater.inflate(R.menu.main, menu);
-            // Associate searchable configuration with the SearchView
-            _defineSearchView(menu);
-            _restoreActionBar();
+        try {
+            if (!mNavigationDrawerFragment.isDrawerOpen()) {
+                // Only show items in the action bar relevant to this screen
+                // if the drawer is not showing. Otherwise, let the drawer
+                // decide what to show in the action bar.
+                MenuInflater inflater = getMenuInflater();
+                // Inflate menu to add items to action bar if it is present.
+                inflater.inflate(R.menu.main, menu);
+                // Associate searchable configuration with the SearchView
+                _defineSearchView(menu);
+                _restoreActionBar();
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         return super.onCreateOptionsMenu(menu);
     }
