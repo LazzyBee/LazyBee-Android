@@ -109,9 +109,6 @@ public class LazzyBeeShare {
     public static final int MAX_NEW_PRE_DAY = 50;
     public static final int SECONDS_PERDAY = 86400;
 
-
-    private static boolean DEBUG = true;
-    private static boolean POSITION_MEANING = true;
     public static final String CARD_MEANING = "meaning";
     public static final String CARD_PRONOUN = "pronoun";
     public static final String CARD_EXPLAIN = "explain";
@@ -194,12 +191,9 @@ public class LazzyBeeShare {
     /**
      * init HTML answer
      */
-    public static String getAnswerHTML(Context context, Card card) {
-        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
-        String mySubject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
-        if (mySubject == null)
-            mySubject = "common";
-        return getAnswerHTMLwithPackage(context, card, mySubject, false);
+    public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
+
+        return getAnswerHTMLwithPackage(context, card, mySubject, sDEBUG, sPOSITION_MEANING, false);
     }
 
     /**
@@ -224,15 +218,7 @@ public class LazzyBeeShare {
      * </body>
      * </html>
      */
-    public static String _getQuestionDisplay(Context context, Card card) {
-        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
-        String mySubject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
-        if (mySubject == null)
-            mySubject = "common";
-        else if (mySubject.equals(EMPTY)) {
-            mySubject = "common";
-        }
-        Log.i(TAG, "mySubject:" + mySubject);
+    public static String _getQuestionDisplay(Context context, Card card, String mySubject) {
         boolean containPakage = false;
         if (card.getPackage().contains(mySubject)) {
             containPakage = true;
@@ -315,10 +301,7 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean onload) {
-        getDebugSetting();
-        getPositionMeaning();
-
+    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -455,7 +438,8 @@ public class LazzyBeeShare {
 
     }
 
-    private static void getPositionMeaning() {
+    public static boolean getPositionMeaning() {
+        boolean POSITION_MEANING = false;
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_POSITION_MEANIG);
         if (value == null)
@@ -465,9 +449,11 @@ public class LazzyBeeShare {
         } else if (value.equals(DOWN)) {
             POSITION_MEANING = true;
         }
+        return POSITION_MEANING;
     }
 
-    private static void getDebugSetting() {
+    public static boolean getDebugSetting() {
+        boolean DEBUG = false;
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_DEBUG_INFOR);
         if (value == null)
@@ -477,6 +463,20 @@ public class LazzyBeeShare {
         } else if (value.equals(OFF)) {
             DEBUG = false;
         }
+        return DEBUG;
+    }
+
+    public static String getSubjectSetting() {
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        String subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+        String mySubject = "common";
+        if (subject == null) {
+        } else if (subject.equals(LazzyBeeShare.EMPTY)) {
+        } else if (subject != null) {
+            mySubject = subject;
+        }
+        return mySubject;
+
     }
 
     public static String getDictionaryHTML(String l_vn) {

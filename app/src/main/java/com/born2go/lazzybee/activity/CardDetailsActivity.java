@@ -66,6 +66,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     CardView mCardViewAdv;
     CardView mCardViewViewPager;
     private String carID;
+    String mySubject = "common";
+    boolean sDEBUG = false;
+    boolean sPOSITION_MEANING = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
+        _initSettingUser();
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -379,7 +383,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             String queue_list = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.QUEUE_LIST);
             List<String> cardIDs = learnApiImplements._getListCardIdFromStringArray(queue_list);
             if (cardIDs.contains(cardId)) {
-                Toast.makeText(context,getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
             } else {
                 if (card == null)
                     card = learnApiImplements._getCardByID(cardId);
@@ -412,7 +416,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 //            // Get the AlertDialog from create()
 //            AlertDialog dialog = builder.create();
 
-           // dialog.show();
+            // dialog.show();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
@@ -463,6 +467,12 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    private void _initSettingUser() {
+        mySubject = LazzyBeeShare.getSubjectSetting();
+        sDEBUG = LazzyBeeShare.getDebugSetting();
+        sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
     }
 
     public String getCarID() {
@@ -552,7 +562,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                         break;
                     case 2:
                         //dic Lazzybee
-                        displayHTML = LazzyBeeShare.getAnswerHTML(context, card);
+                        displayHTML = LazzyBeeShare.getAnswerHTML(context, card, mySubject, sDEBUG, sPOSITION_MEANING);
                         break;
                 }
                 Log.i(TAG, "Tab Dic:" + displayHTML);
