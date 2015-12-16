@@ -495,76 +495,89 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _nextNewCard() {
-        Log.i(TAG, "---------_nextNewCard--------");
-        if (todayList.size() > 0) {
-            currentCard = todayList.get(0);//get next new card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), QUEUE_NEW_CRAM0, 0);//Display question
-        } else if (againList.size() > 0) {
-            Log.i(TAG, "_nextNewCard:Next card is Again card");
-            _nextAgainCard();
-        } else if (dueList.size() > 0) {
-            Log.i(TAG, "_nextNewCard:Next card is Due card");
-            _nextDueCard();
-        } else {
-            Log.i(TAG, "_nextNewCard:_completeLean");
-            _completeLean(true);
+        try {
+            Log.i(TAG, "---------_nextNewCard--------");
+            if (todayList.size() > 0) {
+                currentCard = todayList.get(0);//get next new card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), QUEUE_NEW_CRAM0, 0);//Display question
+            } else if (againList.size() > 0) {
+                Log.i(TAG, "_nextNewCard:Next card is Again card");
+                _nextAgainCard();
+            } else if (dueList.size() > 0) {
+                Log.i(TAG, "_nextNewCard:Next card is Due card");
+                _nextDueCard();
+            } else {
+                Log.i(TAG, "_nextNewCard:_completeLean");
+                _completeLean(true);
+            }
+            Log.i(TAG, "--------------END------------");
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
-        Log.i(TAG, "--------------END------------");
     }
 
 
     private void _nextDueCard() {
-        Log.i(TAG, "---------_nextDueCard--------");
-        if (dueList.size() > 0) {//Check dueList.size()>0
-            currentCard = dueList.get(0);//get current card in DueList
-            //Display next card
-            _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_REV2, 0);
-        } else if (againList.size() > 0) {//Check againList.size()>0
-            Log.i(TAG, "_nextDueCard:Next card is again card");
-            _nextAgainCard();
-        } else if (todayList.size() > 0) {
-            Log.i(TAG, "_nextDueCard:Next card is new card");
-            _nextNewCard();
-        } else {
-            Log.i(TAG, "_nextDueCard:_completeLean");
-            _completeLean(true);
+        try {
+            Log.i(TAG, "---------_nextDueCard--------");
+            if (dueList.size() > 0) {//Check dueList.size()>0
+                currentCard = dueList.get(0);//get current card in DueList
+                //Display next card
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_REV2, 0);
+            } else if (againList.size() > 0) {//Check againList.size()>0
+                Log.i(TAG, "_nextDueCard:Next card is again card");
+                _nextAgainCard();
+            } else if (todayList.size() > 0) {
+                Log.i(TAG, "_nextDueCard:Next card is new card");
+                _nextNewCard();
+            } else {
+                Log.i(TAG, "_nextDueCard:_completeLean");
+                _completeLean(true);
+            }
+            Log.i(TAG, "--------------END------------");
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
-        Log.i(TAG, "--------------END------------");
-
 
     }
 
 
     private void _nextAgainCard() {
-        Log.i(TAG, "---------_nextAgainCard--------");
-        if (againList.size() > 0) {//Check againList.size()>0
+        try {
+            Log.i(TAG, "---------_nextAgainCard--------");
+            if (againList.size() > 0) {//Check againList.size()>0
 
-            currentCard = againList.get(0);//get currentCard in AgainList
+                currentCard = againList.get(0);//get currentCard in AgainList
+                int current_time = (int) (new Date().getTime() / 1000);//Define current time and due card by second
+                int due = (int) currentCard.getDue();
 
-            int current_time = (int) (new Date().getTime() / 1000);//Define current time and due card by second
-            int due = (int) currentCard.getDue();
+                Log.d(TAG, "_nextAgainCard:" + current_time + "-" + due + "=" + (current_time - due));
 
-            Log.d(TAG, "_nextAgainCard:" + current_time + ":" + due);
+                if ((current_time - due >= 600) || todayList.size() == 0) {//Check due<current_time
+                    btnGood2.setEnabled(false);
+                    btnEasy3.setEnabled(false);
 
-            if (current_time - due >= 600 || todayList.size() == 0 && dueList.size() == 0) {//Check due<current_time
-                btnGood2.setEnabled(false);
-                btnEasy3.setEnabled(false);
+                    Log.d(TAG, "_nextAgainCard:Next card is again card 2");
 
-                Log.d(TAG, "_nextAgainCard:Next card is again card 2");
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_LNR1, 0);//Display next card
+                } else if (todayList.size() > 0) {
+                    Log.i(TAG, "_nextAgainCard:Next card is new card 1");
+                    _nextNewCard();
+                } else {
+                    Log.i(TAG, "_nextAgainCard:Next card 3");
+                }
 
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_LNR1, 0);//Display next card
-            } else {
-                Log.i(TAG, "_nextAgainCard:Next card is due card 1");
+            } else if (dueList.size() > 0) {//Check dueList.size()>0
+                Log.i(TAG, "_nextAgainCard:Next card is due card");
                 _nextDueCard();
+            } else if (todayList.size() > 0) {
+                Log.i(TAG, "_nextAgainCard:Next card is new card");
+                _nextNewCard();
+            } else {
+                _completeLean(false);
             }
-        } else if (dueList.size() > 0) {//Check dueList.size()>0
-            Log.i(TAG, "_nextAgainCard:Next card is due card");
-            _nextDueCard();
-        } else if (todayList.size() > 0) {
-            Log.i(TAG, "_nextAgainCard:Next card is new card");
-            _nextNewCard();
-        } else {
-            _completeLean(false);
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "--------------END--------------");
 
