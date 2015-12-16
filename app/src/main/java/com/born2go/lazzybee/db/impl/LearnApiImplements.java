@@ -271,6 +271,7 @@ public class LearnApiImplements implements LearnApi {
             int countNewCard = cards.size();
             if (countNewCard == 0) {//over 100 card
                 countNewCard = _initIncomingCardIdList();//define new incoming list
+                value = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
                 cards = _getListCardFromStringArray(value);
             }
             List<Card> cloneCard = new ArrayList<Card>();
