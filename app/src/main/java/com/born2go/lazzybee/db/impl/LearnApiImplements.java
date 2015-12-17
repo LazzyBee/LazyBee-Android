@@ -279,6 +279,8 @@ public class LearnApiImplements implements LearnApi {
             if (countNewCard > 0) {
                 if (number > LazzyBeeShare.MAX_NEW_PRE_DAY) {//newCard > size MAX_NEW_PRE_DAY
                     number = LazzyBeeShare.MAX_NEW_PRE_DAY;
+                } else if (number > countNewCard) {
+                    number = countNewCard;
                 }
                 for (int i = 0; i < number; i++) {
                     Card card = cards.get(i);//define card
@@ -645,8 +647,8 @@ public class LearnApiImplements implements LearnApi {
 
                 //get Card by id
                 Card card = _getCardByID(cardId);
-
-                cardList.add(card);
+                if (card.getQueue() == 0)
+                    cardList.add(card);
             }
 
         } catch (JSONException e) {
