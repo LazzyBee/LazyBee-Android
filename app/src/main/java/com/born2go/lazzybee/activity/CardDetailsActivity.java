@@ -26,6 +26,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -127,24 +128,19 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
-            String adb_ennable;
-            String admob_pub_id = LazzyBeeShare.EMPTY;
-            String adv_dictionary_id = LazzyBeeShare.EMPTY;
+            String admob_pub_id = null;
+            String adv_dictionary_id = null;
             if (container == null) {
-                adb_ennable = LazzyBeeShare.NO;
             } else {
-                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
                 adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
-
-            }
-            String advId = admob_pub_id + "/" + adv_dictionary_id;
-            if (admob_pub_id == null || adv_dictionary_id == null) {
-                advId = getString(R.string.banner_ad_unit_id);
+                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
+                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
             }
             mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
-            Log.i(TAG, "AdUnitId:" + admob_pub_id + "/" + adv_dictionary_id);
-            if (adb_ennable.equals(LazzyBeeShare.YES)) {
+            if (admob_pub_id != null || adv_dictionary_id != null) {
+                String advId = admob_pub_id + "/" + adv_dictionary_id;
+                Log.i(TAG, "admob -AdUnitId:" + advId);
                 AdView mAdView = new AdView(this);
                 AdRequest adRequest = new AdRequest.Builder()
                         .addTestDevice(getResources().getStringArray(R.array.devices)[0])
@@ -153,22 +149,14 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
                 mAdView.loadAd(adRequest);
-                ((LinearLayout) findViewById(R.id.adView)).addView(mAdView);
+                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                relativeLayout.addView(mAdView, adViewCenter);
 
                 mCardViewAdv.setVisibility(View.VISIBLE);
-                //
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
-                mCardViewViewPager.setLayoutParams(param);
             } else {
                 mCardViewAdv.setVisibility(View.GONE);
-                //
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT, 0f);
-                mCardViewViewPager.setLayoutParams(param);
-
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
