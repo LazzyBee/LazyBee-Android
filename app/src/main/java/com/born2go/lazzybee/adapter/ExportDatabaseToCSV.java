@@ -24,7 +24,14 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "ExportDatabaseToCSV";
     private Context context;
     private ProgressDialog dialog;
-    private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
+    private String queryExportToCsv = "Select " +
+            "vocabulary.gid," +
+            "vocabulary.e_factor," +
+            "vocabulary.last_ivl," +
+            "vocabulary.level," +
+            "vocabulary.queue," +
+            "vocabulary.rev_count," +
+            "vocabulary.due " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
 
 
@@ -56,11 +63,23 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
             SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
             Cursor curCSV = db.rawQuery(queryExportToCsv, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to exprort
-                String arrStr[] = {curCSV.getString(0), curCSV.getString(1), curCSV.getString(3), curCSV.getString(4), curCSV.getString(5)};
-                csvWrite.writeNext(arrStr);
+
+            String[] columNames = curCSV.getColumnNames();
+            Log.d(TAG, "columNames length:" + columNames.length);
+            csvWrite.writeNext(columNames);
+            if (curCSV.moveToFirst()) {
+                if (curCSV.getCount() > 0)
+                    do {
+                        String arrStr[] = {
+                                curCSV.getString(0),
+                                curCSV.getString(1),
+                                curCSV.getString(2),
+                                curCSV.getString(3),
+                                curCSV.getString(4),
+                                curCSV.getString(5),
+                                curCSV.getString(6)};
+                        csvWrite.writeNext(arrStr);
+                    } while (curCSV.moveToNext());
             }
             csvWrite.close();
             curCSV.close();
