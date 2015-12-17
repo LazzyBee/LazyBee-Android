@@ -833,16 +833,17 @@ public class LearnApiImplements implements LearnApi {
 
         //Update queue_list system table
         String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
+        if (queue_list != null) {
+            //Get Card list id form system tabele
+            List<String> cardListId = _getListCardIdFromStringArray(queue_list);
 
-        //Get Card list id form system tabele
-        List<String> cardListId = _getListCardIdFromStringArray(queue_list);
+            //Check cardListId.contains(cardId)==true remeve carId
+            if (cardListId.contains(cardId)) {
+                cardListId.remove(cardId);
 
-        //Check cardListId.contains(cardId)==true remeve carId
-        if (cardListId.contains(cardId)) {
-            cardListId.remove(cardId);
-
-            //update queue list
-            _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardListId));
+                //update queue list
+                _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardListId));
+            }
         }
         db.close();
         return update_result;
