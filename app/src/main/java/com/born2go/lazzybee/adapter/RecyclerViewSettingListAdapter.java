@@ -58,6 +58,8 @@ public class RecyclerViewSettingListAdapter extends
     private static final int TYPE_SETTING_ABOUT = 5;
     private static final int TYPE_SETTING_NOTIFICATION = 6;
     DataLayer lazzybeeTag;
+    private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
+            "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
 
     private RecyclerView mRecyclerViewSettings;
 
@@ -136,7 +138,7 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_check_update))) {
                     //check Update
                     lbLimit.setVisibility(View.GONE);
-                    if (                                                                                                         learnApiImplements._checkUpdateDataBase()) {
+                    if (learnApiImplements._checkUpdateDataBase()) {
                         imageView.setVisibility(View.VISIBLE);
                         imageView.setImageResource(R.drawable.ic_action_about_green);
                     } else {
@@ -154,6 +156,10 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_export_database))) {
                     lbLimit.setVisibility(View.GONE);
                     _exportDatabases(mCardView);
+
+                } else if (setting.equals(context.getString(R.string.setting_export_database_to_csv))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _exportDatabasesToCVS(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
 
                     _showDialogExecuteQueue(mCardView);
@@ -217,6 +223,16 @@ public class RecyclerViewSettingListAdapter extends
             LazzyBeeShare.showErrorOccurred(context, e);
         }
 
+    }
+
+    private void _exportDatabasesToCVS(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExportDatabaseToCSV exportDatabaseToCSV = new ExportDatabaseToCSV(context);
+                exportDatabaseToCSV.execute();
+            }
+        });
     }
 
     private void _handlerChangeSpeechRate(SeekBar mSlideSpeechRate) {
@@ -800,7 +816,7 @@ public class RecyclerViewSettingListAdapter extends
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
-
+                || setting.equals(context.getString(R.string.setting_export_database_to_csv))
                 || setting.equals(context.getString(R.string.setting_update_db_form_query))
                 )
             return TYPE_SETTING_NAME;
