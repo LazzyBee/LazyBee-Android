@@ -1552,4 +1552,24 @@ public class LearnApiImplements implements LearnApi {
         }
     }
 
+    public int _updateCardFormCSV(Card card) {
+        int update_result = -2;
+        //Update staus card by id
+        if (card.getgId() > 0) {
+            SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_FACTOR, card.getFactor());
+            values.put(KEY_LAT_IVL, card.getLast_ivl());
+            values.put(KEY_LEVEL, card.getLevel());
+            values.put(KEY_QUEUE, card.getQueue());
+            values.put(KEY_REV_COUNT, card.getRev_count());
+            values.put(KEY_DUE, card.getDue());
+
+            update_result = db.update(TABLE_VOCABULARY, values, KEY_G_ID + " = ?",
+                    new String[]{String.valueOf(card.getgId())});
+            Log.i(TAG, "_updateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
+            db.close();
+        }
+        return update_result;
+    }
 }
