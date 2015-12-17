@@ -168,6 +168,7 @@
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
         <item>@string/setting_export_database_to_csv</item>
+        <item>@string/setting_import_database_from_csv</item>
         <item>@string/setting_update_db_form_query</item>
         <item>@string/setting_lines</item>
 

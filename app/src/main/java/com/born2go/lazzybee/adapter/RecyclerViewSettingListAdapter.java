@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.CustomStudySettingActivity;
+import com.born2go.lazzybee.activity.SettingActivity;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -58,12 +59,14 @@ public class RecyclerViewSettingListAdapter extends
     private static final int TYPE_SETTING_ABOUT = 5;
     private static final int TYPE_SETTING_NOTIFICATION = 6;
     DataLayer lazzybeeTag;
+    SettingActivity activity;
     private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
 
     private RecyclerView mRecyclerViewSettings;
 
-    public RecyclerViewSettingListAdapter(Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
+    public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
+        this.activity = activity;
         this.context = context;
         this.settings = settings;
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
@@ -160,8 +163,10 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_export_database_to_csv))) {
                     lbLimit.setVisibility(View.GONE);
                     _exportDatabasesToCVS(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_import_database_from_csv))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _importDatabasesFormCVS(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
-
                     _showDialogExecuteQueue(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_custom_study))) {
                     Log.i(TAG, "Here?");
@@ -223,6 +228,29 @@ public class RecyclerViewSettingListAdapter extends
             LazzyBeeShare.showErrorOccurred(context, e);
         }
 
+    }
+
+    private void _importDatabasesFormCVS(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFileChooser();
+            }
+        });
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        //intent.setType("*/*");      //all files
+        intent.setType("text/xml");   //XML file only
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            activity.startActivityForResult(Intent.createChooser(intent, "Select a File to Import"), 159);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(context, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void _exportDatabasesToCVS(RelativeLayout mCardView) {
@@ -817,6 +845,7 @@ public class RecyclerViewSettingListAdapter extends
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
                 || setting.equals(context.getString(R.string.setting_export_database_to_csv))
+                || setting.equals(context.getString(R.string.setting_import_database_from_csv))
                 || setting.equals(context.getString(R.string.setting_update_db_form_query))
                 )
             return TYPE_SETTING_NAME;
