@@ -398,48 +398,59 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
 
             //get card due today & agin
-            againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
             dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
+            againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
 
-            //Define Count due
-            int dueCount = dueList.size();
+            int dueCount = dueList.size(); //Define Count due
 
+            int againCount = againList.size();//Define count again
+            int today = total_learn_per_day - dueCount;
+            todayList = new ArrayList<Card>();
+            if (today > 0) {
+                if (today < limit_today) {
+                    limit_today = today;
+                }
+                Log.i(TAG, "limit_today:" + limit_today);
+                //Define todayList
+                todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
+            }
+//            if (dueCount > 0 && dueCount < total_learn_per_day) {
+//
+//            }else if (dueCount > 0){
+//                limit_today = total_learn_per_day;
+//            }
             //get new random card list to day
             //int newCount =
             //if (newCount > 0)
             //  todayList = dataBaseHelper._getRandomCard(newCount);
-            if (dueCount == 0) {
-                Log.i(TAG, "_setUpStudy()  dueCount == 0");
-            } else {
+//            if (dueCount == 0) {
+//                Log.i(TAG, "_setUpStudy()  dueCount == 0");
+//            } else {
+//
+//                Log.i(TAG, "_setUpStudy()  dueCount != 0");
+//
+//                if (dueCount < total_learn_per_day) {
+//
+//                    Log.i(TAG, "_setUpStudy()  dueCount < total_learn_per_day");
+//
+//                    if (total_learn_per_day - dueCount < limit_today) {
+//
+//                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount < limit_today");
+//                        limit_today = total_learn_per_day - dueCount;
+//
+//                    } else if (total_learn_per_day - dueCount > limit_today) {
+//
+//                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount > limit_today");
+//                    }
+//                } else if (dueCount >= total_learn_per_day) {
+//
+//                    Log.i(TAG, "_setUpStudy()  dueCount >= total_learn_per_day");
+//                    limit_today = 0;
+//                }
+//                learn_more = false;
+//            }
 
-                Log.i(TAG, "_setUpStudy()  dueCount != 0");
 
-                if (dueCount < total_learn_per_day) {
-
-                    Log.i(TAG, "_setUpStudy()  dueCount < total_learn_per_day");
-
-                    if (total_learn_per_day - dueCount < limit_today) {
-
-                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount < limit_today");
-                        limit_today = total_learn_per_day - dueCount;
-
-                    } else if (total_learn_per_day - dueCount > limit_today) {
-
-                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount > limit_today");
-                    }
-                } else if (dueCount >= total_learn_per_day) {
-
-                    Log.i(TAG, "_setUpStudy()  dueCount >= total_learn_per_day");
-                    limit_today = 0;
-                }
-                learn_more = false;
-            }
-
-            //Define todayList
-            todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
-
-            //Define count card
-            int againCount = againList.size();
             int todayCount = todayList.size();
 
             Log.i(TAG, "againCount:" + againCount);
