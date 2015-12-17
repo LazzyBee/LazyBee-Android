@@ -57,39 +57,41 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
 //                            + ("\t" + header[5] + ":" + "\t" + nextLine[5]) + "\n,"
 //                            + ("\t" + header[6] + ":" + "\t" + nextLine[6]));
                     if (nextLine[0] != null) {
-                        Card card = new Card();
-                        card.setgId(Long.valueOf(nextLine[0]));
-                        int factor = 0;
-                        int last_ivl = 0;
-                        int level = 0;
-                        int queue = 0;
-                        int rev_count = 0;
-                        int due = 0;
-                        if (nextLine[1] != null) {
-                            factor = Integer.valueOf(nextLine[1]);
+                        if (nextLine[0].length() > 0) {
+                            Card card = new Card();
+                            card.setgId(Long.valueOf(nextLine[0]));
+                            int factor = 0;
+                            int last_ivl = 0;
+                            int level = 0;
+                            int queue = 0;
+                            int rev_count = 0;
+                            int due = 0;
+                            if (nextLine[1] != null) {
+                                factor = Integer.valueOf(nextLine[1]);
+                            }
+                            if (nextLine[2] != null) {
+                                last_ivl = Integer.valueOf(nextLine[2]);
+                            }
+                            if (nextLine[3] != null) {
+                                level = Integer.valueOf(nextLine[3]);
+                            }
+                            if (nextLine[4] != null) {
+                                queue = Integer.valueOf(nextLine[4]);
+                            }
+                            if (nextLine[5] != null) {
+                                rev_count = Integer.valueOf(nextLine[5]);
+                            }
+                            if (nextLine[6] != null) {
+                                due = Integer.valueOf(nextLine[6]);
+                            }
+                            card.setFactor(factor);
+                            card.setLast_ivl(last_ivl);
+                            card.setLevel(level);
+                            card.setRev_count(rev_count);
+                            card.setQueue(queue);
+                            card.setDue(due);
+                            LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(card);
                         }
-                        if (nextLine[2] != null) {
-                            last_ivl = Integer.valueOf(nextLine[2]);
-                        }
-                        if (nextLine[3] != null) {
-                            level = Integer.valueOf(nextLine[3]);
-                        }
-                        if (nextLine[4] != null) {
-                            queue = Integer.valueOf(nextLine[4]);
-                        }
-                        if (nextLine[5] != null) {
-                            rev_count = Integer.valueOf(nextLine[5]);
-                        }
-                        if (nextLine[6] != null) {
-                            due = Integer.valueOf(nextLine[6]);
-                        }
-                        card.setFactor(factor);
-                        card.setLast_ivl(last_ivl);
-                        card.setLevel(level);
-                        card.setRev_count(rev_count);
-                        card.setQueue(queue);
-                        card.setDue(due);
-                        LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(card);
                     }
                     results = true;
                 }
