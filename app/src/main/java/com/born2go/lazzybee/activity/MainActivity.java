@@ -147,25 +147,17 @@ public class MainActivity extends AppCompatActivity
     private void _initInterstitialAd() {
         try {
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
-            String adb_ennable;
-            String admob_pub_id = LazzyBeeShare.EMPTY;
-            String adv_fullscreen_id = LazzyBeeShare.EMPTY;
-            if (container == null) {
-                adb_ennable = LazzyBeeShare.NO;
-            } else {
-                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
+            String admob_pub_id = null;
+            String adv_fullscreen_id = null;
+            if (container != null) {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
                 adv_fullscreen_id = container.getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
-
+                Log.d(TAG, "admob_pub_id:" + admob_pub_id);
+                Log.d(TAG, "adv_fullscreen_id:" + adv_fullscreen_id);
             }
-            String advId = admob_pub_id + "/" + adv_fullscreen_id;
-            if (admob_pub_id == null || adv_fullscreen_id == null) {
-                advId = "ca-app-pub-3940256099942544/1033173712";
-            }
-            Log.i(TAG, "adb_ennable ? " + adb_ennable);
-            Log.i(TAG, "advId ? " + advId);
-
-            if (adb_ennable.equals(LazzyBeeShare.YES)) {
+            if (admob_pub_id != null || adv_fullscreen_id != null) {
+                String advId = admob_pub_id + "/" + adv_fullscreen_id;
+                Log.d(TAG, "InterstitialAdId:" + advId);
                 mInterstitialAd = new InterstitialAd(this);
                 mInterstitialAd.setAdUnitId(advId);
 
@@ -179,6 +171,7 @@ public class MainActivity extends AppCompatActivity
 
                 requestNewInterstitial();
             } else {
+                Log.d(TAG, "InterstitialAdId null");
                 mInterstitialAd = null;
             }
         } catch (Exception e) {
@@ -189,13 +182,16 @@ public class MainActivity extends AppCompatActivity
     private void requestNewInterstitial() {
         if (mInterstitialAd != null) {
             AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice(getResources().getStringArray(R.array.devices)[0])
                     .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
                     .build();
 
             mInterstitialAd.loadAd(adRequest);
         } else {
-            Log.i(TAG, "mInterstitialAd null");
+            Log.d(TAG, "mInterstitialAd null");
         }
     }
 
