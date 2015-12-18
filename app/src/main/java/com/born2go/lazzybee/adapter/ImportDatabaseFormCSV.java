@@ -62,7 +62,6 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
                             card.setgId(Long.valueOf(nextLine[0]));
                             int factor = 0;
                             int last_ivl = 0;
-                            int level = 0;
                             int queue = 0;
                             int rev_count = 0;
                             int due = 0;
@@ -73,20 +72,16 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
                                 last_ivl = Integer.valueOf(nextLine[2]);
                             }
                             if (nextLine[3] != null) {
-                                level = Integer.valueOf(nextLine[3]);
+                                queue = Integer.valueOf(nextLine[3]);
                             }
                             if (nextLine[4] != null) {
-                                queue = Integer.valueOf(nextLine[4]);
+                                rev_count = Integer.valueOf(nextLine[4]);
                             }
                             if (nextLine[5] != null) {
-                                rev_count = Integer.valueOf(nextLine[5]);
-                            }
-                            if (nextLine[6] != null) {
-                                due = Integer.valueOf(nextLine[6]);
+                                due = Integer.valueOf(nextLine[5]);
                             }
                             card.setFactor(factor);
                             card.setLast_ivl(last_ivl);
-                            card.setLevel(level);
                             card.setRev_count(rev_count);
                             card.setQueue(queue);
                             card.setDue(due);

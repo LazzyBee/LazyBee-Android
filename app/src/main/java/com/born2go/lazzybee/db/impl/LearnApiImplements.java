@@ -1561,7 +1561,6 @@ public class LearnApiImplements implements LearnApi {
             ContentValues values = new ContentValues();
             values.put(KEY_FACTOR, card.getFactor());
             values.put(KEY_LAT_IVL, card.getLast_ivl());
-            values.put(KEY_LEVEL, card.getLevel());
             values.put(KEY_QUEUE, card.getQueue());
             values.put(KEY_REV_COUNT, card.getRev_count());
             values.put(KEY_DUE, card.getDue());

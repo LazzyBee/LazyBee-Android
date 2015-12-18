@@ -28,7 +28,6 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             "vocabulary.gid," +
             "vocabulary.e_factor," +
             "vocabulary.last_ivl," +
-            "vocabulary.level," +
             "vocabulary.queue," +
             "vocabulary.rev_count," +
             "vocabulary.due " +
@@ -76,8 +75,7 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                                 curCSV.getString(2),
                                 curCSV.getString(3),
                                 curCSV.getString(4),
-                                curCSV.getString(5),
-                                curCSV.getString(6)};
+                                curCSV.getString(5)};
                         csvWrite.writeNext(arrStr);
                     } while (curCSV.moveToNext());
             }
