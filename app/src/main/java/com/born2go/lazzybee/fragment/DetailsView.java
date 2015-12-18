@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -262,37 +261,34 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private void _initAdView(CardView mDetailsCardViewAdv) {
         try {
-            String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            Log.i(TAG, "My android_id:" + android_id);
-
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
-            String adb_ennable;
-            String admob_pub_id = LazzyBeeShare.EMPTY;
-            String adv_dictionary_id = LazzyBeeShare.EMPTY;
+            String admob_pub_id = null;
+            String adv_dictionary_id = null;
             if (container == null) {
-                adb_ennable = LazzyBeeShare.NO;
             } else {
-                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
                 adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
-
+                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
+                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
             }
-            String advId = admob_pub_id + "/" + adv_dictionary_id;
-            if (admob_pub_id == null || adv_dictionary_id == null) {
-                advId = context.getString(R.string.banner_ad_unit_id);
-            }
-
-            Log.d(TAG, "AdUnitId:" + admob_pub_id + "/" + adv_dictionary_id);
-            if (adb_ennable.equals(LazzyBeeShare.YES)) {
-
+            CardView mCardViewAdv = mDetailsCardViewAdv;
+            if (admob_pub_id != null || adv_dictionary_id != null) {
+                String advId = admob_pub_id + "/" + adv_dictionary_id;
+                Log.i(TAG, "admob -AdUnitId:" + advId);
                 AdView mAdView = new AdView(context);
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(context.getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(context.getResources().getStringArray(R.array.devices)[1])
-                        .build();
+
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
+
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                        .build();
+
                 mAdView.loadAd(adRequest);
 
                 RelativeLayout relativeLayout = ((RelativeLayout) mDetailsCardViewAdv.findViewById(R.id.adView));
@@ -300,10 +296,9 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                 relativeLayout.addView(mAdView, adViewCenter);
 
-                mDetailsCardViewAdv.setVisibility(View.VISIBLE);
-
+                mCardViewAdv.setVisibility(View.VISIBLE);
             } else {
-                mDetailsCardViewAdv.setVisibility(View.GONE);
+                mCardViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
