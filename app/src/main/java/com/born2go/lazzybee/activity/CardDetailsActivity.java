@@ -142,13 +142,20 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 String advId = admob_pub_id + "/" + adv_dictionary_id;
                 Log.i(TAG, "admob -AdUnitId:" + advId);
                 AdView mAdView = new AdView(this);
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .build();
+
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
+
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                        .build();
+
                 mAdView.loadAd(adRequest);
+
                 RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
                 RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -171,21 +178,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         _defineSearchView(menu);
 
         return true;
-    }
-
-    private void _initAndLoadFavorite(Menu menu) {
-        // itemFavorite = menu.findItem(R.id.action_favorite);
-
-//        if (card != null) {
-//            //load favorite
-//            if (card.getStatus() == 1) {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-//            } else {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-//            }
-//        }
     }
 
     private void _defineSearchView(Menu menu) {

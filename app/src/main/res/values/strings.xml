@@ -298,9 +298,11 @@
         <item>@string/speech_rate_very_fast</item>
     </string-array>
 
-    <string-array name="devices">
+    <string-array name="devices" translatable="false">
         <item>E05695103149F526FA2EFBABB1E00968</item>
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
+        <item>EF50D24B20A7E2E53F484DC278B88A9C</item><!--A820-->
+        <item>757E6C0437129F846D20D0B58D0BFA85</item><!--A890-->
     </string-array>
 
 
