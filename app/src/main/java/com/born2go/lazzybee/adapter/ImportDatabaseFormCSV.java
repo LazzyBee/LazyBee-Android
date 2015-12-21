@@ -52,16 +52,17 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
             File file = new File(path);
             String fileImport = exportDir.getPath() + "/";
             String fileCsvName = exportDir.getPath() + "/" + (file.getName().split("zip")[0]) + "csv";
-            Log.d(TAG, "file import path:" + fileImport);
-            zipManager.unzip(path, fileImport);
-
-            if (file != null) {
-                CSVReader reader = new CSVReader(new FileReader(new File(fileCsvName)));
-                // if the first line is the header
-                String[] header = reader.readNext();
-                // iterate over reader.readNext until it returns null
-                String[] nextLine;
-                while ((nextLine = reader.readNext()) != null) {
+            boolean unzip = zipManager.unzip(path, fileImport);
+            if (unzip) {
+                File fileCsv = new File(fileCsvName);
+                if (fileCsv != null) {
+                    Log.d(TAG, "file Csv path:" + fileCsvName);
+                    CSVReader reader = new CSVReader(new FileReader(fileCsv));
+                    // if the first line is the header
+                    String[] header = reader.readNext();
+                    // iterate over reader.readNext until it returns null
+                    String[] nextLine;
+                    while ((nextLine = reader.readNext()) != null) {
 //                    Log.d(TAG, ("\t" + header[0] + ":" + "\t" + nextLine[0]) + "\n,"
 //                            + ("\t" + header[1] + ":" + "\t" + nextLine[1]) + "\n,"
 //                            + ("\t" + header[2] + ":" + "\t" + nextLine[2]) + "\n,"
@@ -69,46 +70,49 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
 //                            + ("\t" + header[4] + ":" + "\t" + nextLine[4]) + "\n,"
 //                            + ("\t" + header[5] + ":" + "\t" + nextLine[5]) + "\n,"
 //                            + ("\t" + header[6] + ":" + "\t" + nextLine[6]));
-                    if (nextLine[0] != null) {
-                        if (nextLine[0].length() > 0) {
-                            Card card = new Card();
-                            card.setgId(Long.valueOf(nextLine[0]));
-                            int factor = 0;
-                            int last_ivl = 0;
-                            int queue = 0;
-                            int rev_count = 0;
-                            int due = 0;
-                            if (nextLine[1] != null) {
-                                factor = Integer.valueOf(nextLine[1]);
+                        if (nextLine[0] != null) {
+                            if (nextLine[0].length() > 0) {
+                                Card card = new Card();
+                                card.setgId(Long.valueOf(nextLine[0]));
+                                int factor = 0;
+                                int last_ivl = 0;
+                                int queue = 0;
+                                int rev_count = 0;
+                                int due = 0;
+                                if (nextLine[1] != null) {
+                                    factor = Integer.valueOf(nextLine[1]);
+                                }
+                                if (nextLine[2] != null) {
+                                    last_ivl = Integer.valueOf(nextLine[2]);
+                                }
+                                if (nextLine[3] != null) {
+                                    queue = Integer.valueOf(nextLine[3]);
+                                }
+                                if (nextLine[4] != null) {
+                                    rev_count = Integer.valueOf(nextLine[4]);
+                                }
+                                if (nextLine[5] != null) {
+                                    due = Integer.valueOf(nextLine[5]);
+                                }
+                                card.setFactor(factor);
+                                card.setLast_ivl(last_ivl);
+                                card.setRev_count(rev_count);
+                                card.setQueue(queue);
+                                card.setDue(due);
+                                LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(card);
                             }
-                            if (nextLine[2] != null) {
-                                last_ivl = Integer.valueOf(nextLine[2]);
-                            }
-                            if (nextLine[3] != null) {
-                                queue = Integer.valueOf(nextLine[3]);
-                            }
-                            if (nextLine[4] != null) {
-                                rev_count = Integer.valueOf(nextLine[4]);
-                            }
-                            if (nextLine[5] != null) {
-                                due = Integer.valueOf(nextLine[5]);
-                            }
-                            card.setFactor(factor);
-                            card.setLast_ivl(last_ivl);
-                            card.setRev_count(rev_count);
-                            card.setQueue(queue);
-                            card.setDue(due);
-                            LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(card);
                         }
+                        results = true;
                     }
-                    results = true;
+                } else {
+                    Log.d(TAG, "file csv Null");
                 }
+            } else {
+                Log.d(TAG, "unzip file Fails");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
             e.printStackTrace();
         }
         return results;

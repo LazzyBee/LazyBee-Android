@@ -16,6 +16,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipManager {
     private static final int BUFFER = 2048;
+
     public void zip(String[] _files, String zipFileName) {
         try {
             BufferedInputStream origin = null;
@@ -44,8 +45,9 @@ public class ZipManager {
             e.printStackTrace();
         }
     }
-    public void unzip(String _zipFile, String _targetLocation) {
 
+    public boolean unzip(String _zipFile, String _targetLocation) {
+        boolean unzip = false;
         //create target location folder if not exist
         dirChecker(_targetLocation);
 
@@ -70,10 +72,13 @@ public class ZipManager {
 
             }
             zin.close();
+            unzip = true;
         } catch (Exception e) {
             System.out.println(e);
         }
+        return unzip;
     }
+
     private void dirChecker(String dir) {
         File f = new File(dir);
 
