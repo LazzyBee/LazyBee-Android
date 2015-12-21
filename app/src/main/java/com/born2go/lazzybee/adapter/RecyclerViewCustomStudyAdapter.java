@@ -21,6 +21,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -327,10 +328,8 @@ public class RecyclerViewCustomStudyAdapter extends
                                 lbEror.setText(erorr_message);
                             } else {
                                 learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                //main.hide();
+                                _resetQueueList(limit);
                                 dialog.dismiss();
-                                Log.e(TAG, "Update 1");
-//                                studyInferface._finishCustomStudy();
                                 _reloadRecylerView();
                             }
                         } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
@@ -371,6 +370,22 @@ public class RecyclerViewCustomStudyAdapter extends
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         dialog.show();
+    }
+
+    private void _resetQueueList(String limit) {
+        String queueListstr = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.QUEUE_LIST);
+        if (queueListstr != null) {
+            //Get Card list id form system tabele
+            List<String> cardListId = learnApiImplements._getListCardIdFromStringArray(queueListstr);
+            int limitNew = Integer.valueOf(limit);
+            List<String> cardListLimit = new ArrayList<String>(limitNew);
+            if (cardListId.size() > limitNew) {
+                for (int i = 0; i < limitNew; i++) {
+                    cardListLimit.add(cardListId.get(i));
+                }
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.QUEUE_LIST,learnApiImplements._listCardTodayToArrayListCardId(null, cardListLimit));
+            }
+        }
     }
 
     private void _setPositionMeaning(RelativeLayout mCardView, TextView lbLimit) {

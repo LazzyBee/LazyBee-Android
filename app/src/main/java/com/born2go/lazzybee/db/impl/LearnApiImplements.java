@@ -329,7 +329,7 @@ public class LearnApiImplements implements LearnApi {
         return cardIds;
     }
 
-    private String _listCardTodayToArrayListCardId(List<Card> datas, List<String> _listCardId) {
+    public String _listCardTodayToArrayListCardId(List<Card> datas, List<String> _listCardId) {
         String jsonValuestr = "";//Todo: init string json value
         JSONObject valueJoson = new JSONObject();
 
