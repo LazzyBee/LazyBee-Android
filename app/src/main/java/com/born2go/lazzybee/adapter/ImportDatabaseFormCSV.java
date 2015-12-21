@@ -3,11 +3,13 @@ package com.born2go.lazzybee.adapter;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.born2go.lazzybee.utils.ZipManager;
 import com.opencsv.CSVReader;
 
 import java.io.File;
@@ -23,11 +25,13 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
     private Context context;
     private String path;
     private ProgressDialog dialog;
+    ZipManager zipManager;
 
     public ImportDatabaseFormCSV(Context context, String fpath) {
         this.context = context;
         this.path = fpath;
         dialog = new ProgressDialog(context);
+        zipManager = new ZipManager();
     }
 
     protected void onPreExecute() {
@@ -39,11 +43,20 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         boolean results = false;
-        Log.d("", "path file select:" + path);
+        Log.d(TAG, "path file select:" + path);
         try {
+            File exportDir = new File(Environment.getExternalStorageDirectory(), "");
+            if (!exportDir.exists()) {
+                exportDir.mkdirs();
+            }
             File file = new File(path);
+            String fileImport = exportDir.getPath() + "/";
+            String fileCsvName = exportDir.getPath() + "/" + (file.getName().split("zip")[0]) + "csv";
+            Log.d(TAG, "file import path:" + fileImport);
+            zipManager.unzip(path, fileImport);
+
             if (file != null) {
-                CSVReader reader = new CSVReader(new FileReader(file));
+                CSVReader reader = new CSVReader(new FileReader(new File(fileCsvName)));
                 // if the first line is the header
                 String[] header = reader.readNext();
                 // iterate over reader.readNext until it returns null
@@ -94,6 +107,8 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return results;

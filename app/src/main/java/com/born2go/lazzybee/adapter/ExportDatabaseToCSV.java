@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.utils.ZipManager;
 import com.opencsv.CSVWriter;
 
 import java.io.File;
@@ -24,6 +25,8 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "ExportDatabaseToCSV";
     private Context context;
     private ProgressDialog dialog;
+    ZipManager zipManager;
+    private static final int BUFFER = 2048;
     private String queryExportToCsv = "Select " +
             "vocabulary.gid," +
             "vocabulary.e_factor," +
@@ -37,6 +40,7 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     public ExportDatabaseToCSV(Context context) {
         this.context = context;
         dialog = new ProgressDialog(context);
+        zipManager=new ZipManager();
     }
 
     protected void onPreExecute() {
@@ -81,13 +85,15 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             }
             csvWrite.close();
             curCSV.close();
+            String[] files = new String[0];
+            files[0]=file.getPath();
+            zipManager.zip(files,exportDir.getPath()+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
             export = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
         }
         return export;
     }
-
 
     @Override
     protected void onPostExecute(Boolean export) {
