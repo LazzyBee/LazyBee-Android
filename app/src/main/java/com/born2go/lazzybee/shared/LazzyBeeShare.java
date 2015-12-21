@@ -193,7 +193,7 @@ public class LazzyBeeShare {
      */
     public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
 
-        return getAnswerHTMLwithPackage(context, card, mySubject, sDEBUG, sPOSITION_MEANING, false);
+        return getAnswerHTMLwithPackage(context, card, mySubject,sPOSITION_MEANING,sDEBUG, false);
     }
 
     /**
