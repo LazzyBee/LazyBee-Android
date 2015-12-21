@@ -26,6 +26,7 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private Context context;
     private ProgressDialog dialog;
     ZipManager zipManager;
+    private int type;
     private String queryExportToCsv = "Select " +
             "vocabulary.gid," +
             "vocabulary.e_factor," +
@@ -35,11 +36,23 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             "vocabulary.due " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
 
+    private String queryExportToCsvFull = "Select " +
+            "vocabulary.gid," +
+            "vocabulary.e_factor," +
+            "vocabulary.last_ivl," +
+            "vocabulary.queue," +
+            "vocabulary.rev_count," +
+            "vocabulary.due " +
+            "from vocabulary";
 
-    public ExportDatabaseToCSV(Context context) {
+
+    public ExportDatabaseToCSV(Context context, int type) {
         this.context = context;
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
+        this.type = type;
+        Log.d(TAG, "Type export:" + ((type == 0) ? " Full" : " Mini"));
+
     }
 
     protected void onPreExecute() {
@@ -59,12 +72,12 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             exportDir.mkdirs();
         }
         boolean export = false;
-        File file = new File(exportDir, (LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
+        File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
         try {
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
             SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-            Cursor curCSV = db.rawQuery(queryExportToCsv, null);
+            Cursor curCSV = db.rawQuery((type == 0) ? queryExportToCsvFull : queryExportToCsv, null);
             if (curCSV.getCount() > 0) {
                 String[] columNames = curCSV.getColumnNames();
                 Log.d(TAG, "columNames length:" + columNames.length);
@@ -86,7 +99,7 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                 curCSV.close();
                 String[] files = new String[1];
                 files[0] = file.getPath();
-                zipManager.zip(files, exportDir.getPath() + "/" + (LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
+                zipManager.zip(files, exportDir.getPath() + "/" + ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
                 Log.d(TAG, "Delete file Csv:" + (file.delete() ? " Ok" : " Fails"));
                 export = true;
             } else {

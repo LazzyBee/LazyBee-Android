@@ -254,11 +254,35 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _exportDatabasesToCVS(RelativeLayout mCardView) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final CharSequence[] types = new CharSequence[2];
+        types[0] = "Full";
+        types[1] = "Mini";
+        final int[] type = new int[1];
+        builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                type[0] = item;
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ExportDatabaseToCSV exportDatabaseToCSV = new ExportDatabaseToCSV(context, type[0]);
+                exportDatabaseToCSV.execute();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportDatabaseToCSV exportDatabaseToCSV = new ExportDatabaseToCSV(context);
-                exportDatabaseToCSV.execute();
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }
