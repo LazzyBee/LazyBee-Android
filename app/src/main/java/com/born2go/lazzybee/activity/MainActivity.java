@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity
     SearchView searchView;
 
     SharedPreferences sharedpreferences;
+    private int KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT;
 
 
     @Override
@@ -241,6 +242,7 @@ public class MainActivity extends AppCompatActivity
             _showHelp();
             sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).commit();
         }
+        KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
 
 
     }
@@ -263,13 +265,8 @@ public class MainActivity extends AppCompatActivity
     private int _checkCompleteLearn() {
         int complete = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000));
         try {
+            int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
             int check = dataBaseHelper._checkListTodayExit();
-            int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
-
-            if (total == 0)
-                total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
-
-            int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
             int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
 
             Log.i(TAG, "_checkCompleteLearn:\t complete code:" + complete);
@@ -1070,22 +1067,19 @@ public class MainActivity extends AppCompatActivity
         if (countCardNoLearn == 0) {
             Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         }
-        int check = dataBaseHelper._checkListTodayExit();
-        int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
-
-        if (total == 0)
-            total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
-
-        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
-        int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
-
-        check = check + countDue + countAgain;
-        Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
-        if (check == -1 || check == -2 || check > 0) {
+        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+        if (countDue > 0) {
+            Log.d(TAG, "onBtnStudyOnClick\t-countDue:" + countDue);
             _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
-        } else if (check == 0) {
-            String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
-            _showDialogWithMessage(message);
+        } else {
+            int check = dataBaseHelper._checkListTodayExit();
+            Log.d(TAG, "onBtnStudyOnClick\t-queueList:" + check);
+            if (check == -1 || check == -2 || check > 0) {
+                _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+            } else if (check == 0) {
+                String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
+                _showDialogWithMessage(message);
+            }
         }
     }
 
@@ -1119,22 +1113,23 @@ public class MainActivity extends AppCompatActivity
         if (countCardNoLearn == 0) {
             Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         } else {
-            int check = dataBaseHelper._checkListTodayExit();
-            int total = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
-
-            if (total == 0)
-                total = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
-
-            int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, total);
+            int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
             int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
-
-            check = check + countDue + countAgain;
-            Log.i(TAG, "_checkCompleteLearn:\t check count:" + check);
-            if (check == -1 || check == -2 || check > 0) {
+            int dueAgainCount = countDue + countAgain;
+            if (dueAgainCount > 0) {
+                Log.d(TAG, "_onLearnMoreClick:\t -dueAgainCount:" + dueAgainCount);
                 _showDialogWithMessage(getString(R.string.message_you_not_complete));
-            } else if (check == 0) {
-                _learnMore();
+            } else {
+                int check = dataBaseHelper._checkListTodayExit();
+                Log.d(TAG, "_onLearnMoreClick:\t -queueList:" + check);
+                if (check == -1 || check == -2 || check > 0) {
+                    _showDialogWithMessage(getString(R.string.message_you_not_complete));
+                } else if (check == 0) {
+                    _learnMore();
+                }
             }
+
+
         }
 
     }
