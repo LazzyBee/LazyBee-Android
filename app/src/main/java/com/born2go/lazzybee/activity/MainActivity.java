@@ -1072,13 +1072,19 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "onBtnStudyOnClick\t-countDue:" + countDue);
             _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
         } else {
-            int check = dataBaseHelper._checkListTodayExit();
-            Log.d(TAG, "onBtnStudyOnClick\t-queueList:" + check);
-            if (check == -1 || check == -2 || check > 0) {
+            int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+            if (countAgain > 0) {
+                Log.d(TAG, "onBtnStudyOnClick\t-countAgain:" + countAgain);
                 _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
-            } else if (check == 0) {
-                String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
-                _showDialogWithMessage(message);
+            } else {
+                int check = dataBaseHelper._checkListTodayExit();
+                Log.d(TAG, "onBtnStudyOnClick\t-queueList:" + check);
+                if (check == -1 || check == -2 || check > 0) {
+                    _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
+                } else if (check == 0) {
+                    String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
+                    _showDialogWithMessage(message);
+                }
             }
         }
     }
@@ -1114,18 +1120,22 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(context, getString(R.string.message_no_new_card), Toast.LENGTH_SHORT).show();
         } else {
             int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
-            int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
-            int dueAgainCount = countDue + countAgain;
-            if (dueAgainCount > 0) {
-                Log.d(TAG, "_onLearnMoreClick:\t -dueAgainCount:" + dueAgainCount);
+            if (countDue > 0) {
+                Log.d(TAG, "_onLearnMoreClick:\t -countDue:" + countDue);
                 _showDialogWithMessage(getString(R.string.message_you_not_complete));
             } else {
-                int check = dataBaseHelper._checkListTodayExit();
-                Log.d(TAG, "_onLearnMoreClick:\t -queueList:" + check);
-                if (check == -1 || check == -2 || check > 0) {
+                int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+                if (countAgain > 0) {
+                    Log.d(TAG, "_onLearnMoreClick:\t -countAgain:" + countAgain);
                     _showDialogWithMessage(getString(R.string.message_you_not_complete));
-                } else if (check == 0) {
-                    _learnMore();
+                } else {
+                    int check = dataBaseHelper._checkListTodayExit();
+                    Log.d(TAG, "_onLearnMoreClick:\t -queueList:" + check);
+                    if (check == -1 || check == -2 || check > 0) {
+                        _showDialogWithMessage(getString(R.string.message_you_not_complete));
+                    } else if (check == 0) {
+                        _learnMore();
+                    }
                 }
             }
 
