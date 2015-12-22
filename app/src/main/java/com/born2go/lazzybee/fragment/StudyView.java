@@ -452,10 +452,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
 
             int todayCount = todayList.size();
-
-            Log.i(TAG, "againCount:" + againCount);
-            Log.i(TAG, "todayCount:" + todayCount);
-            Log.i(TAG, "dueCount:" + dueCount + ",limit:" + dueCount + ",today:" + todayCount);
+            Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
 
             //Define check_learn
             //check_learn==true Study
