@@ -271,6 +271,19 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_reset_to_default</item>
     </string-array>
+    <string-array name="custom_study_dev">
+        <item>@string/setting_my_level</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_total_learn_per_day</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_today_new_card_limit</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_position_meaning</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_time_deday_show_answer</item>
+        <item>@string/setting_lines</item>
+        <item>@string/setting_reset_to_default</item>
+    </string-array>
 
     <string-array name="drawer_list">
         <!--<item>@string/drawer_user</item>-->
@@ -444,4 +457,5 @@
     <string name="custom_study_eror_limit">Limit</string>
     <string name="setting_export_database_to_csv" translatable="false">Export to CSV</string>
     <string name="setting_import_database_from_csv" translatable="false">Import Db form Csv</string>
+    <string name="setting_time_deday_show_answer">Time show answer</string>
 </resources>
