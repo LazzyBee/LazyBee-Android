@@ -307,6 +307,7 @@
     <string name="dialog_statistical_total">Tổng số: %d</string>
     <string name="custom_study_eror_limit">Số thẻ</string>
     <string name="setting_time_deday_show_answer">Thời gian hiển thị câu trả lời</string>
+    <string name="show_answer_now">Ngay lập tức</string>
 
 
     <string-array name="subjects">

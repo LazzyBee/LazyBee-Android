@@ -128,6 +128,8 @@ public class LazzyBeeShare {
 
     public static final String UP = "Up";
     public static final String DOWN = "Down";
+    public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
+    public static final int DEFAULT_TIME_SHOW_ANSWER = -1;
 
     public static String mime = "text/html";
     public static String encoding = "utf-8";
@@ -193,7 +195,7 @@ public class LazzyBeeShare {
      */
     public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
 
-        return getAnswerHTMLwithPackage(context, card, mySubject,sPOSITION_MEANING,sDEBUG, false);
+        return getAnswerHTMLwithPackage(context, card, mySubject, sPOSITION_MEANING, sDEBUG, false);
     }
 
     /**
