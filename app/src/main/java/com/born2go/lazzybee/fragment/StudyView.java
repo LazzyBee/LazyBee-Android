@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -146,54 +147,52 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         return view;
     }
 
+    View.OnClickListener showAnswer = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mViewPager.setPagingEnabled(true);
+            answerDisplay = true;
+            _showAnswer();
+            mListener.setCurrentCard(currentCard);
+            mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+
+
+        }
+    };
+
     private void _handlerButton() {
-        View.OnClickListener showAnswer = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setPagingEnabled(true);
-                answerDisplay = true;
-                _showAnswer();
-                mListener.setCurrentCard(currentCard);
-                mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
-
-
-            }
-        };
-        mShowAnswer.setOnClickListener(showAnswer);
-        btnShowAnswer.setOnClickListener(showAnswer);
         btnHard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_HARD);
+                _processingAnswerCard(Card.EASE_HARD);
             }
         });
         btnEasy3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_EASY);
+                _processingAnswerCard(Card.EASE_EASY);
             }
         });
         btnAgain0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_AGAIN);
+                _processingAnswerCard(Card.EASE_AGAIN);
             }
         });
         btnGood2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_GOOD);
-
+                _processingAnswerCard(Card.EASE_GOOD);
             }
         });
+    }
+
+    private void _processingAnswerCard(final int ea) {
+        _showBtnAnswer();
+        mViewPager.setPagingEnabled(false);
+        _answerCard(ea);
+        _handlerTimeShowAswerButton();
+
     }
 
     private void setDisplayCard(Card cardFromDB) {
@@ -494,19 +493,25 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
         _addJavascriptInterface(mWebViewLeadDetails, currentCard);
-
+        boolean show = false;
         //Load first card
         if (dueList.size() > 0) {
             //Load first card is Due card
             _nextDueCard();
+            show = true;
         } else if (againList.size() > 0) {
             //Load first card is Again card
             _nextAgainCard();
+            show = true;
         } else if (todayList.size() > 0) {
             //Load first card is new card
             _nextNewCard();
+            show = true;
         } else {
             _completeLean(false);
+        }
+        if (show) {
+            _handlerTimeShowAswerButton();
         }
     }
 
@@ -1018,11 +1023,36 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 message = getString(R.string.message_ignore_card_sucessful);
             }
             mViewPager.setPagingEnabled(false);
+            _handlerTimeShowAswerButton();
+
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "-----------------------END----------------------");
+    }
+
+    private void _handlerTimeShowAswerButton() {
+        if (sTimeShowAnswer > LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER) {
+            mShowAnswer.setOnClickListener(null);
+            btnShowAnswer.setOnClickListener(null);
+            new CountDownTimer(((sTimeShowAnswer) * 1000), 1000) {
+                public void onTick(long millisUntilFinished) {
+                    float second = (millisUntilFinished / 1000);
+                    Log.d(TAG, "second:" + second);
+                    btnShowAnswer.setText("" + Math.round(second+1));
+                }
+
+                public void onFinish() {
+                    btnShowAnswer.setText(R.string.show_answer);
+                    mShowAnswer.setOnClickListener(showAnswer);
+                    btnShowAnswer.setOnClickListener(showAnswer);
+                }
+            }.start();
+        } else {
+            mShowAnswer.setOnClickListener(showAnswer);
+            btnShowAnswer.setOnClickListener(showAnswer);
+        }
     }
 
     private void _updateCardFormServer() {
