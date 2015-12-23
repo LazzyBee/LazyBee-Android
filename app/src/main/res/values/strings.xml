@@ -468,6 +468,6 @@
     <string name="custom_study_eror_limit">Limit</string>
     <string name="setting_export_database_to_csv" translatable="false">Export to CSV</string>
     <string name="setting_import_database_from_csv" translatable="false">Import Db form Csv</string>
-    <string name="setting_time_deday_show_answer">Time show answer</string>
+    <string name="setting_time_deday_show_answer">Watting time to show answer</string>
     <string name="show_answer_now">Immediately</string>
 </resources>
