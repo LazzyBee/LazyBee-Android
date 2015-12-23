@@ -269,6 +269,8 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_position_meaning</item>
         <item>@string/setting_lines</item>
+        <item>@string/setting_time_deday_show_answer</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_reset_to_default</item>
     </string-array>
     <string-array name="custom_study_dev">
