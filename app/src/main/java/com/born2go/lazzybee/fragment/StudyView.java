@@ -1036,17 +1036,21 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         if (sTimeShowAnswer > -1) {
             mShowAnswer.setOnClickListener(null);
             btnShowAnswer.setOnClickListener(null);
+            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
+            btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
             new CountDownTimer(((sTimeShowAnswer) * 1000), 100) {
                 public void onTick(long millisUntilFinished) {
                     int second = Math.round((millisUntilFinished / 1000));
                     Log.d(TAG, "second:" + second);
-                    btnShowAnswer.setText(String.valueOf((second + 1)));
+                    btnShowAnswer.setText(context.getString(R.string.show_answer) + String.valueOf("(" + (second + 1) + "s)"));
                 }
 
                 public void onFinish() {
                     btnShowAnswer.setText(R.string.show_answer);
                     mShowAnswer.setOnClickListener(showAnswer);
                     btnShowAnswer.setOnClickListener(showAnswer);
+                    mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.button_green_color));
+                    btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.button_green_color));
                 }
             }.start();
         } else {
