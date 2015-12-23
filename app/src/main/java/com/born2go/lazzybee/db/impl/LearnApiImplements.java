@@ -706,7 +706,7 @@ public class LearnApiImplements implements LearnApi {
 
         if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
-            select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
+            select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due LIMIT "+limit;
 
             cardListByQueue = _getListCardQueryString(select_list_card_by_queue, 0);
 
