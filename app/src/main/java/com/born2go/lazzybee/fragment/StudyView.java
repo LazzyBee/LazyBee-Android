@@ -1033,14 +1033,14 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerTimeShowAswerButton() {
-        if (sTimeShowAnswer > LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER) {
+        if (sTimeShowAnswer > -1) {
             mShowAnswer.setOnClickListener(null);
             btnShowAnswer.setOnClickListener(null);
-            new CountDownTimer(((sTimeShowAnswer) * 1000), 1000) {
+            new CountDownTimer(((sTimeShowAnswer) * 1000), 100) {
                 public void onTick(long millisUntilFinished) {
-                    float second = (millisUntilFinished / 1000);
+                    int second = Math.round((millisUntilFinished / 1000));
                     Log.d(TAG, "second:" + second);
-                    btnShowAnswer.setText("" + Math.round(second+1));
+                    btnShowAnswer.setText(String.valueOf((second + 1)));
                 }
 
                 public void onFinish() {
