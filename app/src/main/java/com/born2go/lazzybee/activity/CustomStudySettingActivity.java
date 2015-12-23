@@ -81,7 +81,7 @@ public class CustomStudySettingActivity extends AppCompatActivity {
 
     public void setCustomStudyAdapter() {
         try {
-            RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, mRecyclerViewCustomStudy);
+            RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(this.getSupportFragmentManager(),context, settings, mRecyclerViewCustomStudy);
             mRecyclerViewCustomStudy.setAdapter(recyclerViewCustomStudyAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
