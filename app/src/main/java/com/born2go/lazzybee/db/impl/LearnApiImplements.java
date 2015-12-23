@@ -1392,7 +1392,9 @@ public class LearnApiImplements implements LearnApi {
                 return LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION;
             } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
                 return LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
-            } else
+            } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER) {
+                return LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER;
+            }else
                 return 0;
 
         } else {
