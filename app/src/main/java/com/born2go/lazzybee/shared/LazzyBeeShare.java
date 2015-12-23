@@ -129,7 +129,7 @@ public class LazzyBeeShare {
     public static final String UP = "Up";
     public static final String DOWN = "Down";
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
-    public static final int DEFAULT_TIME_SHOW_ANSWER = -1;
+    public static final int DEFAULT_TIME_SHOW_ANSWER = 3;
 
     public static String mime = "text/html";
     public static String encoding = "utf-8";
