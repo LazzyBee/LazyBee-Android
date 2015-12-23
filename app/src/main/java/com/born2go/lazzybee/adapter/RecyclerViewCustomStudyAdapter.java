@@ -206,6 +206,7 @@ public class RecyclerViewCustomStudyAdapter extends
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(LazzyBeeShare.DEFAULT_MY_LEVEL));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER));
 //                studyInferface._finishCustomStudy();
                 _reloadRecylerView();
             }
