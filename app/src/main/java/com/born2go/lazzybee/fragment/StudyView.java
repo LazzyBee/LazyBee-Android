@@ -109,6 +109,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     String mySubject = "common";
     boolean sDEBUG = false;
     boolean sPOSITION_MEANING = false;
+    int sTimeShowAnswer;
+
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -399,21 +401,27 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             //get card due today & agin
             dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
-            againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
+
 
             int dueCount = dueList.size(); //Define Count due
-
-            int againCount = againList.size();//Define count again
-            int today = total_learn_per_day - dueCount;
+            int numberAgainCard = total_learn_per_day - dueCount;
+            Log.d(TAG, "numberAgainCard:" + numberAgainCard);
             todayList = new ArrayList<Card>();
-            if (today > 0) {
-                if (today < limit_today) {
-                    limit_today = today;
+            int againCount = 0;//Define count again
+            if (numberAgainCard > 0) {
+                againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, numberAgainCard);
+                againCount = againList.size();
+                int numberNewCard = total_learn_per_day - (dueCount + againCount);
+                if (numberNewCard > 0) {
+                    if (numberNewCard > limit_today)
+                        numberNewCard = limit_today;
+                    Log.d(TAG, "numberNewCard:" + numberNewCard);
+                    //Define todayList
+                    todayList = dataBaseHelper._getRandomCard(numberNewCard, learn_more);
                 }
-                Log.i(TAG, "limit_today:" + limit_today);
-                //Define todayList
-                todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
             }
+
+
 //            if (dueCount > 0 && dueCount < total_learn_per_day) {
 //
 //            }else if (dueCount > 0){
@@ -559,9 +567,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 int current_time = (int) (new Date().getTime() / 1000);//Define current time and due card by second
                 int due = (int) currentCard.getDue();
 
-                Log.d(TAG, "_nextAgainCard:" + current_time + "-" + due + "=" + (current_time - due));
-
-                if ((current_time - due >= 600) || todayList.size() == 0) {//Check due<current_time
+                int time = (current_time - due);
+                Log.d(TAG, "_nextAgainCard: \t" + current_time + "-" + due + "=" + time);
+                if ((time >= 600) || todayList.size() == 0) {//Check due<current_time
                     btnGood2.setEnabled(false);
                     btnEasy3.setEnabled(false);
 
@@ -868,6 +876,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         mySubject = LazzyBeeShare.getSubjectSetting();
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
+        sTimeShowAnswer = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);
+
 
     }
 
