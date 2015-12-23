@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.view.DialogSetTimeShowAnswer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +42,20 @@ public class RecyclerViewCustomStudyAdapter extends
     int TYPE_LINE = -1;
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
     RecyclerView recyclerView;
+    FragmentManager supportFragmentManager;
+    RecyclerViewCustomStudyAdapter adapter;
 
-    public RecyclerViewCustomStudyAdapter(Context context, List<String> customStudys, RecyclerView recyclerView) {
+    public RecyclerViewCustomStudyAdapter(FragmentManager supportFragmentManager, Context context, List<String> customStudys, RecyclerView recyclerView) {
+        this.supportFragmentManager = supportFragmentManager;
         this.context = context;
         this.customStudys = customStudys;
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 //        this.main = dialog;
         this.recyclerView = recyclerView;
+        this.adapter = this;
     }
 
-    private void _reloadRecylerView() {
+    public void _reloadRecylerView() {
         recyclerView.setAdapter(this);
     }
 
@@ -103,6 +109,10 @@ public class RecyclerViewCustomStudyAdapter extends
                     lbLimit.setTag(limit);
                     getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, limit);
 
+                } else if (setting.equals(context.getString(R.string.setting_time_deday_show_answer))) {
+                    int timeSet = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);
+                    lbLimit.setText(((timeSet == -1) ? context.getString(R.string.show_answer_now) : timeSet + "s"));
+                    _defineSetTimeShowAnswer(mCardView, timeSet);
                 } else if (setting.equals(context.getString(R.string.setting_reset_to_default))) {
                     lbLimit.setVisibility(View.GONE);
                     mCardView.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +132,17 @@ public class RecyclerViewCustomStudyAdapter extends
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    private void _defineSetTimeShowAnswer(RelativeLayout mCardView, final int timeSet) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogSetTimeShowAnswer dialogSetTimeShowAnswer = new DialogSetTimeShowAnswer(adapter, context, timeSet);
+                dialogSetTimeShowAnswer.show(supportFragmentManager, DialogSetTimeShowAnswer.TAG);
+            }
+        });
+
     }
 
     private void getLevelandShowDialogChangeLevel(RelativeLayout mCardView, TextView lbLimit) {
@@ -216,6 +237,7 @@ public class RecyclerViewCustomStudyAdapter extends
                 || setting.equals(context.getString(R.string.setting_reset_to_default))
                 || setting.equals(context.getString(R.string.setting_my_level))
                 || setting.equals(context.getString(R.string.setting_position_meaning))
+                || setting.equals(context.getString(R.string.setting_time_deday_show_answer))
                 || setting.equals(context.getString(R.string.setting_max_learn_more_per_day)))
             return TYPE_SETTING_NAME;
         else
@@ -383,7 +405,7 @@ public class RecyclerViewCustomStudyAdapter extends
                 for (int i = 0; i < limitNew; i++) {
                     cardListLimit.add(cardListId.get(i));
                 }
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.QUEUE_LIST,learnApiImplements._listCardTodayToArrayListCardId(null, cardListLimit));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.QUEUE_LIST, learnApiImplements._listCardTodayToArrayListCardId(null, cardListLimit));
             }
         }
     }
