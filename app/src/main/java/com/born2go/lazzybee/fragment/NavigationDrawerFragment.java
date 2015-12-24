@@ -103,9 +103,12 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        this.context = getActivity();
-        //init List Object
-        final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
+        try {
+
+
+            this.context = getActivity();
+            //init List Object
+            final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
 
 //        objects.add(LazzyBeeShare.DRAWER_USER);
 //        objects.add(LazzyBeeShare.DRAWER_TITLE_COURSE);
@@ -117,44 +120,46 @@ public class NavigationDrawerFragment extends Fragment {
 //        objects.add(LazzyBeeShare.DRAWER_ABOUT);
 
 
-        //init mRecyclerViewDrawerList
-        RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
-        //init GridLayoutManager
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
-        //init Adapter
-        recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
+            //init mRecyclerViewDrawerList
+            RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
+            //init GridLayoutManager
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
+            //init Adapter
+            recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
 
-        mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
-        mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
-        mRecyclerViewDrawerList.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Object o = objects.get(position);
-                        if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
-                            selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
-                        } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
-                            selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
-                        } else if (o.equals(getString(R.string.drawer_about))) {
-                            selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
-                        } else if (o.equals(getString(R.string.drawer_dictionary))) {
-                            selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
-                        } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
-                            selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                        } else if (o instanceof Course) {
-                            selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
-                        } else if (o.equals(getString(R.string.drawer_subject))) {
-                            selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
-                        } else if (o.equals(getString(R.string.drawer_help))) {
-                            selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
-                        } else if (o.equals(getString(R.string.drawer_statistical))) {
-                            selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
+            mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
+            mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
+            mRecyclerViewDrawerList.addOnItemTouchListener(
+                    new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Object o = objects.get(position);
+                            if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
+                                selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
+                            } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
+                                selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
+                            } else if (o.equals(getString(R.string.drawer_about))) {
+                                selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
+                            } else if (o.equals(getString(R.string.drawer_dictionary))) {
+                                selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
+                            } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
+                                selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
+                            } else if (o instanceof Course) {
+                                selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
+                            } else if (o.equals(getString(R.string.drawer_subject))) {
+                                selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
+                            } else if (o.equals(getString(R.string.drawer_help))) {
+                                selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
+                            } else if (o.equals(getString(R.string.drawer_statistical))) {
+                                selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
+                            }
+                            recyclerViewDrawerListAdapter.notifyDataSetChanged();
                         }
-                        recyclerViewDrawerListAdapter.notifyDataSetChanged();
-                    }
-                })
-        );
-
+                    })
+            );
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
         return view;
     }
 

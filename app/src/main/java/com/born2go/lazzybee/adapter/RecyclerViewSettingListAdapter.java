@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.CustomStudySettingActivity;
+import com.born2go.lazzybee.activity.SettingActivity;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -58,10 +59,14 @@ public class RecyclerViewSettingListAdapter extends
     private static final int TYPE_SETTING_ABOUT = 5;
     private static final int TYPE_SETTING_NOTIFICATION = 6;
     DataLayer lazzybeeTag;
+    SettingActivity activity;
+    private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
+            "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
 
     private RecyclerView mRecyclerViewSettings;
 
-    public RecyclerViewSettingListAdapter(Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
+    public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
+        this.activity = activity;
         this.context = context;
         this.settings = settings;
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
@@ -105,7 +110,7 @@ public class RecyclerViewSettingListAdapter extends
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
         ImageView imageView = (ImageView) view.findViewById(R.id.imgGoto);
 
-        Log.i(TAG, "Setting Name:" + setting);
+        // Log.i(TAG, "Setting Name:" + setting);
 
 
         try {
@@ -134,28 +139,34 @@ public class RecyclerViewSettingListAdapter extends
                     getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, limit);
 
                 } else if (setting.equals(context.getString(R.string.setting_check_update))) {
+                    //check Update
                     lbLimit.setVisibility(View.GONE);
+                    if (learnApiImplements._checkUpdateDataBase()) {
+                        imageView.setVisibility(View.VISIBLE);
+                        imageView.setImageResource(R.drawable.ic_action_about_green);
+                    } else {
+                        imageView.setVisibility(View.GONE);
+                    }
                     _onClickCheckUpdate(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_language))) {
                     lbLimit.setVisibility(View.GONE);
                     changeLanguage(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_about))) {
 
-                }
-//                else if (setting.equals(context.getString(R.string.setting_speech_rate))) {
-//
-//                    lbLimit.setVisibility(View.VISIBLE);
-//                    _showDialogChangeSpeechRate(mCardView, lbLimit);
-//
-//                }
-                else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
+                } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                     lbLimit.setVisibility(View.GONE);
                     _resetCache(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_export_database))) {
                     lbLimit.setVisibility(View.GONE);
                     _exportDatabases(mCardView);
-                } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
 
+                } else if (setting.equals(context.getString(R.string.setting_export_database_to_csv))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _exportDatabasesToCVS(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_import_database_from_csv))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _importDatabasesFormCVS(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
                     _showDialogExecuteQueue(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_custom_study))) {
                     Log.i(TAG, "Here?");
@@ -217,6 +228,63 @@ public class RecyclerViewSettingListAdapter extends
             LazzyBeeShare.showErrorOccurred(context, e);
         }
 
+    }
+
+    private void _importDatabasesFormCVS(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFileChooser();
+            }
+        });
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        //intent.setType("*/*");      //all files
+        intent.setType("text/xml");   //XML file only
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            activity.startActivityForResult(Intent.createChooser(intent, "Select a File to Import"), 159);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(context, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void _exportDatabasesToCVS(RelativeLayout mCardView) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final CharSequence[] types = new CharSequence[2];
+        types[0] = "Full";
+        types[1] = "Mini";
+        final int[] type = new int[1];
+        builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                type[0] = item;
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ExportDatabaseToCSV exportDatabaseToCSV = new ExportDatabaseToCSV(context, type[0]);
+                exportDatabaseToCSV.execute();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
     }
 
     private void _handlerChangeSpeechRate(SeekBar mSlideSpeechRate) {
@@ -797,11 +865,11 @@ public class RecyclerViewSettingListAdapter extends
         } else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
-                || setting.equals(context.getString(R.string.setting_check_update))
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
-
+                || setting.equals(context.getString(R.string.setting_export_database_to_csv))
+                || setting.equals(context.getString(R.string.setting_import_database_from_csv))
                 || setting.equals(context.getString(R.string.setting_update_db_form_query))
                 )
             return TYPE_SETTING_NAME;
@@ -824,6 +892,9 @@ public class RecyclerViewSettingListAdapter extends
 
             return TYPE_SETTING_NOTIFICATION;
         else if (setting.equals(context.getString(R.string.setting_custom_study)))
+
+            return TYPE_SETTING_NAME;
+        else if (setting.equals(context.getString(R.string.setting_check_update)))
 
             return TYPE_SETTING_NAME;
         else

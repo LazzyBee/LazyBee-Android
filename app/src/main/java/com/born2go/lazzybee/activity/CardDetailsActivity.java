@@ -26,6 +26,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -66,6 +67,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     CardView mCardViewAdv;
     CardView mCardViewViewPager;
     private String carID;
+    String mySubject = "common";
+    boolean sDEBUG = false;
+    boolean sPOSITION_MEANING = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
+        _initSettingUser();
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -123,48 +128,42 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
-            String adb_ennable;
-            String admob_pub_id = LazzyBeeShare.EMPTY;
-            String adv_dictionary_id = LazzyBeeShare.EMPTY;
+            String admob_pub_id = null;
+            String adv_dictionary_id = null;
             if (container == null) {
-                adb_ennable = LazzyBeeShare.NO;
             } else {
-                adb_ennable = container.getString(LazzyBeeShare.ADV_ENABLE);
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
                 adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
-
-            }
-            String advId = admob_pub_id + "/" + adv_dictionary_id;
-            if (admob_pub_id == null || adv_dictionary_id == null) {
-                advId = getString(R.string.banner_ad_unit_id);
+                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
+                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
             }
             mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
-            Log.i(TAG, "AdUnitId:" + admob_pub_id + "/" + adv_dictionary_id);
-            if (adb_ennable.equals(LazzyBeeShare.YES)) {
+            if (admob_pub_id != null || adv_dictionary_id != null) {
+                String advId = admob_pub_id + "/" + adv_dictionary_id;
+                Log.i(TAG, "admob -AdUnitId:" + advId);
                 AdView mAdView = new AdView(this);
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .build();
+
                 mAdView.setAdSize(AdSize.BANNER);
                 mAdView.setAdUnitId(advId);
+
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                        .build();
+
                 mAdView.loadAd(adRequest);
-                ((LinearLayout) findViewById(R.id.adView)).addView(mAdView);
+
+                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                relativeLayout.addView(mAdView, adViewCenter);
 
                 mCardViewAdv.setVisibility(View.VISIBLE);
-                //
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
-                mCardViewViewPager.setLayoutParams(param);
             } else {
                 mCardViewAdv.setVisibility(View.GONE);
-                //
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT, 0f);
-                mCardViewViewPager.setLayoutParams(param);
-
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -179,21 +178,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         _defineSearchView(menu);
 
         return true;
-    }
-
-    private void _initAndLoadFavorite(Menu menu) {
-        // itemFavorite = menu.findItem(R.id.action_favorite);
-
-//        if (card != null) {
-//            //load favorite
-//            if (card.getStatus() == 1) {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_favorite));
-//            } else {
-//                itemFavorite.setIcon(LazzyBeeShare.getDraweble(context, R.drawable.ic_action_not_important));
-//                itemFavorite.setTitle(context.getString(R.string.action_not_favorite));
-//            }
-//        }
     }
 
     private void _defineSearchView(Menu menu) {
@@ -379,7 +363,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             String queue_list = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.QUEUE_LIST);
             List<String> cardIDs = learnApiImplements._getListCardIdFromStringArray(queue_list);
             if (cardIDs.contains(cardId)) {
-                Toast.makeText(context,getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
             } else {
                 if (card == null)
                     card = learnApiImplements._getCardByID(cardId);
@@ -412,7 +396,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 //            // Get the AlertDialog from create()
 //            AlertDialog dialog = builder.create();
 
-           // dialog.show();
+            // dialog.show();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
@@ -463,6 +447,12 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    private void _initSettingUser() {
+        mySubject = LazzyBeeShare.getSubjectSetting();
+        sDEBUG = LazzyBeeShare.getDebugSetting();
+        sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
     }
 
     public String getCarID() {
@@ -552,7 +542,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                         break;
                     case 2:
                         //dic Lazzybee
-                        displayHTML = LazzyBeeShare.getAnswerHTML(context, card);
+                        displayHTML = LazzyBeeShare.getAnswerHTML(context, card, mySubject, sDEBUG, sPOSITION_MEANING);
                         break;
                 }
                 Log.i(TAG, "Tab Dic:" + displayHTML);

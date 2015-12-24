@@ -53,7 +53,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         } else if (viewType == TYPE_TITLE_COURSE) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer, parent, false);
         } else if (viewType == TYPE_SETTING) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_setting, parent, false);
         } else if (viewType == TYPE_ABOUT) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         } else if (viewType == TYPE_LINES) {
@@ -116,8 +116,12 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                 lbDrawerName.setTextSize(15f);
                 lbDrawerName.setTextColor(context.getResources().getColor(R.color.grey_300));
             } else if (holder.viewType == TYPE_SETTING) {
-//            TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
-//            lbDrawerName.setText(context.getString(R.string.action_settings));
+                ImageView mNoti = (ImageView) view.findViewById(R.id.mNoti);
+                if (learnApiImplements._checkUpdateDataBase()) {
+                    mNoti.setVisibility(View.VISIBLE);
+                } else {
+                    mNoti.setVisibility(View.GONE);
+                }
             } else if (holder.viewType == TYPE_ABOUT) {
                 ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));

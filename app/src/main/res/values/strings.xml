@@ -247,6 +247,8 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
+        <item>@string/setting_export_database_to_csv</item>
+        <item>@string/setting_import_database_from_csv</item>
         <item>@string/setting_update_db_form_query</item>
         <item>@string/setting_lines</item>
 
@@ -296,9 +298,11 @@
         <item>@string/speech_rate_very_fast</item>
     </string-array>
 
-    <string-array name="devices">
+    <string-array name="devices" translatable="false">
         <item>E05695103149F526FA2EFBABB1E00968</item>
         <item>062AA843C75A097E7D8B2498E94ACDC9</item>
+        <item>EF50D24B20A7E2E53F484DC278B88A9C</item><!--A820-->
+        <item>757E6C0437129F846D20D0B58D0BFA85</item><!--A890-->
     </string-array>
 
 
@@ -438,4 +442,6 @@
     <string name="year">year</string>
     <string name="dialog_statistical_total">Total: %d</string>
     <string name="custom_study_eror_limit">Limit</string>
+    <string name="setting_export_database_to_csv" translatable="false">Export to CSV</string>
+    <string name="setting_import_database_from_csv" translatable="false">Import Db form Csv</string>
 </resources>

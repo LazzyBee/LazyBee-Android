@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.ImportDatabaseFormCSV;
 import com.born2go.lazzybee.adapter.RecyclerViewSettingListAdapter;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -69,7 +71,7 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
-        RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(mRecyclerViewSettings.getContext(), settings, mRecyclerViewSettings);
+        RecyclerViewSettingListAdapter recyclerViewSettingListAdapter = new RecyclerViewSettingListAdapter(this, context, settings, mRecyclerViewSettings);
 
         mRecyclerViewSettings.setLayoutManager(gridLayoutManager);
         mRecyclerViewSettings.setAdapter(recyclerViewSettingListAdapter);
@@ -120,5 +122,21 @@ public class SettingActivity extends AppCompatActivity {
         int hour = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         int minute = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 159) {
+            if (resultCode == RESULT_OK) {
+                String Fpath = data.getData().getPath();
+                if (Fpath != null) {
+                    ImportDatabaseFormCSV importDatabaseFormCSV=new ImportDatabaseFormCSV(context,Fpath);
+                    importDatabaseFormCSV.execute();
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }
