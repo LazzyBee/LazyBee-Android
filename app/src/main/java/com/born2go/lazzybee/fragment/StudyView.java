@@ -1042,7 +1042,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 public void onTick(long millisUntilFinished) {
                     int second = Math.round((millisUntilFinished / 1000));
                     Log.d(TAG, "second:" + second);
-                    btnShowAnswer.setText(context.getString(R.string.show_answer) + String.valueOf("(" + (second + 1) + "s)"));
+                    btnShowAnswer.setText(context.getString(R.string.show_answer) + String.valueOf(" (" + (second + 1) + "s)"));
                 }
 
                 public void onFinish() {
