@@ -144,9 +144,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         if (objectList.get(position).equals("English Word")
                 || objectList.get(position).equals(context.getString(R.string.drawer_dictionary))
                 || objectList.get(position).equals(context.getString(R.string.drawer_statistical))
-                || objectList.get(position).equals(context.getString(R.string.drawer_subject))
-                || objectList.get(position).equals(context.getString(R.string.setting_about_message))
-                )
+                || objectList.get(position).equals(context.getString(R.string.drawer_subject)))
+
             return TYPE_COURSE;
         else if (objectList.get(position).equals(context.getString(R.string.drawer_title_course)))
             return TYPE_TITLE_COURSE;

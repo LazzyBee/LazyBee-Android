@@ -307,7 +307,7 @@
         <!--<item>@string/drawer_about</item>-->
         <item>@string/drawer_help</item>
         <item>@string/drawer_line</item>
-        <item>@string/setting_about_message</item>
+        <!--<item>@string/setting_about_message</item>-->
     </string-array>
 
     <string-array name="speech_rate">
