@@ -601,7 +601,7 @@ public class MainActivity extends AppCompatActivity
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
             autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(getResources().getColor(R.color.white));
+            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
         }
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
@@ -639,7 +639,8 @@ public class MainActivity extends AppCompatActivity
                         Log.d(TAG, "cardID:" + cardID);
                         String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
                         Log.d(TAG, "query:" + query);
-
+                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
                         _gotoCardDetailbyCardId(cardID);
 
                         //call back actionbar

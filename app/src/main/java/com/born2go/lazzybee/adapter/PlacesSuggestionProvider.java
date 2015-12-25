@@ -82,33 +82,36 @@ public class PlacesSuggestionProvider extends ContentProvider {
                 String query = uri.getLastPathSegment().toLowerCase().trim();
                 Log.d(LOG_TAG, "query:" + query);
                 MatrixCursor cursor = new MatrixCursor(SUGGEST_COLUMNS, 1);
+                List<Card> cards;
                 if (query != null || query.length() > 1) {
                     if (query.equals("search_suggest_query")) {
                         Log.d(LOG_TAG, "query=search_suggest_query");
-//                        List<String> textSusggestions = learnApiImplements._getListTextSusggestion();
-//                        for (int i = 0; i < textSusggestions.size(); i++) {
-//                            String texts = textSusggestions.get(i);
-//                            cursor.addRow(new String[]{String.valueOf("-1"), texts, LazzyBeeShare.EMPTY, LazzyBeeShare.EMPTY});
-//                        }
-                    } else if (query.length() > 1) {
-                        Log.d(LOG_TAG, "Search suggestions requested.Query=" + query);
-                        List<Card> cards = learnApiImplements._suggestionCard(query);
+                        cards = learnApiImplements._recentSuggestionCard();
                         for (int i = 0; i < cards.size(); i++) {
                             Card card = cards.get(i);
                             String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-
                             cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
                         }
-                        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                    } else if (query.length() > 1) {
+                        Log.d(LOG_TAG, "Search suggestions requested.Query=" + query);
+                        cards = learnApiImplements._suggestionCard(query);
+                        for (int i = 0; i < cards.size(); i++) {
+                            Card card = cards.get(i);
+                            String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+                            cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                        }
+
                     }
                 } else {
                     Log.d(LOG_TAG, "query null or empty");
-//                    List<String> textSusggestions = learnApiImplements._getListTextSusggestion();
-//                    for (int i = 0; i < textSusggestions.size(); i++) {
-//                        String texts = textSusggestions.get(i);
-//                        cursor.addRow(new String[]{String.valueOf("-1"), texts, LazzyBeeShare.EMPTY, LazzyBeeShare.EMPTY});
-//                    }
+                    cards = learnApiImplements._recentSuggestionCard();
+                    for (int i = 0; i < cards.size(); i++) {
+                        Card card = cards.get(i);
+                        String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
+                        cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                    }
                 }
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
                 return cursor;
             default:
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
