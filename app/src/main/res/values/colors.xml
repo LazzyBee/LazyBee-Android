@@ -38,6 +38,7 @@
     <color name="color_level_btn_answer_disable">#757575</color>
     <color name="sliding_tab_color">#3C9F1E</color>
     <color name="text_color_number_count_card_by_level">#004D40</color>
+    <color name="auto_complete_text_view_text_color" >@android:color/white</color>
 
 
 </resources>
