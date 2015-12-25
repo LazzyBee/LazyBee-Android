@@ -595,7 +595,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Log.i(TAG, "_nextAgainCard:Next card is new card");
                 _nextNewCard();
             } else {
-                _completeLean(false);
+                _completeLean(true);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
