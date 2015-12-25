@@ -601,7 +601,7 @@ public class MainActivity extends AppCompatActivity
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
             autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(R.color.grey_600);
+            autoCompleteTextView.setTextColor(getResources().getColor(R.color.white));
         }
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
@@ -1041,7 +1041,14 @@ public class MainActivity extends AppCompatActivity
                 });
                 snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
 
-                snackbar.setDuration(7000).show();
+                new CountDownTimer(3000, 1000) {
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        snackbar.show();
+                    }
+                }.start();
             } else {
                 Log.e(TAG, "popup_text null");
             }
