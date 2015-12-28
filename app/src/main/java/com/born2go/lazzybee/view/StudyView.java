@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.fragment;
+package com.born2go.lazzybee.view;
 
 import android.app.Activity;
 import android.content.Context;
