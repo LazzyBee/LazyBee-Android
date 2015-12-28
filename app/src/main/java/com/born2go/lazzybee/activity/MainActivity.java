@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,7 @@ import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.view.ViewHome;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -82,18 +84,6 @@ public class MainActivity extends AppCompatActivity
     FrameLayout container;
     DrawerLayout drawerLayout;
 
-    CardView mCardViewStudy;
-    CardView mCardViewReView;
-    CardView mCardViewLearnMore;
-
-    CardView mCardViewCustomStudy;
-
-    TextView lbReview;
-
-    TextView lbStudy;
-    TextView lbCustomStudy;
-
-
     InterstitialAd mInterstitialAd;
 
     boolean appPause = false;
@@ -119,6 +109,8 @@ public class MainActivity extends AppCompatActivity
         _initInterstitialAd();
 
         _trackerApplication();
+
+        _goHome();
 
 
     }
@@ -241,27 +233,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _intInterfaceView() {
-        container = (FrameLayout) findViewById(R.id.container);
-        //Define Card View
-        mCardViewStudy = (CardView) findViewById(R.id.mCardViewStudy);
-        mCardViewReView = (CardView) findViewById(R.id.mCardViewReView);
-        mCardViewLearnMore = (CardView) findViewById(R.id.mCardViewLearnMore);
-        mCardViewCustomStudy = (CardView) findViewById(R.id.mCardViewCustomStudy);
-
-        lbStudy = (TextView) findViewById(R.id.lbStudy);
-        lbCustomStudy = (TextView) findViewById(R.id.lbCustomStudy);
-
-        lbReview = (TextView) findViewById(R.id.lbReview);
-
-
-        TextView lbTipHelp = (TextView) findViewById(R.id.lbTipHelp);
-        lbTipHelp.setText("****************************" + getString(R.string.url_lazzybee_website) + "****************************");
-        lbTipHelp.setSelected(true);
-        //lbTipHelp.setTypeface(null, Typeface.BOLD);
-        lbTipHelp.setSingleLine();
-        lbTipHelp.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        lbTipHelp.setHorizontallyScrolling(true);
-
+        container = (FrameLayout) findViewById(R.id.mContainer);
     }
 
     public void onlbTipHelpClick(View view) {
@@ -273,7 +245,7 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogCongraturation(String messgage_congratilation) {
         final Snackbar snackbar =
                 Snackbar
-                        .make(mCardViewReView, messgage_congratilation, Snackbar.LENGTH_LONG);
+                        .make(this.container, messgage_congratilation, Snackbar.LENGTH_LONG);
         View snackBarView = snackbar.getView();
         snackBarView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,6 +335,9 @@ public class MainActivity extends AppCompatActivity
                 case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
                     _showStatistical();
                     break;
+                case LazzyBeeShare.DRAWER_HOME_INDEX:
+                    _goHome();
+                    break;
                 default:
                     break;
             }
@@ -371,6 +346,10 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+
+    private void _goHome() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.mContainer, new ViewHome()).commit();
     }
 
     private void _showStatistical() {
@@ -1024,7 +1003,7 @@ public class MainActivity extends AppCompatActivity
             if (popup_text != null) {
                 final Snackbar snackbar =
                         Snackbar
-                                .make(mCardViewReView, popup_text, Snackbar.LENGTH_LONG);
+                                .make(this.container, popup_text, Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
                 final String finalPopup_url = popup_url;
                 snackBarView.setOnClickListener(new View.OnClickListener() {

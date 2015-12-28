@@ -152,6 +152,8 @@ public class NavigationDrawerFragment extends Fragment {
                                 selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
                             } else if (o.equals(getString(R.string.drawer_statistical))) {
                                 selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
+                            } else if (o.equals(getString(R.string.drawer_home))) {
+                                selectItem(LazzyBeeShare.DRAWER_HOME_INDEX);
                             }
                             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
                         }

@@ -86,10 +86,10 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
                     lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
                 } else if (objectList.get(position).equals(context.getString(R.string.drawer_dictionary))) {
-                    mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_dictionary));
+                    mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_dictionary));
                     lbCount.setVisibility(View.GONE);
                 } else if (objectList.get(position).equals(context.getString(R.string.drawer_subject))) {
-                    mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_list));
+                    mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_list));
                     String my_subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
                     if (my_subject != null) {
                         lbCount.setVisibility(View.VISIBLE);
@@ -110,7 +110,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                     lbNameCourse.setTextColor(context.getResources().getColor(R.color.grey_300));
                     lbNameCourse.setTextSize(15f);
                 } else if (objectList.get(position).equals(context.getString(R.string.drawer_statistical))) {
-                    mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_graph));
+                    mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_graph));
+                } else if (objectList.get(position).equals(context.getString(R.string.drawer_home))) {
+                    mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_home));
                 }
             } else if (holder.viewType == TYPE_ADD_COURCE) {
 
@@ -148,6 +150,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public int getItemViewType(int position) {
         if (objectList.get(position).equals("English Word")
+                || objectList.get(position).equals(context.getString(R.string.drawer_home))
                 || objectList.get(position).equals(context.getString(R.string.drawer_dictionary))
                 || objectList.get(position).equals(context.getString(R.string.drawer_statistical))
                 || objectList.get(position).equals(context.getString(R.string.drawer_subject)))

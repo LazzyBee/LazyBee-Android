@@ -296,6 +296,7 @@
         <!--<item>@string/drawer_user</item>-->
         <!--<item>@string/drawer_title_course</item>-->
         <!--<item>English Word</item>-->
+        <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
         <item>@string/drawer_dictionary</item>
@@ -468,4 +469,8 @@
     <string name="setting_import_database_from_csv" translatable="false">Import Db form Csv</string>
     <string name="setting_time_deday_show_answer">Watting time to show answer</string>
     <string name="show_answer_now">Immediately</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_home">Home</string>
 </resources>

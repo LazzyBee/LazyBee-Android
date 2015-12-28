@@ -207,6 +207,7 @@
         <!--<item>@string/drawer_user</item>-->
         <!--<item>@string/drawer_title_course</item>-->
         <!--<item>English Word</item>-->
+        <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
         <item>@string/drawer_dictionary</item>
@@ -304,6 +305,7 @@
     <string name="custom_study_eror_limit">Số thẻ</string>
     <string name="setting_time_deday_show_answer">Thời gian chờ câu trả lời</string>
     <string name="show_answer_now">Ngay lập tức</string>
+    <string name="drawer_home">Trang chủ</string>
 
 
     <string-array name="subjects">
