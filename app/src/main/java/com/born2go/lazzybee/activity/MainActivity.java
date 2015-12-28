@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.BaseColumns;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -98,7 +99,6 @@ public class MainActivity extends AppCompatActivity
     boolean appPause = false;
     boolean studyComplete = false;
 
-    int countCardNoLearn = 0;
     SearchView searchView;
 
     SharedPreferences sharedpreferences;
@@ -282,7 +282,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
         snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
-        snackbar.show();
+        new CountDownTimer(3000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                snackbar.show();
+            }
+        }.start();
+
     }
 
     private void _initToolBar() {

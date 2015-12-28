@@ -706,7 +706,7 @@ public class LearnApiImplements implements LearnApi {
 
         if (queue == Card.QUEUE_LNR1) {
             //Query select_list_card_by_queue
-            select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due";
+            select_list_card_by_queue = "SELECT " + selectFull + " FROM " + TABLE_VOCABULARY + " where queue = " + queue + " order by due LIMIT " + limit;
 
             cardListByQueue = _getListCardQueryString(select_list_card_by_queue, 0);
 
@@ -1392,6 +1392,8 @@ public class LearnApiImplements implements LearnApi {
                 return LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION;
             } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
                 return LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+            } else if (keySettingMyLevel == LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER) {
+                return LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER;
             } else
                 return 0;
 
@@ -1493,19 +1495,21 @@ public class LearnApiImplements implements LearnApi {
 
     public int _insetStreak() {
         int day = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
-        ContentValues values = new ContentValues();
-        values.put("day", day);
-        SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
-        try {
-            long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
-            Log.i(TAG, "_insetStreak\tInsert:day=" + day);
-            db_insert.close();
-            return (int) long_insert_results;
-        } catch (SQLiteException e) {
+        if (_queryCount("select count(day) from streak where day = " + day) == 0) {
+            ContentValues values = new ContentValues();
+            values.put("day", day);
+            SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
+            try {
+                long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
+                Log.i(TAG, "_insetStreak\tInsert:day=" + day);
+                db_insert.close();
+                return (int) long_insert_results;
+            } catch (SQLiteException e) {
+                return (int) -1;
+            }
+        } else {
             return (int) -1;
         }
-
-
     }
 
     public void _updateUserNoteCard(Card card) {

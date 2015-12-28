@@ -2,9 +2,11 @@ package com.born2go.lazzybee.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -31,8 +33,15 @@ public class CustomStudySettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_custom_study_setting);
         context = this;
 
-        settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study));
-
+        final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
+        String android_id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        if (devices.contains(android_id)) {
+            Log.d(TAG, "Device " + android_id + " is DEV");
+            settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study_dev));
+        } else {
+            settings = Arrays.asList(context.getResources().getStringArray(R.array.custom_study));
+        }
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
 
@@ -72,7 +81,7 @@ public class CustomStudySettingActivity extends AppCompatActivity {
 
     public void setCustomStudyAdapter() {
         try {
-            RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(context, settings, mRecyclerViewCustomStudy);
+            RecyclerViewCustomStudyAdapter recyclerViewCustomStudyAdapter = new RecyclerViewCustomStudyAdapter(this.getSupportFragmentManager(),context, settings, mRecyclerViewCustomStudy);
             mRecyclerViewCustomStudy.setAdapter(recyclerViewCustomStudyAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);

@@ -121,7 +121,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
             //init mRecyclerViewDrawerList
-            RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
+            final RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
             //init GridLayoutManager
             GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
             //init Adapter
@@ -153,7 +153,7 @@ public class NavigationDrawerFragment extends Fragment {
                             } else if (o.equals(getString(R.string.drawer_statistical))) {
                                 selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
                             }
-                            recyclerViewDrawerListAdapter.notifyDataSetChanged();
+                            mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
                         }
                     })
             );

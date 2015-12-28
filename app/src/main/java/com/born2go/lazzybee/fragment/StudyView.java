@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -109,6 +110,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     String mySubject = "common";
     boolean sDEBUG = false;
     boolean sPOSITION_MEANING = false;
+    int sTimeShowAnswer;
+
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -144,54 +147,52 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         return view;
     }
 
+    View.OnClickListener showAnswer = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mViewPager.setPagingEnabled(true);
+            answerDisplay = true;
+            _showAnswer();
+            mListener.setCurrentCard(currentCard);
+            mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+
+
+        }
+    };
+
     private void _handlerButton() {
-        View.OnClickListener showAnswer = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setPagingEnabled(true);
-                answerDisplay = true;
-                _showAnswer();
-                mListener.setCurrentCard(currentCard);
-                mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
-
-
-            }
-        };
-        mShowAnswer.setOnClickListener(showAnswer);
-        btnShowAnswer.setOnClickListener(showAnswer);
         btnHard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_HARD);
+                _processingAnswerCard(Card.EASE_HARD);
             }
         });
         btnEasy3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_EASY);
+                _processingAnswerCard(Card.EASE_EASY);
             }
         });
         btnAgain0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_AGAIN);
+                _processingAnswerCard(Card.EASE_AGAIN);
             }
         });
         btnGood2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setPagingEnabled(false);
-                _showBtnAnswer();
-                _answerCard(Card.EASE_GOOD);
-
+                _processingAnswerCard(Card.EASE_GOOD);
             }
         });
+    }
+
+    private void _processingAnswerCard(final int ea) {
+        _showBtnAnswer();
+        mViewPager.setPagingEnabled(false);
+        _answerCard(ea);
+        _handlerTimeShowAswerButton();
+
     }
 
     private void setDisplayCard(Card cardFromDB) {
@@ -399,21 +400,27 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             //get card due today & agin
             dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
-            againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, 0);
+
 
             int dueCount = dueList.size(); //Define Count due
-
-            int againCount = againList.size();//Define count again
-            int today = total_learn_per_day - dueCount;
+            int numberAgainCard = total_learn_per_day - dueCount;
+            Log.d(TAG, "numberAgainCard:" + numberAgainCard);
             todayList = new ArrayList<Card>();
-            if (today > 0) {
-                if (today < limit_today) {
-                    limit_today = today;
+            int againCount = 0;//Define count again
+            if (numberAgainCard > 0) {
+                againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, numberAgainCard);
+                againCount = againList.size();
+                int numberNewCard = total_learn_per_day - (dueCount + againCount);
+                if (numberNewCard > 0) {
+                    if (numberNewCard > limit_today)
+                        numberNewCard = limit_today;
+                    Log.d(TAG, "numberNewCard:" + numberNewCard);
+                    //Define todayList
+                    todayList = dataBaseHelper._getRandomCard(numberNewCard, learn_more);
                 }
-                Log.i(TAG, "limit_today:" + limit_today);
-                //Define todayList
-                todayList = dataBaseHelper._getRandomCard(limit_today, learn_more);
             }
+
+
 //            if (dueCount > 0 && dueCount < total_learn_per_day) {
 //
 //            }else if (dueCount > 0){
@@ -486,19 +493,25 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
         _addJavascriptInterface(mWebViewLeadDetails, currentCard);
-
+        boolean show = false;
         //Load first card
         if (dueList.size() > 0) {
             //Load first card is Due card
             _nextDueCard();
+            show = true;
         } else if (againList.size() > 0) {
             //Load first card is Again card
             _nextAgainCard();
+            show = true;
         } else if (todayList.size() > 0) {
             //Load first card is new card
             _nextNewCard();
+            show = true;
         } else {
             _completeLean(false);
+        }
+        if (show) {
+            _handlerTimeShowAswerButton();
         }
     }
 
@@ -559,9 +572,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 int current_time = (int) (new Date().getTime() / 1000);//Define current time and due card by second
                 int due = (int) currentCard.getDue();
 
-                Log.d(TAG, "_nextAgainCard:" + current_time + "-" + due + "=" + (current_time - due));
-
-                if ((current_time - due >= 600) || todayList.size() == 0) {//Check due<current_time
+                int time = (current_time - due);
+                Log.d(TAG, "_nextAgainCard: \t" + current_time + "-" + due + "=" + time);
+                if ((time >= 600) || todayList.size() == 0) {//Check due<current_time
                     btnGood2.setEnabled(false);
                     btnEasy3.setEnabled(false);
 
@@ -582,7 +595,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Log.i(TAG, "_nextAgainCard:Next card is new card");
                 _nextNewCard();
             } else {
-                _completeLean(false);
+                _completeLean(true);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
@@ -868,6 +881,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         mySubject = LazzyBeeShare.getSubjectSetting();
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
+        sTimeShowAnswer = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);
+
 
     }
 
@@ -1008,11 +1023,40 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 message = getString(R.string.message_ignore_card_sucessful);
             }
             mViewPager.setPagingEnabled(false);
+            _handlerTimeShowAswerButton();
+
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
         Log.i(TAG, "-----------------------END----------------------");
+    }
+
+    private void _handlerTimeShowAswerButton() {
+        if (sTimeShowAnswer > -1) {
+            mShowAnswer.setOnClickListener(null);
+            btnShowAnswer.setOnClickListener(null);
+            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
+            btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
+            new CountDownTimer(((sTimeShowAnswer) * 1000), 100) {
+                public void onTick(long millisUntilFinished) {
+                    int second = Math.round((millisUntilFinished / 1000));
+                    Log.d(TAG, "second:" + second);
+                    btnShowAnswer.setText(context.getString(R.string.show_answer) + String.valueOf(" (" + (second + 1) + "s)"));
+                }
+
+                public void onFinish() {
+                    btnShowAnswer.setText(R.string.show_answer);
+                    mShowAnswer.setOnClickListener(showAnswer);
+                    btnShowAnswer.setOnClickListener(showAnswer);
+                    mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.button_green_color));
+                    btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.button_green_color));
+                }
+            }.start();
+        } else {
+            mShowAnswer.setOnClickListener(showAnswer);
+            btnShowAnswer.setOnClickListener(showAnswer);
+        }
     }
 
     private void _updateCardFormServer() {
