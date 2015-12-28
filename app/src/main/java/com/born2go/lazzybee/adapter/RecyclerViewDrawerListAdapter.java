@@ -70,6 +70,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         try {
             View view = holder.view;
             if (holder.viewType == TYPE_COURSE) {
+                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+
                 TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
                 TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
@@ -84,8 +86,10 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 
                     lbCount.setText(context.getString(R.string.setting_limit_card_number, allCount));
                 } else if (objectList.get(position).equals(context.getString(R.string.drawer_dictionary))) {
+                    mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_dictionary));
                     lbCount.setVisibility(View.GONE);
                 } else if (objectList.get(position).equals(context.getString(R.string.drawer_subject))) {
+                    mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_list));
                     String my_subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
                     if (my_subject != null) {
                         lbCount.setVisibility(View.VISIBLE);
@@ -105,6 +109,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                 } else if (objectList.get(position).equals(context.getString(R.string.setting_about_message))) {
                     lbNameCourse.setTextColor(context.getResources().getColor(R.color.grey_300));
                     lbNameCourse.setTextSize(15f);
+                } else if (objectList.get(position).equals(context.getString(R.string.drawer_statistical))) {
+                    mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_graph));
                 }
             } else if (holder.viewType == TYPE_ADD_COURCE) {
 
