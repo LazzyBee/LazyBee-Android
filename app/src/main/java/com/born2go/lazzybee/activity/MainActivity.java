@@ -22,11 +22,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -66,7 +62,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        DownloadFileDatabaseResponse {
+        DownloadFileDatabaseResponse{
 
     private Context context = this;
     private static final String TAG = "MainActivity";
@@ -98,6 +94,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         _initSQlIte();
@@ -349,7 +346,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _goHome() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.mContainer, new ViewHome()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
     }
 
     private void _showStatistical() {
@@ -924,16 +921,10 @@ public class MainActivity extends AppCompatActivity
 
 
     public void _onbtnReviewOnClick(View view) {
-        //Toast.makeText(this, "Goto Review", Toast.LENGTH_SHORT).show();
-        _gotoReviewToday();
-    }
-
-    private void _gotoReviewToday() {
-        //_initInterstitialAd inten
         Intent intent = new Intent(this, ReviewCardActivity.class);
-        //start intent
         startActivity(intent);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -1068,5 +1059,4 @@ public class MainActivity extends AppCompatActivity
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
-
 }
