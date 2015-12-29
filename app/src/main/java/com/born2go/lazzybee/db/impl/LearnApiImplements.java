@@ -236,17 +236,17 @@ public class LearnApiImplements implements LearnApi {
 
     public Card _getCardByQuestion(String query) {
         Card card = null;
-        String selectbyQuestionQuery = "Select " + selectList + " from " + TABLE_VOCABULARY + " where vocabulary.question ='" + query + "'";
+        String selectbyQuestionQuery = "Select " + selectFull + " from " + TABLE_VOCABULARY + " where vocabulary.question ='" + query + "'";
 
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
         //query for cursor
         Cursor cursor = db.rawQuery(selectbyQuestionQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
+        if (cursor.getCount() > 0)
+            if (cursor.moveToFirst()) {
                 do {
                     card = _defineCardbyCursor(cursor, 0);
                 } while (cursor.moveToNext());
-        }
+            }
         return card;
     }
 
