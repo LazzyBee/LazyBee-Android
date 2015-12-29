@@ -332,10 +332,12 @@ public class SearchActivity extends AppCompatActivity implements
                     cardFormDB = getCardFormServerByQuestion.execute(cardFormDB).get();
                     getCardFormServerByQuestion.delegate = this;
                 }
-                List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                List<Card> cardList = new ArrayList<Card>();
                 if (cardFormDB != null) {
                     cardList.add(cardFormDB);
                 }
+                cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                
                 int result_count = cardList.size();
                 Log.i(TAG, "Search result_count:" + result_count);
                 if (result_count > 0) {
