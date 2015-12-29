@@ -329,15 +329,10 @@ public class SearchActivity extends AppCompatActivity implements
                     cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
                     GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                    cardFormDB = getCardFormServerByQuestion.execute(cardFormDB).get();
+                    getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
                 }
-                List<Card> cardList = new ArrayList<Card>();
-                if (cardFormDB != null) {
-                    cardList.add(cardFormDB);
-                }
-                cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
-                
+                List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
                 int result_count = cardList.size();
                 Log.i(TAG, "Search result_count:" + result_count);
                 if (result_count > 0) {
@@ -473,10 +468,11 @@ public class SearchActivity extends AppCompatActivity implements
                     card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
                 }
                 cardList.add(card);
-                result_count = cardList.size();
             } else {
                 Log.i(TAG, getString(R.string.not_found));
             }
+            cardList = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
+            result_count = cardList.size();
             if (result_count > 0) {
                 lbResultCount.setVisibility(View.VISIBLE);
                 mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
