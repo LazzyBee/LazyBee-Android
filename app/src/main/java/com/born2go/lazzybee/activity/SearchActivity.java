@@ -79,6 +79,7 @@ public class SearchActivity extends AppCompatActivity implements
         _trackerApplication();
 
     }
+
     private void _initActonBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -123,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements
                     Card card = (Card) lbQuestion.getTag();
                     String cardID = String.valueOf(card.getId());
                     if (card.getId() > 0) {
-                       // _optionList(card);
+                        // _optionList(card);
                     } else {
                         Log.w(TAG, "card.getId()==0");
                     }
@@ -313,7 +314,6 @@ public class SearchActivity extends AppCompatActivity implements
     private void _search(String query, int display_type, boolean suggestion) {
         //use the query_text to search
         Log.d(TAG, "query_text:" + query);
-
         try {
             query_text = query;
             if (query == null) {
@@ -324,7 +324,18 @@ public class SearchActivity extends AppCompatActivity implements
                 }
                 setAdapterListCard(cardList);
             } else if (query != null || query.length() > 0) {
+                Card cardFormDB = dataBaseHelper._getCardByQuestion(query);
+                if (cardFormDB == null) {
+                    cardFormDB = new Card();
+                    cardFormDB.setQuestion(query);
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    cardFormDB = getCardFormServerByQuestion.execute(cardFormDB).get();
+                    getCardFormServerByQuestion.delegate = this;
+                }
                 List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                if (cardFormDB != null) {
+                    cardList.add(cardFormDB);
+                }
                 int result_count = cardList.size();
                 Log.i(TAG, "Search result_count:" + result_count);
                 if (result_count > 0) {
