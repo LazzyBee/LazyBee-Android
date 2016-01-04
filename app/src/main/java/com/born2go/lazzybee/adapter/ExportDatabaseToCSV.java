@@ -72,7 +72,8 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             exportDir.mkdirs();
         }
         boolean export = false;
-        File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
+        //File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
+        File file = new File(exportDir, "backup.csv");
         try {
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
@@ -99,7 +100,8 @@ public class ExportDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                 curCSV.close();
                 String[] files = new String[1];
                 files[0] = file.getPath();
-                zipManager.zip(files, exportDir.getPath() + "/" + ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
+                //zipManager.zip(files, exportDir.getPath() + "/" + ((type == 0) ? "Full_" : "") + (LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
+                zipManager.zip(files, exportDir.getPath() + "/backup.zip");
                 Log.d(TAG, "Delete file Csv:" + (file.delete() ? " Ok" : " Fails"));
                 export = true;
             } else {
