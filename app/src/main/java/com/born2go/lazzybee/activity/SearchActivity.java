@@ -461,18 +461,20 @@ public class SearchActivity extends AppCompatActivity implements
     public void processFinish(Card card) {
         try {
             List<Card> cardList = new ArrayList<Card>();
-            int result_count = 0;
+            int result_count;
             if (card != null) {
                 if (card.getId() == 0) {
                     dataBaseHelper._insertOrUpdateCard(card);
                     card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
                 }
+                Log.d(TAG, "card:" + card.toString());
                 cardList.add(card);
             } else {
-                Log.i(TAG, getString(R.string.not_found));
+                Log.d(TAG, getString(R.string.not_found));
             }
-            cardList = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
+            cardList.addAll(dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type));
             result_count = cardList.size();
+            Log.d(TAG, "Results count:" + result_count);
             if (result_count > 0) {
                 lbResultCount.setVisibility(View.VISIBLE);
                 mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
@@ -485,11 +487,21 @@ public class SearchActivity extends AppCompatActivity implements
                 mRecyclerViewSearchResults.setVisibility(View.GONE);
                 lbMessageNotFound.setVisibility(View.VISIBLE);
                 lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
+                _trackerWorkNotFound();
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
         hideKeyboard();
+    }
+
+    private void _trackerWorkNotFound() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("searchNoResult", DataLayer.mapOf("wordError", query_text));
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 
     @Override
