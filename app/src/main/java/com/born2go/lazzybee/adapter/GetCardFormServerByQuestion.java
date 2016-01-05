@@ -45,7 +45,7 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
         Log.d(TAG, "q:" + q + ",gId:" + gId);
 
         Voca voca;//Define voca
-        
+
         if (gId > 0) {
             voca = connectGdatabase._getGdatabase_byID(gId);//get voca by gID
         } else {
@@ -60,9 +60,11 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
 
     private Card defineCardbyVoca(Card _card, Voca voca) {
         try {
-            Log.i(TAG, "voca:\t Q:" + voca.getQ() + ",level:" + voca.getLevel() + ",package:" + voca.getPackages());
-            Log.i(TAG, "LEN=:" + voca.getLEn());
-            Log.i(TAG, "LVN=:" + voca.getLVn());
+            Log.d(TAG, "voca:\t Q:" + voca.getQ() +
+                    "\n,level:" + voca.getLevel() +
+                    "\n,package:" + voca.getPackages() +
+                    "\nLVN=:" + voca.getLVn() +
+                    "\n,LEN=:" + voca.getLEn());
             Card card = new Card();
 
             card.setgId(voca.getGid());
