@@ -28,7 +28,7 @@ public class ConnectGdatabase {
     final String applicationName = "Lazzybee";
 
 
-    private DataServiceApi getDataServiceApi() {
+    public DataServiceApi getDataServiceApi() {
         HttpTransport transport;
         JsonFactory gsonFactory;
         HttpRequestInitializer initializer = null;
