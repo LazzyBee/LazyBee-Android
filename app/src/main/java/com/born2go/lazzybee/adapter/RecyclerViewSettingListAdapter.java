@@ -268,7 +268,7 @@ public class RecyclerViewSettingListAdapter extends
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ExportDatabaseToCSV exportDatabaseToCSV = new ExportDatabaseToCSV(context, type[0]);
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(context, type[0]);
                 exportDatabaseToCSV.execute();
             }
         });
