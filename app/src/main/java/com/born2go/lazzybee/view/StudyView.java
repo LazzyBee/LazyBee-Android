@@ -1166,7 +1166,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
 
             btnBackBeforeCard.setVisible(false); //Hide btnBackBeforeCard
-
+            _handlerTimeShowAswerButton();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
