@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.ImportDatabaseFormCSV;
+import com.born2go.lazzybee.adapter.DownloadAndRestoreDatabaseFormCSV;
 import com.born2go.lazzybee.adapter.RecyclerViewSettingListAdapter;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -130,7 +130,7 @@ public class SettingActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String Fpath = data.getData().getPath();
                 if (Fpath != null) {
-                    ImportDatabaseFormCSV importDatabaseFormCSV=new ImportDatabaseFormCSV(context,Fpath);
+                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV=new DownloadAndRestoreDatabaseFormCSV(context,Fpath);
                     importDatabaseFormCSV.execute();
                 }
             }

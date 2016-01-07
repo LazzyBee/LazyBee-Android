@@ -4,40 +4,39 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.born2go.lazzybee.db.Card;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.DownloadTarget;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.ZipManager;
 
-import com.opencsv.CSVReader;
-
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.nio.CharBuffer;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Hue on 12/17/2015.
  */
-public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
-    private static final String TAG = "ImportDBFormCSV";
+public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
+    private static final String TAG = "DRDatabaseFormCSV";
     private Context context;
-    private String path;
+    private String code;
     private ProgressDialog dialog;
     ZipManager zipManager;
 
-    public ImportDatabaseFormCSV(Context context, String fpath) {
+    public DownloadAndRestoreDatabaseFormCSV(Context context, String fpath) {
         this.context = context;
-        this.path = fpath;
+        this.code = fpath;
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
     }
@@ -51,7 +50,56 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         boolean results = false;
-        Log.d(TAG, "path file select:" + path);
+        String pathFileRestore = _downloadFileRestoreDb();
+        if (pathFileRestore != null) {
+            results = _restoreDatabase(pathFileRestore);
+        }
+        return results;
+    }
+
+    private String _downloadFileRestoreDb() {
+        String pathFileRestore = null;
+        try {
+            //get URL Download  by API
+            DataServiceApi.GetDownloadUrl getDownloadUrl = LazzyBeeSingleton.connectGdatabase.getDataServiceApi().getDownloadUrl(code);
+            DownloadTarget downloadTarget = getDownloadUrl.execute();
+            String downloadTargetUrl = downloadTarget.getUrl();
+            if (downloadTargetUrl != null) {
+                Log.d(TAG, "download file restore url:" + downloadTargetUrl);
+                URL u = new URL(downloadTargetUrl);
+                File sdCard_dir = Environment.getExternalStorageDirectory();
+                File file = new File(sdCard_dir.getAbsolutePath() + "/backup.zip");
+                InputStream is = u.openStream();
+
+                DataInputStream dis = new DataInputStream(is);
+
+                byte[] buffer = new byte[1024];
+                int length;
+
+                FileOutputStream fos = new FileOutputStream(file);
+                while ((length = dis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+                fos.close();
+                pathFileRestore = file.getPath();
+                Log.d(TAG, "Download file restore complete.Path:" + pathFileRestore);
+            } else {
+                Log.d(TAG, "Download file restore fails");
+            }
+        } catch (MalformedURLException mue) {
+            Log.e("SYNC getUpdate", "malformed url error", mue);
+        } catch (IOException ioe) {
+            Log.e("SYNC getUpdate", "io error", ioe);
+        } catch (SecurityException se) {
+            Log.e("SYNC getUpdate", "security error", se);
+        } catch (Exception e) {
+            Log.e(TAG, "exception error", e);
+        }
+        return pathFileRestore;
+    }
+
+    private boolean _restoreDatabase(String path) {
+        boolean restore = false;
         try {
             File exportDir = new File(Environment.getExternalStorageDirectory(), "");
             if (!exportDir.exists()) {
@@ -64,7 +112,7 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
             if (unzip) {
                 File fileCsv = new File(fileCsvName);
                 if (fileCsv != null) {
-                    Log.d(TAG, "file Csv path:" + fileCsvName);
+                    Log.d(TAG, "file Csv code:" + fileCsvName);
                     FileReader fReader = new FileReader(fileCsv);
                     BufferedReader reader = new BufferedReader(fReader);
                     String cvsSplitBy = ",\n";
@@ -166,7 +214,7 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
                                     + ",factor:" + factor
                                     + ",user_note:" + user_note
                                     + ",Update :" + ((result == 1) ? " OK" : " Fails"));
-                            results = true;
+                            restore = true;
                             totalResults += result;
                         }
                         Log.d(TAG, "_update Ok:" + totalResults);
@@ -185,8 +233,8 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return restore;
 
-        return results;
     }
 
     @Override

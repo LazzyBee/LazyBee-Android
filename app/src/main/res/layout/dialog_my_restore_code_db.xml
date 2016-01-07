@@ -35,7 +35,8 @@
             android:text="Large Text"
             android:id="@+id/lbMyRestoreCode"
             android:layout_gravity="center"
-            android:textColor="@color/grey_600" />
+            android:textColor="@color/rau_xanh"
+            android:textSize="25pt" />
     </FrameLayout>
 
 </LinearLayout>

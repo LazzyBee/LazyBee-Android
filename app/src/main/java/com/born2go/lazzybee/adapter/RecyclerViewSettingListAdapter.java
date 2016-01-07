@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,7 @@ public class RecyclerViewSettingListAdapter extends
     SettingActivity activity;
     private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
-
+    String device_id;
     private RecyclerView mRecyclerViewSettings;
 
     public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
@@ -73,6 +74,8 @@ public class RecyclerViewSettingListAdapter extends
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         this.mRecyclerViewSettings = mRecyclerViewSettings;
         this.lazzybeeTag = TagManager.getInstance(context).getDataLayer();
+        device_id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
     }
 
@@ -235,9 +238,41 @@ public class RecyclerViewSettingListAdapter extends
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFileChooser();
+                _restoreDatabase();
+                //showFileChooser();
             }
         });
+    }
+
+    private void _restoreDatabase() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        builder.setTitle("Restore database");
+        View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
+        final EditText lbMybackupkey = (EditText) viewDialog.findViewById(R.id.lbMybackupkey);
+        String backup_key = device_id.substring(device_id.length() - 6, device_id.length());
+        lbMybackupkey.setText(backup_key);
+        //
+        builder.setView(viewDialog);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String getBackupKey = lbMybackupkey.getText().toString();
+                Toast.makeText(context, "My Backup key:" + getBackupKey, Toast.LENGTH_SHORT).show();
+                DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, getBackupKey);
+                downloadAndRestoreDatabaseFormCSV.execute();
+                //dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     private void showFileChooser() {
@@ -269,7 +304,7 @@ public class RecyclerViewSettingListAdapter extends
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity,context, type[0]);
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, type[0]);
                 exportDatabaseToCSV.execute();
             }
         });
