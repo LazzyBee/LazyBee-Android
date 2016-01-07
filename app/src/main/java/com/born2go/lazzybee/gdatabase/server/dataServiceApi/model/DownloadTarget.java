@@ -19,7 +19,7 @@
 package com.born2go.lazzybee.gdatabase.server.dataServiceApi.model;
 
 /**
- * Model definition for VocaCollection.
+ * Model definition for DownloadTarget.
  *
  * <p> This is the Java data model class that specifies how to parse/serialize into the JSON that is
  * transmitted over HTTP when working with the LazzyBee Backend Api. For a detailed explanation see:
@@ -29,43 +29,37 @@ package com.born2go.lazzybee.gdatabase.server.dataServiceApi.model;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
-public final class VocaCollection extends com.google.api.client.json.GenericJson {
+public final class DownloadTarget extends com.google.api.client.json.GenericJson {
 
   /**
    * The value may be {@code null}.
    */
   @com.google.api.client.util.Key
-  private java.util.List<Voca> items;
-
-  static {
-    // hack to force ProGuard to consider Voca used, since otherwise it would be stripped out
-    // see https://github.com/google/google-api-java-client/issues/543
-    com.google.api.client.util.Data.nullOf(Voca.class);
-  }
+  private java.lang.String url;
 
   /**
    * @return value or {@code null} for none
    */
-  public java.util.List<Voca> getItems() {
-    return items;
+  public java.lang.String getUrl() {
+    return url;
   }
 
   /**
-   * @param items items or {@code null} for none
+   * @param url url or {@code null} for none
    */
-  public VocaCollection setItems(java.util.List<Voca> items) {
-    this.items = items;
+  public DownloadTarget setUrl(java.lang.String url) {
+    this.url = url;
     return this;
   }
 
   @Override
-  public VocaCollection set(String fieldName, Object value) {
-    return (VocaCollection) super.set(fieldName, value);
+  public DownloadTarget set(String fieldName, Object value) {
+    return (DownloadTarget) super.set(fieldName, value);
   }
 
   @Override
-  public VocaCollection clone() {
-    return (VocaCollection) super.clone();
+  public DownloadTarget clone() {
+    return (DownloadTarget) super.clone();
   }
 
 }
