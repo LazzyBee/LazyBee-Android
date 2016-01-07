@@ -324,6 +324,7 @@
         <!--A820-->
         <item>757E6C0437129F846D20D0B58D0BFA85</item>
         <!--A890-->
+
     </string-array>
 
 
@@ -424,10 +425,11 @@
     <string-array name="devices_dev_id" translatable="false">
         <item>b6fe9200bf21fe7e</item>
         <item>7761c5785b548881</item>
-        <item>b5a8fa6f8c1ba689</item>
-        <!--A890-->
-        <item>501847cbba33a2e</item>
-        <!--A820-->
+        <item>b5a8fa6f8c1ba689<!--A890--></item>
+        <item>501847cbba33a2e <!--A820--></item>
+        <item>a23c44db2bc85af9<!--geny n7 5.0--></item>
+        <item>f130a1e2a7076611<!--blue stask--></item>
+
 
     </string-array>
 
