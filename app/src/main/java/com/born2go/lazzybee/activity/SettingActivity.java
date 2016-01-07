@@ -61,7 +61,7 @@ public class SettingActivity extends AppCompatActivity {
         final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
         String android_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        Log.i(TAG, "Android id:" + android_id);
+        Log.d(TAG, "Android id:" + android_id);
         if (devices.contains(android_id)) {
             Log.i(TAG, "Contain");
             settings = Arrays.asList(context.getResources().getStringArray(R.array.settings_dev));
