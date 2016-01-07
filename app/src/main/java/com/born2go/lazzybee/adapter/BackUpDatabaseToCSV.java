@@ -75,6 +75,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
     private static final String TAG = "BackUpDatabaseToCSV";
     private Activity activity;
     private Context context;
+    private String device_id;
     private ProgressDialog dialog;
     ZipManager zipManager;
     // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
@@ -99,9 +100,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
 
 
-    public BackUpDatabaseToCSV(Activity activity, Context context, int type) {
+    public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
         this.activity = activity;
         this.context = context;
+        this.device_id = device_id;
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
         this.type = type;
@@ -166,7 +168,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
                 //zipManager.zip(files, exportDir.getPath() + "/" + ((type == 0) ? "Full_" : "") + (LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
                 zipManager.zip(files, fileZipPath);
 
-                //savel file backup to server
+                //save file backup to server
                 String resCode = postFile(exportDir.getPath() + "/backup.zip");
                 if (resCode != null) {
                     code = resCode;
@@ -204,15 +206,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
     private String postFile(String fileName) {
         String resCode = null;
         try {
-            //get device id
-            String device_id = Settings.Secure.getString(context.getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-
             //get upload URl
             DataServiceApi.GetUploadUrl getUploadUrl = LazzyBeeSingleton.connectGdatabase.getDataServiceApi().getUploadUrl();
             UploadTarget uploadTarget = getUploadUrl.execute();
             String upLoadServerUri = uploadTarget.getUrl();
-
             if (upLoadServerUri != null) {
                 HttpClient client = new DefaultHttpClient();
                 HttpPost post = new HttpPost(upLoadServerUri);
