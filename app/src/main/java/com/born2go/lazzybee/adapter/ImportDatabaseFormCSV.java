@@ -4,18 +4,26 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.ZipManager;
+
 import com.opencsv.CSVReader;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.CharBuffer;
 
 /**
  * Created by Hue on 12/17/2015.
@@ -57,52 +65,114 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
                 File fileCsv = new File(fileCsvName);
                 if (fileCsv != null) {
                     Log.d(TAG, "file Csv path:" + fileCsvName);
-                    CSVReader reader = new CSVReader(new FileReader(fileCsv));
-                    // if the first line is the header
-                    String[] header = reader.readNext();
-                    // iterate over reader.readNext until it returns null
-                    String[] nextLine;
-                    while ((nextLine = reader.readNext()) != null) {
-//                    Log.d(TAG, ("\t" + header[0] + ":" + "\t" + nextLine[0]) + "\n,"
-//                            + ("\t" + header[1] + ":" + "\t" + nextLine[1]) + "\n,"
-//                            + ("\t" + header[2] + ":" + "\t" + nextLine[2]) + "\n,"
-//                            + ("\t" + header[3] + ":" + "\t" + nextLine[3]) + "\n,"
-//                            + ("\t" + header[4] + ":" + "\t" + nextLine[4]) + "\n,"
-//                            + ("\t" + header[5] + ":" + "\t" + nextLine[5]) + "\n,"
-//                            + ("\t" + header[6] + ":" + "\t" + nextLine[6]));
-                        if (nextLine[0] != null) {
-                            if (nextLine[0].length() > 0) {
-                                Card card = new Card();
-                                card.setgId(Long.valueOf(nextLine[0]));
-                                int factor = 0;
-                                int last_ivl = 0;
-                                int queue = 0;
-                                int rev_count = 0;
-                                int due = 0;
-                                if (nextLine[1] != null) {
-                                    factor = Integer.valueOf(nextLine[1]);
-                                }
-                                if (nextLine[2] != null) {
-                                    last_ivl = Integer.valueOf(nextLine[2]);
-                                }
-                                if (nextLine[3] != null) {
-                                    queue = Integer.valueOf(nextLine[3]);
-                                }
-                                if (nextLine[4] != null) {
-                                    rev_count = Integer.valueOf(nextLine[4]);
-                                }
-                                if (nextLine[5] != null) {
-                                    due = Integer.valueOf(nextLine[5]);
-                                }
-                                card.setFactor(factor);
-                                card.setLast_ivl(last_ivl);
-                                card.setRev_count(rev_count);
-                                card.setQueue(queue);
-                                card.setDue(due);
-                                LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(card);
-                            }
+                    FileReader fReader = new FileReader(fileCsv);
+                    BufferedReader reader = new BufferedReader(fReader);
+                    String cvsSplitBy = ",\n";
+                    try {
+                        String all = LazzyBeeShare.EMPTY;
+                        char[] buffer = new char[1024];
+                        while (reader.read(buffer) > 0) {
+                            String sBuffer = new String(buffer);
+                            all += sBuffer;
                         }
-                        results = true;
+
+                        //Split line
+                        String[] allLine = all.split(cvsSplitBy);
+                        int length = allLine.length;
+                        Log.d(TAG, "length:" + length);
+                        int totalResults = 0;
+                        for (int i = 0; i < length; i++) {
+                            String[] sLine = allLine[i].split(",");
+                            int slength = sLine.length;
+                            // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
+                            long gId = 0l;
+                            int factor = 0;
+                            int last_ivl = 0;
+                            int queue = 0;
+                            int rev_count = 0;
+                            int due = 0;
+                            String user_note = LazzyBeeShare.EMPTY;
+//                            // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
+                            if (sLine[0] != null) {
+                                try {
+                                    gId = Long.valueOf(sLine[(0)]);
+                                } catch (Exception e) {
+                                    Log.d(TAG, "gId not Long:" + sLine[(0)]);
+                                }
+                            }
+
+                            if (sLine[(1)] != null) {
+                                if (sLine[(1)].length() > 0) {
+                                    try {
+                                        queue = Integer.valueOf(sLine[(1)]);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Error1:" + e.getMessage());
+                                    }
+                                }
+                            }
+
+
+                            if (sLine[2] != null) {
+                                if (sLine[(2)].length() > 0)
+                                    try {
+                                        due = Integer.valueOf(sLine[(2)]);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Error2:" + e.getMessage());
+                                    }
+                            }
+
+                            if (sLine[(3)] != null) {
+                                if (sLine[(3)].length() > 0)
+                                    try {
+                                        rev_count = Integer.valueOf(sLine[(3)]);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Error3:" + e.getMessage());
+                                    }
+                            }
+                            if (sLine[(4)] != null) {
+                                if (sLine[(4)].length() > 0)
+                                    try {
+                                        last_ivl = Integer.valueOf(sLine[(4)]);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Error4:" + e.getMessage());
+                                    }
+                            }
+                            if (slength > 6) {
+                                if (sLine[(5)].length() > 0)
+                                    try {
+                                        factor = Integer.valueOf(sLine[(5)]);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Error5:" + e.getMessage());
+                                    }
+
+                                if (sLine[(6)].length() > 0)
+                                    try {
+                                        user_note = String.valueOf(sLine[(6)]);
+                                        if (user_note.contains("*#*")) {
+                                            user_note = user_note.replace("*#*", ",");
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "Error6:" + e.getMessage());
+                                    }
+                            } else {
+                                Log.d(TAG, "User note empty");
+                            }
+                            int result = LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(gId, queue, due, rev_count, last_ivl, factor, user_note);
+                            Log.d(TAG, "gId:" + gId
+                                    + ",queue:" + queue
+                                    + ",due:" + due
+                                    + ",rev_count:" + rev_count
+                                    + ",last_ivl:" + last_ivl
+                                    + ",factor:" + factor
+                                    + ",user_note:" + user_note
+                                    + ",Update :" + ((result == 1) ? " OK" : " Fails"));
+                            results = true;
+                            totalResults += result;
+                        }
+                        Log.d(TAG, "_update Ok:" + totalResults);
+                    } catch (Exception e) {
+                        Log.d(TAG, "Error:" + e.getMessage());
+                        e.printStackTrace();
                     }
                 } else {
                     Log.d(TAG, "file csv Null");
@@ -115,6 +185,7 @@ public class ImportDatabaseFormCSV extends AsyncTask<Void, Void, Boolean> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return results;
     }
 
