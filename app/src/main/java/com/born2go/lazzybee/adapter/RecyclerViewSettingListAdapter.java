@@ -73,6 +73,7 @@ public class RecyclerViewSettingListAdapter extends
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         this.mRecyclerViewSettings = mRecyclerViewSettings;
         this.lazzybeeTag = TagManager.getInstance(context).getDataLayer();
+
     }
 
     @Override
@@ -268,7 +269,7 @@ public class RecyclerViewSettingListAdapter extends
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(context, type[0]);
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity,context, type[0]);
                 exportDatabaseToCSV.execute();
             }
         });
