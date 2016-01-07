@@ -34,20 +34,11 @@ public class ConnectGdatabase {
         HttpRequestInitializer initializer = null;
         DataServiceApi apiService = null;
         try {
-//            transport = GoogleNetHttpTransport
-//                    .newTrustedTransport();
             gsonFactory = new GsonFactory();
-
             //Setup DataSevices Api
             apiService = new DataServiceApi.Builder(AndroidHttp.newCompatibleTransport(), gsonFactory,
                     initializer)
                     .setRootUrl(DataServiceApi.DEFAULT_ROOT_URL).setApplicationName(applicationName)
-//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-//                        @Override
-//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-//                            abstractGoogleClientRequest.setDisableGZipContent(true);
-//                        }
-//                    })
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,62 +86,4 @@ public class ConnectGdatabase {
         return word;
 
     }
-
-    /**
-     * this method get all vocabulary database in google
-     */
-    public List<Voca> _getListGdatabase() {
-
-        ListVoca apiInst;
-        VocaCollection vocaCollection = null;
-        List<Voca> result = null;
-
-        try {
-            api = getDataServiceApi();
-            apiInst = api.listVoca();
-            vocaCollection = apiInst.execute();
-            if (vocaCollection != null) {
-                result = vocaCollection.getItems();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    Voca vocaresult = null;
-
-    /*
-     * save voca in Gdatabase
-     * @param Voca
-     *            voca will save
-     */
-    public Voca _saveVoca(Voca voca) {
-        api = getDataServiceApi();
-        try {
-            //	api.saveVoca(voca).execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return vocaresult;
-    }
-
-    public void _saveListVoca(List<Voca> list) {
-        int count = 0;
-        api = getDataServiceApi();
-        for (Voca voca2 : list) {
-            try {
-                //	api.saveVoca(voca2).execute();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                count = count + 1;
-            }
-        }
-        System.out.println("Total voca import success: " + (list.size() - count));
-        System.out.println("Total voca exist: " + count);
-
-    }
-
 }
