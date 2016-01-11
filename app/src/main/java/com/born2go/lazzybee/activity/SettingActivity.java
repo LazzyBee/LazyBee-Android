@@ -63,11 +63,10 @@ public class SettingActivity extends AppCompatActivity {
                 Settings.Secure.ANDROID_ID);
         Log.d(TAG, "Android id:" + android_id);
         if (devices.contains(android_id)) {
-            Log.i(TAG, "Contain");
             settings = Arrays.asList(context.getResources().getStringArray(R.array.settings_dev));
+            Log.d(TAG, "It is Dev devices");
         } else {
             settings = Arrays.asList(context.getResources().getStringArray(R.array.settings));
-            Log.i(TAG, "Not contain");
         }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
@@ -130,7 +129,7 @@ public class SettingActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String Fpath = data.getData().getPath();
                 if (Fpath != null) {
-                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV=new DownloadAndRestoreDatabaseFormCSV(context,Fpath);
+                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, Fpath);
                     importDatabaseFormCSV.execute();
                 }
             }
