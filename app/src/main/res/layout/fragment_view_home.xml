@@ -1,0 +1,416 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.born2go.lazzybee.view.ViewHome"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="3dp">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/main_top_bottom_magin_view"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#AEB404"
+            android:onClick="onlbTipHelpClick"
+            android:visibility="gone"
+            app:cardBackgroundColor="#AEB404"
+            app:cardElevation="@dimen/setting_card_view_elevation">
+            <!--<RelativeLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="#AEB404">-->
+
+            <TextView
+
+                android:id="@+id/lbTipHelp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="#AEB404"
+                android:cursorVisible="false"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:onClick="onlbTipHelpClick"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:scrollbars="horizontal"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+            <!--</RelativeLayout>-->
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            app:cardElevation="@dimen/setting_card_view_elevation">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/color_backgroud_english_word"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="15dp">
+
+                    <TextView
+                        android:id="@+id/lbNameCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/english_word"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="27sp" />
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayout"
+                        android:layout_width="190dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/white"
+                        android:paddingBottom="20dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="20dp">
+
+                        <RelativeLayout
+                            android:id="@+id/mDue"
+                            android:layout_width="183dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal">
+
+                            <TextView
+                                android:id="@+id/textView4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:text="@string/due_today"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="@color/textcolorPrimary" />
+
+                            <TextView
+                                android:id="@+id/lbDueToday2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="false"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:text="00 00 00"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="#000000" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/textView17"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@+id/mDue"
+                            android:text="@string/total_new_learn"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/textcolorPrimary" />
+
+                        <TextView
+                            android:id="@+id/textView18"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignStart="@+id/textView17"
+                            android:layout_below="@+id/textView17"
+                            android:text="@string/total_cards"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/textcolorPrimary" />
+
+                        <TextView
+                            android:id="@+id/lbTotalNewCount2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/mDue"
+                            android:text="300"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/textcolorPrimary" />
+
+                        <TextView
+                            android:id="@+id/lbTotalsCount2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/textView17"
+                            android:text="400"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/textcolorPrimary" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mLine"
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/colorPrimary"
+                        android:orientation="vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"></LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/mCongratulations"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/white"
+                        android:padding="16dp"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/congratulations"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/txtMessageCongratulation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/message_congratulations_with_tip"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/grey_600" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+                <!--<LinearLayout-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/grey_300"></LinearLayout>-->
+
+
+                <!--<TextView-->
+                <!--android:id="@+id/lbDueToday"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:text="Medium Text"-->
+                <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+                <!--android:visibility="visible" />-->
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="220dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_home_view" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/mCardViewStudy"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="@dimen/main_top_bottom_magin_view"
+            android:autoText="false"
+            android:background="@color/button_green_color"
+            android:nestedScrollingEnabled="false"
+            android:onClick="_onBtnStudyOnClick"
+            app:cardBackgroundColor="@color/button_green_color"
+            app:cardElevation="@dimen/setting_card_view_elevation">
+
+            <RelativeLayout
+
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/lbStudy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/button_green_color"
+                    android:padding="16dp"
+                    android:text="@string/study"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/main_top_bottom_magin_view"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/mCardViewReView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/button_green_color"
+                android:onClick="_onbtnReviewOnClick"
+                app:cardBackgroundColor="@color/button_green_color"
+                app:cardElevation="@dimen/setting_card_view_elevation">
+
+                <Button
+                    android:id="@+id/btnReview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:text="@string/review"
+                    android:textColor="@color/colorPrimary"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/lbReview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@color/button_green_color"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/incoming"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white" />
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/mCardViewLearnMore"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@color/button_green_color"
+                android:onClick="_onLearnMoreClick"
+                app:cardBackgroundColor="@color/button_green_color"
+                app:cardElevation="@dimen/setting_card_view_elevation">
+
+                <Button
+                    android:id="@+id/btnCustomStudy"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:text="@string/learn_more"
+                    android:textColor="@color/colorPrimary"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/mCardViewLearnMore"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@color/button_green_color"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/learn_more"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white" />
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/mCardViewCustomStudy"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="@dimen/main_top_bottom_magin_view"
+            android:nestedScrollingEnabled="false"
+            android:visibility="invisible">
+
+            <RelativeLayout
+                android:id="@+id/mCustomLearn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/lbCustomStudy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/custom_study"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/grey_600" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/lbCustomStudy"
+                    android:layout_toStartOf="@+id/lbCustomStudy"
+                    android:src="@drawable/ic_action_settings" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</FrameLayout>

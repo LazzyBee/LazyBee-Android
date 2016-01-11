@@ -196,7 +196,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
             autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(R.color.grey_600);
+            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
         }
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
@@ -234,7 +234,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                         Log.d(TAG, "cardID:" + cardID);
                         String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
                         Log.d(TAG, "query:" + query);
-
+                        int insertSuggesstionResults = learnApiImplements._insertSuggesstion(cardID);
+                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
                         _displayCard(cardID);
 
                         //call back actionbar

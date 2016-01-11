@@ -82,6 +82,7 @@ public class LazzyBeeShare {
     public static final int DRAWER_MAJOR_INDEX = 6;
     public static final int DRAWER_HELP_INDEX = 7;
     public static final int DRAWER_STATISTICAL_INDEX = 8;
+    public static final int DRAWER_HOME_INDEX = 9;
 
     public static final int CODE_COMPLETE_STUDY_RESULTS_1000 = 1000;
     public static final int CODE_SEARCH_RESULT = 1001;
@@ -130,6 +131,7 @@ public class LazzyBeeShare {
     public static final String DOWN = "Down";
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
     public static final int DEFAULT_TIME_SHOW_ANSWER = 3;
+
 
     public static String mime = "text/html";
     public static String encoding = "utf-8";

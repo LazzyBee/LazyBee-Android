@@ -3,6 +3,7 @@ package com.born2go.lazzybee.db.impl;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -60,6 +61,9 @@ public class LearnApiImplements implements LearnApi {
     public static final String TABLE_STREAK = "streak";
     public static final String CREATE_TABLE_STREAK = "CREATE TABLE " + TABLE_STREAK + " ( day INTEGER NOT NULL, PRIMARY KEY (day) );";
     private static final String KEY_USER_NOTE = "user_note";
+
+    public static final String TABLE_SUGGESTION = "suggestion";
+    public static final java.lang.String CREATE_TABLE_SUGGESTION = "CREATE TABLE suggestion (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, suggestion TEXT UNIQUE);";
 
     Context context;
     DataBaseHelper dataBaseHelper;
@@ -1368,7 +1372,6 @@ public class LearnApiImplements implements LearnApi {
     public int _queryCount(String query) {
         int count = 0;
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
-
         //query for cursor
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
@@ -1579,4 +1582,48 @@ public class LearnApiImplements implements LearnApi {
         }
         return update_result;
     }
+
+    public int _insertSuggesstion(String cardID) {
+        int update_result = -1;
+        try {
+            SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(TABLE_SUGGESTION, cardID);
+            db.insert(TABLE_SUGGESTION, null, values);
+            update_result = 1;
+            db.close();
+        } catch (Exception e) {
+        }
+
+        return update_result;
+    }
+
+    public List<Card> _recentSuggestionCard() {
+        int countSug = _queryCount("select Count(suggestion.suggestion) from suggestion");
+        Log.d(TAG, "count Suggestion:" + countSug);
+        if (countSug > 50) {
+            String delete40Row = "delete from suggestion where suggestion.id in (select suggestion.id from suggestion order by suggestion.id LIMIT 40);";
+            Log.d(TAG, "DELETE 40 ROW" + (executeQuery(delete40Row) == 1 ? " OK" : " Fails"));
+        }
+        String getSug = "select suggestion.suggestion from suggestion ORDER  BY id DESC LIMIT 5";
+        List<String> cardIdRecents = new ArrayList<String>();
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getSug, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0) {
+                do {
+                    String cardId = cursor.getString(0);
+                    cardIdRecents.add(cardId);
+                } while (cursor.moveToNext());
+            }
+        }
+        List<Card> datas = new ArrayList<Card>();
+        if (cardIdRecents.size() > 0) {
+            for (String cardId : cardIdRecents) {
+                datas.add(_getCardByID(cardId));
+            }
+        }
+        return datas;
+    }
+
 }

@@ -172,8 +172,10 @@ public class SplashScreen extends Activity {
 
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         if (!learnApiImplements.checkTableExist(LearnApiImplements.TABLE_STREAK)) {
-            SQLiteDatabase db_create = myDbHelper.getReadableDatabase();
-            db_create.execSQL(LearnApiImplements.CREATE_TABLE_STREAK);
+            Log.d(TAG, "CREATE_TABLE_STREAK" + (learnApiImplements.executeQuery(LearnApiImplements.CREATE_TABLE_STREAK) == 1 ? " OK" : " Fails"));
+        }
+        if (!learnApiImplements.checkTableExist(LearnApiImplements.TABLE_SUGGESTION)) {
+            Log.d(TAG, "CREATE_TABLE_SUGGESTION" + (learnApiImplements.executeQuery(LearnApiImplements.CREATE_TABLE_SUGGESTION) == 1 ? " OK" : " Fails"));
         }
 
     }
