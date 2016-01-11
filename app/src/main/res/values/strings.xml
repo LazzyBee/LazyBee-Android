@@ -30,7 +30,7 @@
 
     <string name="EASE_AGAIN">Again</string>
     <string name="EASE_HARD">Hard</string>
-    <string name="EASE_GOOD">Good</string>
+    <string name="EASE_GOOD">Normal</string>
     <string name="EASE_EASY">Easy</string>
 
     <string name="learn_more">Learn more</string>

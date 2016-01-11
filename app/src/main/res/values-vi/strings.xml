@@ -2,7 +2,7 @@
 <resources>
     <string name="EASE_AGAIN">Học lại</string>
     <string name="EASE_EASY">Dễ</string>
-    <string name="EASE_GOOD">Tốt</string>
+    <string name="EASE_GOOD">Trung bình</string>
     <string name="EASE_HARD">Khó</string>
 
     <string name="action_learnt">Đã biết</string>
