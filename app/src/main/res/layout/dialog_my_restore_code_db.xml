@@ -28,15 +28,62 @@
         android:layout_height="match_parent"
         android:background="#ffffff">
 
-        <TextView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/lbMyRestoreCode"
             android:layout_gravity="center"
-            android:textColor="@color/rau_xanh"
-            android:textSize="25pt" />
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/successfully"
+                android:id="@+id/textView14"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/grey_600"
+                android:textSize="18pt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/message_using_backup_code"
+                android:id="@+id/textView11"
+                android:layout_gravity="center"
+                android:textColor="@color/grey_600"
+                android:textAlignment="center"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/lbMyRestoreCode"
+                android:layout_gravity="center"
+                android:textColor="@color/rau_xanh"
+                android:textSize="25pt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/close"
+                android:id="@+id/btnClose"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/grey_600"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+        </LinearLayout>
+
     </FrameLayout>
 
 </LinearLayout>

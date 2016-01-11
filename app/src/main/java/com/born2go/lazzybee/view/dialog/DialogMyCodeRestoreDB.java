@@ -45,14 +45,14 @@ public class DialogMyCodeRestoreDB extends DialogFragment {
         ImageView mClose = (ImageView) view.findViewById(R.id.mClose);
         TextView lbMyRestoreCode = (TextView) view.findViewById(R.id.lbMyRestoreCode);
         lbMyRestoreCode.setText(code);
-        mClose.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener closeDialog = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
             }
-        });
-
-
+        };
+        mClose.setOnClickListener(closeDialog);
+        view.findViewById(R.id.btnClose).setOnClickListener(closeDialog);
         return view;
     }
 
