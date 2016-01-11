@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Path;
@@ -13,10 +14,12 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.UploadTarget;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
@@ -70,7 +73,7 @@ import static com.google.android.gms.internal.zzir.runOnUiThread;
 /**
  * Created by Hue on 12/16/2015.
  */
-public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
+public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "BackUpDatabaseToCSV";
     private Activity activity;
@@ -118,16 +121,17 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected Boolean doInBackground(Void... params) {
         return _exportDBToCSV();
     }
 
-    private String _exportDBToCSV() {
+    private Boolean _exportDBToCSV() {
         File exportDir = new File(Environment.getExternalStorageDirectory(), "");
         if (!exportDir.exists()) {
             exportDir.mkdirs();
         }
         String code = null;
+        boolean results = false;
         //File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
         File file = new File(exportDir, "backup.csv");
         try {
@@ -169,41 +173,56 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
                 zipManager.zip(files, fileZipPath);
 
                 //save file backup to server
-                String resCode = postFile(exportDir.getPath() + "/backup.zip");
-                if (resCode != null) {
-                    code = resCode;
-                    Log.d(TAG, "Response code=" + code);
-                }
+                boolean resultsBackupFile = postFile(exportDir.getPath() + "/backup.zip");
                 //Delete file
                 File zipFile = new File(fileZipPath);
                 Log.d(TAG, "Delete file Csv:" + (file.delete() ? " Ok" : " Fails"));
                 Log.d(TAG, "Delete zip File:" + (zipFile.delete() ? " Ok" : " Fails"));
+                results = resultsBackupFile;
             } else {
                 Log.d(TAG, "No query");
             }
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
         }
-        return code;
+        return results;
     }
 
     @Override
-    protected void onPostExecute(String export) {
-        super.onPostExecute(export);
+    protected void onPostExecute(Boolean results) {
+        super.onPostExecute(results);
         //Dismis dialog
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Toast.makeText(context, "Export to CSV" + ((export != null) ? " Ok,code=" + export : " Fails"), Toast.LENGTH_SHORT).show();
-        if ((export != null)) {
+        if (results) {
+            String backup_key = device_id.substring(device_id.length() - 6, device_id.length());
             //show backUp Key
-            DialogMyCodeRestoreDB dialogMyCodeRestoreDB = new DialogMyCodeRestoreDB(export);
+            DialogMyCodeRestoreDB dialogMyCodeRestoreDB = new DialogMyCodeRestoreDB(backup_key);
             dialogMyCodeRestoreDB.show(activity.getFragmentManager(), DialogMyCodeRestoreDB.TAG);
+        } else {
+            _showDialogFailsBackupDatabase();
+
         }
 
     }
 
-    private String postFile(String fileName) {
+    private void _showDialogFailsBackupDatabase() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        builder.setTitle(R.string.try_again);
+        builder.setMessage(R.string.failed_to_connect_to_server);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        android.support.v7.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private boolean postFile(String fileName) {
+        boolean results = false;
         String resCode = null;
         try {
             //get upload URl
@@ -224,20 +243,18 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, String> {
                 int statusCode = response.getStatusLine().getStatusCode();
                 Log.d(TAG, "Status code:" + statusCode);
                 if (statusCode == 200) {
-                    String backup_key = device_id.substring(device_id.length() - 6, device_id.length());
-                    resCode = backup_key;
+                    results = true;
                     Log.d(TAG, "Post file backup to Server Ok");
                 } else {
                     Log.d(TAG, "Post file backup to Server Fails");
                 }
                 client.getConnectionManager().shutdown();
-
             }
         } catch (Exception e) {
             Log.d(TAG, "Post file backup to Server Fails");
             e.printStackTrace();
         }
-        return resCode;
+        return results;
     }
 }
 
