@@ -217,19 +217,16 @@
         <!--<item>@string/setting_export_database</item>-->
         <!--<item>@string/setting_update_db_form_query</item>-->
         <item>@string/setting_lines</item>
-
+        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_back_up_database</item>
+        <item>@string/setting_restore_database</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="settings_dev">
-        <!--<item>@string/setting_learn_title</item>
-        <item>@string/setting_total_learn_per_day</item>
-        <item>@string/setting_today_new_card_limit</item>-->
-        <!--<item>@string/setting_today_review_card_limit</item>-->
-        <!--<item>@string/setting_custom_study_title</item>-->
         <item>@string/setting_custom_study</item>
-        <!--<item>@string/setting_speech_rate</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
@@ -238,7 +235,6 @@
 
         <item>@string/setting_update_title</item>
         <item>@string/setting_check_update</item>
-        <!--<item>@string/setting_auto_check_update</item>-->
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
@@ -247,9 +243,12 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
-        <item>@string/setting_export_database_to_csv</item>
-        <item>@string/setting_import_database_from_csv</item>
         <item>@string/setting_update_db_form_query</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_back_up_database</item>
+        <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_about</item>
@@ -429,8 +428,6 @@
         <item>501847cbba33a2e <!--A820--></item>
         <item>a23c44db2bc85af9<!--geny n7 5.0--></item>
         <item>f130a1e2a7076611<!--blue stask--></item>
-
-
     </string-array>
 
     <string name="title_dialog_daily_target_completed">Daily target completed</string>
@@ -467,12 +464,23 @@
     <string name="year">year</string>
     <string name="dialog_statistical_total">Total: %d</string>
     <string name="custom_study_eror_limit">Limit</string>
-    <string name="setting_export_database_to_csv" translatable="false">Export to CSV</string>
-    <string name="setting_import_database_from_csv" translatable="false">Import Db form Csv</string>
+    <string name="setting_back_up_database">Backup database</string>
+    <string name="setting_back_up_database_dev" translatable="false">Backup database dev</string>
+    <string name="setting_restore_database">Restore database</string>
     <string name="setting_time_deday_show_answer">Watting time to show answer</string>
     <string name="show_answer_now">Immediately</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_home">Home</string>
+    <string name="restore_database_sucessful">Your database have been restored successfully.</string>
+    <string name="restore_database_fails">Can not restore database, please try again.</string>
+    <string name="setting_backup_and_restore_database_title"><![CDATA[Backup & restore database]]></string>
+    <string name="hint_input_my_backup_key">Input my backup key</string>
+    <string name="successfully">Successfully</string>
+    <string name="message_using_backup_code" >Your database will be archived on server in 7 days. To restore your database, use below code:</string>
+    <string name="close">Close</string>
+    <string name="try_again">Try again</string>
+    <string name="failed_to_connect_to_server">Failed to connect to server. Can not back up database, please try again.</string>
+    <string name="restore_database_wrong_code">Wrong code, please try again.</string>
 </resources>

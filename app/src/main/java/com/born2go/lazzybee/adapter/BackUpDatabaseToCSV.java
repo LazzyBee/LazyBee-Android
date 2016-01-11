@@ -122,7 +122,9 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        return _exportDBToCSV();
+        if (LazzyBeeShare.checkConn(context)) {
+            return _exportDBToCSV();
+        } else return false;
     }
 
     private Boolean _exportDBToCSV() {

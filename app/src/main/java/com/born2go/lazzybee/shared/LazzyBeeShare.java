@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -145,7 +147,7 @@ public class LazzyBeeShare {
 
 
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
-    
+
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFR0hIU3FCU0xuU28
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E
 
@@ -767,6 +769,29 @@ public class LazzyBeeShare {
         long fraction = (long) (range * aRandom.nextDouble());
         int randomNumber = (int) (fraction + aStart);
         return randomNumber;
+    }
+
+    public static boolean checkConn(Context ctx) {
+//        ConnectivityManager conMgr = (ConnectivityManager) ctx
+//                .getSystemService(Context.CONNECTIVITY_SERVICE);
+//        if (conMgr.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
+//                || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING) {
+//            return true;
+//        } else if (conMgr.getNetworkInfo(0).getState()==NetworkInfo.State.DISCONNECTED
+//                || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED){
+//            return false;
+//        }
+//        return false;
+        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        // test for connection
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+            return true;
+        } else {
+            Log.v(TAG, "Internet Connection Not Present");
+            return false;
+        }
     }
 
 
