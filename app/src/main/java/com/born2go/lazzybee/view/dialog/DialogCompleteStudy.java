@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.fragment;
+package com.born2go.lazzybee.view.dialog;
 
 
 import android.app.Activity;
@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import java.util.Calendar;
 
 public class DialogCompleteStudy extends DialogFragment {
 
+    private static final String TAG = "DialogCompleteStudy";
     private Context context;
     private MediaPlayer mpintro;
 
@@ -130,6 +132,14 @@ public class DialogCompleteStudy extends DialogFragment {
             _dayRing.setImageResource(showRing ? R.drawable.day_ring : R.drawable.day_ring_gray);
 
             mDays.addView(_mDayRing);
+        }
+        int startofDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        Log.d(TAG, "start of day:" + startofDay);
+        ArrayList<String> days = new ArrayList<String>();
+        for (int i = 1; i < 6; i++) {
+            int day = startofDay - (LazzyBeeShare.SECONDS_PERDAY * i);
+            days.add("" + day);
+            Log.d(TAG, "day:" + day);
         }
     }
 

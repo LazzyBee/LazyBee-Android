@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.view;
+package com.born2go.lazzybee.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

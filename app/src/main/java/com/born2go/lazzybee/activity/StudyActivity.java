@@ -35,19 +35,19 @@ import com.born2go.lazzybee.adapter.CustomViewPager;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.view.DetailsView;
-import com.born2go.lazzybee.fragment.DialogCompleteStudy;
-import com.born2go.lazzybee.fragment.DialogCompleteStudy.ICompleteSutdy;
+
 import com.born2go.lazzybee.view.StudyView;
 import com.born2go.lazzybee.view.StudyView.OnStudyViewListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudyActivity extends AppCompatActivity
-        implements ICompleteSutdy, OnStudyViewListener {
+        implements DialogCompleteStudy.ICompleteSutdy, OnStudyViewListener {
 
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
