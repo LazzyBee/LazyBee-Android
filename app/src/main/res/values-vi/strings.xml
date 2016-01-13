@@ -312,10 +312,12 @@
     <string name="setting_backup_and_restore_database_title"><![CDATA[Sao lưu & khôi phục dữ liệu]]></string>
     <string name="hint_input_my_backup_key">Nhập mã khôi phục đữ liệu</string>
     <string name="successfully">Thành công</string>
-    <string name="message_using_backup_code" >Dữ liệu học tập của bạn sẽ được lưu trữ trong 7 ngày. Để khôi phục dữ liệu xin hãy sử dụng mã dưới đây:</string>
+    <string name="message_using_backup_code">Dữ liệu học tập của bạn sẽ được lưu trữ trong 7 ngày. Để khôi phục dữ liệu xin hãy sử dụng mã dưới đây:</string>
     <string name="close">Đóng</string>
     <string name="try_again">Thử lại</string>
-    <string name="failed_to_connect_to_server">Lỗi kết nối tới server. Không thể sao lưu dữ liệu, vui lòng thử lại</string>
+    <string name="failed_to_connect_to_server">Lỗi kết nối tới máy chủ.Vui lòng thử lại</string>
+    <string name="failed_to_connect_to_server_can_not_back_up_database">Lỗi kết nối tới máy chủ. Không thể sao lưu dữ liệu, vui lòng thử lại</string>
+    <string name="failed_to_connect_to_server_can_not_restore_database">Lỗi kết nối tới server. Không thể khôi phục dữ liệu, vui lòng thử lại</string>
     <string name="restore_database_wrong_code">Sai mã, vui lòng thử lại.</string>
 
 

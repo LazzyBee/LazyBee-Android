@@ -481,6 +481,8 @@
     <string name="message_using_backup_code">Your database will be archived on server in 7 days. To restore your database, use below code:</string>
     <string name="close">Close</string>
     <string name="try_again">Try again</string>
-    <string name="failed_to_connect_to_server">Failed to connect to server. Can not back up database, please try again.</string>
+    <string name="failed_to_connect_to_server">Failed to connect to server.Please try again.</string>
+    <string name="failed_to_connect_to_server_can_not_back_up_database">Failed to connect to server. Can not back up database, please try again.</string>
+    <string name="failed_to_connect_to_server_can_not_restore_database">Failed to connect to server. Can not restore database, please try again.</string>
     <string name="restore_database_wrong_code">Wrong code, please try again.</string>
 </resources>
