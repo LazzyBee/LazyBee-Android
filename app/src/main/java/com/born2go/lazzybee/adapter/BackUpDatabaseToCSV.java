@@ -183,10 +183,11 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 //                File zipFile = new File(fileZipPath);
 //                Log.d(TAG, "Delete file Csv:" + (file.delete() ? " Ok" : " Fails"));
 //                Log.d(TAG, "Delete zip File:" + (zipFile.delete() ? " Ok" : " Fails"));
-                results = true;
+
             } else {
                 Log.d(TAG, "No query");
             }
+            results = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
         }
@@ -225,6 +226,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             } else {
                 Log.d(TAG, "No query");
             }
+            results = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
         }
