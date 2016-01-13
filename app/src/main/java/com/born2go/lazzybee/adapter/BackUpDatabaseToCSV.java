@@ -1,23 +1,15 @@
 package com.born2go.lazzybee.adapter;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Path;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.internal.view.ContextThemeWrapper;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
@@ -26,49 +18,20 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.ZipManager;
 import com.born2go.lazzybee.view.dialog.DialogMyCodeRestoreDB;
-import com.google.api.client.util.IOUtils;
 import com.opencsv.CSVWriter;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.Header;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.android.gms.internal.zzir.runOnUiThread;
 
 /**
  * Created by Hue on 12/16/2015.
@@ -82,7 +45,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private ProgressDialog dialog;
     ZipManager zipManager;
     // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
-    private String queryExportToCsvFull = "Select " +
+    private String queryExportWordTableToCsvFull = "Select " +
             "vocabulary.gid," +
             "vocabulary.queue," +
             "vocabulary.due," +
@@ -92,7 +55,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             "vocabulary.user_note " +
             "from vocabulary where vocabulary.gid not null";
     private int type;
-    private String queryExportToCsv = "Select " +
+    private String queryExportWordTableToCsv = "Select " +
             "vocabulary.gid," +
             "vocabulary.queue," +
             "vocabulary.due," +
@@ -101,7 +64,12 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             "vocabulary.e_factor," +
             "vocabulary.user_note " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
+    private String queryExportStreakTableToCsv = "select day from streak";
 
+    private String wordFileName = "word.csv";
+    private String streakFileName = "streak.csv";
+    private String backupFileName = "backup.zip";
+    File exportDir;
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
         this.activity = activity;
@@ -111,6 +79,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         zipManager = new ZipManager();
         this.type = type;
         Log.d(TAG, "Type export:" + ((type == 0) ? " Full" : " Mini"));
+        exportDir = new File(Environment.getExternalStorageDirectory(), LazzyBeeShare.EMPTY);
+        if (!exportDir.exists()) {
+            exportDir.mkdirs();
+        }
 
     }
 
@@ -123,25 +95,56 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         if (LazzyBeeShare.checkConn(context)) {
-            return _exportDBToCSV();
+            if (_exportToCSV()) {
+                Log.d(TAG, "Export db to csv:" + context.getString(R.string.successfully));
+                if (_zipFileBackUp()) {
+                    Log.d(TAG, "Zip backup file:" + context.getString(R.string.successfully));
+                    boolean resultsBackupFile = postFile(exportDir.getPath() + "/" + backupFileName);
+                    _deleteFile();
+                    if (resultsBackupFile) {
+                        Log.d(TAG, "Post backup file:" + context.getString(R.string.successfully));
+                        return true;
+                    } else {
+                        Log.d(TAG, "Post backup file:Fails");
+                        return false;
+                    }
+                } else {
+                    Log.d(TAG, "Zip backup file:Fails");
+                    return false;
+                }
+            } else {
+                Log.d(TAG, "Export db to csv: Fails");
+                return false;
+            }
         } else return false;
     }
 
-    private Boolean _exportDBToCSV() {
-        File exportDir = new File(Environment.getExternalStorageDirectory(), "");
-        if (!exportDir.exists()) {
-            exportDir.mkdirs();
+    private void _deleteFile() {
+        File zipFile = new File(exportDir, backupFileName);
+        File wordFile = new File(exportDir, wordFileName);
+        File streakFile = new File(exportDir, streakFileName);
+        Log.d(TAG, "Delete backup.zip file:" + (zipFile.delete() ? " Ok" : " Fails"));
+        Log.d(TAG, "Delete word.csv:" + (wordFile.delete() ? " Ok" : " Fails"));
+        Log.d(TAG, "Delete streak.csv:" + (streakFile.delete() ? " Ok" : " Fails"));
+    }
+
+    private Boolean _exportToCSV() {
+        if (_exportWordTableToCSV()) {
+            return _exportStreakTableToCSV();
+        } else {
+            return false;
         }
-        String code = null;
+    }
+
+    private Boolean _exportWordTableToCSV() {
         boolean results = false;
         //File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
-        File file = new File(exportDir, "backup.csv");
+        File file = new File(exportDir, wordFileName);
         try {
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
-
             SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-            Cursor curCSV = db.rawQuery((type == 0) ? queryExportToCsvFull : queryExportToCsv, null);
+            Cursor curCSV = db.rawQuery((type == 0) ? queryExportWordTableToCsvFull : queryExportWordTableToCsv, null);
             if (curCSV.getCount() > 0) {
                 if (curCSV.moveToFirst()) {
                     if (curCSV.getCount() > 0)
@@ -168,19 +171,57 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                 }
                 csvWrite.close();
                 curCSV.close();
-                String[] files = new String[1];
-                files[0] = file.getPath();
-                String fileZipPath = exportDir.getPath() + "/backup.zip";
-                //zipManager.zip(files, exportDir.getPath() + "/" + ((type == 0) ? "Full_" : "") + (LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
-                zipManager.zip(files, fileZipPath);
+//                String[] files = new String[1];
+//                files[0] = file.getPath();
+//                String fileZipPath = exportDir.getPath() + "/backup.zip";
+//                //zipManager.zip(files, exportDir.getPath() + "/" + ((type == 0) ? "Full_" : "") + (LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".zip");
+//                zipManager.zip(files, fileZipPath);
+//
+//                //save file backup to server
+//                boolean resultsBackupFile = postFile(exportDir.getPath() + "/backup.zip");
+//                //Delete file
+//                File zipFile = new File(fileZipPath);
+//                Log.d(TAG, "Delete file Csv:" + (file.delete() ? " Ok" : " Fails"));
+//                Log.d(TAG, "Delete zip File:" + (zipFile.delete() ? " Ok" : " Fails"));
+                results = true;
+            } else {
+                Log.d(TAG, "No query");
+            }
+        } catch (Exception sqlEx) {
+            Log.e(TAG, sqlEx.getMessage(), sqlEx);
+        }
+        return results;
+    }
 
-                //save file backup to server
-                boolean resultsBackupFile = postFile(exportDir.getPath() + "/backup.zip");
-                //Delete file
-                File zipFile = new File(fileZipPath);
-                Log.d(TAG, "Delete file Csv:" + (file.delete() ? " Ok" : " Fails"));
-                Log.d(TAG, "Delete zip File:" + (zipFile.delete() ? " Ok" : " Fails"));
-                results = resultsBackupFile;
+    boolean _zipFileBackUp() {
+        File wordFile = new File(exportDir.getPath() + "/" + wordFileName);
+        File streakFile = new File(exportDir.getPath() + "/" + streakFileName);
+        String[] files = new String[2];
+        files[0] = wordFile.getPath();
+        files[1] = streakFile.getPath();
+        String fileZipPath = exportDir.getPath() + "/" + backupFileName;
+        return zipManager.zip(files, fileZipPath);
+    }
+
+    private Boolean _exportStreakTableToCSV() {
+        boolean results = false;
+        File file = new File(exportDir, streakFileName);
+        try {
+            file.createNewFile();
+            CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
+            SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+            Cursor curCSV = db.rawQuery(queryExportStreakTableToCsv, null);
+            if (curCSV.getCount() > 0) {
+                if (curCSV.moveToFirst()) {
+                    if (curCSV.getCount() > 0)
+                        do {
+                            String arrStr[] = {curCSV.getString(0),};
+                            csvWrite.writeNext(arrStr, true);
+                        } while (curCSV.moveToNext());
+                }
+                csvWrite.close();
+                curCSV.close();
+                results = true;
             } else {
                 Log.d(TAG, "No query");
             }
