@@ -40,9 +40,10 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
     private ProgressDialog dialog;
     ZipManager zipManager;
     private boolean debug = false;
+    private String backupFileName = "backup.zip";
     private String wordFileName = "word.csv";
     private String streakFileName = "streak.csv";
-    private String backupFileName = "backup.zip";
+    String backupCVSFileName = "backup.csv";
     File exportDir;
 
     public DownloadAndRestoreDatabaseFormCSV(Context context, boolean debug, String localPath, String code) {
@@ -122,11 +123,19 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         int restore = 0;
         File zipfile = new File(path);
         String fileImport = exportDir.getPath() + "/";
-        String wordFilePath = exportDir.getPath() + "/" + wordFileName;
-        String streakFilePath = exportDir.getPath() + "/" + streakFileName;
         boolean unzip = zipManager.unzip(path, fileImport);
         if (unzip) {
-            restore = _restoreWordTableFormCSV(wordFilePath) + _restoreStreakTableFormCSV(streakFilePath);
+            String wordFilePath = exportDir.getPath() + "/" + wordFileName;
+            String backupCVSFilePath = exportDir.getPath() + "/" + backupCVSFileName;
+            String streakFilePath = exportDir.getPath() + "/" + streakFileName;
+            File wordFileCsv = new File(backupCVSFilePath);
+            if (wordFileCsv.exists()) {
+                Log.d(TAG, "File in path : " + backupCVSFilePath + " exists");
+                wordFilePath = backupCVSFilePath;
+                restore = _restoreWordTableFormCSV(wordFilePath);
+            } else {
+                restore = _restoreWordTableFormCSV(wordFilePath) + _restoreStreakTableFormCSV(streakFilePath);
+            }
         } else {
             Log.d(TAG, "unzip file Fails");
         }
@@ -140,7 +149,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         int restore = 0;
         try {
             File fileCsv = new File(wordFilePath);
-            if (fileCsv != null) {
+            if (fileCsv.exists()) {
                 Log.d(TAG, "file Csv code:" + wordFilePath);
                 FileReader fReader = new FileReader(wordFilePath);
                 BufferedReader reader = new BufferedReader(fReader);
@@ -259,7 +268,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                 Log.d(TAG, "Delete file Csv:" + (fileCsv.delete() ? " Ok" : " Fails"));
 
             } else {
-                Log.d(TAG, "file csv Null");
+                Log.d(TAG, "File in path : " + wordFilePath + " is not exists");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,7 +281,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         try {
             Log.d(TAG, "Streak file path:" + streakFilePath);
             File fileCsv = new File(streakFilePath);
-            if (fileCsv != null) {
+            if (fileCsv.exists()) {
                 FileReader fReader = new FileReader(streakFilePath);
                 CSVReader reader = new CSVReader(fReader);
                 try {
@@ -290,7 +299,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                 Log.d(TAG, "Delete streak file Csv:" + (fileCsv.delete() ? " Ok" : " Fails"));
 
             } else {
-                Log.d(TAG, "file csv Null");
+                Log.d(TAG, "File in path : " + streakFilePath + " is not exists");
             }
         } catch (Exception e) {
             e.printStackTrace();
