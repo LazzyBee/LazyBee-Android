@@ -1065,10 +1065,15 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _updateCardFormServer() {
-        //Call Api Update Card
-        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-        getCardFormServerByQuestion.execute(currentCard);
-        getCardFormServerByQuestion.delegate = this;
+        if (LazzyBeeShare.checkConn(context)) {
+            //Call Api Update Card
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            getCardFormServerByQuestion.execute(currentCard);
+            getCardFormServerByQuestion.delegate = this;
+        } else {
+            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void _backToBeforeCard() {

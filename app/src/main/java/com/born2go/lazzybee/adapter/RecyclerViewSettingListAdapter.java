@@ -987,9 +987,11 @@ public class RecyclerViewSettingListAdapter extends
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                _checkUpdate();
-
+                if (LazzyBeeShare.checkConn(context)) {
+                    _checkUpdate();
+                } else {
+                    Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+                }
 
 //                //Check vesion form server
 //                String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);

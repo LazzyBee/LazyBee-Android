@@ -253,7 +253,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private void _showDialogFailsBackupDatabase() {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(R.string.try_again);
-        builder.setMessage(R.string.failed_to_connect_to_server);
+        builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -324,7 +324,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         } else if (results == -1) {
             message = context.getString(R.string.restore_database_wrong_code);
         } else if (results == -2) {
-            message = context.getString(R.string.failed_to_connect_to_server);
+            message = context.getString(R.string.failed_to_connect_to_server_can_not_restore_database);
         } else {
             message = context.getString(R.string.restore_database_fails);
         }

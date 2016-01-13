@@ -328,9 +328,13 @@ public class SearchActivity extends AppCompatActivity implements
                 if (cardFormDB == null) {
                     cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
-                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                    getCardFormServerByQuestion.execute(cardFormDB);
-                    getCardFormServerByQuestion.delegate = this;
+                    if (LazzyBeeShare.checkConn(context)) {
+                        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                        getCardFormServerByQuestion.execute(cardFormDB);
+                        getCardFormServerByQuestion.delegate = this;
+                    } else {
+                        Log.d(TAG, getString(R.string.failed_to_connect_to_server));
+                    }
                 }
                 List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
                 int result_count = cardList.size();
@@ -349,9 +353,13 @@ public class SearchActivity extends AppCompatActivity implements
                     Card card = new Card();
                     card.setQuestion(query);
                     //Call Search in server
-                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                    getCardFormServerByQuestion.execute(card);
-                    getCardFormServerByQuestion.delegate = this;
+                    if (LazzyBeeShare.checkConn(context)) {
+                        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                        getCardFormServerByQuestion.execute(cardFormDB);
+                        getCardFormServerByQuestion.delegate = this;
+                    } else {
+                        Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 lbResultCount.setVisibility(View.GONE);

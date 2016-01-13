@@ -348,13 +348,17 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
 
     private void _updateCardFormServer() {
-        //Check card==null get card form Sqlite by cardID
-        if (card == null)
-            card = learnApiImplements._getCardByID(cardId);
+        if (LazzyBeeShare.checkConn(context)) {
+            //Check card==null get card form Sqlite by cardID
+            if (card == null)
+                card = learnApiImplements._getCardByID(cardId);
 
-        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-        getCardFormServerByQuestion.execute(card);
-        getCardFormServerByQuestion.delegate = this;
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            getCardFormServerByQuestion.execute(card);
+            getCardFormServerByQuestion.delegate = this;
+        } else {
+            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+        }
 
 
     }
