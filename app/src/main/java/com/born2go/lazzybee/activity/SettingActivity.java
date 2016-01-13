@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -110,6 +111,14 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TextToSpeech textToSpeech = LazzyBeeSingleton.textToSpeech;
+        if (textToSpeech != null)
+            LazzyBeeSingleton.textToSpeech.stop();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         LazzyBeeShare._cancelNotification(context);
@@ -129,7 +138,7 @@ public class SettingActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String fileSelectPath = data.getData().getPath();
                 if (fileSelectPath != null) {
-                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context,true,fileSelectPath,fileSelectPath );
+                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, true, fileSelectPath, fileSelectPath);
                     importDatabaseFormCSV.execute();
                 }
             }
