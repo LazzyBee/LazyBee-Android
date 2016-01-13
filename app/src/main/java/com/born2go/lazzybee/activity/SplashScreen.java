@@ -204,7 +204,7 @@ public class SplashScreen extends Activity {
             _gdbVesion = Integer.valueOf(gae_db_version);
         }
         if (_dbVesion > _gdbVesion) {
-            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.DEFAULT_VERSION_DB));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(_dbVesion));
         }
         //
         if (_dbVesion == 0) {
