@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -644,5 +645,12 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         int hour = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TextToSpeech textToSpeech = LazzyBeeSingleton.textToSpeech;
+        if (textToSpeech != null)
+            LazzyBeeSingleton.textToSpeech.stop();
     }
 }

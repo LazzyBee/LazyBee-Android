@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -449,6 +450,14 @@ public class StudyActivity extends AppCompatActivity
 
         dialog.show();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TextToSpeech textToSpeech = LazzyBeeSingleton.textToSpeech;
+        if (textToSpeech != null)
+            LazzyBeeSingleton.textToSpeech.stop();
     }
 
     @Override
