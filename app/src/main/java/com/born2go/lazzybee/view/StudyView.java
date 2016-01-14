@@ -150,7 +150,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mViewPager.setPagingEnabled(true);
+            //mViewPager.setPagingEnabled(true);
+            setEnableShowDictionary(true);
             answerDisplay = true;
             _showAnswer();
             mListener.setCurrentCard(currentCard);
@@ -189,7 +190,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     private void _processingAnswerCard(final int ea) {
         _showBtnAnswer();
-        mViewPager.setPagingEnabled(false);
+        //mViewPager.setPagingEnabled(false);
+        setEnableShowDictionary(false);
         _answerCard(ea);
         _handlerTimeShowAswerButton();
 
@@ -232,9 +234,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card, mySubject), card.getQueue(), 0);
                 }
                 if (answerDisplay) {
-                    mViewPager.setPagingEnabled(true);
+//                    mViewPager.setPagingEnabled(true);
+                    setEnableShowDictionary(true);
                 } else {
-                    mViewPager.setPagingEnabled(false);
+//                    mViewPager.setPagingEnabled(false);
+                    setEnableShowDictionary(false);
                 }
                 //Update Card form DB
                 dataBaseHelper._updateCardFormServer(card);
@@ -325,6 +329,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "On touch");
+                setEnableShowDictionary(true);
                 switch (event.getActionMasked()) {
 
                     case MotionEvent.ACTION_DOWN:
@@ -361,7 +367,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                                 .y(eY)
                                 .setDuration(0)
                                 .start();
+                        setEnableShowDictionary(false);
                         break;
+                    case MotionEvent.ACTION_CANCEL:
+                        Log.d(TAG, "Action cancel");
+                        break;
+
                     default:
                         return false;
                 }
@@ -370,6 +381,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         });
 
+    }
+
+    private void setEnableShowDictionary(boolean enable) {
+        //true to show Dicionary
+        mViewPager.setPagingEnabled(enable);
     }
 
     private void setDisplaySize(int width, int height) {
@@ -1022,7 +1038,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             if (queue == Card.QUEUE_SUSPENDED_1) {
                 message = getString(R.string.message_ignore_card_sucessful);
             }
-            mViewPager.setPagingEnabled(false);
+            //mViewPager.setPagingEnabled(false);
+            setEnableShowDictionary(false);
             _handlerTimeShowAswerButton();
 
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
