@@ -62,7 +62,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        DownloadFileDatabaseResponse{
+        DownloadFileDatabaseResponse {
 
     private Context context = this;
     private static final String TAG = "MainActivity";
@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences sharedpreferences;
     private int KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT;
+
+    Snackbar snackbarCongraturation;
+    Snackbar snackbarTip;
 
 
     @Override
@@ -240,14 +243,14 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _showDialogCongraturation(String messgage_congratilation) {
-        final Snackbar snackbar =
+        snackbarCongraturation =
                 Snackbar
                         .make(this.container, messgage_congratilation, Snackbar.LENGTH_LONG);
-        View snackBarView = snackbar.getView();
+        View snackBarView = snackbarCongraturation.getView();
         snackBarView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                snackbar.dismiss();
+                snackbarCongraturation.dismiss();
             }
         });
         snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             public void onFinish() {
-                snackbar.show();
+                snackbarCongraturation.show();
             }
         }.start();
 
@@ -554,11 +557,24 @@ public class MainActivity extends AppCompatActivity
                 // Associate searchable configuration with the SearchView
                 _defineSearchView(menu);
                 _restoreActionBar();
+            } else {
+                _dismissTip();
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void _dismissTip() {
+        if (snackbarCongraturation != null) {
+            Log.d(TAG, "Stop snackbar Congraturation");
+            snackbarCongraturation.dismiss();
+        }
+        if (snackbarTip != null) {
+            Log.d(TAG, "Stop snackbar Tip");
+            snackbarTip.dismiss();
+        }
     }
 
     private void _defineSearchView(Menu menu) {
@@ -795,12 +811,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
+        _dismissTip();
     }
 
     @Override
     public void processFinish(int code) {
         if (code == 1) {
-            //Dowload and update Complete
+            //Download and update Complete
             if (!_checkUpdate())
                 Toast.makeText(context, context.getString(R.string.mesage_update_database_successful), Toast.LENGTH_SHORT).show();
         } else {
@@ -965,6 +982,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     private void _showDialogTip() {
         try {
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
@@ -992,16 +1010,16 @@ public class MainActivity extends AppCompatActivity
 
             }
             if (popup_text != null) {
-                final Snackbar snackbar =
+                snackbarTip =
                         Snackbar
                                 .make(this.container, popup_text, Snackbar.LENGTH_LONG);
-                View snackBarView = snackbar.getView();
+                View snackBarView = snackbarTip.getView();
                 final String finalPopup_url = popup_url;
                 snackBarView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
-                            snackbar.dismiss();
+                            snackbarTip.dismiss();
                             Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
                             startActivity(myIntent);
                         } catch (ActivityNotFoundException e) {
@@ -1017,7 +1035,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     public void onFinish() {
-                        snackbar.show();
+                        snackbarTip.show();
                     }
                 }.start();
             } else {
