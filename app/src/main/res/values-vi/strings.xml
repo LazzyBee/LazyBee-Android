@@ -2,7 +2,7 @@
 <resources>
     <string name="EASE_AGAIN">Học lại</string>
     <string name="EASE_EASY">Dễ</string>
-    <string name="EASE_GOOD">Tốt</string>
+    <string name="EASE_GOOD">Trung bình</string>
     <string name="EASE_HARD">Khó</string>
 
     <string name="action_learnt">Đã biết</string>
@@ -112,8 +112,8 @@
 
     <string-array name="settings">
         <!--<item>@string/setting_learn_title</item>
-        <item>@string/setting_total_learn_per_day</item>
-        <item>@string/setting_today_new_card_limit</item>-->
+    <item>@string/setting_total_learn_per_day</item>
+    <item>@string/setting_today_new_card_limit</item>-->
         <!--<item>@string/setting_today_review_card_limit</item>-->
         <!--<item>@string/setting_custom_study_title</item>-->
         <item>@string/setting_custom_study</item>
@@ -137,19 +137,16 @@
         <!--<item>@string/setting_export_database</item>-->
         <!--<item>@string/setting_update_db_form_query</item>-->
         <item>@string/setting_lines</item>
-
+        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_back_up_database</item>
+        <item>@string/setting_restore_database</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_about</item>
         <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="settings_dev">
-        <!--<item>@string/setting_learn_title</item>
-        <item>@string/setting_total_learn_per_day</item>
-        <item>@string/setting_today_new_card_limit</item>-->
-        <!--<item>@string/setting_today_review_card_limit</item>-->
-        <!--<item>@string/setting_custom_study_title</item>-->
         <item>@string/setting_custom_study</item>
-        <!--<item>@string/setting_speech_rate</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
@@ -158,7 +155,6 @@
 
         <item>@string/setting_update_title</item>
         <item>@string/setting_check_update</item>
-        <!--<item>@string/setting_auto_check_update</item>-->
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
@@ -167,9 +163,12 @@
         <item>@string/setting_debug_info</item>
         <item>@string/setting_reset_cache</item>
         <item>@string/setting_export_database</item>
-        <item>@string/setting_export_database_to_csv</item>
-        <item>@string/setting_import_database_from_csv</item>
         <item>@string/setting_update_db_form_query</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_back_up_database</item>
+        <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_about</item>
@@ -306,6 +305,18 @@
     <string name="setting_time_deday_show_answer">Thời gian chờ câu trả lời</string>
     <string name="show_answer_now">Ngay lập tức</string>
     <string name="drawer_home">Trang chủ</string>
+    <string name="restore_database_sucessful">Dữ liệu của bạn đã được khôi phục thành công.</string>
+    <string name="restore_database_fails">Không thể khôi phục dữ liệu, vui lòng thử lại.</string>
+    <string name="setting_back_up_database">Sao lưu dữ liệu</string>
+    <string name="setting_restore_database">Khôi phục dữ liệu</string>
+    <string name="setting_backup_and_restore_database_title"><![CDATA[Sao lưu & khôi phục cơ sơ đữ liệu]]></string>
+    <string name="hint_input_my_backup_key">Nhập mã khôi phục đữ liệu</string>
+    <string name="successfully">Thành công</string>
+    <string name="message_using_backup_code" >Dữ liệu học tập của bạn sẽ được lưu trữ trong 7 ngày. Để khôi phục dữ liệu xin hãy sử dụng mã dưới đây:</string>
+    <string name="close">Đóng</string>
+    <string name="try_again">Thử lại</string>
+    <string name="failed_to_connect_to_server">Lỗi kết nối. Không thể sao lưu dữ liệu, vui lòng thử lại</string>
+    <string name="restore_database_wrong_code">Sai mã, vui lòng thử lại.</string>
 
 
     <string-array name="subjects">

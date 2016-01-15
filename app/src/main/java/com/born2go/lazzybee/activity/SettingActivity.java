@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.ImportDatabaseFormCSV;
+import com.born2go.lazzybee.adapter.DownloadAndRestoreDatabaseFormCSV;
 import com.born2go.lazzybee.adapter.RecyclerViewSettingListAdapter;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -61,13 +61,12 @@ public class SettingActivity extends AppCompatActivity {
         final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
         String android_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        Log.i(TAG, "Android id:" + android_id);
+        Log.d(TAG, "Android id:" + android_id);
         if (devices.contains(android_id)) {
-            Log.i(TAG, "Contain");
             settings = Arrays.asList(context.getResources().getStringArray(R.array.settings_dev));
+            Log.d(TAG, "It is Dev devices");
         } else {
             settings = Arrays.asList(context.getResources().getStringArray(R.array.settings));
-            Log.i(TAG, "Not contain");
         }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
@@ -130,7 +129,7 @@ public class SettingActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String Fpath = data.getData().getPath();
                 if (Fpath != null) {
-                    ImportDatabaseFormCSV importDatabaseFormCSV=new ImportDatabaseFormCSV(context,Fpath);
+                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, Fpath);
                     importDatabaseFormCSV.execute();
                 }
             }

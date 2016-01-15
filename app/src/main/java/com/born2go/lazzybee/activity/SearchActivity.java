@@ -79,6 +79,7 @@ public class SearchActivity extends AppCompatActivity implements
         _trackerApplication();
 
     }
+
     private void _initActonBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -123,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements
                     Card card = (Card) lbQuestion.getTag();
                     String cardID = String.valueOf(card.getId());
                     if (card.getId() > 0) {
-                       // _optionList(card);
+                        // _optionList(card);
                     } else {
                         Log.w(TAG, "card.getId()==0");
                     }
@@ -313,7 +314,6 @@ public class SearchActivity extends AppCompatActivity implements
     private void _search(String query, int display_type, boolean suggestion) {
         //use the query_text to search
         Log.d(TAG, "query_text:" + query);
-
         try {
             query_text = query;
             if (query == null) {
@@ -324,6 +324,14 @@ public class SearchActivity extends AppCompatActivity implements
                 }
                 setAdapterListCard(cardList);
             } else if (query != null || query.length() > 0) {
+                Card cardFormDB = dataBaseHelper._getCardByQuestion(query);
+                if (cardFormDB == null) {
+                    cardFormDB = new Card();
+                    cardFormDB.setQuestion(query);
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    getCardFormServerByQuestion.execute(cardFormDB);
+                    getCardFormServerByQuestion.delegate = this;
+                }
                 List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
                 int result_count = cardList.size();
                 Log.i(TAG, "Search result_count:" + result_count);
@@ -453,17 +461,20 @@ public class SearchActivity extends AppCompatActivity implements
     public void processFinish(Card card) {
         try {
             List<Card> cardList = new ArrayList<Card>();
-            int result_count = 0;
+            int result_count;
             if (card != null) {
                 if (card.getId() == 0) {
                     dataBaseHelper._insertOrUpdateCard(card);
                     card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
                 }
+                Log.d(TAG, "card:" + card.toString());
                 cardList.add(card);
-                result_count = cardList.size();
             } else {
-                Log.i(TAG, getString(R.string.not_found));
+                Log.d(TAG, getString(R.string.not_found));
             }
+            cardList.addAll(dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type));
+            result_count = cardList.size();
+            Log.d(TAG, "Results count:" + result_count);
             if (result_count > 0) {
                 lbResultCount.setVisibility(View.VISIBLE);
                 mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
@@ -476,11 +487,21 @@ public class SearchActivity extends AppCompatActivity implements
                 mRecyclerViewSearchResults.setVisibility(View.GONE);
                 lbMessageNotFound.setVisibility(View.VISIBLE);
                 lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
+                _trackerWorkNotFound();
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
         hideKeyboard();
+    }
+
+    private void _trackerWorkNotFound() {
+        try {
+            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
+            mDataLayer.pushEvent("searchNoResult", DataLayer.mapOf("wordError", query_text));
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 
     @Override

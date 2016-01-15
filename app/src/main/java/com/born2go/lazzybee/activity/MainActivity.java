@@ -921,7 +921,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void _onbtnReviewOnClick(View view) {
-        Intent intent = new Intent(this, ReviewCardActivity.class);
+        Intent intent = new Intent(this, IncomingListActivity.class);
         startActivity(intent);
     }
 

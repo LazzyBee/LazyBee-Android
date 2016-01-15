@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.fragment;
+package com.born2go.lazzybee.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -1032,13 +1032,18 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         Log.i(TAG, "-----------------------END----------------------");
     }
 
+    private CountDownTimer countDownTimer;
+
     private void _handlerTimeShowAswerButton() {
         if (sTimeShowAnswer > -1) {
             mShowAnswer.setOnClickListener(null);
             btnShowAnswer.setOnClickListener(null);
             mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
             btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
-            new CountDownTimer(((sTimeShowAnswer) * 1000), 100) {
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
+            countDownTimer = new CountDownTimer(((sTimeShowAnswer) * 1000), 100) {
                 public void onTick(long millisUntilFinished) {
                     int second = Math.round((millisUntilFinished / 1000));
                     Log.d(TAG, "second:" + second);
@@ -1161,7 +1166,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
 
             btnBackBeforeCard.setVisible(false); //Hide btnBackBeforeCard
-
+            _handlerTimeShowAswerButton();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.born2go.lazzybee.activity.ReviewCardActivity">
+    tools:context=".activity.IncomingListActivity">
     <TextView
         android:id="@+id/lbCountReviewCard"
         android:layout_width="fill_parent"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,7 @@ public class RecyclerViewSettingListAdapter extends
     SettingActivity activity;
     private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
-
+    String device_id;
     private RecyclerView mRecyclerViewSettings;
 
     public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
@@ -73,6 +74,9 @@ public class RecyclerViewSettingListAdapter extends
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         this.mRecyclerViewSettings = mRecyclerViewSettings;
         this.lazzybeeTag = TagManager.getInstance(context).getDataLayer();
+        device_id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
     }
 
     @Override
@@ -160,10 +164,13 @@ public class RecyclerViewSettingListAdapter extends
                     lbLimit.setVisibility(View.GONE);
                     _exportDatabases(mCardView);
 
-                } else if (setting.equals(context.getString(R.string.setting_export_database_to_csv))) {
+                } else if (setting.equals(context.getString(R.string.setting_back_up_database))) {
                     lbLimit.setVisibility(View.GONE);
-                    _exportDatabasesToCVS(mCardView);
-                } else if (setting.equals(context.getString(R.string.setting_import_database_from_csv))) {
+                    _backupDatabase(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_back_up_database_dev))) {
+                    lbLimit.setVisibility(View.GONE);
+                    _backupDatabases_Dev(mCardView);
+                } else if (setting.equals(context.getString(R.string.setting_restore_database))) {
                     lbLimit.setVisibility(View.GONE);
                     _importDatabasesFormCVS(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_update_db_form_query))) {
@@ -230,13 +237,56 @@ public class RecyclerViewSettingListAdapter extends
 
     }
 
+    private void _backupDatabase(RelativeLayout mCardView) {
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int mini = 1;
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
+                exportDatabaseToCSV.execute();
+            }
+        });
+    }
+
     private void _importDatabasesFormCVS(RelativeLayout mCardView) {
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFileChooser();
+                _restoreDatabase();
+                //showFileChooser();
             }
         });
+    }
+
+    private void _restoreDatabase() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        builder.setTitle(R.string.setting_restore_database);
+        View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
+        final EditText lbMybackupkey = (EditText) viewDialog.findViewById(R.id.lbMybackupkey);
+        //String hint_input_my_backup_key = context.getString(R.string.hint_input_my_backup_key);
+        //lbMybackupkey.setHint(hint_input_my_backup_key);
+        //
+        builder.setView(viewDialog);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String getBackupKey = lbMybackupkey.getText().toString();
+                //Toast.makeText(context, "My Backup key:" + getBackupKey, Toast.LENGTH_SHORT).show();
+                DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, getBackupKey);
+                downloadAndRestoreDatabaseFormCSV.execute();
+                //dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     private void showFileChooser() {
@@ -253,12 +303,13 @@ public class RecyclerViewSettingListAdapter extends
         }
     }
 
-    private void _exportDatabasesToCVS(RelativeLayout mCardView) {
+    private void _backupDatabases_Dev(RelativeLayout mCardView) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         final CharSequence[] types = new CharSequence[2];
-        types[0] = "Full";
-        types[1] = "Mini";
+        types[0] = "Full-Card";
+        types[1] = "Mini-Only Card Learned";
         final int[] type = new int[1];
+        builder.setTitle(R.string.setting_back_up_database);
         builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -268,7 +319,7 @@ public class RecyclerViewSettingListAdapter extends
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ExportDatabaseToCSV exportDatabaseToCSV = new ExportDatabaseToCSV(context, type[0]);
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, type[0]);
                 exportDatabaseToCSV.execute();
             }
         });
@@ -859,6 +910,7 @@ public class RecyclerViewSettingListAdapter extends
 
         if (setting.equals(context.getString(R.string.setting_learn_title))
                 || setting.equals(context.getString(R.string.setting_update_title))
+                || setting.equals(context.getString(R.string.setting_backup_and_restore_database_title))
                 || setting.equals(context.getString(R.string.setting_speech_rate))
                 ) {
             return TYPE_TITLE;
@@ -868,8 +920,9 @@ public class RecyclerViewSettingListAdapter extends
                 || setting.equals(context.getString(R.string.setting_reset_cache))
                 || setting.equals(context.getString(R.string.setting_all_right))
                 || setting.equals(context.getString(R.string.setting_export_database))
-                || setting.equals(context.getString(R.string.setting_export_database_to_csv))
-                || setting.equals(context.getString(R.string.setting_import_database_from_csv))
+                || setting.equals(context.getString(R.string.setting_back_up_database))
+                || setting.equals(context.getString(R.string.setting_back_up_database_dev))
+                || setting.equals(context.getString(R.string.setting_restore_database))
                 || setting.equals(context.getString(R.string.setting_update_db_form_query))
                 )
             return TYPE_SETTING_NAME;

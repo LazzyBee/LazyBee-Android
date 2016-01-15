@@ -90,7 +90,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.ReviewCardActivity"
+            android:name=".activity.IncomingListActivity"
             android:label="@string/title_activity_review_card"
             android:screenOrientation="portrait">
             <meta-data
@@ -112,7 +112,7 @@
             android:theme="@style/ThemeNoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ReviewCardActivity" />
+                android:value=".activity.IncomingListActivity" />
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".activity.SearchActivity" />

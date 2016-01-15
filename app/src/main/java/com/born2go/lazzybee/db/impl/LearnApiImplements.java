@@ -234,6 +234,22 @@ public class LearnApiImplements implements LearnApi {
         return datas;
     }
 
+    public Card _getCardByQuestion(String query) {
+        Card card = null;
+        String selectbyQuestionQuery = "Select " + selectFull + " from " + TABLE_VOCABULARY + " where vocabulary.question ='" + query + "'";
+
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(selectbyQuestionQuery, null);
+        if (cursor.getCount() > 0)
+            if (cursor.moveToFirst()) {
+                do {
+                    card = _defineCardbyCursor(cursor, 0);
+                } while (cursor.moveToNext());
+            }
+        return card;
+    }
+
     private List<Card> _getDictionary() {
         String query = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY + " order by question";
         List<Card> cardList = _getListCardQueryString(query, 1);
@@ -1574,10 +1590,10 @@ public class LearnApiImplements implements LearnApi {
             values.put(KEY_QUEUE, card.getQueue());
             values.put(KEY_REV_COUNT, card.getRev_count());
             values.put(KEY_DUE, card.getDue());
+            values.put(KEY_USER_NOTE, card.getUser_note());
 
             update_result = db.update(TABLE_VOCABULARY, values, KEY_G_ID + " = ?",
                     new String[]{String.valueOf(card.getgId())});
-            Log.i(TAG, "_updateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
             db.close();
         }
         return update_result;
@@ -1626,4 +1642,23 @@ public class LearnApiImplements implements LearnApi {
         return datas;
     }
 
+    public int _updateCardFormCSV(long gId, int queue, int due, int rev_count, int last_ivl, int factor, String user_note) {
+        int update_result = -2;
+        //Update staus card by id
+        if (gId > 0) {
+            SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_QUEUE, queue);
+            values.put(KEY_DUE, due);
+            values.put(KEY_REV_COUNT, rev_count);
+            values.put(KEY_LAT_IVL, last_ivl);
+            values.put(KEY_FACTOR, factor);
+            values.put(KEY_USER_NOTE, user_note);
+
+            update_result = db.update(TABLE_VOCABULARY, values, KEY_G_ID + " = ?",
+                    new String[]{String.valueOf(gId)});
+            db.close();
+        }
+        return update_result;
+    }
 }

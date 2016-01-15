@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.fragment;
+package com.born2go.lazzybee.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,6 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.view.SlidingTabLayout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;

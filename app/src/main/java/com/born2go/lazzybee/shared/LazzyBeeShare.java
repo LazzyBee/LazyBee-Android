@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -46,45 +48,44 @@ public class LazzyBeeShare {
     public static final String LEARN_MORE = "LEARN_MORE";
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
-    public static final int DEFAULT_TOTAL_LEAN_PER_DAY = 20;
     public static final String CARDID = "cardId";
-
     public static final String KEY_SETTING_TODAY_NEW_CARD_LIMIT = "today_new_card_limit";
+
     public static final String KEY_SETTING_TODAY_REVIEW_CARD_LIMIT = "today_review_card_limit";
     public static final String KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT = "max_learn_more_per_day";
     //Total card learn
     public static final String KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT = "total_card_learn_pre_day";
-
     public static final String KEY_SETTING_AUTO_CHECK_UPDATE = "auto_check_update";
+
     public static final String KEY_SETTING_DEBUG_INFOR = "debug_infor";
     public static final String KEY_SETTING_NOTIFICTION = "notification";
     public static final String KEY_SETTING_SPEECH_RATE = "speech_rate";
     public static final String KEY_SETTING_MY_LEVEL = "my_level";
-
-
     public static final String DRAWER_USER = "user";
+
+
     public static final String DRAWER_TITLE_COURSE = "title_course";
     public static final String DRAWER_SETTING = "settings";
-
     public static final String DRAWER_ABOUT = "about";
+
     public static final String DRAWER_LINES = "lines";
     public static final String DRAWER_ADD_COURSE = "add_course";
     public static final int DRAWER_ADD_COURSE_INDEX = 0;
     public static final int DRAWER_SETTINGS_INDEX = 1;
-
     public static final int DRAWER_ABOUT_INDEX = 2;
 
     public static final int DRAWER_USER_INDEX = 3;
-    public static final int DRAWER_COURSE_INDEX = 4;
 
+    public static final int DRAWER_COURSE_INDEX = 4;
     public static final int DRAWER_DICTIONARY_INDEX = 5;
 
     public static final int DRAWER_MAJOR_INDEX = 6;
+
     public static final int DRAWER_HELP_INDEX = 7;
     public static final int DRAWER_STATISTICAL_INDEX = 8;
     public static final int DRAWER_HOME_INDEX = 9;
-
     public static final int CODE_COMPLETE_STUDY_RESULTS_1000 = 1000;
+
     public static final int CODE_SEARCH_RESULT = 1001;
     public static final String NOTIFICATION_MESSAGE = "n_message";
     public static final String NOTIFICATION_INDEX = "index";
@@ -105,48 +106,47 @@ public class LazzyBeeShare {
     public static final String NOTIFY_TEXT = "notify_text";
     public static final String KEY_SETTING_MY_SUBJECT = "my_subject";
     public static final String KEY_FIRST_RUN_APP = "first_run_application";
-    public static final int DEFAULT_HOUR_NOTIFICATION = 13;
-    public static final int DEFAULT_MINUTE_NOTIFICATION = 30;
+
     public static final int MAX_NEW_PRE_DAY = 50;
     public static final int SECONDS_PERDAY = 86400;
-
     public static final String CARD_MEANING = "meaning";
+
     public static final String CARD_PRONOUN = "pronoun";
     public static final String CARD_EXPLAIN = "explain";
     public static final String CARD_EXAMPLE = "example";
     public static final String KEY_LANGUAGE = "lang";
-
     public static final String LANG_EN = "en";
-    public static final String LANG_VI = "vi";
 
+    public static final String LANG_VI = "vi";
     public static final String DB_VERSION = "db_v";
+
     public static final String GAE_DB_VERSION = "gae_db_version";
     public static final java.lang.String DB_UPDATE_NAME = "update.db";
-    public static final int NO_DOWNLOAD_UPDATE = 0;
     public static final int DOWNLOAD_UPDATE = 1;
     public static final String ON = "on";
     public static final String OFF = "off";
-
     public static final String UP = "Up";
+
     public static final String DOWN = "Down";
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
-    public static final int DEFAULT_TIME_SHOW_ANSWER = 3;
-
-
     public static String mime = "text/html";
     public static String encoding = "utf-8";
-    public static String ASSETS = "file:///android_asset/";
 
+
+    public static String ASSETS = "file:///android_asset/";
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
+
+    //Default setting
+    public static final int DEFAULT_TOTAL_LEAN_PER_DAY = 40;
     public static final int DEFAULT_MAX_LEARN_MORE_PER_DAY = 5;
     public static final int DEFAULT_MY_LEVEL = 2;
+    public static final int DEFAULT_TIME_SHOW_ANSWER = 3;
+    public static final int DEFAULT_HOUR_NOTIFICATION = 13;
+    public static final int DEFAULT_MINUTE_NOTIFICATION = 30;
 
 
     public static final String PRE_FETCH_NEWCARD_LIST = "pre_fetch_newcard_list";
-
-
-    public static int VERSION_SERVER = 4;
 
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFR0hIU3FCU0xuU28
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFd05remxQR0ctU0E
@@ -769,6 +769,29 @@ public class LazzyBeeShare {
         long fraction = (long) (range * aRandom.nextDouble());
         int randomNumber = (int) (fraction + aStart);
         return randomNumber;
+    }
+
+    public static boolean checkConn(Context ctx) {
+//        ConnectivityManager conMgr = (ConnectivityManager) ctx
+//                .getSystemService(Context.CONNECTIVITY_SERVICE);
+//        if (conMgr.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
+//                || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING) {
+//            return true;
+//        } else if (conMgr.getNetworkInfo(0).getState()==NetworkInfo.State.DISCONNECTED
+//                || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED){
+//            return false;
+//        }
+//        return false;
+        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        // test for connection
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+            return true;
+        } else {
+            Log.v(TAG, "Internet Connection Not Present");
+            return false;
+        }
     }
 
 

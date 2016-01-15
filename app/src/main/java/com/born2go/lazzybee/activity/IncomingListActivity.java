@@ -21,10 +21,9 @@ import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.List;
 
-public class ReviewCardActivity extends AppCompatActivity {
+public class IncomingListActivity extends AppCompatActivity {
 
-    private static final String TAG = "ReviewCardActivity";
-    private static final Object GA_SCREEN = "aReviewCardScreen";
+    private static final Object GA_SCREEN = "aIncomingListScreen";
     private Context context;
 
     @Override
