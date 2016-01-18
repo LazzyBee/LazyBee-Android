@@ -324,11 +324,9 @@ public class SearchActivity extends AppCompatActivity implements
                 }
                 setAdapterListCard(cardList);
             } else if (query != null || query.length() > 0) {
-//                Card cardFormDB = dataBaseHelper._getCardByQuestion(query);
-//                if (cardFormDB == null) {
-                Card cardFormDB = new Card();
-                cardFormDB.setQuestion(query);
                 if (LazzyBeeShare.checkConn(context)) {
+                    Card cardFormDB = new Card();
+                    cardFormDB.setQuestion(query);
                     GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
                     getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
@@ -346,17 +344,6 @@ public class SearchActivity extends AppCompatActivity implements
                         //Init Adapter
                         setAdapterListCard(cardList);
                     } else if (result_count == 0) {//Check result_count==0 search in server
-                        //Define Card
-//                        Card card = new Card();
-//                        card.setQuestion(query);
-//                        //Call Search in server
-//                        if (LazzyBeeShare.checkConn(context)) {
-//                            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-//                            getCardFormServerByQuestion.execute(cardFormDB);
-//                            getCardFormServerByQuestion.delegate = this;
-//                        } else {
-//                            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
-//                        }
                         lbResultCount.setVisibility(View.GONE);
                         mRecyclerViewSearchResults.setVisibility(View.GONE);
                         lbMessageNotFound.setVisibility(View.VISIBLE);
@@ -474,18 +461,30 @@ public class SearchActivity extends AppCompatActivity implements
         try {
             List<Card> cardList = new ArrayList<Card>();
             int result_count;
+            boolean cardNull = false;
             if (card != null) {
+                Log.d(TAG, "Card get Form Server:" + card.toString());
                 if (card.getId() == 0) {
                     dataBaseHelper._insertOrUpdateCard(card);
                     card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
+                    cardList.add(card);
                 }
-                Log.d(TAG, "card:" + card.toString());
-                //cardList.add(card);
             } else {
+                //Not found find card form server
                 Log.d(TAG, getString(R.string.not_found));
+                cardNull = true;
             }
-            cardList.addAll(dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type));
-
+            List<Card> cardResultSearchFromDb = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
+            if (cardResultSearchFromDb.size() > 0) {
+                if (!cardNull) {
+                    for (Card cardDB : cardResultSearchFromDb) {
+                        if (cardDB.getId() == (card.getId())) {
+                            cardResultSearchFromDb.remove(cardDB);
+                        }
+                    }
+                }
+                cardList.addAll(cardResultSearchFromDb);
+            }
             result_count = cardList.size();
             Log.d(TAG, "Results count:" + result_count);
             if (result_count > 0) {
