@@ -472,18 +472,21 @@ public class SearchActivity extends AppCompatActivity implements
             } else {
                 //Not found find card form server
                 Log.d(TAG, getString(R.string.not_found));
-                cardNull = true;
+                cardNull=true;
             }
             List<Card> cardResultSearchFromDb = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
             if (cardResultSearchFromDb.size() > 0) {
+                //Clone result search card form db
+                List<Card> cloneSearchResults = new ArrayList<Card>(cardResultSearchFromDb);
                 if (!cardNull) {
                     for (Card cardDB : cardResultSearchFromDb) {
                         if (cardDB.getId() == (card.getId())) {
-                            cardResultSearchFromDb.remove(cardDB);
+                            cloneSearchResults.remove(cardDB);//Remove duplicate card
                         }
                     }
                 }
-                cardList.addAll(cardResultSearchFromDb);
+                if (cloneSearchResults.size() > 0)
+                    cardList.addAll(cloneSearchResults);
             }
             result_count = cardList.size();
             Log.d(TAG, "Results count:" + result_count);
