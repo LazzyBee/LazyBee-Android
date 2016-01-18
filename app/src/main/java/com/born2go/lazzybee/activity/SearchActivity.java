@@ -324,43 +324,47 @@ public class SearchActivity extends AppCompatActivity implements
                 }
                 setAdapterListCard(cardList);
             } else if (query != null || query.length() > 0) {
-                Card cardFormDB = dataBaseHelper._getCardByQuestion(query);
-                if (cardFormDB == null) {
-                    cardFormDB = new Card();
-                    cardFormDB.setQuestion(query);
-                    if (LazzyBeeShare.checkConn(context)) {
-                        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                        getCardFormServerByQuestion.execute(cardFormDB);
-                        getCardFormServerByQuestion.delegate = this;
-                    } else {
-                        Log.d(TAG, getString(R.string.failed_to_connect_to_server));
+//                Card cardFormDB = dataBaseHelper._getCardByQuestion(query);
+//                if (cardFormDB == null) {
+                Card cardFormDB = new Card();
+                cardFormDB.setQuestion(query);
+                if (LazzyBeeShare.checkConn(context)) {
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    getCardFormServerByQuestion.execute(cardFormDB);
+                    getCardFormServerByQuestion.delegate = this;
+                } else {
+                    Log.d(TAG, getString(R.string.failed_to_connect_to_server));
+                    List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                    int result_count = cardList.size();
+                    Log.i(TAG, "Search result_count:" + result_count);
+                    if (result_count > 0) {
+                        lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
+                        mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
+                        lbMessageNotFound.setVisibility(View.GONE);
+                        //set count
+                        lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
+                        //Init Adapter
+                        setAdapterListCard(cardList);
+                    } else if (result_count == 0) {//Check result_count==0 search in server
+                        //Define Card
+//                        Card card = new Card();
+//                        card.setQuestion(query);
+//                        //Call Search in server
+//                        if (LazzyBeeShare.checkConn(context)) {
+//                            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+//                            getCardFormServerByQuestion.execute(cardFormDB);
+//                            getCardFormServerByQuestion.delegate = this;
+//                        } else {
+//                            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+//                        }
+                        lbResultCount.setVisibility(View.GONE);
+                        mRecyclerViewSearchResults.setVisibility(View.GONE);
+                        lbMessageNotFound.setVisibility(View.VISIBLE);
+                        lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
+                        _trackerWorkNotFound();
                     }
                 }
-                List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
-                int result_count = cardList.size();
-                Log.i(TAG, "Search result_count:" + result_count);
-                if (result_count > 0) {
-                    lbResultCount.setVisibility((display_type > 0) ? View.GONE : View.VISIBLE);
-                    mRecyclerViewSearchResults.setVisibility(View.VISIBLE);
-                    lbMessageNotFound.setVisibility(View.GONE);
 
-                    //set count
-                    lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
-                    //Init Adapter
-                    setAdapterListCard(cardList);
-                } else if (result_count == 0) {//Check result_count==0 search in server
-                    //Define Card
-                    Card card = new Card();
-                    card.setQuestion(query);
-                    //Call Search in server
-                    if (LazzyBeeShare.checkConn(context)) {
-                        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-                        getCardFormServerByQuestion.execute(cardFormDB);
-                        getCardFormServerByQuestion.delegate = this;
-                    } else {
-                        Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
-                    }
-                }
             } else {
                 lbResultCount.setVisibility(View.GONE);
                 List<Card> cardList = new ArrayList<Card>();
@@ -369,9 +373,9 @@ public class SearchActivity extends AppCompatActivity implements
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
-        if (suggestion)
+        if (suggestion) {
             hideKeyboard();
-
+        }
 
     }
 
@@ -476,11 +480,12 @@ public class SearchActivity extends AppCompatActivity implements
                     card.setId(dataBaseHelper._getCardIDByQuestion(card.getQuestion()));
                 }
                 Log.d(TAG, "card:" + card.toString());
-                cardList.add(card);
+                //cardList.add(card);
             } else {
                 Log.d(TAG, getString(R.string.not_found));
             }
             cardList.addAll(dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type));
+
             result_count = cardList.size();
             Log.d(TAG, "Results count:" + result_count);
             if (result_count > 0) {
