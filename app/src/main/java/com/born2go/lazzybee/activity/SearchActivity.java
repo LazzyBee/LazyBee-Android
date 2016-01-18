@@ -324,6 +324,7 @@ public class SearchActivity extends AppCompatActivity implements
                 }
                 setAdapterListCard(cardList);
             } else if (query != null || query.length() > 0) {
+                //connection with internet ok search in server first
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
@@ -331,6 +332,7 @@ public class SearchActivity extends AppCompatActivity implements
                     getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
                 } else {
+                    //failed to connect to internet
                     Log.d(TAG, getString(R.string.failed_to_connect_to_server));
                     List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
                     int result_count = cardList.size();
