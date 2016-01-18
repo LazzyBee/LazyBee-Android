@@ -165,14 +165,10 @@ public class Card {
 
     @Override
     public String toString() {
-        return "\nCard{" +
-                "\nid=" + id +
-                "\n, question='" + question + '\'' +
-                ", status=" + status +
-                "\n, queue=" + queue +
-                ", _package='" + _package + '\'' +
-                "\n, level=" + level +
-                ", due=" + due +
+        return "Card { id=" + id +
+                ", question='" + question + '\'' +
+                ", package='" + _package + '\'' +
+                ", level=" + level +
                 '}';
     }
 
