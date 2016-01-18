@@ -17,7 +17,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipManager {
     private static final int BUFFER = 2048;
 
-    public void zip(String[] _files, String zipFileName) {
+    public boolean zip(String[] _files, String zipFileName) {
         try {
             BufferedInputStream origin = null;
             FileOutputStream dest = new FileOutputStream(zipFileName);
@@ -41,8 +41,10 @@ public class ZipManager {
             }
 
             out.close();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 

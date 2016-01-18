@@ -391,9 +391,13 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     private void _updateCardFormServer() {
-        //Call Api Update Card
-        GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
-        getCardFormServerByQuestion.execute(card);
-        getCardFormServerByQuestion.delegate = this;
+        if (LazzyBeeShare.checkConn(context)) {
+            //Call Api Update Card
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            getCardFormServerByQuestion.execute(card);
+            getCardFormServerByQuestion.delegate = this;
+        } else {
+            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+        }
     }
 }

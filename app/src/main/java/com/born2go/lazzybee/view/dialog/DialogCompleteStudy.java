@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.fragment;
+package com.born2go.lazzybee.view.dialog;
 
 
 import android.app.Activity;
@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +29,12 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 
 
 public class DialogCompleteStudy extends DialogFragment {
 
+    private static final String TAG = "DialogCompleteStudy";
     private Context context;
     private MediaPlayer mpintro;
 
@@ -72,7 +75,7 @@ public class DialogCompleteStudy extends DialogFragment {
             @Override
             public void onClick(View v) {
                 getDialog().cancel();
-                iCompleteSutdy.close();
+                 iCompleteSutdy.close();
             }
         });
 
@@ -101,22 +104,38 @@ public class DialogCompleteStudy extends DialogFragment {
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
         ArrayList<String> weeks = _defineWeekbyDayOfWeek(dayOfWeek);
-        boolean[] showRings = null;
-        if (countStreak >= 7) {
-            showRings = new boolean[]{true, true, true, true, true, true, true};
-        } else if (countStreak == 6) {
-            showRings = new boolean[]{false, true, true, true, true, true, true};
-        } else if (countStreak == 5) {
-            showRings = new boolean[]{false, false, true, true, true, true, true};
-        } else if (countStreak == 4) {
-            showRings = new boolean[]{false, false, false, true, true, true, true};
-        } else if (countStreak == 3) {
-            showRings = new boolean[]{false, false, false, false, true, true, true};
-        } else if (countStreak == 2) {
-            showRings = new boolean[]{false, false, false, false, false, true, true};
-        } else if (countStreak == 1) {
-            showRings = new boolean[]{false, false, false, false, false, false, true};
+        int startofDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        Log.d(TAG, "Count of streak:" + countStreak);
+        Log.d(TAG, "Start of the day:" + startofDay);
+        ArrayList<Boolean> showDays = new ArrayList<Boolean>();
+
+        String showDay = LazzyBeeShare.EMPTY;
+        if (countStreak > 7) {
+            //full day learn
+            showDays.add(true);
+            showDays.add(true);
+            showDays.add(true);
+            showDays.add(true);
+            showDays.add(true);
+            showDays.add(true);
+            showDays.add(true);
+        } else {
+            showDays.clear();
+            for (int i = 6; i >= 1; i--) {
+                int day = startofDay - (LazzyBeeShare.SECONDS_PERDAY * i);
+                String streakDayCount = "SELECT Count(day) FROM streak where day = " + day;
+                if (LazzyBeeSingleton.learnApiImplements._queryCount(streakDayCount) == 1) {
+                    showDays.add(true);
+                    showDay += true + "\t";
+                } else {
+                    showDays.add(false);
+                    showDay += false + "\t";
+                }
+            }
+            showDays.add(true);
+            showDay += true + "\t";
         }
+        Log.d(TAG, "Show day no soft =" + showDay);
         for (int i = 0; i < weeks.size(); i++) {
 
             String _day = weeks.get(i);//define dayOfWeek
@@ -126,7 +145,7 @@ public class DialogCompleteStudy extends DialogFragment {
             TextView _lbDay = (TextView) _mDayRing.findViewById(R.id.lbDay);
             _lbDay.setText(_day);
 
-            boolean showRing = showRings[i];//define show ring
+            boolean showRing = showDays.get(i);//define show ring
             _dayRing.setImageResource(showRing ? R.drawable.day_ring : R.drawable.day_ring_gray);
 
             mDays.addView(_mDayRing);

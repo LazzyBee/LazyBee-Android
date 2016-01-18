@@ -66,7 +66,7 @@
 
 
     <string name="notification">Notification</string>
-    <string name="language">Language</string>
+    <string name="language" translatable="false">Language/Ngôn ngữ</string>
     <string name="queue" translatable="false">queue</string>
 
     <!--Dialog Done card-->
@@ -76,8 +76,8 @@
 
     <!--Dialog Change Language-->
     <string name="change_language">Change language</string>
-    <string name="lang_english" translatable="false">English</string>
-    <string name="lang_viet">Vietnamse</string>
+    <string name="lang_english" translatable="false">English/Tiếng anh</string>
+    <string name="lang_viet" translatable="false">Vietnamse/Tiếng việt</string>
 
     <!--Dialog restart app-->
     <string name="dialog_message_restart_app">Your app is going to restart now</string>
@@ -117,7 +117,7 @@
     <string name="setting_check_update">Check update</string>
     <string name="setting_auto_check_update">Auto check update</string>
     <string name="setting_debug_info">Debug Infor</string>
-    <string name="setting_language">Language</string>
+    <string name="setting_language" translatable="false">Language/Ngôn ngữ</string>
     <string name="setting_lines" translatable="false">LINE</string>
     <string name="setting_limit_card_number">%d Card</string>
 
@@ -478,9 +478,11 @@
     <string name="setting_backup_and_restore_database_title"><![CDATA[Backup & restore database]]></string>
     <string name="hint_input_my_backup_key">Input my backup key</string>
     <string name="successfully">Successfully</string>
-    <string name="message_using_backup_code" >Your database will be archived on server in 7 days. To restore your database, use below code:</string>
+    <string name="message_using_backup_code">Your database will be archived on server in 7 days. To restore your database, use below code:</string>
     <string name="close">Close</string>
     <string name="try_again">Try again</string>
-    <string name="failed_to_connect_to_server">Failed to connect to server. Can not back up database, please try again.</string>
+    <string name="failed_to_connect_to_server">Failed to connect to server.Please try again.</string>
+    <string name="failed_to_connect_to_server_can_not_back_up_database">Failed to connect to server. Can not back up database, please try again.</string>
+    <string name="failed_to_connect_to_server_can_not_restore_database">Failed to connect to server. Can not restore database, please try again.</string>
     <string name="restore_database_wrong_code">Wrong code, please try again.</string>
 </resources>

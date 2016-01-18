@@ -47,7 +47,7 @@
     <string name="dialog_title_add_to_learn">Thêm thẻ vào khóa học</string>
 
     <string name="notification">Thông báo</string>
-    <string name="language">Ngôn ngữ</string>
+    <!--<string name="language">Ngôn ngữ/Language</string>-->
 
     <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
     <string name="message_learnt_card_sucessful">Đã học xong thẻ!</string>
@@ -55,7 +55,7 @@
     <string name="dialog_title_delete_card">Xóa từ</string>
     <string name="change_language">Thay đổi ngôn ngữ</string>
     <!--<string name="lang_english">Tiếng anh</string>-->
-    <string name="lang_viet">Tiếng việt</string>
+    <!--<string name="lang_viet">Tiếng việt</string>-->
     <string name="dialog_message_restart_app">Ứng dụng sẽ khởi động lại</string>
     <string name="dialog_title_restart_app">Khởi động lại</string>
     <string name="action_check_update_database">Kiểm tra cập nhật</string>
@@ -81,7 +81,7 @@
     <string name="setting_check_update">Kiểm tra cập nhật</string>
     <string name="setting_auto_check_update">Tự động kiểm tra cập nhật</string>
     <string name="setting_debug_info">Thông tin lỗi</string>
-    <string name="setting_language">Ngôn ngữ/Language</string>
+    <!--<string name="setting_language">Ngôn ngữ/Language</string>-->
     <string name="setting_limit_card_number">%d Thẻ</string>
 
     <string name="message_congratulations_with_tip" formatted="false">Bấm vào %1s để học tiếp,bấm vào %2s để xem lại thẻ đã học</string>
@@ -309,13 +309,15 @@
     <string name="restore_database_fails">Không thể khôi phục dữ liệu, vui lòng thử lại.</string>
     <string name="setting_back_up_database">Sao lưu dữ liệu</string>
     <string name="setting_restore_database">Khôi phục dữ liệu</string>
-    <string name="setting_backup_and_restore_database_title"><![CDATA[Sao lưu & khôi phục cơ sơ đữ liệu]]></string>
+    <string name="setting_backup_and_restore_database_title"><![CDATA[Sao lưu & khôi phục dữ liệu]]></string>
     <string name="hint_input_my_backup_key">Nhập mã khôi phục đữ liệu</string>
     <string name="successfully">Thành công</string>
-    <string name="message_using_backup_code" >Dữ liệu học tập của bạn sẽ được lưu trữ trong 7 ngày. Để khôi phục dữ liệu xin hãy sử dụng mã dưới đây:</string>
+    <string name="message_using_backup_code">Dữ liệu học tập của bạn sẽ được lưu trữ trong 7 ngày. Để khôi phục dữ liệu xin hãy sử dụng mã dưới đây:</string>
     <string name="close">Đóng</string>
     <string name="try_again">Thử lại</string>
-    <string name="failed_to_connect_to_server">Lỗi kết nối. Không thể sao lưu dữ liệu, vui lòng thử lại</string>
+    <string name="failed_to_connect_to_server">Lỗi kết nối tới máy chủ.Vui lòng thử lại</string>
+    <string name="failed_to_connect_to_server_can_not_back_up_database">Lỗi kết nối tới máy chủ. Không thể sao lưu dữ liệu, vui lòng thử lại</string>
+    <string name="failed_to_connect_to_server_can_not_restore_database">Lỗi kết nối tới server. Không thể khôi phục dữ liệu, vui lòng thử lại</string>
     <string name="restore_database_wrong_code">Sai mã, vui lòng thử lại.</string>
 
 

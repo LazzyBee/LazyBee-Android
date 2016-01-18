@@ -21,7 +21,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.view.DialogSetTimeShowAnswer;
+import com.born2go.lazzybee.view.dialog.DialogSetTimeShowAnswer;
 
 import java.util.ArrayList;
 import java.util.List;

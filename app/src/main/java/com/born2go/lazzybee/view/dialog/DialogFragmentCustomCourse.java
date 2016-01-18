@@ -1,4 +1,4 @@
-package com.born2go.lazzybee.fragment;
+package com.born2go.lazzybee.view.dialog;
 
 
 import android.support.v4.app.DialogFragment;

@@ -273,7 +273,7 @@ public class RecyclerViewSettingListAdapter extends
             public void onClick(DialogInterface dialog, int which) {
                 String getBackupKey = lbMybackupkey.getText().toString();
                 //Toast.makeText(context, "My Backup key:" + getBackupKey, Toast.LENGTH_SHORT).show();
-                DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, getBackupKey);
+                DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, false, LazzyBeeShare.EMPTY, getBackupKey);
                 downloadAndRestoreDatabaseFormCSV.execute();
                 //dialog.dismiss();
             }
@@ -987,9 +987,11 @@ public class RecyclerViewSettingListAdapter extends
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                _checkUpdate();
-
+                if (LazzyBeeShare.checkConn(context)) {
+                    _checkUpdate();
+                } else {
+                    Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+                }
 
 //                //Check vesion form server
 //                String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);

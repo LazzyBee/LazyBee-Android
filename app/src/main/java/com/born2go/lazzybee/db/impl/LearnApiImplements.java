@@ -1661,4 +1661,22 @@ public class LearnApiImplements implements LearnApi {
         }
         return update_result;
     }
+
+    public int updateStreakDay(int day) {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        int update_result;
+        String countStreak = "select count(day) from streak where streak.day=" + day;
+        if (_queryCount(countStreak) == 1) {
+            Log.d(TAG, "Streak is existing!");
+            update_result = 1;
+        } else {
+            Log.d(TAG, "Inset new streak day =" + day);
+            ContentValues values = new ContentValues();
+            values.put("day", day);
+            long long_insert_results = db.insert(TABLE_STREAK, null, values);
+            update_result = (int) long_insert_results;
+        }
+        db.close();
+        return update_result;
+    }
 }
