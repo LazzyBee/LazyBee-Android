@@ -15,6 +15,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
@@ -426,7 +427,7 @@ public class LazzyBeeShare {
                     "              Factor:" + card.getFactor() + "</br>\n" +
                     "              Rev_count:" + card.getRev_count() + "</br>\n" +
                     "              Queue:" + card.getQueue() + "</br>\n" +
-                    "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
+                    "              Due:" + card.getDue() + "-----" + getDate(card.getDue() * 1000) + "</br>\n" +
                     "              -------------------------------------</br>\n" +
                     "           </div>\n" +
                     "   </body>\n" +
@@ -440,6 +441,13 @@ public class LazzyBeeShare {
 
         return html;
 
+    }
+
+    private static String getDate(long time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        String date = DateFormat.format("dd/MM/yyyy", cal).toString();
+        return date;
     }
 
     public static boolean getPositionMeaning() {
