@@ -45,7 +45,7 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 public class DialogStatistics extends DialogFragment {
 
     public static final String TAG = "DialogStatistics";
-    RelativeLayout mChart;
+    RelativeLayout mStatistic, mChart;
     TextView mlazzybee;
     private ColumnChartView chart;
     private ColumnChartData data;
@@ -54,6 +54,7 @@ public class DialogStatistics extends DialogFragment {
     private boolean hasLabels = false;
     private boolean hasLabelForSelected = false;
     private Context context;
+    Button btnShare;
 
     public DialogStatistics(Context context) {
         this.context = context;
@@ -74,7 +75,7 @@ public class DialogStatistics extends DialogFragment {
             MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.magic);
             mediaPlayer.start();
 
-            Button btnShare = (Button) view.findViewById(R.id.btnShared);
+            btnShare = (Button) view.findViewById(R.id.btnShared);
             btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,8 +100,9 @@ public class DialogStatistics extends DialogFragment {
     private void screenViewChart() {
         try {
             String mPath = Environment.getExternalStorageDirectory().toString() + "/statitis_scren.jpg";
-            View v1 = mChart;
+            View v1 = mStatistic;
             mlazzybee.setVisibility(View.VISIBLE);
+            btnShare.setVisibility(View.INVISIBLE);
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
             v1.setDrawingCacheEnabled(false);
@@ -114,12 +116,14 @@ public class DialogStatistics extends DialogFragment {
             outputStream.flush();
             outputStream.close();
             mlazzybee.setVisibility(View.INVISIBLE);
+            btnShare.setVisibility(View.VISIBLE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void _initChart(View view) {
+        mStatistic = (RelativeLayout) view.findViewById(R.id.mStatistic);
         mChart = (RelativeLayout) view.findViewById(R.id.mChart);
         chart = (ColumnChartView) view.findViewById(R.id.chart);
         mlazzybee = (TextView) view.findViewById(R.id.mlazzybee);
@@ -161,7 +165,7 @@ public class DialogStatistics extends DialogFragment {
             if (count > 0) {
                 SubcolumnValue valueColum =
                         new SubcolumnValue(count, ChartUtils.pickColor()).setLabel(String.valueOf(count));//define Subcolum
-                
+
                 values.add(valueColum);
             }
             Column column = new Column(values);

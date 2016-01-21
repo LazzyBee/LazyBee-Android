@@ -39,7 +39,8 @@
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:paddingTop="8dp"
+        android:id="@+id/mStatistic">
 
         <RelativeLayout
             android:orientation="vertical"
@@ -53,17 +54,6 @@
                 android:layout_height="230dp"
                 android:background="@color/white" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="lazzybee.com"
-                android:id="@+id/mlazzybee"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/colorPrimary"
-                android:visibility="invisible" />
         </RelativeLayout>
 
         <include
@@ -85,6 +75,17 @@
             android:layout_centerHorizontal="true"
             android:background="@color/colorPrimary"
             android:textColor="#ffffff" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="www.lazzybee.com"
+            android:id="@+id/mlazzybee"
+            android:textColor="@color/colorPrimary"
+            android:visibility="invisible"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
 </LinearLayout>
