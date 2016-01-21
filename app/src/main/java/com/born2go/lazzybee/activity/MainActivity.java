@@ -841,7 +841,7 @@ public class MainActivity extends AppCompatActivity
                 if (check == -1 || check == -2 || check > 0) {
                     _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
                 } else if (check == 0) {
-                    String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
+                    String message = getString(R.string.congratulations_learnmore, " ' <b>" + getString(R.string.learn_more) + "</b> ' ");
                     _showDialogWithMessage(message);
                 }
             }
