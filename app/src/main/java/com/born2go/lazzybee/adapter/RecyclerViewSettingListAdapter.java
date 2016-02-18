@@ -165,10 +165,14 @@ public class RecyclerViewSettingListAdapter extends
                     _exportDatabases(mCardView);
 
                 } else if (setting.equals(context.getString(R.string.setting_back_up_database))) {
-                    lbLimit.setVisibility(View.GONE);
+                    lbLimit.setVisibility(View.VISIBLE);
+                    String backup_key = device_id.substring(device_id.length() - 6, device_id.length());
+                    lbLimit.setText(backup_key);
                     _backupDatabase(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_back_up_database_dev))) {
-                    lbLimit.setVisibility(View.GONE);
+                    lbLimit.setVisibility(View.VISIBLE);
+                    String backup_key = device_id.substring(device_id.length() - 6, device_id.length());
+                    lbLimit.setText(backup_key);
                     _backupDatabases_Dev(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_restore_database))) {
                     lbLimit.setVisibility(View.GONE);
