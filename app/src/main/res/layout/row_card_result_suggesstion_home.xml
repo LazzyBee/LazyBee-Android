@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/lbQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:singleLine="true"
+        android:text="Question"
+        android:textColor="#757575"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/lbAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lbQuestion"
+        android:singleLine="true"
+        android:text="answer"
+        android:textColor="#757575" />
+
+    <TextView
+        android:id="@+id/level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lbQuestion"
+        android:layout_alignBottom="@+id/lbQuestion"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="3dp"
+        android:background="@color/blue_500"
+        android:text="Level"
+        android:textColor="#ffffff"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/learned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lbQuestion"
+
+        android:layout_alignTop="@+id/level"
+
+        android:layout_toLeftOf="@+id/level"
+        android:layout_toStartOf="@+id/level"
+        android:background="@color/colorPrimary"
+        android:text="Learn"
+        android:textColor="#ffffff"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/lbPronoun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lbQuestion"
+        android:layout_alignBottom="@+id/learned"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@+id/lbQuestion"
+        android:layout_toRightOf="@+id/lbQuestion"
+        android:text="pronoun"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ff060606"
+        android:visibility="gone" />
+</RelativeLayout>

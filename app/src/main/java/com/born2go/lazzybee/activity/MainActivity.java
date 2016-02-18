@@ -24,19 +24,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
+import com.born2go.lazzybee.adapter.RecyclerViewSearchResultListAdapter;
+import com.born2go.lazzybee.adapter.SuggestionCardHomeAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
@@ -93,6 +105,10 @@ public class MainActivity extends AppCompatActivity
     Snackbar snackbarCongraturation;
     Snackbar snackbarTip;
 
+    ImageButton btnSearchDictionnary;
+    AutoCompleteTextView mAutoSearchDictionaryBox;
+    ImageView mCancelSearch;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +122,8 @@ public class MainActivity extends AppCompatActivity
         _initToolBar();
         _intInterfaceView();
 
+        _initDictinarySearchBox();
+
         _initInterstitialAd();
 
         _trackerApplication();
@@ -113,6 +131,60 @@ public class MainActivity extends AppCompatActivity
         _goHome();
 
 
+    }
+
+    private void _initDictinarySearchBox() {
+        //Define Search Dictionary box
+        btnSearchDictionnary = (ImageButton) findViewById(R.id.btnSearchDictionnary);
+        mAutoSearchDictionaryBox = (AutoCompleteTextView) findViewById(R.id.mAutoSearchDictionaryBox);
+        mCancelSearch = (ImageView) findViewById(R.id.mCancelSearch);
+
+        //Define adapter for searchbox
+        SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
+                (this, dataBaseHelper._getAllLQuestionCard());
+        mAutoSearchDictionaryBox.setAdapter(adapter);
+
+
+        //Handel item click
+        mAutoSearchDictionaryBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Toast.makeText(context, "ID:" + view.getId(), Toast.LENGTH_SHORT).show();
+                String cardID = String.valueOf(view.getId());
+                _gotoCardDetailbyCardId(cardID);
+            }
+        });
+
+        //Handler dictionary box change text
+        mAutoSearchDictionaryBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    mCancelSearch.setVisibility(View.VISIBLE);
+                } else {
+                    mCancelSearch.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+        //Handler Clear text
+        mCancelSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAutoSearchDictionaryBox.setText(LazzyBeeShare.EMPTY);
+            }
+        });
     }
 
 
@@ -349,7 +421,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _goHome() {
-        getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
+        //getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
     }
 
     private void _showStatistical() {
@@ -580,6 +652,7 @@ public class MainActivity extends AppCompatActivity
     private void _defineSearchView(Menu menu) {
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.menu_search);
+
         searchView =
                 (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -646,6 +719,7 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         });
+
     }
 
     private void _gotoCardDetailbyCardId(String cardId) {
@@ -1077,4 +1151,36 @@ public class MainActivity extends AppCompatActivity
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
+
+    public void onSearchDictionary(View view) {
+        String query = mAutoSearchDictionaryBox.getText().toString();
+        if (query.length() > 0) {
+            //goto Search
+            //_gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
+            Intent intent = new Intent(this, SearchActivity.class);
+            intent.putExtra(SearchActivity.DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.putExtra(SearchManager.QUERY, query);
+            intent.setAction(Intent.ACTION_SEARCH);
+            startActivity(intent);
+        } else {
+            //Suggestion word
+            //mAutoSearchDictionaryBox.setFocusable(true);
+            //mAutoSearchDictionaryBox.setFocusableInTouchMode(true);
+            mAutoSearchDictionaryBox.requestFocus();
+
+            //show keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mAutoSearchDictionaryBox, InputMethodManager.SHOW_IMPLICIT);
+        }
+
+    }
+
+    public void removeAllFocus(View view) {
+        mAutoSearchDictionaryBox.clearFocus();
+        //hide keyboad
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
 }
