@@ -948,6 +948,7 @@ public class LearnApiImplements implements LearnApi {
         List<Card> cardList = _getListCardQueryString(query, 0);
         return cardList;
     }
+
     public List<String> _getAllLQuestionCard() {
         String query = "SELECT vocabulary.question FROM " + TABLE_VOCABULARY;
         List<String> datas = new ArrayList<String>();
@@ -1152,18 +1153,18 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public void _addCardIdToQueueList(Card card) {
-        if (_checkListTodayExit() < 0) {
-            _getRandomCard(_getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
-        }
-        String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
-        List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
-        //Add cardId
-        cardIDs.add(String.valueOf(card.getId()));
-        //Update queue list
-        _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
-
+//        if (_checkListTodayExit() < 0) {
+//            _getRandomCard(_getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
+//        }
+//        String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
+//        List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
+//        //Add cardId
+//        cardIDs.add(String.valueOf(card.getId()));
+//        //Update queue list
+//        _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
+        
         //Update Queue Card from DB
-        card.setQueue(Card.QUEUE_NEW_CRAM0);
+        card.setQueue(Card.QUEUE_LNR1);
 
         //String cardId = String.valueOf(card.getId());
 
