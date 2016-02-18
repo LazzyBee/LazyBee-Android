@@ -140,7 +140,7 @@
     <string name="drawer_add_course" translatable="false">add_course</string>
     <string name="drawer_line" translatable="false">lines</string>
     <string name="drawer_setting" translatable="false">settings</string>
-    <string name="setting_about_message" translatable="false">Born2Go © 2015</string>
+    <string name="setting_about_message" translatable="false">Born2Go © 2016</string>
     <string name="under_construction" translatable="false">Under construction</string>
 
     <string name="notification_title">%1$s %2$s</string>
@@ -175,7 +175,7 @@
     <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
     <string name="gtag_container_load_error" translatable="false">Failed to load container</string>
 
-    <string name="notification_message" translatable="false">It\'s time to learn English!</string>
+    <string name="notification_message" translatable="false">It\'s time to learn few English!</string>
     <string name="local_service_started" translatable="false">no</string>
 
     <string name="setting_reset_to_default">Reset to default</string>
