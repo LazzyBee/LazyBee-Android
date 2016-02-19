@@ -6,18 +6,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -38,9 +41,8 @@ public class RecyclerViewCustomStudyAdapter extends
     //    Dialog main;
     int TYPE_TITLE = 0;
     int TYPE_SETTING_NAME = 1;
-    int TYPE_SETTING_SWITCH = 2;
+    int TYPE_SETTING_MEANING = 2;
     int TYPE_LINE = -1;
-    int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
     RecyclerView recyclerView;
     FragmentManager supportFragmentManager;
     RecyclerViewCustomStudyAdapter adapter;
@@ -69,6 +71,8 @@ public class RecyclerViewCustomStudyAdapter extends
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
         } else if (viewType == TYPE_LINE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_lines, parent, false); //Inflating the layout
+        } else if (viewType == TYPE_SETTING_MEANING) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_custom_study_display_meaning, parent, false); //Inflating the layout
         }
         RecyclerViewCustomStudyAdapterViewHolder recyclerViewCustomStudyAdapterViewHolder = new RecyclerViewCustomStudyAdapterViewHolder(view, viewType);
         return recyclerViewCustomStudyAdapterViewHolder;
@@ -125,13 +129,90 @@ public class RecyclerViewCustomStudyAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_my_level))) {
                     getLevelandShowDialogChangeLevel(mCardView, lbLimit);
                 } else if (setting.equals(context.getString(R.string.setting_position_meaning))) {
-                    _setPositionMeaning(mCardView, lbLimit);
+                    // _showDialogSetPositionMeaning(mCardView, lbLimit);
                 }
+            } else if (holder.viewType == TYPE_SETTING_MEANING) {
+                RelativeLayout mSetPositionMeaning = (RelativeLayout) view.findViewById(R.id.mSetPositionMeaning);
+                _getSettingDisplayMeaningAndUpdateWithSwitch(mCardView, mSetPositionMeaning);
+
             }
             //_reloadRecylerView();
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    private void _getSettingDisplayMeaningAndUpdateWithSwitch(RelativeLayout mCardView, final RelativeLayout mSetPositionMeaning) {
+        final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
+
+        //Define value
+        String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
+        if (value == null) {
+            mSwitch.setChecked(true);
+            mSetPositionMeaning.setVisibility(View.VISIBLE);
+        } else if (value.equals(LazzyBeeShare.ON)) {
+            mSetPositionMeaning.setVisibility(View.VISIBLE);
+            mSwitch.setChecked(true);
+        } else if (value.equals(LazzyBeeShare.OFF)) {
+            mSetPositionMeaning.setVisibility(View.GONE);
+            mSwitch.setChecked(false);
+        } else {
+            mSwitch.setChecked(false);
+            mSetPositionMeaning.setVisibility(View.GONE);
+        }
+
+        //Hander switch
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String value;
+                if (isChecked) {
+                    value = LazzyBeeShare.ON;
+                    mSetPositionMeaning.setVisibility(View.VISIBLE);
+                } else {
+                    value = LazzyBeeShare.OFF;
+                    mSetPositionMeaning.setVisibility(View.GONE);
+
+                }
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING, value);
+            }
+        });
+
+        int index = 0;
+
+        TextView lbPositionMeaning = (TextView) mSetPositionMeaning.findViewById(R.id.lbPositionMeaning);
+        String htmlPosition = "<font color='" + context.getResources().getColor(R.color.grey_600) + " '> " + context.getString(R.string.setting_position_meaning) + " </font> : " +
+                "<font color='" + context.getResources().getColor(R.color.position_meaning_display_text_color) + " '> " + context.getString(R.string.position_meaning_up) + " </font>";
+
+
+        String position_meaing = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG);
+        if (position_meaing != null && position_meaing.equals(LazzyBeeShare.DOWN)) {
+            index = 1;
+            htmlPosition = "<font color='" + context.getResources().getColor(R.color.grey_600) + " '> " + context.getString(R.string.setting_position_meaning) + " </font> : " +
+                    "<font color='" + context.getResources().getColor(R.color.position_meaning_display_text_color) + " '> " + context.getString(R.string.position_meaning_down) + " </font>";
+        }
+        lbPositionMeaning.setText(Html.fromHtml(htmlPosition));
+        final int finalIndex = index;
+
+
+        View.OnClickListener setPositionMeaning = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _showDialogSetPositionMeaning(finalIndex);
+            }
+        };
+        mSetPositionMeaning.setOnClickListener(setPositionMeaning);
+        lbPositionMeaning.setOnClickListener(setPositionMeaning);
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSwitch.isChecked())
+                    mSwitch.setChecked(false);
+                else
+                    mSwitch.setChecked(true);
+            }
+        });
+
     }
 
     private void _defineSetTimeShowAnswer(RelativeLayout mCardView, final int timeSet) {
@@ -241,6 +322,8 @@ public class RecyclerViewCustomStudyAdapter extends
                 || setting.equals(context.getString(R.string.setting_time_deday_show_answer))
                 || setting.equals(context.getString(R.string.setting_max_learn_more_per_day)))
             return TYPE_SETTING_NAME;
+        else if (setting.equals(context.getString(R.string.setting_display_meaning)))
+            return TYPE_SETTING_MEANING;
         else
             return -1;
     }
@@ -411,20 +494,11 @@ public class RecyclerViewCustomStudyAdapter extends
         }
     }
 
-    private void _setPositionMeaning(RelativeLayout mCardView, TextView lbLimit) {
+    private void _showDialogSetPositionMeaning(int index) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
         builder.setTitle(context.getString(R.string.title_change_position_meaning));
         final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
         final CharSequence[] values = {LazzyBeeShare.UP, LazzyBeeShare.DOWN};
-        int index = 0;
-        String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG);
-
-        if (value != null && value.equals(LazzyBeeShare.DOWN)) {
-            index = 1;
-            lbLimit.setText(context.getString(R.string.position_meaning_down));
-        } else {
-            lbLimit.setText(context.getString(R.string.position_meaning_up));
-        }
 
 
         builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
@@ -436,14 +510,9 @@ public class RecyclerViewCustomStudyAdapter extends
 
             }
         });
+        //builder.setView(viewDialog);
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
-
+        dialog.show();
     }
 }

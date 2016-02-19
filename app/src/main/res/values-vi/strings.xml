@@ -182,7 +182,8 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_position_meaning</item>
+        <item>@string/setting_display_meaning</item>
+        <!--<item>@string/setting_position_meaning</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_time_deday_show_answer</item>
         <item>@string/setting_lines</item>
@@ -195,7 +196,8 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_position_meaning</item>
+        <item>@string/setting_display_meaning</item>
+        <!--<item>@string/setting_position_meaning</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_time_deday_show_answer</item>
         <item>@string/setting_lines</item>
@@ -320,6 +322,7 @@
     <string name="failed_to_connect_to_server_can_not_restore_database">Lỗi kết nối tới server. Không thể khôi phục dữ liệu, vui lòng thử lại</string>
     <string name="restore_database_wrong_code">Sai mã, vui lòng thử lại.</string>
     <string name="swipe_action_add">Thêm</string>
+    <string name="setting_display_meaning">Hiển thị ý nghĩa</string>
 
 
     <string-array name="subjects">
