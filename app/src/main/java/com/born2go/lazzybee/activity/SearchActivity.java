@@ -15,6 +15,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -24,7 +25,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +38,13 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
@@ -48,6 +56,7 @@ public class SearchActivity extends AppCompatActivity implements
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
     private static final Object GA_SCREEN = "aSearchScreen";
+    private static final Object GA_SCREEN_DICTIONARY = "aDictionaryScreen";
     public static final String DISPLAY_TYPE = "display_type";
     RecyclerView mRecyclerViewSearchResults;
     TextView lbResultCount;
@@ -59,6 +68,8 @@ public class SearchActivity extends AppCompatActivity implements
     int display_type = 0;
     private int ADD_TO_LEARN = 0;
     ConnectGdatabase connectGdatabase;
+    CardView mCardViewAdv;
+    SearchView.SearchAutoComplete mSuggerstionCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +86,8 @@ public class SearchActivity extends AppCompatActivity implements
 
         //Show Home as Up
         _initActonBar();
+
+        _initAdView();
 
         _trackerApplication();
 
@@ -137,7 +150,7 @@ public class SearchActivity extends AppCompatActivity implements
         //Set data and add Touch Listener
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
 
-        mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
+        //  mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
     }
 
     private void _initLazzyBeeSingleton() {
@@ -167,15 +180,15 @@ public class SearchActivity extends AppCompatActivity implements
         search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
+        mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
 
-        if (autoCompleteTextView != null) {
+        if (mSuggerstionCard != null) {
             int color = Color.parseColor("#ffffffff");
-            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            Drawable drawable = mSuggerstionCard.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
-            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
+            mSuggerstionCard.setDropDownBackgroundDrawable(drawable);
+            mSuggerstionCard.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
         }
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
@@ -474,7 +487,7 @@ public class SearchActivity extends AppCompatActivity implements
             } else {
                 //Not found find card form server
                 Log.d(TAG, getString(R.string.not_found));
-                cardNull=true;
+                cardNull = true;
             }
             List<Card> cardResultSearchFromDb = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
             if (cardResultSearchFromDb.size() > 0) {
@@ -535,7 +548,7 @@ public class SearchActivity extends AppCompatActivity implements
     private void _trackerApplication() {
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", (display_type == LazzyBeeShare.GOTO_DICTIONARY_CODE ? GA_SCREEN_DICTIONARY : GA_SCREEN)));
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
@@ -565,5 +578,52 @@ public class SearchActivity extends AppCompatActivity implements
         int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         int minute = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
+
+    private void _initAdView() {
+        try {
+            mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
+
+            //get value form task manager
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String admob_pub_id = null;
+            String adv_dictionary_id = null;
+            if (container == null) {
+            } else {
+                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
+                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
+                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+            }
+            if (admob_pub_id != null || adv_dictionary_id != null) {
+                String advId = admob_pub_id + "/" + adv_dictionary_id;
+                Log.i(TAG, "admob -AdUnitId:" + advId);
+                AdView mAdView = new AdView(this);
+
+                mAdView.setAdSize(AdSize.BANNER);
+                mAdView.setAdUnitId(advId);
+
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                        .build();
+
+                mAdView.loadAd(adRequest);
+
+                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                relativeLayout.addView(mAdView, adViewCenter);
+
+                mCardViewAdv.setVisibility(View.VISIBLE);
+            } else {
+                mCardViewAdv.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 }
