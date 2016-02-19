@@ -487,6 +487,6 @@
     <string name="failed_to_connect_to_server_can_not_back_up_database">Failed to connect to server. Can not back up database, please try again.</string>
     <string name="failed_to_connect_to_server_can_not_restore_database">Failed to connect to server. Can not restore database, please try again.</string>
     <string name="restore_database_wrong_code">Wrong code, please try again.</string>
-    <string name="swipe_action_add">Add</string>
+    <string name="swipe_action_add">Learn</string>
     <string name="setting_display_meaning">Display meaning</string>
 </resources>
