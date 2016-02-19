@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.IncomingListActivity">
+    <TextView
+        android:id="@+id/lbCountReviewCard"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:text="Total 200"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/textcolorPrimary" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/cardview_study_margin_left"
+        android:layout_marginRight="@dimen/cardview_study_margin_right"
+        android:layout_marginBottom="2dp">
+
+        <view
+            android:id="@+id/mRecyclerViewReviewTodayList"
+            class="android.support.v7.widget.RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/cardview_study_margin_left"
+            android:layout_marginRight="@dimen/cardview_study_margin_right"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+    <android.support.v7.widget.CardView
+        android:id="@+id/mCardViewAdv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
+        android:layout_marginLeft="@dimen/cardview_study_margin_left"
+        android:layout_marginRight="@dimen/cardview_study_margin_right"
+        android:layout_marginTop="@dimen/cardview_study_margin_top">
+
+        <RelativeLayout
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
