@@ -18,6 +18,7 @@ import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -130,6 +131,7 @@ public class LazzyBeeShare {
 
     public static final String DOWN = "Down";
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
+    public static final String KEY_SETTING_DISPLAY_MEANING = "display_meaning";
     public static String mime = "text/html";
     public static String encoding = "utf-8";
 
@@ -197,8 +199,18 @@ public class LazzyBeeShare {
      * init HTML answer
      */
     public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
-
-        return getAnswerHTMLwithPackage(context, card, mySubject, sPOSITION_MEANING, sDEBUG, false);
+        boolean sDisplayPosition;
+        String value = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
+        if (value == null) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.ON)) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.OFF)) {
+            sDisplayPosition = false;
+        } else {
+            sDisplayPosition = false;
+        }
+        return getAnswerHTMLwithPackage(context, card, mySubject, sDisplayPosition, sPOSITION_MEANING, sDEBUG, false);
     }
 
     /**
@@ -306,7 +318,7 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
+    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -353,22 +365,24 @@ public class LazzyBeeShare {
         if (!example.isEmpty()) {
             exampleTagA = "<p style=''><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
         }
-        String meaningUP;
-        String meaningDOWN;
-        if (!POSITION_MEANING) {
-            meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                    "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
-                    "</div>";
-            meaningDOWN = EMPTY;
-            // Log.d(TAG, "meaningUP:" + meaningUP);
-        } else {
-            meaningUP = EMPTY;
-            meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                    "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
-                    "</div>";
-            // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+        String meaningUP = EMPTY;
+        String meaningDOWN = EMPTY;
+        if (sDisplayPosition) {
+            if (!POSITION_MEANING) {
+                meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
+                        "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "</div>";
+                meaningDOWN = EMPTY;
+                // Log.d(TAG, "meaningUP:" + meaningUP);
+            } else {
+                meaningUP = EMPTY;
+                meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
+                        "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "</div>";
+                // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+            }
         }
 
 
