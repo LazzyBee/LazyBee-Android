@@ -9,7 +9,10 @@
         android:text="@string/swipe_action_ignore"
         android:id="@+id/lbIgnore"
         android:background="@color/red_500"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/lbAdd"
+        android:layout_toEndOf="@+id/lbAdd" />
 
     <TextView
         android:layout_width="80dp"
@@ -21,4 +24,14 @@
         android:layout_toRightOf="@+id/lbIgnore"
         android:layout_toEndOf="@+id/lbIgnore"
         android:gravity="center" />
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:text="@string/swipe_action_add"
+        android:id="@+id/lbAdd"
+        android:background="@color/action_add_search_card_reslts"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

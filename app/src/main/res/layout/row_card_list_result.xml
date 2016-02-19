@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/bottom_wrapper"
-        android:layout_width="160dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/teal_600"
         android:orientation="vertical">
@@ -15,9 +15,10 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!-->-->
-       <include layout="@layout/swipe_button"
-           android:layout_height="match_parent"
-           android:layout_width="match_parent"></include>
+        <include
+            layout="@layout/swipe_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></include>
         <!--</android.support.v7.widget.CardView>-->
 
 
@@ -25,10 +26,10 @@
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mDetailsCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/mDetailsCard">
+        android:orientation="vertical">
 
         <!--<android.support.v7.widget.CardView-->
         <!--android:layout_width="match_parent"-->
@@ -38,7 +39,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="16dp">
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp">
 
             <TextView
                 android:id="@+id/lbQuestion"
@@ -48,7 +52,7 @@
                 android:singleLine="true"
                 android:text="Question"
                 android:textColor="#ff060606"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/lbAnswer"

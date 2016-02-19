@@ -319,6 +319,7 @@
     <string name="failed_to_connect_to_server_can_not_back_up_database">Lỗi kết nối tới máy chủ. Không thể sao lưu dữ liệu, vui lòng thử lại</string>
     <string name="failed_to_connect_to_server_can_not_restore_database">Lỗi kết nối tới server. Không thể khôi phục dữ liệu, vui lòng thử lại</string>
     <string name="restore_database_wrong_code">Sai mã, vui lòng thử lại.</string>
+    <string name="swipe_action_add">Thêm</string>
 
 
     <string-array name="subjects">
