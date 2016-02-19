@@ -45,5 +45,7 @@
     <color name="border_searchbox_home_screen">#757575</color>
     <color name="hint_text_searchbox_home_screen">#BDBDBD</color>
     <color name="background_button_searchbox_home_screen">#3C9F1E</color>
+    <color name="position_meaning_display_text_color" >#3C9F1E</color>
+    <color name="color_cursor_searchbox_home_screen">#2196F3</color>
 
 </resources>
