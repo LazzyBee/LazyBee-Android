@@ -41,4 +41,9 @@
     <color name="auto_complete_text_view_text_color" >@android:color/white</color>
 
 
+    <color name="action_add_search_card_reslts">#3C9F1E</color>
+    <color name="border_searchbox_home_screen">#757575</color>
+    <color name="hint_text_searchbox_home_screen">#BDBDBD</color>
+    <color name="background_button_searchbox_home_screen">#3C9F1E</color>
+
 </resources>
