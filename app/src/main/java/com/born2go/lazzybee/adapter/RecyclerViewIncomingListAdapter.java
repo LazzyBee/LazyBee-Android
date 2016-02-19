@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by Hue on 7/6/2015.
  */
-public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<RecyclerViewReviewTodayListAdapter.RecyclerViewReviewTodayListAdapterViewHolder> {
+public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<RecyclerViewIncomingListAdapter.RecyclerViewReviewTodayListAdapterViewHolder> {
     private static final String TAG = "ReviewAdapter";
     List<Card> vocabularies;
     private Context context;
@@ -31,7 +31,7 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
     private RecyclerView mRecyclerViewReviewTodayList;
     private TextView lbCountReviewCard;
 
-    public RecyclerViewReviewTodayListAdapter(Context context, RecyclerView mRecyclerViewReviewTodayList, List<Card> vocabularies, TextView lbCountReviewCard) {
+    public RecyclerViewIncomingListAdapter(Context context, RecyclerView mRecyclerViewReviewTodayList, List<Card> vocabularies, TextView lbCountReviewCard) {
         this.context = context;
         this.vocabularies = vocabularies;
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
@@ -57,8 +57,11 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
         final TextView learned = (TextView) view.findViewById(R.id.learned);
         TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
 
+        //Define action card
         TextView lbIgnore = (TextView) view.findViewById(R.id.lbIgnore);
         TextView lbLearned = (TextView) view.findViewById(R.id.lbLearned);
+        TextView lbAdd = (TextView) view.findViewById(R.id.lbAdd);
+        lbAdd.setVisibility(View.GONE);
         LinearLayout mDetailsCard = (LinearLayout) view.findViewById(R.id.mDetailsCard);
         try {
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -163,6 +166,7 @@ public class RecyclerViewReviewTodayListAdapter extends RecyclerView.Adapter<Rec
             this.view = itemView;
         }
     }
+
     public List<Card> getVocabularies() {
         return vocabularies;
     }

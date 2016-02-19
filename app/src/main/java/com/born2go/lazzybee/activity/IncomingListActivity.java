@@ -5,18 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.RecyclerViewReviewTodayListAdapter;
+import com.born2go.lazzybee.adapter.RecyclerViewIncomingListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.List;
@@ -24,12 +34,13 @@ import java.util.List;
 public class IncomingListActivity extends AppCompatActivity {
 
     private static final Object GA_SCREEN = "aIncomingListScreen";
+    private static final String TAG = "IncomingList";
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_review_card);
+        setContentView(R.layout.activity_incoming_list);
         this.context = this;
         //init DB SQLIte
         final LearnApiImplements dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
@@ -46,13 +57,13 @@ public class IncomingListActivity extends AppCompatActivity {
             lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
             lbCountReviewCard.setTag(vocabularies.size());
             //Init Adapter
-            RecyclerViewReviewTodayListAdapter recyclerViewReviewTodayListAdapter =
-                    new RecyclerViewReviewTodayListAdapter
+            RecyclerViewIncomingListAdapter recyclerViewIncomingListAdapter =
+                    new RecyclerViewIncomingListAdapter
                             (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
 
             //Set data and add Touch Listener
             mRecyclerViewReviewTodayList.setLayoutManager(gridLayoutManager);
-            mRecyclerViewReviewTodayList.setAdapter(recyclerViewReviewTodayListAdapter);
+            mRecyclerViewReviewTodayList.setAdapter(recyclerViewIncomingListAdapter);
 
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -71,8 +82,8 @@ public class IncomingListActivity extends AppCompatActivity {
                         lbCountReviewCard.setTag(fillUpCards.size());
 
                         //Reset adapter incoming list
-                        RecyclerViewReviewTodayListAdapter fillUpnewincomingAdapter =
-                                new RecyclerViewReviewTodayListAdapter(context, mRecyclerViewReviewTodayList, fillUpCards, lbCountReviewCard);
+                        RecyclerViewIncomingListAdapter fillUpnewincomingAdapter =
+                                new RecyclerViewIncomingListAdapter(context, mRecyclerViewReviewTodayList, fillUpCards, lbCountReviewCard);
                         mRecyclerViewReviewTodayList.setAdapter(fillUpnewincomingAdapter);
                     }
 
@@ -83,6 +94,9 @@ public class IncomingListActivity extends AppCompatActivity {
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+
+        _initAdView();
+
         _trackerApplication();
     }
 
@@ -131,5 +145,52 @@ public class IncomingListActivity extends AppCompatActivity {
         int hour = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         int minute = LazzyBeeSingleton.learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
+    }
+
+    private void _initAdView() {
+        try {
+            CardView mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
+
+            //get value form task manager
+            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            String admob_pub_id = null;
+            String adv_dictionary_id = null;
+            if (container == null) {
+            } else {
+                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
+                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
+                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+            }
+            if (admob_pub_id != null || adv_dictionary_id != null) {
+                String advId = admob_pub_id + "/" + adv_dictionary_id;
+                Log.i(TAG, "admob -AdUnitId:" + advId);
+                AdView mAdView = new AdView(this);
+
+                mAdView.setAdSize(AdSize.BANNER);
+                mAdView.setAdUnitId(advId);
+
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                        .build();
+
+                mAdView.loadAd(adRequest);
+
+                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                relativeLayout.addView(mAdView, adViewCenter);
+
+                mCardViewAdv.setVisibility(View.VISIBLE);
+            } else {
+                mCardViewAdv.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, e);
+        }
     }
 }
