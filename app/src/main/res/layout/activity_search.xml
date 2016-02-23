@@ -21,11 +21,8 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
-        android:layout_marginTop="@dimen/cardview_study_margin_top"
         android:layout_weight="1"
-        android:layout_marginBottom="2dp">
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:id="@+id/lbResultCount"
@@ -66,10 +63,7 @@
         android:id="@+id/mCardViewAdv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
-        android:layout_marginTop="@dimen/cardview_study_margin_top">
+       >
 
         <RelativeLayout
             android:id="@+id/adView"
