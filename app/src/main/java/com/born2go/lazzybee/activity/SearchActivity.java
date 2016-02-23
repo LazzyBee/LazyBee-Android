@@ -70,26 +70,28 @@ public class SearchActivity extends AppCompatActivity implements
     ConnectGdatabase connectGdatabase;
     CardView mCardViewAdv;
     SearchView.SearchAutoComplete mSuggerstionCard;
+    List<Card> dictionaryCardList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = this;
-//        Toast.makeText(context,"Search onCreate",Toast.LENGTH_SHORT).show();
 
         _initLazzyBeeSingleton();
 
+        dictionaryCardList = dataBaseHelper._searchCardOrGotoDictionary(LazzyBeeShare.EMPTY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+
         _initRecyclerViewSearchResults();
-        //Search by text
-        handleIntent(getIntent());
 
         //Show Home as Up
         _initActonBar();
 
+        handleIntent(getIntent());
+
         _initAdView();
 
-        _trackerApplication();
 
     }
 
@@ -195,13 +197,19 @@ public class SearchActivity extends AppCompatActivity implements
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
+                Log.d(TAG, "close search view -Action:" + getIntent().getAction());
+                if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
+                    _displayDictionary();
+                } else {
+                    onBackPressed();
+                }
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand");
+                Log.d(TAG, "open search view");
+
                 return true;
             }
 
@@ -242,15 +250,15 @@ public class SearchActivity extends AppCompatActivity implements
             }
         });
 
-        if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
-            query_text = getIntent().getStringExtra(SearchManager.QUERY);
-            search.setQuery(query_text, false);
-            search.setIconified(false);
-            search.clearFocus();
-        } else {
-            search.setQuery(LazzyBeeShare.EMPTY, false);
-            search.setIconified(true);
-        }
+//        if (display_type == LazzyBeeShare.GOTO_SEARCH_CODE) {
+//            query_text = getIntent().getStringExtra(SearchManager.QUERY);
+//            search.setQuery(query_text, false);
+//            search.setIconified(false);
+//            search.clearFocus();
+//        } else {
+//            search.setQuery(LazzyBeeShare.EMPTY, false);
+//            search.setIconified(true);
+//        }
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
@@ -262,8 +270,8 @@ public class SearchActivity extends AppCompatActivity implements
 //                Toast.makeText(getBaseContext(), query,
 //                        Toast.LENGTH_SHORT).show();
                 search.clearFocus();
-                Log.i(TAG, "Vao day tiep");
-                //  _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, true);
+                Log.d(TAG, "Vao day tiep");
+                _search(query, LazzyBeeShare.GOTO_SEARCH_CODE, true);
                 return false;
             }
 
@@ -274,6 +282,8 @@ public class SearchActivity extends AppCompatActivity implements
                 return false;
             }
         });
+
+
     }
 
 
@@ -284,7 +294,7 @@ public class SearchActivity extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
 
@@ -304,24 +314,45 @@ public class SearchActivity extends AppCompatActivity implements
         this.startActivityForResult(intent, getResources().getInteger(R.integer.code_card_details_updated));
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        setIntent(intent);
+//        handleIntent(intent);
+//    }
 
     private void handleIntent(Intent intent) {
-        display_type = intent.getIntExtra(DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
-        Log.d(TAG, "display_type=" + display_type);
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        String action = intent.getAction();
+        if (Intent.ACTION_SEARCH.equals(action)) {
             Log.d(TAG, "ACTION_SEARCH");
             query_text = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(TAG, "query:" + query_text);
-            display_type = LazzyBeeShare.GOTO_SEARCH_CODE;
-            if (search != null)
+            Log.d(TAG, "Intent.ACTION_SEARCH query:" + query_text);
+            if (search != null) {
                 search.setQuery(query_text, false);
+                getSupportActionBar().setTitle(query_text);
+            } else {
+                Log.d(TAG, "search view null");
+            }
+            _search(query_text, display_type, true);
+            _trackerApplication(GA_SCREEN);
+        } else if (LazzyBeeShare.ACTION_GOTO_DICTIONARY.equals(action)) {
+            Log.d(TAG, "ACTION_DICTIONARY");
+            _displayDictionary();
         }
-        _search(query_text, display_type, true);
+
+
+    }
+
+    private void _displayDictionary() {
+        //set Title
+        getSupportActionBar().setTitle(R.string.drawer_dictionary);
+
+        query_text = null;
+        //Hide count results
+        lbResultCount.setVisibility(View.GONE);
+
+        //reset adapter
+        setAdapterListCard(dictionaryCardList);
+        _trackerApplication(GA_SCREEN_DICTIONARY);
     }
 
     private void _search(String query, int display_type, boolean suggestion) {
@@ -329,14 +360,15 @@ public class SearchActivity extends AppCompatActivity implements
         Log.d(TAG, "query_text:" + query);
         try {
             query_text = query;
-            if (query == null) {
-                lbResultCount.setVisibility(View.GONE);
-                List<Card> cardList = new ArrayList<Card>();
-                if (display_type == LazzyBeeShare.GOTO_DICTIONARY_CODE) {
-                    cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
-                }
-                setAdapterListCard(cardList);
-            } else if (query != null || query.length() > 0) {
+//            if (query == null) {
+//                lbResultCount.setVisibility(View.GONE);
+//                List<Card> cardList = new ArrayList<Card>();
+//                if (display_type == LazzyBeeShare.GOTO_DICTIONARY_CODE) {
+//                    cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+//                }
+//                setAdapterListCard(cardList);
+//            } else
+            if (query != null || query.length() > 0) {
                 //connection with internet ok search in server first
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
@@ -534,21 +566,21 @@ public class SearchActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
-        if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
-            //Reload data
-            Log.i(TAG, QUERY_TEXT + ":" + query_text);
-            _search(query_text, display_type, false);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Log.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+//        if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
+//            //Reload data
+//            Log.i(TAG, QUERY_TEXT + ":" + query_text);
+//            _search(query_text, display_type, false);
+//        }
+//    }
 
-    private void _trackerApplication() {
+    private void _trackerApplication(Object screenName) {
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", (display_type == LazzyBeeShare.GOTO_DICTIONARY_CODE ? GA_SCREEN_DICTIONARY : GA_SCREEN)));
+            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", screenName));
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
@@ -587,43 +619,56 @@ public class SearchActivity extends AppCompatActivity implements
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
-            String adv_dictionary_id = null;
+            String adv_id = null;
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+                Log.i(TAG, "admob -adv_id:" + adv_id);
             }
-            if (admob_pub_id != null || adv_dictionary_id != null) {
-                String advId = admob_pub_id + "/" + adv_dictionary_id;
-                Log.i(TAG, "admob -AdUnitId:" + advId);
-                AdView mAdView = new AdView(this);
+            if (admob_pub_id != null) {
+                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                    mCardViewAdv.setVisibility(View.GONE);
+                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                    String advId = admob_pub_id + "/" + adv_id;
+                    Log.i(TAG, "admob -AdUnitId:" + advId);
+                    AdView mAdView = new AdView(this);
 
-                mAdView.setAdSize(AdSize.BANNER);
-                mAdView.setAdUnitId(advId);
+                    mAdView.setAdSize(AdSize.BANNER);
+                    mAdView.setAdUnitId(advId);
 
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                        .build();
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                            .build();
 
-                mAdView.loadAd(adRequest);
+                    mAdView.loadAd(adRequest);
 
-                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                relativeLayout.addView(mAdView, adViewCenter);
+                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    relativeLayout.addView(mAdView, adViewCenter);
 
-                mCardViewAdv.setVisibility(View.VISIBLE);
+                    mCardViewAdv.setVisibility(View.VISIBLE);
+                } else {
+                    mCardViewAdv.setVisibility(View.GONE);
+                }
             } else {
                 mCardViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "Action:" + getIntent().getAction());
+        //finish();
+        super.onBackPressed();
     }
 }
