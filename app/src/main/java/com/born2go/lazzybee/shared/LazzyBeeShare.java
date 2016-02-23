@@ -132,6 +132,7 @@ public class LazzyBeeShare {
     public static final String DOWN = "Down";
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
     public static final String KEY_SETTING_DISPLAY_MEANING = "display_meaning";
+    public static final String ACTION_GOTO_DICTIONARY = "goto_dictionary";
     public static String mime = "text/html";
     public static String encoding = "utf-8";
 
