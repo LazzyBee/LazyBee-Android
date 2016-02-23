@@ -36,6 +36,7 @@ public class IncomingListActivity extends AppCompatActivity {
     private static final Object GA_SCREEN = "aIncomingListScreen";
     private static final String TAG = "IncomingList";
     private Context context;
+    RecyclerViewIncomingListAdapter incomingListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +58,13 @@ public class IncomingListActivity extends AppCompatActivity {
             lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
             lbCountReviewCard.setTag(vocabularies.size());
             //Init Adapter
-            RecyclerViewIncomingListAdapter recyclerViewIncomingListAdapter =
+            incomingListAdapter =
                     new RecyclerViewIncomingListAdapter
                             (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
 
             //Set data and add Touch Listener
             mRecyclerViewReviewTodayList.setLayoutManager(gridLayoutManager);
-            mRecyclerViewReviewTodayList.setAdapter(recyclerViewIncomingListAdapter);
+            mRecyclerViewReviewTodayList.setAdapter(incomingListAdapter);
 
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -112,18 +113,6 @@ public class IncomingListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //Updated Card reload activity
-        if (resultCode == getResources().getInteger(R.integer.code_card_details_updated)) {
-            //reload activity
-            finish();
-            startActivity(getIntent());
-        }
-    }
-
     private void _trackerApplication() {
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
@@ -154,38 +143,45 @@ public class IncomingListActivity extends AppCompatActivity {
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
-            String adv_dictionary_id = null;
+            String adv_id = null;
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_DEFAULT_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+                Log.i(TAG, "admob -adv_id:" + adv_id);
             }
-            if (admob_pub_id != null || adv_dictionary_id != null) {
-                String advId = admob_pub_id + "/" + adv_dictionary_id;
-                Log.i(TAG, "admob -AdUnitId:" + advId);
-                AdView mAdView = new AdView(this);
+            if (admob_pub_id != null) {
+                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                    mCardViewAdv.setVisibility(View.GONE);
+                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                    String advId = admob_pub_id + "/" + adv_id;
+                    Log.i(TAG, "admob -AdUnitId:" + advId);
+                    AdView mAdView = new AdView(this);
 
-                mAdView.setAdSize(AdSize.BANNER);
-                mAdView.setAdUnitId(advId);
+                    mAdView.setAdSize(AdSize.BANNER);
 
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                        .build();
+                    mAdView.setAdUnitId(advId);
 
-                mAdView.loadAd(adRequest);
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                            .build();
 
-                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                relativeLayout.addView(mAdView, adViewCenter);
+                    mAdView.loadAd(adRequest);
 
-                mCardViewAdv.setVisibility(View.VISIBLE);
+                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    relativeLayout.addView(mAdView, adViewCenter);
+
+                    mCardViewAdv.setVisibility(View.VISIBLE);
+                } else {
+                    mCardViewAdv.setVisibility(View.GONE);
+                }
             } else {
                 mCardViewAdv.setVisibility(View.GONE);
             }
@@ -193,4 +189,5 @@ public class IncomingListActivity extends AppCompatActivity {
             LazzyBeeShare.showErrorOccurred(context, e);
         }
     }
+
 }
