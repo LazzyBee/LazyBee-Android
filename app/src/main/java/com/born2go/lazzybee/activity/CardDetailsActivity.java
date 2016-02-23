@@ -260,7 +260,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             case R.id.action_add_to_learn:
                 _addCardToLearn();
@@ -408,22 +408,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
     }
 
-//    /**
-//     * Take care of calling onBackPressed() for pre-Eclair platforms.
-//     *
-//     * @param keyCode
-//     * @param event
-//     */
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            // do something on back.
-//            finish();
-//            return true;
-//        }
-//
-//        return super.onKeyDown(keyCode, event);
-//    }
 
     @Override
     public void processFinish(Card card) {
@@ -616,13 +600,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
 
     }
-//
-//    @Override
-//    protected void onDestroy() {
-//        //_stopTextToSpeech();
-//        super.onDestroy();
-//
-//    }
 
     private void _trackerApplication() {
         try {
@@ -646,11 +623,21 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         TextToSpeech textToSpeech = LazzyBeeSingleton.textToSpeech;
         if (textToSpeech != null)
             LazzyBeeSingleton.textToSpeech.stop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mViewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        }
     }
 }
