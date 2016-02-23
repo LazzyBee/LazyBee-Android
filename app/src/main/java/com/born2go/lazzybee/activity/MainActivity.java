@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -140,10 +141,10 @@ public class MainActivity extends AppCompatActivity
         mCancelSearch = (ImageView) findViewById(R.id.mCancelSearch);
 
         //Define adapter for searchbox
+        // List<Card> cardList = dataBaseHelper._getAllListCardforSearch();
         SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
-                (this, dataBaseHelper._getAllLQuestionCard());
+                (context, dataBaseHelper._getAllLQuestionCard());
         mAutoSearchDictionaryBox.setAdapter(adapter);
-
 
         //Handel item click
         mAutoSearchDictionaryBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -151,6 +152,10 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Toast.makeText(context, "ID:" + view.getId(), Toast.LENGTH_SHORT).show();
                 String cardID = String.valueOf(view.getId());
+
+                //add card to recent Search
+                int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+                Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
                 _gotoCardDetailbyCardId(cardID);
             }
         });
@@ -159,21 +164,32 @@ public class MainActivity extends AppCompatActivity
         mAutoSearchDictionaryBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Log.d(TAG, "beforeTextChanged:" + s);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                Log.d(TAG, "afterTextChanged:" + s);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     mCancelSearch.setVisibility(View.VISIBLE);
+                    SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
+                            (context, dataBaseHelper._getAllLQuestionCard());
+                    mAutoSearchDictionaryBox.setAdapter(adapter);
+                    mAutoSearchDictionaryBox.showDropDown();
+//                    List<Card> cardList = dataBaseHelper._suggestionCard(s.toString());
+//                    SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
+//                            (context, cardList);
+//                    mAutoSearchDictionaryBox.setAdapter(adapter);
+//                    mAutoSearchDictionaryBox.showDropDown();
                 } else {
                     mCancelSearch.setVisibility(View.GONE);
+//                    mAutoSearchDictionaryBox.dismissDropDown();
                 }
+                Log.d(TAG, "ontextchange:" + s);
 
             }
         });
@@ -183,6 +199,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mAutoSearchDictionaryBox.setText(LazzyBeeShare.EMPTY);
+            }
+        });
+
+        mAutoSearchDictionaryBox.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
+                        (context, dataBaseHelper._recentSuggestionQuestionCard());
+                mAutoSearchDictionaryBox.setAdapter(adapter);
+                mAutoSearchDictionaryBox.showDropDown();
+                return false;
             }
         });
     }
@@ -577,7 +604,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        _gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+        //_gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(SearchActivity.QUERY_TEXT, LazzyBeeShare.GOTO_DICTIONARY);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setAction(LazzyBeeShare.ACTION_GOTO_DICTIONARY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+        //startActivity(intent);
 
     }
 
@@ -915,7 +949,7 @@ public class MainActivity extends AppCompatActivity
                 if (check == -1 || check == -2 || check > 0) {
                     _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
                 } else if (check == 0) {
-                    String message = getString(R.string.congratulations_learnmore, " ' <b>" + getString(R.string.learn_more) + "</b> ' ");
+                    String message = getString(R.string.congratulations_learnmore, " '<b>" + getString(R.string.learn_more) + "</b>' ");
                     _showDialogWithMessage(message);
                 }
             }
@@ -1159,8 +1193,8 @@ public class MainActivity extends AppCompatActivity
             //_gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
             Intent intent = new Intent(this, SearchActivity.class);
             intent.putExtra(SearchActivity.DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.putExtra(SearchManager.QUERY, query);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.setAction(Intent.ACTION_SEARCH);
             startActivity(intent);
         } else {
@@ -1184,3 +1218,4 @@ public class MainActivity extends AppCompatActivity
     }
 
 }
+
