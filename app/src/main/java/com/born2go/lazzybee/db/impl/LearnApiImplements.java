@@ -65,6 +65,9 @@ public class LearnApiImplements implements LearnApi {
     public static final String TABLE_SUGGESTION = "suggestion";
     public static final java.lang.String CREATE_TABLE_SUGGESTION = "CREATE TABLE suggestion (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, suggestion TEXT UNIQUE);";
 
+    public static int TYPE_SUGGESTION_QUESTION_CARD__SEARCH = 0;
+    public static int TYPE_SUGGESTION_QUESTION_CARD__RECENT = 1;
+
     Context context;
     DataBaseHelper dataBaseHelper;
 
@@ -949,6 +952,12 @@ public class LearnApiImplements implements LearnApi {
         return cardList;
     }
 
+    public List<Card> _getAllListCardforSearch() {
+        String query = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY;
+        List<Card> cardList = _getListCardQueryString(query, 1);
+        return cardList;
+    }
+
     public List<String> _getAllLQuestionCard() {
         String query = "SELECT vocabulary.question FROM " + TABLE_VOCABULARY;
         List<String> datas = new ArrayList<String>();
@@ -963,6 +972,44 @@ public class LearnApiImplements implements LearnApi {
             }
         }
         db.close();
+        return datas;
+    }
+
+
+
+    public List<String> _suggestionQuestionCard(String query, int type) {
+        if (type == TYPE_SUGGESTION_QUESTION_CARD__SEARCH) {
+            List<String> datas = new ArrayList<String>();
+            String likeQuery = "SELECT  " + selectSucgetioList + " FROM " + TABLE_VOCABULARY + " WHERE "
+                    + KEY_QUESTION + " like '" + query + "%' OR "
+                    + KEY_QUESTION + " like '% " + query + "%'"
+                    + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+
+            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+            //query for cursor
+            Cursor cursor = db.rawQuery(likeQuery, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0) {
+                    do {
+                        datas.add(cursor.getString(0));
+                    } while (cursor.moveToNext());
+                }
+            }
+            db.close();
+            return datas;
+        } else {
+            return _recentSuggestionQuestionCard();
+        }
+
+
+    }
+
+    public List<String> _recentSuggestionQuestionCard() {
+        List<Card> cardList = _recentSuggestionCard();
+        List<String> datas = new ArrayList<String>();
+        for (Card card : cardList) {
+            datas.add(card.getQuestion());
+        }
         return datas;
     }
 
@@ -1162,7 +1209,7 @@ public class LearnApiImplements implements LearnApi {
 //        cardIDs.add(String.valueOf(card.getId()));
 //        //Update queue list
 //        _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
-        
+
         //Update Queue Card from DB
         card.setQueue(Card.QUEUE_LNR1);
 
