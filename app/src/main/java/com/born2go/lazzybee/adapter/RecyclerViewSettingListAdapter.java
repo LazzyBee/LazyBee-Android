@@ -236,7 +236,7 @@ public class RecyclerViewSettingListAdapter extends
                 _handlerChangeSpeechRate(mSlideSpeechRate);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);
         }
 
     }
@@ -1112,7 +1112,7 @@ public class RecyclerViewSettingListAdapter extends
                 Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_downloadFile", e);
         }
     }
 

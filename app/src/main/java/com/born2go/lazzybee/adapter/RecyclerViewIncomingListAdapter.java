@@ -96,7 +96,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
                         // Toast.makeText(context, "Learned Card:"+position, Toast.LENGTH_SHORT).show();
                         ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_DONE_2);
                     } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, e);
+                        LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
                     }
                 }
             });
@@ -107,7 +107,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
                         // Toast.makeText(context, "Ignore Card:"+position, Toast.LENGTH_SHORT).show();
                         ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_SUSPENDED_1);
                     } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, e);
+                        LazzyBeeShare.showErrorOccurred(context, "2_onBindViewHolder", e);
                     }
                 }
             });
@@ -122,7 +122,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
                 }
             });
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);
         }
 
     }
@@ -149,7 +149,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
             //mRecyclerViewReviewTodayList.setAdapter(this);
             mRecyclerViewReviewTodayList.getAdapter().notifyItemRemoved(position);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "ignoreAndLearnedCard", e);
         }
     }
 

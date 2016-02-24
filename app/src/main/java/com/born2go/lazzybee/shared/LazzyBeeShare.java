@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -18,7 +17,6 @@ import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -36,7 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -175,6 +172,7 @@ public class LazzyBeeShare {
     public static String ADV_DEFAULT_ID = "adv_default_id";
     public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
+    public static String ADV_LEARNDETAIL_ID = "adv_learndetail_id";
     public static String MyPREFERENCES = "LazzyBee";
     public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
@@ -289,13 +287,14 @@ public class LazzyBeeShare {
                 value = Html.fromHtml(commonObj.getString(key)).toString();
 
             }
-
+            return value;
         } catch (JSONException e) {
             Log.e(TAG, "_getValueFromKey\tError:" + e.getMessage());
             //e.printStackTrace();
+            return value;
         }
 
-        return value;
+
     }
 
 
@@ -566,10 +565,10 @@ public class LazzyBeeShare {
         return html;
     }
 
-    public static void showErrorOccurred(Context context, Exception e) {
+    public static void showErrorOccurred(Context context, String function, Exception e) {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
-                    + "\t" + context.getClass().getName() + ":" + e.getMessage();
+                    + "\t" + context.getClass().getName() + " in function "+function+"():" + e.getMessage();
             final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
             String android_id = Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
@@ -762,7 +761,7 @@ public class LazzyBeeShare {
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
             Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_setUpNotification", e);
         }
         Log.i(TAG, "---------END-------");
     }

@@ -106,7 +106,7 @@ public class StudyActivity extends AppCompatActivity
             pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy", e);
         }
     }
 
@@ -124,7 +124,7 @@ public class StudyActivity extends AppCompatActivity
             mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
@@ -298,7 +298,7 @@ public class StudyActivity extends AppCompatActivity
                         Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
                 }
                 return true;
             }

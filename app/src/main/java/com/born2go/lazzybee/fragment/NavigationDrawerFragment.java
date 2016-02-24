@@ -160,7 +160,7 @@ public class NavigationDrawerFragment extends Fragment {
                     })
             );
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
         return view;
     }

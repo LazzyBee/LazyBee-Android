@@ -234,7 +234,7 @@ public class DialogStatistics extends DialogFragment {
             sendIntent.setType("image/jpeg");
             startActivity(sendIntent);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }
 
     }

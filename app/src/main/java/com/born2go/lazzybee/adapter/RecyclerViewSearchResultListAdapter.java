@@ -102,13 +102,13 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
                         notifyItemChanged(position);
                         Toast.makeText(context, context.getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, e);
+                        LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
                     }
 
                 }
             });
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);
         }
     }
 

@@ -20,7 +20,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -138,7 +137,7 @@ public class RecyclerViewCustomStudyAdapter extends
             }
             //_reloadRecylerView();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);
         }
     }
 
