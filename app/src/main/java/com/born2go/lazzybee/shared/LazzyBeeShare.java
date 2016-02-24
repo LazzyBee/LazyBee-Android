@@ -130,6 +130,7 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
     public static final String KEY_SETTING_DISPLAY_MEANING = "display_meaning";
     public static final String ACTION_GOTO_DICTIONARY = "goto_dictionary";
+
     public static String mime = "text/html";
     public static String encoding = "utf-8";
 
@@ -169,10 +170,18 @@ public class LazzyBeeShare {
     public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
     public static String ADMOB_PUB_ID = "admob_pub_id";
+
     public static String ADV_DEFAULT_ID = "adv_default_id";
+
     public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
-    public static String ADV_LEARNDETAIL_ID = "adv_learndetail_id";
+    public static String ADV_LEARN_DETAIL_ID = "adv_learndetail_id";
+
+    public static final String ADV_INCOMING_LIST_ID = ADV_DEFAULT_ID;
+    public static final String ADV_SEARCH_RESULTS_LIST_ID = ADV_DEFAULT_ID;
+    public static final String ADV_DICTIONARY_LIST_ID = ADV_DEFAULT_ID;
+    public static final String ADV_DETAILS_ID = ADV_DEFAULT_ID;
+
     public static String MyPREFERENCES = "LazzyBee";
     public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
@@ -568,7 +577,7 @@ public class LazzyBeeShare {
     public static void showErrorOccurred(Context context, String function, Exception e) {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
-                    + "\t" + context.getClass().getName() + " in function "+function+"():" + e.getMessage();
+                    + "\t" + context.getClass().getName() + " in function " + function + "():" + e.getMessage();
             final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
             String android_id = Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
@@ -579,6 +588,7 @@ public class LazzyBeeShare {
             }
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
