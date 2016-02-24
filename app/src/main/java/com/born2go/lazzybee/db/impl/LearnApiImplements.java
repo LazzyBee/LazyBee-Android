@@ -3,7 +3,6 @@ package com.born2go.lazzybee.db.impl;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -114,7 +113,7 @@ public class LearnApiImplements implements LearnApi {
             "vocabulary.l_en,vocabulary.l_vn";
     private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers," +
             "vocabulary.queue,vocabulary.level";
-    private String selectSucgetioList = "vocabulary.id,vocabulary.question,vocabulary.answers";
+    private String selectSuggestionList = "vocabulary.id,vocabulary.question,vocabulary.answers";
 
 
     /**
@@ -976,11 +975,10 @@ public class LearnApiImplements implements LearnApi {
     }
 
 
-
     public List<String> _suggestionQuestionCard(String query, int type) {
         if (type == TYPE_SUGGESTION_QUESTION_CARD__SEARCH) {
             List<String> datas = new ArrayList<String>();
-            String likeQuery = "SELECT  " + selectSucgetioList + " FROM " + TABLE_VOCABULARY + " WHERE "
+            String likeQuery = "SELECT vocabulary.question FROM " + TABLE_VOCABULARY + " WHERE "
                     + KEY_QUESTION + " like '" + query + "%' OR "
                     + KEY_QUESTION + " like '% " + query + "%'"
                     + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
@@ -1611,7 +1609,7 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Card> _suggestionCard(String query) {
-        String likeQuery = "SELECT  " + selectSucgetioList + " FROM " + TABLE_VOCABULARY + " WHERE "
+        String likeQuery = "SELECT  " + selectSuggestionList + " FROM " + TABLE_VOCABULARY + " WHERE "
                 + KEY_QUESTION + " like '" + query + "%' OR "
                 + KEY_QUESTION + " like '% " + query + "%'"
                 + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
@@ -1622,7 +1620,6 @@ public class LearnApiImplements implements LearnApi {
             datas = _getListCardQueryString(likeQuery, 2);
         return datas;
     }
-
 
     public List<Integer> _getListCountCardbyLevel() {
         //get max level
