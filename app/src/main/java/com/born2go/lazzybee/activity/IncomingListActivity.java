@@ -136,7 +136,7 @@ public class IncomingListActivity extends AppCompatActivity {
 
     private void _initAdView() {
         try {
-            RelativeLayout mCardViewAdv = (RelativeLayout) findViewById(R.id.mCardViewAdv);
+            View mViewAdv =  findViewById(R.id.mViewAdv);
 
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
@@ -145,13 +145,13 @@ public class IncomingListActivity extends AppCompatActivity {
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_id = container.getString(LazzyBeeShare.ADV_DEFAULT_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_INCOMING_LIST_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
                 Log.i(TAG, "admob -adv_id:" + adv_id);
             }
             if (admob_pub_id != null) {
                 if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                    mCardViewAdv.setVisibility(View.GONE);
+                    mViewAdv.setVisibility(View.GONE);
                 } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
                     String advId = admob_pub_id + "/" + adv_id;
                     Log.i(TAG, "admob -AdUnitId:" + advId);
@@ -171,17 +171,17 @@ public class IncomingListActivity extends AppCompatActivity {
 
                     mAdView.loadAd(adRequest);
 
-                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                    RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
                     RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                     relativeLayout.addView(mAdView, adViewCenter);
 
-                    mCardViewAdv.setVisibility(View.VISIBLE);
+                    mViewAdv.setVisibility(View.VISIBLE);
                 } else {
-                    mCardViewAdv.setVisibility(View.GONE);
+                    mViewAdv.setVisibility(View.GONE);
                 }
             } else {
-                mCardViewAdv.setVisibility(View.GONE);
+                mViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);

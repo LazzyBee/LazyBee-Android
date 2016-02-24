@@ -266,7 +266,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_id = container.getString(LazzyBeeShare.ADV_LEARNDETAIL_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_LEARN_DETAIL_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
                 Log.i(TAG, "admob -adv_id:" + adv_id);
             }

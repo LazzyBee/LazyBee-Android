@@ -15,7 +15,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -68,7 +67,7 @@ public class SearchActivity extends AppCompatActivity implements
     int display_type = 0;
     private int ADD_TO_LEARN = 0;
     ConnectGdatabase connectGdatabase;
-    CardView mCardViewAdv;
+    View mViewAdv;
     SearchView.SearchAutoComplete mSuggerstionCard;
     List<Card> dictionaryCardList;
 
@@ -126,7 +125,7 @@ public class SearchActivity extends AppCompatActivity implements
                         Log.w(TAG, "card.getId()==0");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "1_initRecyclerViewSearchResults", e);
                 }
 
             }
@@ -144,7 +143,7 @@ public class SearchActivity extends AppCompatActivity implements
                         Log.w(TAG, "card.getId()==0");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "2_initRecyclerViewSearchResults", e);
                 }
 
             }
@@ -244,7 +243,7 @@ public class SearchActivity extends AppCompatActivity implements
                         Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
                 }
                 return true;
             }
@@ -405,7 +404,7 @@ public class SearchActivity extends AppCompatActivity implements
                 setAdapterListCard(cardList);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_search", e);
         }
         if (suggestion) {
             hideKeyboard();
@@ -552,7 +551,7 @@ public class SearchActivity extends AppCompatActivity implements
                 _trackerWorkNotFound();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "processFinish", e);
         }
         hideKeyboard();
     }
@@ -562,7 +561,7 @@ public class SearchActivity extends AppCompatActivity implements
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("searchNoResult", DataLayer.mapOf("wordError", query_text));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerWorkNotFound", e);
         }
     }
 
@@ -582,7 +581,7 @@ public class SearchActivity extends AppCompatActivity implements
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", screenName));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
@@ -614,8 +613,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _initAdView() {
         try {
-            mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
-
+            mViewAdv = findViewById(R.id.mViewAdv);
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
@@ -623,13 +621,17 @@ public class SearchActivity extends AppCompatActivity implements
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+//                if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
+//                    adv_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_LIST_ID);
+//                } else {
+                adv_id = container.getString(LazzyBeeShare.ADV_SEARCH_RESULTS_LIST_ID);
+//                }
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
                 Log.i(TAG, "admob -adv_id:" + adv_id);
             }
             if (admob_pub_id != null) {
                 if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                    mCardViewAdv.setVisibility(View.GONE);
+                    mViewAdv.setVisibility(View.GONE);
                 } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
                     String advId = admob_pub_id + "/" + adv_id;
                     Log.i(TAG, "admob -AdUnitId:" + advId);
@@ -648,20 +650,20 @@ public class SearchActivity extends AppCompatActivity implements
 
                     mAdView.loadAd(adRequest);
 
-                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                    RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
                     RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                     relativeLayout.addView(mAdView, adViewCenter);
 
-                    mCardViewAdv.setVisibility(View.VISIBLE);
+                    mViewAdv.setVisibility(View.VISIBLE);
                 } else {
-                    mCardViewAdv.setVisibility(View.GONE);
+                    mViewAdv.setVisibility(View.GONE);
                 }
             } else {
-                mCardViewAdv.setVisibility(View.GONE);
+                mViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
     }
 

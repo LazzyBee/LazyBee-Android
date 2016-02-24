@@ -64,7 +64,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     MenuItem itemFavorite;
 
     WebView mWebViewLeadDetails;
-    LinearLayout mCardViewAdv;
+    View mViewAdv;
     private String carID;
     String mySubject = "common";
     boolean sDEBUG = false;
@@ -123,44 +123,50 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     private void _initAdView() {
         try {
+            mViewAdv =  findViewById(R.id.mViewAdv);
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
-            String adv_dictionary_id = null;
+            String adv_id = null;
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_DETAILS_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+                Log.i(TAG, "admob -adv_id:" + adv_id);
             }
-            mCardViewAdv = (LinearLayout) findViewById(R.id.mCardViewAdv);
-            if (admob_pub_id != null || adv_dictionary_id != null) {
-                String advId = admob_pub_id + "/" + adv_dictionary_id;
-                Log.i(TAG, "admob -AdUnitId:" + advId);
-                AdView mAdView = new AdView(this);
+            if (admob_pub_id != null) {
+                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                    mViewAdv.setVisibility(View.GONE);
+                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                    String advId = admob_pub_id + "/" + adv_id;
+                    Log.i(TAG, "admob -AdUnitId:" + advId);
+                    AdView mAdView = new AdView(this);
 
-                mAdView.setAdSize(AdSize.BANNER);
-                mAdView.setAdUnitId(advId);
+                    mAdView.setAdSize(AdSize.BANNER);
+                    mAdView.setAdUnitId(advId);
 
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                        .build();
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                            .build();
 
-                mAdView.loadAd(adRequest);
+                    mAdView.loadAd(adRequest);
 
-                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                relativeLayout.addView(mAdView, adViewCenter);
+                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    relativeLayout.addView(mAdView, adViewCenter);
 
-                mCardViewAdv.setVisibility(View.VISIBLE);
+                    mViewAdv.setVisibility(View.VISIBLE);
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
+                }
             } else {
-                mCardViewAdv.setVisibility(View.GONE);
+                mViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
