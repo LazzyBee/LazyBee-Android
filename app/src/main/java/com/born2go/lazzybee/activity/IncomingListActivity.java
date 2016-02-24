@@ -1,11 +1,9 @@
 package com.born2go.lazzybee.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -93,7 +91,7 @@ public class IncomingListActivity extends AppCompatActivity {
             });
 
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onCreate", e);
         }
 
         _initAdView();
@@ -118,7 +116,7 @@ public class IncomingListActivity extends AppCompatActivity {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
@@ -138,7 +136,7 @@ public class IncomingListActivity extends AppCompatActivity {
 
     private void _initAdView() {
         try {
-            CardView mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
+            RelativeLayout mCardViewAdv = (RelativeLayout) findViewById(R.id.mCardViewAdv);
 
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
@@ -186,7 +184,7 @@ public class IncomingListActivity extends AppCompatActivity {
                 mCardViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
     }
 

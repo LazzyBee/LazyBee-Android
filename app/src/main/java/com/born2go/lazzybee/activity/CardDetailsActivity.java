@@ -15,7 +15,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -65,8 +64,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     MenuItem itemFavorite;
 
     WebView mWebViewLeadDetails;
-    CardView mCardViewAdv;
-    CardView mCardViewViewPager;
+    LinearLayout mCardViewAdv;
     private String carID;
     String mySubject = "common";
     boolean sDEBUG = false;
@@ -79,8 +77,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = this;
-
-        mCardViewViewPager = (CardView) findViewById(R.id.mCardViewViewPager);
 
         container = (LinearLayout) findViewById(R.id.container);
 
@@ -121,7 +117,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_displayCard", e);
         }
     }
 
@@ -138,7 +134,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
                 Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
             }
-            mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
+            mCardViewAdv = (LinearLayout) findViewById(R.id.mCardViewAdv);
             if (admob_pub_id != null || adv_dictionary_id != null) {
                 String advId = admob_pub_id + "/" + adv_dictionary_id;
                 Log.i(TAG, "admob -AdUnitId:" + advId);
@@ -167,7 +163,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 mCardViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
     }
 
@@ -245,7 +241,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                         Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
                 }
                 return true;
             }
@@ -308,7 +304,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }
 
     }
@@ -317,7 +313,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_reportCard", e);
         }
     }
 
@@ -343,7 +339,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             Toast.makeText(context, getString(R.string.message_add_favorite_card_done, card.getQuestion()), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_addCardToFavorite", e);
         }
     }
 
@@ -404,7 +400,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             // dialog.show();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_addCardToLearn", e);
         }
     }
 
@@ -435,7 +431,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "processFinish", e);
         }
     }
 
@@ -450,7 +446,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
         } catch (Exception e) {
             cardId = LazzyBeeShare.EMPTY;
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "getCarID", e);
         }
         return cardId;
     }
@@ -539,7 +535,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
                 mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             } catch (Exception e) {
-                LazzyBeeShare.showErrorOccurred(context, e);
+                LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
             }
 
 
@@ -606,7 +602,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
