@@ -24,32 +24,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
-import com.born2go.lazzybee.adapter.RecyclerViewSearchResultListAdapter;
-import com.born2go.lazzybee.adapter.SuggestionCardHomeAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
@@ -60,7 +50,6 @@ import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.view.ViewHome;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -98,18 +87,13 @@ public class MainActivity extends AppCompatActivity
     boolean appPause = false;
     boolean studyComplete = false;
 
-    SearchView searchView;
-
     SharedPreferences sharedpreferences;
     private int KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT;
 
     Snackbar snackbarCongraturation;
     Snackbar snackbarTip;
 
-    ImageButton btnSearchDictionnary;
-    AutoCompleteTextView mAutoSearchDictionaryBox;
-    ImageView mCancelSearch;
-
+    SearchView mSearchCardBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,84 +118,78 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     private void _initDictinarySearchBox() {
         //Define Search Dictionary box
-        btnSearchDictionnary = (ImageButton) findViewById(R.id.btnSearchDictionnary);
-        mAutoSearchDictionaryBox = (AutoCompleteTextView) findViewById(R.id.mAutoSearchDictionaryBox);
-        mCancelSearch = (ImageView) findViewById(R.id.mCancelSearch);
+        mSearchCardBox = (SearchView) findViewById(R.id.mSearchCard);
+        mSearchCardBox.setIconifiedByDefault(false);
+        mSearchCardBox.setQueryHint("Dictionary");
 
-        //Define adapter for searchbox
-        // List<Card> cardList = dataBaseHelper._getAllListCardforSearch();
-        SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
-                (context, dataBaseHelper._getAllLQuestionCard());
-        mAutoSearchDictionaryBox.setAdapter(adapter);
+        //set provaider search
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
 
-        //Handel item click
-        mAutoSearchDictionaryBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //Custom search
+        // Hide icon search in searchView and set clear text icon
+        ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
+        if (search_close_btn != null) {
+            search_close_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_black_18dp));
+        }
+        ImageView magImage = (ImageView) mSearchCardBox.findViewById(R.id.search_mag_icon);
+        if (magImage != null) {
+            magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+            magImage.setVisibility(View.GONE);
+        }
+        //set color..
+        if (autoCompleteTextView != null) {
+            int color = Color.parseColor("#ffffffff");
+            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+
+            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+            autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
+            autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
+
+        }
+
+        //Handler click item suggesstion
+        mSearchCardBox.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Toast.makeText(context, "ID:" + view.getId(), Toast.LENGTH_SHORT).show();
-                String cardID = String.valueOf(view.getId());
-
-                //add card to recent Search
-                int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
-                Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
-                _gotoCardDetailbyCardId(cardID);
-            }
-        });
-
-        //Handler dictionary box change text
-        mAutoSearchDictionaryBox.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d(TAG, "beforeTextChanged:" + s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.d(TAG, "afterTextChanged:" + s);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    mCancelSearch.setVisibility(View.VISIBLE);
-                    SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
-                            (context, dataBaseHelper._getAllLQuestionCard());
-                    mAutoSearchDictionaryBox.setAdapter(adapter);
-                    mAutoSearchDictionaryBox.showDropDown();
-//                    List<Card> cardList = dataBaseHelper._suggestionCard(s.toString());
-//                    SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
-//                            (context, cardList);
-//                    mAutoSearchDictionaryBox.setAdapter(adapter);
-//                    mAutoSearchDictionaryBox.showDropDown();
-                } else {
-                    mCancelSearch.setVisibility(View.GONE);
-//                    mAutoSearchDictionaryBox.dismissDropDown();
-                }
-                Log.d(TAG, "ontextchange:" + s);
-
-            }
-        });
-
-        //Handler Clear text
-        mCancelSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAutoSearchDictionaryBox.setText(LazzyBeeShare.EMPTY);
-            }
-        });
-
-        mAutoSearchDictionaryBox.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                SuggestionCardHomeAdapter adapter = new SuggestionCardHomeAdapter
-                        (context, dataBaseHelper._recentSuggestionQuestionCard());
-                mAutoSearchDictionaryBox.setAdapter(adapter);
-                mAutoSearchDictionaryBox.showDropDown();
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
                 return false;
             }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = mSearchCardBox.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
+                        _gotoCardDetailbyCardId(cardID);
+
+                        //call back actionbar
+                        //mSearchCardBox.clearFocus();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
+                }
+                return true;
+            }
         });
+
     }
 
 
@@ -246,7 +224,7 @@ public class MainActivity extends AppCompatActivity
                 mInterstitialAd = null;
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initInterstitialAd", e);
         }
     }
 
@@ -295,7 +273,7 @@ public class MainActivity extends AppCompatActivity
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
             Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_setUpNotification", e);
         }
         Log.i(TAG, "---------END-------");
     }
@@ -333,6 +311,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _intInterfaceView() {
         container = (FrameLayout) findViewById(R.id.mContainer);
+        container.requestFocus();
     }
 
     public void onlbTipHelpClick(View view) {
@@ -397,7 +376,7 @@ public class MainActivity extends AppCompatActivity
                     R.id.navigation_drawer, toolbar,
                     drawerLayout);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initNavigationDrawerFragment", e);
         }
     }
 
@@ -441,7 +420,7 @@ public class MainActivity extends AppCompatActivity
                     break;
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onNavigationDrawerItemSelected", e);
         }
 
 
@@ -661,13 +640,13 @@ public class MainActivity extends AppCompatActivity
                 // Inflate menu to add items to action bar if it is present.
                 inflater.inflate(R.menu.main, menu);
                 // Associate searchable configuration with the SearchView
-                _defineSearchView(menu);
+               // _defineSearchView(menu);
                 _restoreActionBar();
             } else {
                 _dismissTip();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onCreateOptionsMenu", e);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -684,75 +663,75 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _defineSearchView(Menu menu) {
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem searchItem = menu.findItem(R.id.menu_search);
+        //final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        //final MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-        searchView =
-                (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
-
-        if (autoCompleteTextView != null) {
-            int color = Color.parseColor("#ffffffff");
-            Drawable drawable = autoCompleteTextView.getDropDownBackground();
-            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-
-            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
-        }
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand");
-                return true;
-            }
-
-        });
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                Log.d(TAG, "onSuggestionSelect:" + position);
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                Log.d(TAG, "onSuggestionClick:" + position);
-                try {
-                    CursorAdapter c = searchView.getSuggestionsAdapter();
-                    if (c != null) {
-                        Cursor cur = c.getCursor();
-                        cur.moveToPosition(position);
-
-                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
-                        Log.d(TAG, "cardID:" + cardID);
-                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
-                        Log.d(TAG, "query:" + query);
-                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
-                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
-                        _gotoCardDetailbyCardId(cardID);
-
-                        //call back actionbar
-                        searchItem.collapseActionView();
-                    } else {
-                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
-                    }
-                } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
-                }
-                return true;
-            }
-        });
+//        searchView =
+//                (SearchView) menu.findItem(R.id.menu_search).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//
+//        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
+//        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+//
+//        if (autoCompleteTextView != null) {
+//            int color = Color.parseColor("#ffffffff");
+//            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+//            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+//
+//            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+//            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
+//        }
+//
+//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+//
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                Log.d(TAG, "onMenuItemActionCollapse");
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem item) {
+//                Log.d(TAG, "onMenuItemActionExpand");
+//                return true;
+//            }
+//
+//        });
+//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//            @Override
+//            public boolean onSuggestionSelect(int position) {
+//                Log.d(TAG, "onSuggestionSelect:" + position);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onSuggestionClick(int position) {
+//                Log.d(TAG, "onSuggestionClick:" + position);
+//                try {
+//                    CursorAdapter c = searchView.getSuggestionsAdapter();
+//                    if (c != null) {
+//                        Cursor cur = c.getCursor();
+//                        cur.moveToPosition(position);
+//
+//                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+//                        Log.d(TAG, "cardID:" + cardID);
+//                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+//                        Log.d(TAG, "query:" + query);
+//                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+//                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
+//                        _gotoCardDetailbyCardId(cardID);
+//
+//                        //call back actionbar
+//                        searchItem.collapseActionView();
+//                    } else {
+//                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+//                    }
+//                } catch (Exception e) {
+//                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
+//                }
+//                return true;
+//            }
+//        });
 
     }
 
@@ -794,7 +773,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_checkUpdate", e);
             return false;
         }
     }
@@ -1061,7 +1040,7 @@ public class MainActivity extends AppCompatActivity
                 // completeStudyCode = _checkCompleteLearn();
                 // _getCountCard();
             }
-            _restoreSearchView();
+//            _restoreSearchView();
         }
         if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
@@ -1082,13 +1061,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void _restoreSearchView() {
-        if (searchView != null) {
-            searchView.setQuery(LazzyBeeShare.EMPTY, false);
-//            searchView.clearFocus();
-            searchView.setIconified(true);
-        }
-    }
+//    private void _restoreSearchView() {
+//        if (searchView != null) {
+//            searchView.setQuery(LazzyBeeShare.EMPTY, false);
+////            searchView.clearFocus();
+//            searchView.setIconified(true);
+//        }
+//    }
 
 
     private void _showDialogTip() {
@@ -1150,7 +1129,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "popup_text null");
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_showDialogTip", e);
         }
     }
 
@@ -1182,12 +1161,12 @@ public class MainActivity extends AppCompatActivity
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
     public void onSearchDictionary(View view) {
-        String query = mAutoSearchDictionaryBox.getText().toString();
+        String query = mSearchCardBox.getQuery().toString();
         if (query.length() > 0) {
             //goto Search
             //_gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
@@ -1201,17 +1180,21 @@ public class MainActivity extends AppCompatActivity
             //Suggestion word
             //mAutoSearchDictionaryBox.setFocusable(true);
             //mAutoSearchDictionaryBox.setFocusableInTouchMode(true);
-            mAutoSearchDictionaryBox.requestFocus();
+            mSearchCardBox.requestFocus();
 
             //show keyboard
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mAutoSearchDictionaryBox, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(mSearchCardBox, InputMethodManager.SHOW_IMPLICIT);
         }
 
     }
 
     public void removeAllFocus(View view) {
-        mAutoSearchDictionaryBox.clearFocus();
+        // mAutoSearchDictionaryBox.clearFocus();
+        //mSearch.clearFocus();
+
+        mSearchCardBox.clearFocus();
+
         //hide keyboad
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
