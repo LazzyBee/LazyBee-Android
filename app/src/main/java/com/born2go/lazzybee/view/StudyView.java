@@ -1051,8 +1051,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         if (sTimeShowAnswer > -1) {
             mShowAnswer.setOnClickListener(null);
             btnShowAnswer.setOnClickListener(null);
-            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
-            btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
+            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
+            btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
             if (countDownTimer != null) {
                 countDownTimer.cancel();
             }
