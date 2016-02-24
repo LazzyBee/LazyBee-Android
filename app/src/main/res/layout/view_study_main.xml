@@ -8,20 +8,20 @@
     android:orientation="vertical"
     tools:context="com.born2go.lazzybee.fragment.FragmentStudy">
 
-    <include layout="@layout/view_study_count" />
+    <include layout="@layout/view_study_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/mDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
-        android:layout_marginTop="@dimen/cardview_study_margin_top"
-        android:layout_weight="1"
-        card_view:cardCornerRadius="4dp">
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/mDisplay"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="2dp"-->
+        <!--android:layout_weight="1"-->
+        <!--card_view:cardCornerRadius="0dp">-->
 
         <RelativeLayout
+            android:id="@+id/mDisplay"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1">
@@ -46,7 +46,7 @@
 
 
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    <!--</android.support.v7.widget.CardView>-->
 
     <include layout="@layout/view_study_button" />
 

@@ -10,13 +10,14 @@
     <dimen name="cardview_study_margin_left">1dp</dimen>
     <dimen name="cardview_study_margin_right">1dp</dimen>
     <dimen name="cardview_study_margin_top">0dp</dimen>
-    <dimen name="cardview_study_margin_bottom">1dp</dimen>
+    <dimen name="cardview_study_margin_bottom">3dp</dimen>
     <dimen name="study_question_size">30px</dimen>
 
     <dimen name="setting_card_view_elevation">0dp</dimen>
     <dimen name="margin_left_due_card">16dp</dimen>
     <dimen name="main_top_bottom_magin_view">0dp</dimen>
     <dimen name="cardview_count_study_margin_top">3dp</dimen>
+    <dimen name="height_study_count_and_swipe">40dp</dimen>
 
 
 </resources>

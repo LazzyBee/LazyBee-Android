@@ -2,23 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <android.support.v7.widget.CardView
-        android:id="@+id/mCountStudy"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
-        android:layout_marginTop="@dimen/cardview_count_study_margin_top">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp">
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="horizontal">
+                android:layout_height="@dimen/height_study_count_and_swipe"
+                android:orientation="horizontal"
+                android:background="#BDBDBD">
 
 
                 <TextView
@@ -68,7 +56,5 @@
                 android:textColor="#d91e1e"
                 android:visibility="gone" />
 
-        </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
 </LinearLayout>

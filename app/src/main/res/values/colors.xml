@@ -21,9 +21,9 @@
     <color name="teal_600">#00897B</color>
     <color name="teal_900">#004D40</color>
 
-    <color name="card_new_color">@color/red_500</color>
-    <color name="card_again_color">@color/grey_600</color>
-    <color name="card_due_color">@color/blue_500</color>
+    <color name="card_new_color">@color/blue_500</color>
+    <color name="card_again_color">@color/red_500</color>
+    <color name="card_due_color">#FFEB3B</color>
     <color name="vang_rau_xanh">#FFCB09</color>
 
     <color name="teal_200">#80CBC4</color>
