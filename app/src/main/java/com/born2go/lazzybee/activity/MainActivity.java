@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.BaseColumns;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -271,7 +270,7 @@ public class MainActivity extends AppCompatActivity
 
             //set notificaion by time
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
-            Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
+            Log.d(TAG, "Set notificarion time:" + hour + ":" + minute + " -" + calendar.getTime().toString());
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_setUpNotification", e);
         }
@@ -640,7 +639,7 @@ public class MainActivity extends AppCompatActivity
                 // Inflate menu to add items to action bar if it is present.
                 inflater.inflate(R.menu.main, menu);
                 // Associate searchable configuration with the SearchView
-               // _defineSearchView(menu);
+                // _defineSearchView(menu);
                 _restoreActionBar();
             } else {
                 _dismissTip();
@@ -938,25 +937,14 @@ public class MainActivity extends AppCompatActivity
     private void _gotoStudy(int type) {
         //goto_study_code0 study
         //goto_study_code1 learnmore
-
-        //Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
         studyComplete = false;
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
-            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-
-            //set Slide ac
-//            overridePendingTransition(R.anim.slide_right, 0);
-            //this.startActivityForResult(intent, RESULT_OK);
-
+            this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
         } else if (type == getResources().getInteger(R.integer.goto_study_code1)) {
-            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-            this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-            String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-            dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
-            // _setUpNotification();
+            this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
         }
     }
 
@@ -1033,31 +1021,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Log.i(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            if (resultCode == 1
-                    || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-                // completeStudyCode = _checkCompleteLearn();
-                // _getCountCard();
-            }
-//            _restoreSearchView();
-        }
-        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+        Log.d(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
+        if (requestCode == LazzyBeeShare.ACTION_CODE_GOTO_STUDY) {
+            if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_1000) {
+                Log.d(TAG, "Congratilation study LazzyBee");
+
+                //Reset notification
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
+
+                //Show message congratilation
                 String messgage_congratilation = getString(R.string.congratulations);
                 _showDialogCongraturation(messgage_congratilation);
-                studyComplete = true;
+                //studyComplete = true;
 
+                //Save time congratilation in SharedPreferences
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, new Date().getTime());
                 editor.commit();
+
             } else {
+                Log.d(TAG, "Not congratilation study LazzyBee");
                 _showDialogTip();
             }
-            // completeStudyCode = _checkCompleteLearn();
-            // _getCountCard();
         }
     }
 
@@ -1146,8 +1132,8 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
-        Log.i(TAG, "studyComplete ?" + studyComplete);
-        _setUpNotification(studyComplete);
+        Log.d(TAG, "studyComplete ?" + studyComplete);
+        //_setUpNotification(studyComplete);
     }
 
     @Override
