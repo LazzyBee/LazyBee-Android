@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.IncomingListActivity">
+
     <TextView
         android:id="@+id/lbCountReviewCard"
         android:layout_width="fill_parent"
@@ -18,7 +19,9 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
+        android:layout_weight="1">
 
         <view
             android:id="@+id/mRecyclerViewReviewTodayList"
@@ -26,4 +29,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/mViewAdv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        >
+
+        <RelativeLayout
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 </LinearLayout>

@@ -29,7 +29,6 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 
 
 public class DialogCompleteStudy extends DialogFragment {
@@ -68,7 +67,7 @@ public class DialogCompleteStudy extends DialogFragment {
 
 
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
         Button btnDone = (Button) view.findViewById(R.id.btnDone);
         btnDone.setOnClickListener(new View.OnClickListener() {

@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/bottom_wrapper"
-        android:layout_width="160dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/teal_600"
         android:orientation="vertical">
@@ -15,9 +15,10 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!-->-->
-       <include layout="@layout/swipe_button"
-           android:layout_height="match_parent"
-           android:layout_width="match_parent"></include>
+        <include
+            layout="@layout/swipe_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></include>
         <!--</android.support.v7.widget.CardView>-->
 
 
@@ -25,10 +26,11 @@
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mDetailsCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/mDetailsCard">
+        android:background="@color/white">
 
         <!--<android.support.v7.widget.CardView-->
         <!--android:layout_width="match_parent"-->
@@ -38,7 +40,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="16dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/lbQuestion"
@@ -47,8 +52,8 @@
                 android:layout_alignParentTop="true"
                 android:singleLine="true"
                 android:text="Question"
-                android:textColor="#ff060606"
-                android:textSize="20sp" />
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/lbAnswer"
@@ -90,14 +95,11 @@
                 android:id="@+id/lbPronoun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/lbQuestion"
-                android:layout_alignBottom="@+id/learned"
-                android:layout_marginLeft="15dp"
-                android:layout_toEndOf="@+id/lbQuestion"
-                android:layout_toRightOf="@+id/lbQuestion"
+                android:layout_alignBottom="@+id/lbQuestion"
+                android:layout_marginStart="200dp"
                 android:text="pronoun"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#ff060606" />
+                android:textColor="@color/grey_900" />
 
         </RelativeLayout>
         <!--</android.support.v7.widget.CardView>-->

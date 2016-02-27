@@ -81,8 +81,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     TextView lbCountAgain;
     TextView lbCountDue;
 
-    CardView mCountStudy;
-
     CardView mCardViewHelpandAdMod;
     RelativeLayout mShowAnswer;
 
@@ -247,7 +245,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "processFinish", e);
         }
     }
 
@@ -283,9 +281,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         lbCountAgain = (TextView) view.findViewById(R.id.lbCountAgainInday);
         lbCountDue = (TextView) view.findViewById(R.id.lbAgainDue);
 
-        mCountStudy = (CardView) view.findViewById(R.id.mCountStudy);
-
-        final CardView mDisplay = (CardView) view.findViewById(R.id.mDisplay);
+        final RelativeLayout mDisplay = (RelativeLayout) view.findViewById(R.id.mDisplay);
 
 
         mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
@@ -497,7 +493,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 _completeLean(false);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_setUpStudy", e);
         }
     }
 
@@ -549,7 +545,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
             Log.i(TAG, "--------------END------------");
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_nextNewCard", e);
         }
     }
 
@@ -573,7 +569,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
             Log.i(TAG, "--------------END------------");
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_nextDueCard", e);
         }
 
     }
@@ -614,7 +610,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 _completeLean(true);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_nextAgainCard", e);
         }
         Log.i(TAG, "--------------END--------------");
 
@@ -702,7 +698,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
 
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_showBtnAnswer", e);
         }
     }
 
@@ -814,7 +810,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_answerCard", e);
         }
         Log.i(TAG, "-----------------------END-----------------------------");
     }
@@ -1044,7 +1040,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_learntorIgnoreCardbyQueue", e);
         }
         Log.i(TAG, "-----------------------END----------------------");
     }
@@ -1055,8 +1051,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         if (sTimeShowAnswer > -1) {
             mShowAnswer.setOnClickListener(null);
             btnShowAnswer.setOnClickListener(null);
-            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
-            btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.grey_600));
+            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
+            btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
             if (countDownTimer != null) {
                 countDownTimer.cancel();
             }
@@ -1190,7 +1186,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             btnBackBeforeCard.setVisible(false); //Hide btnBackBeforeCard
             _handlerTimeShowAswerButton();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_backToBeforeCard", e);
         }
         Log.i(TAG, "------------------END-------------------");
     }
@@ -1231,7 +1227,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }
 
     }
@@ -1248,7 +1244,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_reportCard", e);
         }
     }
 

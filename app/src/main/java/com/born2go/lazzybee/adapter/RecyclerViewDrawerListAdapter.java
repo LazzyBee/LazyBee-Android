@@ -143,7 +143,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
             }
 
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);
         }
     }
 

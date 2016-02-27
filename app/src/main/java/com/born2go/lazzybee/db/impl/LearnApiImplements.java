@@ -3,7 +3,6 @@ package com.born2go.lazzybee.db.impl;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -65,6 +64,9 @@ public class LearnApiImplements implements LearnApi {
     public static final String TABLE_SUGGESTION = "suggestion";
     public static final java.lang.String CREATE_TABLE_SUGGESTION = "CREATE TABLE suggestion (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, suggestion TEXT UNIQUE);";
 
+    public static int TYPE_SUGGESTION_QUESTION_CARD__SEARCH = 0;
+    public static int TYPE_SUGGESTION_QUESTION_CARD__RECENT = 1;
+
     Context context;
     DataBaseHelper dataBaseHelper;
 
@@ -111,7 +113,7 @@ public class LearnApiImplements implements LearnApi {
             "vocabulary.l_en,vocabulary.l_vn";
     private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers," +
             "vocabulary.queue,vocabulary.level";
-    private String selectSucgetioList = "vocabulary.id,vocabulary.question,vocabulary.answers";
+    private String selectSuggestionList = "vocabulary.id,vocabulary.question,vocabulary.answers";
 
 
     /**
@@ -949,6 +951,66 @@ public class LearnApiImplements implements LearnApi {
         return cardList;
     }
 
+    public List<Card> _getAllListCardforSearch() {
+        String query = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY;
+        List<Card> cardList = _getListCardQueryString(query, 1);
+        return cardList;
+    }
+
+    public List<String> _getAllLQuestionCard() {
+        String query = "SELECT vocabulary.question FROM " + TABLE_VOCABULARY;
+        List<String> datas = new ArrayList<String>();
+        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        //query for cursor
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            if (cursor.getCount() > 0) {
+                do {
+                    datas.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+        }
+        db.close();
+        return datas;
+    }
+
+
+    public List<String> _suggestionQuestionCard(String query, int type) {
+        if (type == TYPE_SUGGESTION_QUESTION_CARD__SEARCH) {
+            List<String> datas = new ArrayList<String>();
+            String likeQuery = "SELECT vocabulary.question FROM " + TABLE_VOCABULARY + " WHERE "
+                    + KEY_QUESTION + " like '" + query + "%' OR "
+                    + KEY_QUESTION + " like '% " + query + "%'"
+                    + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+
+            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+            //query for cursor
+            Cursor cursor = db.rawQuery(likeQuery, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0) {
+                    do {
+                        datas.add(cursor.getString(0));
+                    } while (cursor.moveToNext());
+                }
+            }
+            db.close();
+            return datas;
+        } else {
+            return _recentSuggestionQuestionCard();
+        }
+
+
+    }
+
+    public List<String> _recentSuggestionQuestionCard() {
+        List<Card> cardList = _recentSuggestionCard();
+        List<String> datas = new ArrayList<String>();
+        for (Card card : cardList) {
+            datas.add(card.getQuestion());
+        }
+        return datas;
+    }
+
     public List<Card> _getListCardLearned() {
         String query = "SELECT " + selectList + " FROM " + TABLE_VOCABULARY + " where queue >= 1";
         List<Card> cardList = _getListCardQueryString(query, 1);
@@ -1136,18 +1198,18 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public void _addCardIdToQueueList(Card card) {
-        if (_checkListTodayExit() < 0) {
-            _getRandomCard(_getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
-        }
-        String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
-        List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
-        //Add cardId
-        cardIDs.add(String.valueOf(card.getId()));
-        //Update queue list
-        _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
+//        if (_checkListTodayExit() < 0) {
+//            _getRandomCard(_getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT), false);
+//        }
+//        String queue_list = _getValueFromSystemByKey(QUEUE_LIST);
+//        List<String> cardIDs = _getListCardIdFromStringArray(queue_list);
+//        //Add cardId
+//        cardIDs.add(String.valueOf(card.getId()));
+//        //Update queue list
+//        _insertOrUpdateToSystemTable(QUEUE_LIST, _listCardTodayToArrayListCardId(null, cardIDs));
 
         //Update Queue Card from DB
-        card.setQueue(Card.QUEUE_NEW_CRAM0);
+        card.setQueue(Card.QUEUE_LNR1);
 
         //String cardId = String.valueOf(card.getId());
 
@@ -1199,7 +1261,6 @@ public class LearnApiImplements implements LearnApi {
 
     @Override
     public void _insertOrUpdateCard(Card card) {
-
         //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1212,10 +1273,12 @@ public class LearnApiImplements implements LearnApi {
 
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
                 new String[]{card.getQuestion()});
-        Log.i(TAG, "_insertOrUpdateCard:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         if (update_result == 0) {
             values.put(KEY_QUESTION, card.getQuestion());
             db.insert(TABLE_VOCABULARY, null, values);
+            Log.i(TAG, "Insert New Card \t -result=" + update_result);
+        } else {
+            Log.i(TAG, "Update Card:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         }
 
     }
@@ -1546,7 +1609,7 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public List<Card> _suggestionCard(String query) {
-        String likeQuery = "SELECT  " + selectSucgetioList + " FROM " + TABLE_VOCABULARY + " WHERE "
+        String likeQuery = "SELECT  " + selectSuggestionList + " FROM " + TABLE_VOCABULARY + " WHERE "
                 + KEY_QUESTION + " like '" + query + "%' OR "
                 + KEY_QUESTION + " like '% " + query + "%'"
                 + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
@@ -1557,7 +1620,6 @@ public class LearnApiImplements implements LearnApi {
             datas = _getListCardQueryString(likeQuery, 2);
         return datas;
     }
-
 
     public List<Integer> _getListCountCardbyLevel() {
         //get max level

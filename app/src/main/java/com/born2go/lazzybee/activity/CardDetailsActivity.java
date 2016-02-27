@@ -15,7 +15,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -65,8 +64,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     MenuItem itemFavorite;
 
     WebView mWebViewLeadDetails;
-    CardView mCardViewAdv;
-    CardView mCardViewViewPager;
+    View mViewAdv;
     private String carID;
     String mySubject = "common";
     boolean sDEBUG = false;
@@ -79,8 +77,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = this;
-
-        mCardViewViewPager = (CardView) findViewById(R.id.mCardViewViewPager);
 
         container = (LinearLayout) findViewById(R.id.container);
 
@@ -121,53 +117,59 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mViewPager.setAdapter(packageCardPageAdapter);
             mSlidingTabLayout.setViewPager(mViewPager);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_displayCard", e);
         }
     }
 
     private void _initAdView() {
         try {
+            mViewAdv =  findViewById(R.id.mViewAdv);
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
-            String adv_dictionary_id = null;
+            String adv_id = null;
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_DETAILS_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+                Log.i(TAG, "admob -adv_id:" + adv_id);
             }
-            mCardViewAdv = (CardView) findViewById(R.id.mCardViewAdv);
-            if (admob_pub_id != null || adv_dictionary_id != null) {
-                String advId = admob_pub_id + "/" + adv_dictionary_id;
-                Log.i(TAG, "admob -AdUnitId:" + advId);
-                AdView mAdView = new AdView(this);
+            if (admob_pub_id != null) {
+                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                    mViewAdv.setVisibility(View.GONE);
+                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                    String advId = admob_pub_id + "/" + adv_id;
+                    Log.i(TAG, "admob -AdUnitId:" + advId);
+                    AdView mAdView = new AdView(this);
 
-                mAdView.setAdSize(AdSize.BANNER);
-                mAdView.setAdUnitId(advId);
+                    mAdView.setAdSize(AdSize.BANNER);
+                    mAdView.setAdUnitId(advId);
 
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                        .build();
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                            .build();
 
-                mAdView.loadAd(adRequest);
+                    mAdView.loadAd(adRequest);
 
-                RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                relativeLayout.addView(mAdView, adViewCenter);
+                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    relativeLayout.addView(mAdView, adViewCenter);
 
-                mCardViewAdv.setVisibility(View.VISIBLE);
+                    mViewAdv.setVisibility(View.VISIBLE);
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
+                }
             } else {
-                mCardViewAdv.setVisibility(View.GONE);
+                mViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
     }
 
@@ -245,7 +247,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                         Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
                 }
                 return true;
             }
@@ -260,7 +262,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             case R.id.action_add_to_learn:
                 _addCardToLearn();
@@ -308,7 +310,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }
 
     }
@@ -317,7 +319,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_reportCard", e);
         }
     }
 
@@ -343,7 +345,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             Toast.makeText(context, getString(R.string.message_add_favorite_card_done, card.getQuestion()), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_addCardToFavorite", e);
         }
     }
 
@@ -404,26 +406,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             // dialog.show();
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_addCardToLearn", e);
         }
     }
 
-//    /**
-//     * Take care of calling onBackPressed() for pre-Eclair platforms.
-//     *
-//     * @param keyCode
-//     * @param event
-//     */
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            // do something on back.
-//            finish();
-//            return true;
-//        }
-//
-//        return super.onKeyDown(keyCode, event);
-//    }
 
     @Override
     public void processFinish(Card card) {
@@ -451,7 +437,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "processFinish", e);
         }
     }
 
@@ -466,7 +452,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             cardId = getIntent().getStringExtra(LazzyBeeShare.CARDID);
         } catch (Exception e) {
             cardId = LazzyBeeShare.EMPTY;
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "getCarID", e);
         }
         return cardId;
     }
@@ -555,7 +541,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
                 mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             } catch (Exception e) {
-                LazzyBeeShare.showErrorOccurred(context, e);
+                LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
             }
 
 
@@ -616,20 +602,13 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         }
 
     }
-//
-//    @Override
-//    protected void onDestroy() {
-//        //_stopTextToSpeech();
-//        super.onDestroy();
-//
-//    }
 
     private void _trackerApplication() {
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
@@ -646,11 +625,21 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         LazzyBeeShare._setUpNotification(context, hour, minute);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         TextToSpeech textToSpeech = LazzyBeeSingleton.textToSpeech;
         if (textToSpeech != null)
             LazzyBeeSingleton.textToSpeech.stop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mViewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        }
     }
 }

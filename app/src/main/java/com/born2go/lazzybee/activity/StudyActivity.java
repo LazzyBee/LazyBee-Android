@@ -106,7 +106,7 @@ public class StudyActivity extends AppCompatActivity
             pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy", e);
         }
     }
 
@@ -124,32 +124,27 @@ public class StudyActivity extends AppCompatActivity
             mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
 
     private void _completeLean(boolean showCompleteDialog) {
         Log.i(TAG, "----_completeLean----");
         setBeforeCard(null);
-        completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
-        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
+        completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_1000;
+        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_1000), String.valueOf(completeStudy));
 
-//        setBeforeCard(null);
-//        completeStudy = LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000;
-//        dataBaseHelper._insertOrUpdateToSystemTable(String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000), String.valueOf(completeStudy));
-//        setResult(completeStudy, new Intent());
-//        finish();
         if (showCompleteDialog) {
             int result = dataBaseHelper._insetStreak();
-            Log.d(TAG, "inseart streaks result:" + result);
-            if (!(result == -1)) {
+            Log.d(TAG, "Inseart streaks result:" + result);
+            if (result > -1) {
                 _showDialogComplete();
             } else {
-                setResult(completeStudy, new Intent());
+                setResult(RESULT_CANCELED, new Intent());
                 finish();
             }
         } else {
-            setResult(completeStudy, new Intent());
+            setResult(RESULT_CANCELED, new Intent());
             finish();
         }
         Log.i(TAG, "---------END---------");
@@ -158,6 +153,7 @@ public class StudyActivity extends AppCompatActivity
 
     private void _showDialogComplete() {
         if (learn_more == false) {
+            //Show dialog complete learn
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
         } else {
@@ -298,7 +294,7 @@ public class StudyActivity extends AppCompatActivity
                         Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
                     }
                 } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
                 }
                 return true;
             }
@@ -351,7 +347,8 @@ public class StudyActivity extends AppCompatActivity
 
     @Override
     public void close() {
-        setResult(completeStudy, new Intent());
+        //set results complete
+        setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000, new Intent());
         finish();
     }
 

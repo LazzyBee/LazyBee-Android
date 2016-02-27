@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.BaseColumns;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -30,8 +29,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -47,7 +49,6 @@ import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
 import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.view.ViewHome;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -85,14 +86,13 @@ public class MainActivity extends AppCompatActivity
     boolean appPause = false;
     boolean studyComplete = false;
 
-    SearchView searchView;
-
     SharedPreferences sharedpreferences;
     private int KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT;
 
     Snackbar snackbarCongraturation;
     Snackbar snackbarTip;
 
+    SearchView mSearchCardBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +106,88 @@ public class MainActivity extends AppCompatActivity
         _initToolBar();
         _intInterfaceView();
 
+        _initDictinarySearchBox();
+
         _initInterstitialAd();
 
         _trackerApplication();
 
         _goHome();
 
+
+    }
+
+
+    private void _initDictinarySearchBox() {
+        //Define Search Dictionary box
+        mSearchCardBox = (SearchView) findViewById(R.id.mSearchCard);
+        mSearchCardBox.setIconifiedByDefault(false);
+        mSearchCardBox.setQueryHint("Dictionary");
+
+        //set provaider search
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
+
+        //Custom search
+        // Hide icon search in searchView and set clear text icon
+        ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
+        if (search_close_btn != null) {
+            search_close_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_black_18dp));
+        }
+        ImageView magImage = (ImageView) mSearchCardBox.findViewById(R.id.search_mag_icon);
+        if (magImage != null) {
+            magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+            magImage.setVisibility(View.GONE);
+        }
+        //set color..
+        if (autoCompleteTextView != null) {
+            int color = Color.parseColor("#ffffffff");
+            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+
+            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+            autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
+            autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
+
+        }
+
+        //Handler click item suggesstion
+        mSearchCardBox.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelect:" + position);
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick:" + position);
+                try {
+                    CursorAdapter c = mSearchCardBox.getSuggestionsAdapter();
+                    if (c != null) {
+                        Cursor cur = c.getCursor();
+                        cur.moveToPosition(position);
+
+                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+                        Log.d(TAG, "cardID:" + cardID);
+                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                        Log.d(TAG, "query:" + query);
+                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
+                        _gotoCardDetailbyCardId(cardID);
+
+                        //call back actionbar
+                        //mSearchCardBox.clearFocus();
+                    } else {
+                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+                    }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
+                }
+                return true;
+            }
+        });
 
     }
 
@@ -147,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                 mInterstitialAd = null;
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initInterstitialAd", e);
         }
     }
 
@@ -194,9 +270,9 @@ public class MainActivity extends AppCompatActivity
 
             //set notificaion by time
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
-            Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
+            Log.d(TAG, "Set notificarion time:" + hour + ":" + minute + " -" + calendar.getTime().toString());
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_setUpNotification", e);
         }
         Log.i(TAG, "---------END-------");
     }
@@ -234,6 +310,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _intInterfaceView() {
         container = (FrameLayout) findViewById(R.id.mContainer);
+        container.requestFocus();
     }
 
     public void onlbTipHelpClick(View view) {
@@ -298,7 +375,7 @@ public class MainActivity extends AppCompatActivity
                     R.id.navigation_drawer, toolbar,
                     drawerLayout);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initNavigationDrawerFragment", e);
         }
     }
 
@@ -342,14 +419,14 @@ public class MainActivity extends AppCompatActivity
                     break;
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onNavigationDrawerItemSelected", e);
         }
 
 
     }
 
     private void _goHome() {
-        getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
+        //getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
     }
 
     private void _showStatistical() {
@@ -505,7 +582,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        _gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+        //_gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(SearchActivity.QUERY_TEXT, LazzyBeeShare.GOTO_DICTIONARY);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setAction(LazzyBeeShare.ACTION_GOTO_DICTIONARY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+        //startActivity(intent);
 
     }
 
@@ -555,13 +639,13 @@ public class MainActivity extends AppCompatActivity
                 // Inflate menu to add items to action bar if it is present.
                 inflater.inflate(R.menu.main, menu);
                 // Associate searchable configuration with the SearchView
-                _defineSearchView(menu);
+                // _defineSearchView(menu);
                 _restoreActionBar();
             } else {
                 _dismissTip();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onCreateOptionsMenu", e);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -578,74 +662,76 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _defineSearchView(Menu menu) {
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem searchItem = menu.findItem(R.id.menu_search);
-        searchView =
-                (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        //final MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+//        searchView =
+//                (SearchView) menu.findItem(R.id.menu_search).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//
+//        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
+//        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+//
+//        if (autoCompleteTextView != null) {
+//            int color = Color.parseColor("#ffffffff");
+//            Drawable drawable = autoCompleteTextView.getDropDownBackground();
+//            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+//
+//            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+//            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
+//        }
+//
+//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+//
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                Log.d(TAG, "onMenuItemActionCollapse");
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem item) {
+//                Log.d(TAG, "onMenuItemActionExpand");
+//                return true;
+//            }
+//
+//        });
+//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//            @Override
+//            public boolean onSuggestionSelect(int position) {
+//                Log.d(TAG, "onSuggestionSelect:" + position);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onSuggestionClick(int position) {
+//                Log.d(TAG, "onSuggestionClick:" + position);
+//                try {
+//                    CursorAdapter c = searchView.getSuggestionsAdapter();
+//                    if (c != null) {
+//                        Cursor cur = c.getCursor();
+//                        cur.moveToPosition(position);
+//
+//                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+//                        Log.d(TAG, "cardID:" + cardID);
+//                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+//                        Log.d(TAG, "query:" + query);
+//                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+//                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
+//                        _gotoCardDetailbyCardId(cardID);
+//
+//                        //call back actionbar
+//                        searchItem.collapseActionView();
+//                    } else {
+//                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+//                    }
+//                } catch (Exception e) {
+//                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
+//                }
+//                return true;
+//            }
+//        });
 
-        if (autoCompleteTextView != null) {
-            int color = Color.parseColor("#ffffffff");
-            Drawable drawable = autoCompleteTextView.getDropDownBackground();
-            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-
-            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
-        }
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand");
-                return true;
-            }
-
-        });
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                Log.d(TAG, "onSuggestionSelect:" + position);
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                Log.d(TAG, "onSuggestionClick:" + position);
-                try {
-                    CursorAdapter c = searchView.getSuggestionsAdapter();
-                    if (c != null) {
-                        Cursor cur = c.getCursor();
-                        cur.moveToPosition(position);
-
-                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
-                        Log.d(TAG, "cardID:" + cardID);
-                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
-                        Log.d(TAG, "query:" + query);
-                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
-                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
-                        _gotoCardDetailbyCardId(cardID);
-
-                        //call back actionbar
-                        searchItem.collapseActionView();
-                    } else {
-                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
-                    }
-                } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, e);
-                }
-                return true;
-            }
-        });
     }
 
     private void _gotoCardDetailbyCardId(String cardId) {
@@ -686,7 +772,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_checkUpdate", e);
             return false;
         }
     }
@@ -841,7 +927,7 @@ public class MainActivity extends AppCompatActivity
                 if (check == -1 || check == -2 || check > 0) {
                     _gotoStudy(getResources().getInteger(R.integer.goto_study_code0));
                 } else if (check == 0) {
-                    String message = getString(R.string.congratulations_learnmore, "<b>" + getString(R.string.learn_more) + "</b>");
+                    String message = getString(R.string.congratulations_learnmore, " '<b>" + getString(R.string.learn_more) + "</b>' ");
                     _showDialogWithMessage(message);
                 }
             }
@@ -851,25 +937,14 @@ public class MainActivity extends AppCompatActivity
     private void _gotoStudy(int type) {
         //goto_study_code0 study
         //goto_study_code1 learnmore
-
-        //Toast.makeText(context, "Goto Study", Toast.LENGTH_SHORT).show();
         studyComplete = false;
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
-            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-
-            //set Slide ac
-//            overridePendingTransition(R.anim.slide_right, 0);
-            //this.startActivityForResult(intent, RESULT_OK);
-
+            this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
         } else if (type == getResources().getInteger(R.integer.goto_study_code1)) {
-            Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
             intent.putExtra(LazzyBeeShare.LEARN_MORE, true);
-            this.startActivityForResult(intent, LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-            String key = String.valueOf(LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000);
-            dataBaseHelper._insertOrUpdateToSystemTable(key, String.valueOf(1));
-            // _setUpNotification();
+            this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
         }
     }
 
@@ -946,41 +1021,39 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Log.i(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-            if (resultCode == 1
-                    || requestCode == LazzyBeeShare.CODE_SEARCH_RESULT) {
-                // completeStudyCode = _checkCompleteLearn();
-                // _getCountCard();
-            }
-            _restoreSearchView();
-        }
-        if (requestCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
-            if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_RESULTS_1000) {
+        Log.d(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
+        if (requestCode == LazzyBeeShare.ACTION_CODE_GOTO_STUDY) {
+            if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_1000) {
+                Log.d(TAG, "Congratilation study LazzyBee");
+
+                //Reset notification
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
+
+                //Show message congratilation
                 String messgage_congratilation = getString(R.string.congratulations);
                 _showDialogCongraturation(messgage_congratilation);
-                studyComplete = true;
+                //studyComplete = true;
 
+                //Save time congratilation in SharedPreferences
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, new Date().getTime());
                 editor.commit();
+
             } else {
+                Log.d(TAG, "Not congratilation study LazzyBee");
                 _showDialogTip();
             }
-            // completeStudyCode = _checkCompleteLearn();
-            // _getCountCard();
         }
     }
 
-    private void _restoreSearchView() {
-        if (searchView != null) {
-            searchView.setQuery(LazzyBeeShare.EMPTY, false);
-//            searchView.clearFocus();
-            searchView.setIconified(true);
-        }
-    }
+//    private void _restoreSearchView() {
+//        if (searchView != null) {
+//            searchView.setQuery(LazzyBeeShare.EMPTY, false);
+////            searchView.clearFocus();
+//            searchView.setIconified(true);
+//        }
+//    }
 
 
     private void _showDialogTip() {
@@ -1042,7 +1115,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "popup_text null");
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_showDialogTip", e);
         }
     }
 
@@ -1059,8 +1132,8 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         Log.i(TAG, "onPause()");
         appPause = true;
-        Log.i(TAG, "studyComplete ?" + studyComplete);
-        _setUpNotification(studyComplete);
+        Log.d(TAG, "studyComplete ?" + studyComplete);
+        //_setUpNotification(studyComplete);
     }
 
     @Override
@@ -1074,7 +1147,44 @@ public class MainActivity extends AppCompatActivity
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
     }
+
+    public void onSearchDictionary(View view) {
+        String query = mSearchCardBox.getQuery().toString();
+        if (query.length() > 0) {
+            //goto Search
+            //_gotoSeachOrDictionary(query, LazzyBeeShare.GOTO_SEARCH_CODE);
+            Intent intent = new Intent(this, SearchActivity.class);
+            intent.putExtra(SearchActivity.DISPLAY_TYPE, LazzyBeeShare.GOTO_SEARCH_CODE);
+            intent.putExtra(SearchManager.QUERY, query);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.setAction(Intent.ACTION_SEARCH);
+            startActivity(intent);
+        } else {
+            //Suggestion word
+            //mAutoSearchDictionaryBox.setFocusable(true);
+            //mAutoSearchDictionaryBox.setFocusableInTouchMode(true);
+            mSearchCardBox.requestFocus();
+
+            //show keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mSearchCardBox, InputMethodManager.SHOW_IMPLICIT);
+        }
+
+    }
+
+    public void removeAllFocus(View view) {
+        // mAutoSearchDictionaryBox.clearFocus();
+        //mSearch.clearFocus();
+
+        mSearchCardBox.clearFocus();
+
+        //hide keyboad
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
 }
+

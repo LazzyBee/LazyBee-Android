@@ -9,12 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
@@ -34,7 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -84,7 +83,7 @@ public class LazzyBeeShare {
     public static final int DRAWER_HELP_INDEX = 7;
     public static final int DRAWER_STATISTICAL_INDEX = 8;
     public static final int DRAWER_HOME_INDEX = 9;
-    public static final int CODE_COMPLETE_STUDY_RESULTS_1000 = 1000;
+    public static final int CODE_COMPLETE_STUDY_1000 = 1000;
 
     public static final int CODE_SEARCH_RESULT = 1001;
     public static final String NOTIFICATION_MESSAGE = "n_message";
@@ -129,6 +128,11 @@ public class LazzyBeeShare {
 
     public static final String DOWN = "Down";
     public static final String KEY_SETTING_TIME_SHOW_ANSWER = "time_show_answer";
+    public static final String KEY_SETTING_DISPLAY_MEANING = "display_meaning";
+    public static final String ACTION_GOTO_DICTIONARY = "goto_dictionary";
+    public static final int ACTION_CODE_GOTO_STUDY = 101;
+
+
     public static String mime = "text/html";
     public static String encoding = "utf-8";
 
@@ -168,9 +172,18 @@ public class LazzyBeeShare {
     public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
     public static String ADMOB_PUB_ID = "admob_pub_id";
+
     public static String ADV_DEFAULT_ID = "adv_default_id";
+
     public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
+    public static String ADV_LEARN_DETAIL_ID = "adv_learndetail_id";
+
+    public static final String ADV_INCOMING_LIST_ID = ADV_DEFAULT_ID;
+    public static final String ADV_SEARCH_RESULTS_LIST_ID = ADV_DEFAULT_ID;
+    public static final String ADV_DICTIONARY_LIST_ID = ADV_DEFAULT_ID;
+    public static final String ADV_DETAILS_ID = ADV_DEFAULT_ID;
+
     public static String MyPREFERENCES = "LazzyBee";
     public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
@@ -196,8 +209,18 @@ public class LazzyBeeShare {
      * init HTML answer
      */
     public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
-
-        return getAnswerHTMLwithPackage(context, card, mySubject, sPOSITION_MEANING, sDEBUG, false);
+        boolean sDisplayPosition;
+        String value = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
+        if (value == null) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.ON)) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.OFF)) {
+            sDisplayPosition = false;
+        } else {
+            sDisplayPosition = false;
+        }
+        return getAnswerHTMLwithPackage(context, card, mySubject, sDisplayPosition, sPOSITION_MEANING, sDEBUG, false);
     }
 
     /**
@@ -275,13 +298,14 @@ public class LazzyBeeShare {
                 value = Html.fromHtml(commonObj.getString(key)).toString();
 
             }
-
+            return value;
         } catch (JSONException e) {
             Log.e(TAG, "_getValueFromKey\tError:" + e.getMessage());
             //e.printStackTrace();
+            return value;
         }
 
-        return value;
+
     }
 
 
@@ -305,7 +329,7 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
+    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
         String html = null;
         String meaning = EMPTY;
         String explain = EMPTY;
@@ -352,22 +376,24 @@ public class LazzyBeeShare {
         if (!example.isEmpty()) {
             exampleTagA = "<p style=''><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
         }
-        String meaningUP;
-        String meaningDOWN;
-        if (!POSITION_MEANING) {
-            meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                    "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
-                    "</div>";
-            meaningDOWN = EMPTY;
-            // Log.d(TAG, "meaningUP:" + meaningUP);
-        } else {
-            meaningUP = EMPTY;
-            meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
-                    "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                    "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
-                    "</div>";
-            // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+        String meaningUP = EMPTY;
+        String meaningDOWN = EMPTY;
+        if (sDisplayPosition) {
+            if (!POSITION_MEANING) {
+                meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
+                        "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "</div>";
+                meaningDOWN = EMPTY;
+                // Log.d(TAG, "meaningUP:" + meaningUP);
+            } else {
+                meaningUP = EMPTY;
+                meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
+                        "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "</div>";
+                // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+            }
         }
 
 
@@ -426,7 +452,7 @@ public class LazzyBeeShare {
                     "              Factor:" + card.getFactor() + "</br>\n" +
                     "              Rev_count:" + card.getRev_count() + "</br>\n" +
                     "              Queue:" + card.getQueue() + "</br>\n" +
-                    "              Due:" + card.getDue() + "-" + new Date(card.getDue()).toString() + "</br>\n" +
+                    "              Due:" + card.getDue() + "-----" + getDate(card.getDue() * 1000) + "</br>\n" +
                     "              -------------------------------------</br>\n" +
                     "           </div>\n" +
                     "   </body>\n" +
@@ -440,6 +466,13 @@ public class LazzyBeeShare {
 
         return html;
 
+    }
+
+    private static String getDate(long time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        String date = DateFormat.format("dd/MM/yyyy", cal).toString();
+        return date;
     }
 
     public static boolean getPositionMeaning() {
@@ -543,10 +576,10 @@ public class LazzyBeeShare {
         return html;
     }
 
-    public static void showErrorOccurred(Context context, Exception e) {
+    public static void showErrorOccurred(Context context, String function, Exception e) {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
-                    + "\t" + context.getClass().getName() + ":" + e.getMessage();
+                    + "\t" + context.getClass().getName() + " in function " + function + "():" + e.getMessage();
             final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
             String android_id = Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
@@ -557,6 +590,7 @@ public class LazzyBeeShare {
             }
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -739,7 +773,7 @@ public class LazzyBeeShare {
             LazzyBeeShare.scheduleNotification(context, 0, alertTime);
             Log.e(TAG, "Set notificarion time:" + hour + ":" + minute);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_setUpNotification", e);
         }
         Log.i(TAG, "---------END-------");
     }

@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewDrawerListAdapter;
@@ -127,6 +128,12 @@ public class NavigationDrawerFragment extends Fragment {
             //init Adapter
             recyclerViewDrawerListAdapter = new RecyclerViewDrawerListAdapter(context, objects);
 
+            //set version app
+            String versionName = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0).versionName;
+            TextView lbAppVersion = (TextView) view.findViewById(R.id.mVesionApp);
+            lbAppVersion.setText("Version:" + versionName);
+
             mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
             mRecyclerViewDrawerList.addOnItemTouchListener(
@@ -160,7 +167,7 @@ public class NavigationDrawerFragment extends Fragment {
                     })
             );
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
         return view;
     }

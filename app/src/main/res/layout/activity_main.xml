@@ -20,7 +20,14 @@
             android:id="@+id/mContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
+            >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                layout="@layout/fragment_view_home"
+                android:layout_gravity="center" />
+        </FrameLayout>
     </LinearLayout>
     <fragment
         android:id="@+id/navigation_drawer"

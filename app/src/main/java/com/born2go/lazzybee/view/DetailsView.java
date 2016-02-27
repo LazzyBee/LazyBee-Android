@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,7 +47,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     String tag;
     private Card card;
 
-    CardView mDetailsCardViewAdv;
+    View mViewAdv;
     SlidingTabLayout mDetailsSlidingTabLayout;
     WebView mDetailsWebViewLeadDetails;
     ViewPager mDetailsViewPager;
@@ -87,13 +86,13 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     private void _defineDetailsView(View view) {
         try {
 //             mDetailsCardViewViewPager = (CardView) view.findViewById(R.id.mCardViewViewPager);
-            mDetailsCardViewAdv = (CardView) view.findViewById(R.id.mCardViewAdv);
+            mViewAdv = view.findViewById(R.id.mCardViewAdv);
             mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
             mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
             _displayCard(card);
-            _initAdView(mDetailsCardViewAdv);
+            _initAdView(mViewAdv);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_defineDetailsView", e);
         }
     }
 
@@ -147,7 +146,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "processFinish", e);
         }
     }
 
@@ -174,7 +173,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 Log.d(TAG, "Send card null");
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_displayCard", e);
         }
     }
 
@@ -238,7 +237,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
                 mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
             } catch (Exception e) {
-                LazzyBeeShare.showErrorOccurred(context, e);
+                LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
             }
 
 
@@ -258,49 +257,54 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     }
 
-    private void _initAdView(CardView mDetailsCardViewAdv) {
+    private void _initAdView(View mViewAdv) {
         try {
             //get value form task manager
             Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
-            String adv_dictionary_id = null;
+            String adv_id = null;
             if (container == null) {
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_dictionary_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_ID);
+                adv_id = container.getString(LazzyBeeShare.ADV_LEARN_DETAIL_ID);
                 Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_dictionary_id:" + adv_dictionary_id);
+                Log.i(TAG, "admob -adv_id:" + adv_id);
             }
-            CardView mCardViewAdv = mDetailsCardViewAdv;
-            if (admob_pub_id != null || adv_dictionary_id != null) {
-                String advId = admob_pub_id + "/" + adv_dictionary_id;
-                Log.i(TAG, "admob -AdUnitId:" + advId);
-                AdView mAdView = new AdView(context);
+            if (admob_pub_id != null) {
+                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                    mViewAdv.setVisibility(View.GONE);
+                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                    String advId = admob_pub_id + "/" + adv_id;
+                    Log.i(TAG, "admob -AdUnitId:" + advId);
+                    AdView mAdView = new AdView(context);
 
-                mAdView.setAdSize(AdSize.BANNER);
-                mAdView.setAdUnitId(advId);
+                    mAdView.setAdSize(AdSize.BANNER);
+                    mAdView.setAdUnitId(advId);
 
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                        .build();
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                            .build();
 
-                mAdView.loadAd(adRequest);
+                    mAdView.loadAd(adRequest);
 
-                RelativeLayout relativeLayout = ((RelativeLayout) mDetailsCardViewAdv.findViewById(R.id.adView));
-                RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                relativeLayout.addView(mAdView, adViewCenter);
+                    RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
+                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    relativeLayout.addView(mAdView, adViewCenter);
 
-                mCardViewAdv.setVisibility(View.VISIBLE);
+                    mViewAdv.setVisibility(View.VISIBLE);
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
+                }
             } else {
-                mCardViewAdv.setVisibility(View.GONE);
+                mViewAdv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
     }
 
@@ -377,7 +381,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }
 
     }
@@ -386,7 +390,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         try {
             startActivity(LazzyBeeShare.getOpenFacebookIntent(context));
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeShare.showErrorOccurred(context, "_reportCard", e);
         }
     }
 

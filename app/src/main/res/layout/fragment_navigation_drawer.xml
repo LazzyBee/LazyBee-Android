@@ -41,7 +41,16 @@
             android:text="@string/setting_about_message"
             android:id="@+id/textView16"
             android:layout_gravity="center_horizontal"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="1.4.4"
+            android:id="@+id/mVesionApp"
+            android:layout_below="@+id/textView16"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
