@@ -309,6 +309,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
+        //Handler onclick
         mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -316,30 +317,40 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
             }
         });
+
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         final int densityDpi = (int) (metrics.density * 160f);
         Log.d(TAG, "DPI:" + densityDpi);
+
         mFloatActionButtonUserNote.setOnTouchListener(new View.OnTouchListener() {
             public boolean shouldClick;
+            int move = 0;
             float dX, dY;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d(TAG, "On touch");
+//                Log.d(TAG, "On touch");
                 setEnableShowDictionary(true);
-                switch (event.getActionMasked()) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
 
                     case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG, "ACTION_DOWN");
                         shouldClick = true;
                         dX = (mFloatActionButtonUserNote.getX() - event.getRawX());
                         dY = (mFloatActionButtonUserNote.getY() - event.getRawY());
+                        move = 1;
                         break;
+
                     case MotionEvent.ACTION_UP:
-                        if (shouldClick)
-                            mFloatActionButtonUserNote.performClick();//call click
+                        Log.d(TAG, "ACTION_UP -shouldClick:" + shouldClick);
+                        if (shouldClick || move == 2)
+                            Log.d(TAG, "performClick:" + mFloatActionButtonUserNote.performClick());//call on move
+
                         break;
 
                     case MotionEvent.ACTION_MOVE:
+                        Log.d(TAG, "ACTION_MOVE");
+                        move++;
                         shouldClick = false;
                         float eX = (event.getRawX() + dX);//define position X
                         float eY = (event.getRawY() + dY);//define position Y
@@ -364,19 +375,18 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                                 .setDuration(0)
                                 .start();
                         setEnableShowDictionary(false);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        Log.d(TAG, "Action cancel");
-                        break;
 
+                        break;
+                    case MotionEvent.ACTION_HOVER_MOVE:
+                        Log.d(TAG, "ACTION_MOVE");
+                        break;
                     default:
-                        return false;
+                        return true;
                 }
                 return true;
             }
 
         });
-
     }
 
     private void setEnableShowDictionary(boolean enable) {

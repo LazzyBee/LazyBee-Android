@@ -48,5 +48,6 @@
     <color name="position_meaning_display_text_color" >#3C9F1E</color>
     <color name="color_cursor_searchbox_home_screen">#2196F3</color>
     <color name="color_watting_show_answer" >#9E9E9E</color>
+    <color name="background_btn_user_note" >#3C9F1E</color>
 
 </resources>
