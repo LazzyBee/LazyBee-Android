@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -240,6 +241,8 @@ public class StudyActivity extends AppCompatActivity
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
+            //set Enable Spelling Suggestions
+            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);

@@ -24,6 +24,7 @@ import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         // Hide icon search in searchView and set clear text icon
         ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
         if (search_close_btn != null) {
-            search_close_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_black_18dp));
+            search_close_btn.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_clear_black_18dp));
         }
         ImageView magImage = (ImageView) mSearchCardBox.findViewById(R.id.search_mag_icon);
         if (magImage != null) {
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity
         }
         //set color..
         if (autoCompleteTextView != null) {
+            //set Enable Spelling Suggestions
+            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -642,6 +645,7 @@ public class MainActivity extends AppCompatActivity
                 // _defineSearchView(menu);
                 _restoreActionBar();
             } else {
+                _hideKeyboard();
                 _dismissTip();
             }
         } catch (Exception e) {
@@ -1181,10 +1185,13 @@ public class MainActivity extends AppCompatActivity
 
         mSearchCardBox.clearFocus();
 
+        _hideKeyboard();
+    }
+
+    public void _hideKeyboard() {
         //hide keyboad
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
-
 }
 

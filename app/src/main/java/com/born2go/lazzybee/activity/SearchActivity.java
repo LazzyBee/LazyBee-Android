@@ -19,6 +19,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,8 +80,6 @@ public class SearchActivity extends AppCompatActivity implements
         context = this;
 
         _initLazzyBeeSingleton();
-
-        dictionaryCardList = dataBaseHelper._searchCardOrGotoDictionary(LazzyBeeShare.EMPTY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
 
         _initRecyclerViewSearchResults();
 
@@ -184,6 +183,8 @@ public class SearchActivity extends AppCompatActivity implements
         mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
 
         if (mSuggerstionCard != null) {
+            //set Enable Spelling Suggestions
+            mSuggerstionCard.setInputType( InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = mSuggerstionCard.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -335,7 +336,11 @@ public class SearchActivity extends AppCompatActivity implements
             _trackerApplication(GA_SCREEN);
         } else if (LazzyBeeShare.ACTION_GOTO_DICTIONARY.equals(action)) {
             Log.d(TAG, "ACTION_DICTIONARY");
+            //init dic
+            dictionaryCardList = dataBaseHelper._searchCardOrGotoDictionary(LazzyBeeShare.EMPTY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
             _displayDictionary();
+        } else {
+            Log.d(TAG, "ACTION_DIF");
         }
 
 
@@ -378,7 +383,7 @@ public class SearchActivity extends AppCompatActivity implements
                 } else {
                     //failed to connect to internet
                     Log.d(TAG, getString(R.string.failed_to_connect_to_server));
-                    List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                    List<Card> cardList = dataBaseHelper._searchCard(query);
                     int result_count = cardList.size();
                     Log.i(TAG, "Search result_count:" + result_count);
                     if (result_count > 0) {
