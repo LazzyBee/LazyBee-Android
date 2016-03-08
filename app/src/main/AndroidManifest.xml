@@ -6,12 +6,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <!-- Permission to use AlarmManager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
@@ -122,30 +119,29 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        <meta-data
-            android:name="identitytoolkit.show_providers"
-            android:value="Google,Facebook" />
-        <meta-data
-            android:name="identitytoolkit.use_google_plus"
-            android:value="false" />
-        <meta-data
-            android:name="identitytoolkit.api_key"
-            android:value="@string/API_KEY" />
-        <meta-data
-            android:name="identitytoolkit.server_client_id"
-            android:value="@string/SERVER_CLIENT_ID" />
-        <meta-data
-            android:name="identitytoolkit.server_widget_url"
-            android:value="@string/SERVER_WIDGET_URL" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/fb_app_id" />
+        <!--<meta-data-->
+            <!--android:name="identitytoolkit.show_providers"-->
+            <!--android:value="Google,Facebook" />-->
+        <!--<meta-data-->
+            <!--android:name="identitytoolkit.use_google_plus"-->
+            <!--android:value="false" />-->
+        <!--<meta-data-->
+            <!--android:name="identitytoolkit.api_key"-->
+            <!--android:value="@string/API_KEY" />-->
+        <!--<meta-data-->
+            <!--android:name="identitytoolkit.server_client_id"-->
+            <!--android:value="@string/SERVER_CLIENT_ID" />-->
+        <!--<meta-data-->
+            <!--android:name="identitytoolkit.server_widget_url"-->
+            <!--android:value="@string/SERVER_WIDGET_URL" />-->
+        <!--<meta-data-->
+            <!--android:name="com.facebook.sdk.ApplicationId"-->
+            <!--android:value="@string/fb_app_id" />-->
 
 
         <service
             android:name=".utils.MyAlarmService"
             android:enabled="true" />
-
         <receiver android:name=".utils.NotificationReceiver" />
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
