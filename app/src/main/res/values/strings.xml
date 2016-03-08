@@ -490,4 +490,7 @@
     <string name="restore_database_wrong_code">Wrong code, please try again.</string>
     <string name="swipe_action_add">Learn</string>
     <string name="setting_display_meaning">Display meaning</string>
+    <string name="btnBackUp">Backup</string>
+    <string name="message_backup_database">Do you want to backup data?</string>
+    <string name="title_backup_database">Backup database</string>
 </resources>

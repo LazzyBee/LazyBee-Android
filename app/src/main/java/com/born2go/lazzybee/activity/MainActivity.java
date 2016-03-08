@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.BaseColumns;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
@@ -38,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.BackUpDatabaseToCSV;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
 import com.born2go.lazzybee.db.Card;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
+    private MainActivity activity;
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements dataBaseHelper;
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
+        this.activity = this;
         _initSQlIte();
         _initSettingApplication();
 
@@ -1034,10 +1036,16 @@ public class MainActivity extends AppCompatActivity
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
 
-                //Show message congratilation
-                String messgage_congratilation = getString(R.string.congratulations);
-                _showDialogCongraturation(messgage_congratilation);
-                //studyComplete = true;
+                int count = dataBaseHelper._getCountStreak();
+                if (count % 10 == 0) {
+                    //Show dialog backup db
+                    _showDialogBackupDataBase();
+                } else {
+                    //Show message congratilation
+                    String messgage_congratilation = getString(R.string.congratulations);
+                    _showDialogCongraturation(messgage_congratilation);
+                }
+
 
                 //Save time congratilation in SharedPreferences
                 SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -1049,6 +1057,37 @@ public class MainActivity extends AppCompatActivity
                 _showDialogTip();
             }
         }
+    }
+
+    private void _showDialogBackupDataBase() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.message_backup_database)
+                .setTitle(R.string.title_backup_database);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.btnBackUp, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //  _updateDB(type);
+                String device_id = Settings.Secure.getString(context.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                int mini = 1;
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
+                exportDatabaseToCSV.execute();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
     }
 
 //    private void _restoreSearchView() {
