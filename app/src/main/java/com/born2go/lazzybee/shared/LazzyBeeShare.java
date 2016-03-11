@@ -138,7 +138,7 @@ public class LazzyBeeShare {
 
 
     public static String ASSETS = "file:///android_asset/";
-    public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
+    public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 5;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
 
     //Default setting
