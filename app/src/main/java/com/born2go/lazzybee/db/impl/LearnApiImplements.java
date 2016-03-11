@@ -1746,4 +1746,23 @@ public class LearnApiImplements implements LearnApi {
         db.close();
         return update_result;
     }
+
+    public void deteteStreak() {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        String deleteStreak = "streak";
+        db.delete(deleteStreak, null, null);
+    }
+
+    public int restoreStreakDay(int day) {
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        int update_result;
+        Log.d(TAG, "Inset new streak day =" + day);
+        ContentValues values = new ContentValues();
+        values.put("day", day);
+        long long_insert_results = db.insert(TABLE_STREAK, null, values);
+        update_result = (int) long_insert_results;
+
+        db.close();
+        return update_result;
+    }
 }
