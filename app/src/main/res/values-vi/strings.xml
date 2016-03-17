@@ -76,7 +76,7 @@
     <string name="message_total_card_review">Tổng số thẻ đã học:</string>
     <string name="my_course">Khóa học của bạn</string>
     <string name="setting_about">About</string>
-    <string name="setting_update_title">Cập nhật cở sở dữ liệu</string>
+    <string name="setting_update_title">Cở sở dữ liệu</string>
     <string name="setting_notification">Thông báo</string>
     <string name="setting_check_update">Kiểm tra cập nhật</string>
     <string name="setting_auto_check_update">Tự động kiểm tra cập nhật</string>
@@ -325,8 +325,9 @@
     <string name="swipe_action_add">Học</string>
     <string name="setting_display_meaning">Hiển thị ý nghĩa</string>
     <string name="btnBackUp">Sao lưu</string>
-    <string name="message_backup_database">Bạn có muốn sao lưu dữ liệu bây giờ?</string>
+    <string name="message_backup_database">LazzyBee sẽ sao lưu dữ liệu học tập của bạn. Bạn có muốn thực hiện không?</string>
     <string name="title_backup_database">Sao lưu dữ liệu</string>
+    <string name="custom_study_error_input_value">Nhập giới hạn thẻ</string>
 
 
     <string-array name="subjects">
@@ -334,6 +335,8 @@
         <item>@string/subject_economy</item>
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
+        <item>@string/subject_ielts</item>
+        <item>@string/subject_600toeic</item>
     </string-array>
 
     <string-array name="days">

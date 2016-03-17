@@ -415,6 +415,7 @@
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
         <item>@string/subject_ielts</item>
+        <item>@string/subject_600toeic</item>
     </string-array>
 
     <string-array name="subjects_value" translatable="false">
@@ -423,6 +424,7 @@
         <item>@string/subject_science_value</item>
         <item>@string/subject_medical_value</item>
         <item>@string/subject_ielts_value</item>
+        <item>@string/subject_600_toeic_value</item>
     </string-array>
     <string-array name="devices_dev_id" translatable="false">
         <item>b6fe9200bf21fe7e</item>
@@ -491,6 +493,9 @@
     <string name="swipe_action_add">Learn</string>
     <string name="setting_display_meaning">Display meaning</string>
     <string name="btnBackUp">Backup</string>
-    <string name="message_backup_database">Do you want to backup data?</string>
+    <string name="message_backup_database">LazzyBee is going to backup data to save your progress. Proceed?</string>
     <string name="title_backup_database">Backup database</string>
+    <string name="subject_600toeic" translatable="false">600 toeic</string>
+    <string name="subject_600_toeic_value">600toeic</string>
+    <string name="custom_study_error_input_value">Please input limit</string>
 </resources>
