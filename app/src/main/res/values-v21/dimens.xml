@@ -11,4 +11,5 @@
     <dimen name="main_top_bottom_magin_view">5dp</dimen>
     <dimen name="cardview_count_study_margin_top">5dp</dimen>
     <dimen name="height_study_count_and_swipe">40dp</dimen>
+    <dimen name="magrin_top_search_box_home">25dp</dimen>
 </resources>
