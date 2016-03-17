@@ -435,8 +435,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showStatistical() {
-        DialogStatistics dialogStatistics = new DialogStatistics(context);
-        dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
+        try {
+            DialogStatistics dialogStatistics = new DialogStatistics(context);
+            dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, "_showStatistical", e);
+        }
+
     }
 
     private void showSelectSubject() {
@@ -446,6 +451,7 @@ public class MainActivity extends AppCompatActivity
         final CheckBox cbScience = (CheckBox) mSelectMajor.findViewById(R.id.cbScience);
         final CheckBox cbMedicine = (CheckBox) mSelectMajor.findViewById(R.id.cbMedicine);
         final CheckBox cbIelts = (CheckBox) mSelectMajor.findViewById(R.id.cbIelts);
+        final CheckBox cbx600Toeic = (CheckBox) mSelectMajor.findViewById(R.id.cbx600Toeic);
 
         //get my subbject
         String my_subject = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
@@ -455,16 +461,22 @@ public class MainActivity extends AppCompatActivity
             cbMedicine.setChecked(false);
             cbIelts.setChecked(false);
             cbIt.setChecked(false);
-        } else if (my_subject.equals(getString(R.string.subject_it_value))) {
-            cbIt.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
-            cbEconomy.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_science_value))) {
-            cbScience.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
-            cbMedicine.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_ielts_value))) {
-            cbIelts.setChecked(true);
+            cbx600Toeic.setChecked(false);
+        } else {
+            Log.d(TAG, "MY_SUBJECT:" + my_subject);
+            if (my_subject.equals(getString(R.string.subject_it_value))) {
+                cbIt.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
+                cbEconomy.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_science_value))) {
+                cbScience.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
+                cbMedicine.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_ielts_value))) {
+                cbIelts.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_600_toeic_value))) {
+                cbx600Toeic.setChecked(true);
+            }
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
@@ -482,6 +494,7 @@ public class MainActivity extends AppCompatActivity
                     cbScience.setChecked(false);
                     cbMedicine.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 0;
                 } else {
                     checker[0] = -2;
@@ -498,6 +511,7 @@ public class MainActivity extends AppCompatActivity
                     cbScience.setChecked(false);
                     cbMedicine.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 1;
                 } else {
                     checker[0] = -2;
@@ -514,6 +528,7 @@ public class MainActivity extends AppCompatActivity
                     cbEconomy.setChecked(false);
                     cbMedicine.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 2;
                 } else {
                     checker[0] = -2;
@@ -530,6 +545,7 @@ public class MainActivity extends AppCompatActivity
                     cbEconomy.setChecked(false);
                     cbScience.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 3;
                 } else {
                     checker[0] = -2;
@@ -546,7 +562,25 @@ public class MainActivity extends AppCompatActivity
                     cbEconomy.setChecked(false);
                     cbScience.setChecked(false);
                     cbMedicine.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 4;
+                } else {
+                    checker[0] = -2;
+                }
+            }
+        });
+        cbx600Toeic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    // Put some meat on the sandwich
+                    cbIt.setChecked(false);
+                    cbEconomy.setChecked(false);
+                    cbScience.setChecked(false);
+                    cbMedicine.setChecked(false);
+                    cbIelts.setChecked(false);
+                    checker[0] = 5;
                 } else {
                     checker[0] = -2;
                 }

@@ -103,6 +103,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                             lbCount.setText(context.getString(R.string.subject_medical));
                         else if (my_subject.equals(context.getString(R.string.subject_ielts_value)))
                             lbCount.setText(context.getString(R.string.subject_ielts));
+                        else if (my_subject.equals(context.getString(R.string.subject_600_toeic_value)))
+                            lbCount.setText(context.getString(R.string.subject_600toeic));
                         else
                             lbCount.setText(LazzyBeeShare.EMPTY);
                     }
