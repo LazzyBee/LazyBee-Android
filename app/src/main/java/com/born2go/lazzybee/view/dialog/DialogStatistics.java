@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.view.dialog;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
+@SuppressLint("ValidFragment")
 public class DialogStatistics extends DialogFragment {
 
     public static final String TAG = "DialogStatistics";
@@ -85,14 +87,16 @@ public class DialogStatistics extends DialogFragment {
 
                 }
             });
+            view.findViewById(R.id.mClose).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
         } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
-        view.findViewById(R.id.mClose).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+
 
         return view;
     }
@@ -118,6 +122,7 @@ public class DialogStatistics extends DialogFragment {
             mlazzybee.setVisibility(View.INVISIBLE);
             btnShare.setVisibility(View.VISIBLE);
         } catch (IOException e) {
+            LazzyBeeShare.showErrorOccurred(context, "screenViewChart", e);
             e.printStackTrace();
         }
     }
@@ -143,6 +148,7 @@ public class DialogStatistics extends DialogFragment {
     }
 
     private void generateDefaultData() {
+        try {
         List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
@@ -201,11 +207,13 @@ public class DialogStatistics extends DialogFragment {
 
             }
         });
-
-
+        }catch (Exception e){
+            LazzyBeeShare.showErrorOccurred(context, "generateDefaultData", e);
+        }
     }
 
     private void _initStreakCount(View view) {
+        try{
         //get count
         int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
         //Define view
@@ -219,6 +227,9 @@ public class DialogStatistics extends DialogFragment {
         Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
         a.setDuration(1000);
         streak_ring.startAnimation(a);
+        }catch (Exception e){
+            LazzyBeeShare.showErrorOccurred(context, "_initStreakCount", e);
+        }
     }
 
     private void _shareCard() {
