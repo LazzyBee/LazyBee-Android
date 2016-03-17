@@ -16,15 +16,16 @@
             layout="@layout/tool_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+
         <FrameLayout
             android:id="@+id/mContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:layout_gravity="center">
 
             <include
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 layout="@layout/fragment_view_home"
                 android:layout_gravity="center" />
         </FrameLayout>
