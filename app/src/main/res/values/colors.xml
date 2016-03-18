@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/button_green_color</color>
-    <color name="colorPrimaryDark">@color/main_color</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
     <color name="textcolorPrimary">@color/button_green_color</color>
     <color name="main_color">#FFC82F</color>
 
@@ -38,16 +38,18 @@
     <color name="color_level_btn_answer_disable">#757575</color>
     <color name="sliding_tab_color">#3C9F1E</color>
     <color name="text_color_number_count_card_by_level">#004D40</color>
-    <color name="auto_complete_text_view_text_color" >@android:color/white</color>
+    <color name="auto_complete_text_view_text_color">@android:color/white</color>
 
 
     <color name="action_add_search_card_reslts">#3C9F1E</color>
     <color name="border_searchbox_home_screen">#757575</color>
     <color name="hint_text_searchbox_home_screen">#BDBDBD</color>
     <color name="background_button_searchbox_home_screen">#3C9F1E</color>
-    <color name="position_meaning_display_text_color" >#3C9F1E</color>
+    <color name="position_meaning_display_text_color">#3C9F1E</color>
     <color name="color_cursor_searchbox_home_screen">#2196F3</color>
-    <color name="color_watting_show_answer" >#9E9E9E</color>
-    <color name="background_btn_user_note" >#3C9F1E</color>
+    <color name="color_watting_show_answer">#9E9E9E</color>
+    <color name="background_btn_user_note">#3C9F1E</color>
+    <color name="color_title_dialog_statitsic">@color/main_color</color>
+    <color name="color_sub_header">@color/main_color</color>
 
 </resources>

@@ -69,7 +69,7 @@ public class RecyclerViewCustomStudyAdapter extends
         } else if (viewType == TYPE_SETTING_NAME) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
         } else if (viewType == TYPE_LINE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_lines, parent, false); //Inflating the layout
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_line_child, parent, false); //Inflating the layout
         } else if (viewType == TYPE_SETTING_MEANING) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_custom_study_display_meaning, parent, false); //Inflating the layout
         }

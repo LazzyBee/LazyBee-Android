@@ -75,7 +75,6 @@
     <string name="message_you_not_complete">Bạn chưa học xong bài hôm nay! Bấm để học</string>
     <string name="message_total_card_review">Tổng số thẻ đã học:</string>
     <string name="my_course">Khóa học của bạn</string>
-    <string name="setting_about">About</string>
     <string name="setting_update_title">Cở sở dữ liệu</string>
     <string name="setting_notification">Thông báo</string>
     <string name="setting_check_update">Kiểm tra cập nhật</string>
@@ -106,73 +105,82 @@
     <string name="message_action_add_card_to_learn_complete">Thêm  thẻ %s vào học</string>
     <!-- <string name="notification_message">Học từ vựng tiếng Anh nào!</string>-->
 
-
     <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
 
-
     <string-array name="settings">
-        <!--<item>@string/setting_learn_title</item>
-    <item>@string/setting_total_learn_per_day</item>
-    <item>@string/setting_today_new_card_limit</item>-->
-        <!--<item>@string/setting_today_review_card_limit</item>-->
-        <!--<item>@string/setting_custom_study_title</item>-->
+        <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
-        <!--<item>@string/setting_speech_rate</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_notification</item>
-        <item>@string/setting_lines</item>
 
-        <item>@string/setting_update_title</item>
-        <item>@string/setting_check_update</item>
-        <!--<item>@string/setting_auto_check_update</item>-->
+        <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
-        <item>@string/setting_reset_cache</item>
-        <!--<item>@string/setting_export_database</item>-->
-        <!--<item>@string/setting_update_db_form_query</item>-->
-        <item>@string/setting_lines</item>
-        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_back_up_database</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_more</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_about</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="settings_dev">
+        <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_notification</item>
-        <item>@string/setting_lines</item>
 
-        <item>@string/setting_update_title</item>
-        <item>@string/setting_check_update</item>
+        <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
-        <item>@string/setting_reset_cache</item>
-        <item>@string/setting_export_database</item>
-        <item>@string/setting_update_db_form_query</item>
-        <item>@string/setting_lines</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_lines_child</item>
 
-        <item>@string/setting_backup_and_restore_database_title</item>
         <item>@string/setting_back_up_database</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
 
+        <item>@string/setting_sub_header_more</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_export_database</item>
+
+        <item>@string/setting_lines_child</item>
+        <item>@string/setting_update_db_form_query</item>
+
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_about</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_all_right</item>
+
     </string-array>
 
     <string-array name="custom_study">
@@ -328,6 +336,7 @@
     <string name="message_backup_database">LazzyBee sẽ sao lưu dữ liệu học tập của bạn. Bạn có muốn thực hiện không?</string>
     <string name="title_backup_database">Sao lưu dữ liệu</string>
     <string name="custom_study_error_input_value">Nhập giới hạn thẻ</string>
+    <string name="setting_sub_header_more">Thêm</string>
 
 
     <string-array name="subjects">

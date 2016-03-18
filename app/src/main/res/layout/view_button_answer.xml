@@ -8,7 +8,8 @@
     android:paddingLeft="3dp"
     android:paddingRight="3dp"
     android:paddingTop="5dp"
-    android:weightSum="4.9">
+    android:weightSum="4.9"
+    android:background="#ffffff">
 
     <TextView
         android:id="@+id/btnAgain0"

@@ -111,14 +111,15 @@
     <string name="setting_max_learn_more_per_day">Max learn more per day</string>
     <string name="setting_total_learn_per_day">Total card per day</string>
 
-    <string name="setting_about">About</string>
-    <string name="setting_update_title">Update Database</string>
+    <string name="setting_about" translatable="false">-About</string>
+    <string name="setting_update_title">Database</string>
     <string name="setting_notification">Notification</string>
     <string name="setting_check_update">Check update</string>
     <string name="setting_auto_check_update">Auto check update</string>
     <string name="setting_debug_info">Debug Infor</string>
     <string name="setting_language" translatable="false">Language/Ngôn ngữ</string>
     <string name="setting_lines" translatable="false">LINE</string>
+    <string name="setting_lines_child" translatable="false">LINE CHILD</string>
     <string name="setting_limit_card_number">%d Card</string>
 
     <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
@@ -145,7 +146,7 @@
 
     <string name="notification_title">%1$s %2$s</string>
     <string name="message_hellp_study">Tip/help panel(under construction)</string>
-    <string name="setting_speech_rate">Speech rate</string>
+    <string name="setting_speech_rate">Speaking speed</string>
     <string name="setting_speech_rate_slider" translatable="false">SpeechSlider</string>
     <string name="action_change_speech_rate">Speech rate</string>
 
@@ -191,68 +192,79 @@
 
 
     <string-array name="settings">
-        <!--<item>@string/setting_learn_title</item>
-        <item>@string/setting_total_learn_per_day</item>
-        <item>@string/setting_today_new_card_limit</item>-->
-        <!--<item>@string/setting_today_review_card_limit</item>-->
-        <!--<item>@string/setting_custom_study_title</item>-->
+        <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
-        <!--<item>@string/setting_speech_rate</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_notification</item>
-        <item>@string/setting_lines</item>
 
-        <item>@string/setting_update_title</item>
-        <item>@string/setting_check_update</item>
-        <!--<item>@string/setting_auto_check_update</item>-->
+        <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
-        <item>@string/setting_reset_cache</item>
-        <!--<item>@string/setting_export_database</item>-->
-        <!--<item>@string/setting_update_db_form_query</item>-->
-        <item>@string/setting_lines</item>
-        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_back_up_database</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_more</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_about</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="settings_dev">
+        <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_notification</item>
-        <item>@string/setting_lines</item>
 
-        <item>@string/setting_update_title</item>
-        <item>@string/setting_check_update</item>
+        <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
-        <item>@string/setting_reset_cache</item>
-        <item>@string/setting_export_database</item>
-        <item>@string/setting_update_db_form_query</item>
-        <item>@string/setting_lines</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_lines_child</item>
 
-        <item>@string/setting_backup_and_restore_database_title</item>
         <item>@string/setting_back_up_database</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
 
+        <item>@string/setting_sub_header_more</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_export_database</item>
+
+        <item>@string/setting_lines_child</item>
+        <item>@string/setting_update_db_form_query</item>
+
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_about</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_all_right</item>
+
     </string-array>
 
     <string-array name="custom_study">
@@ -432,7 +444,7 @@
         <item>b5a8fa6f8c1ba689<!--A890--></item>
         <item>501847cbba33a2e <!--A820--></item>
         <item>a23c44db2bc85af9<!--geny n7 5.0--></item>
-        <item>f130a1e2a7076611<!--blue stask--></item>
+        <!-- <item>f130a1e2a7076611&lt;!&ndash;blue stask&ndash;&gt;</item>-->
     </string-array>
 
     <string name="title_dialog_daily_target_completed">Daily target completed</string>
@@ -496,6 +508,8 @@
     <string name="message_backup_database">LazzyBee is going to backup data to save your progress. Proceed?</string>
     <string name="title_backup_database">Backup database</string>
     <string name="subject_600toeic" translatable="false">600 toeic</string>
-    <string name="subject_600_toeic_value">600toeic</string>
+    <string name="subject_600_toeic_value">toeic</string>
     <string name="custom_study_error_input_value">Please input limit</string>
+    <string name="setting_sub_header_more">More</string>
+    <string name="setting_sub_header_about">About</string>
 </resources>
