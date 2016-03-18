@@ -131,6 +131,7 @@ public class DialogStatistics extends DialogFragment {
         mStatistic = (RelativeLayout) view.findViewById(R.id.mStatistic);
         mChart = (RelativeLayout) view.findViewById(R.id.mChart);
         chart = (ColumnChartView) view.findViewById(R.id.chart);
+        chart.setZoomEnabled(false);
         mlazzybee = (TextView) view.findViewById(R.id.mlazzybee);
         generateDefaultData();
     }
