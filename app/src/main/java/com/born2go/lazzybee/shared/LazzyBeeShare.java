@@ -444,16 +444,16 @@ public class LazzyBeeShare {
                 "   </div>\n";
 
         if (DEBUG) {
-            debug = "           <div id='debug'>\n " +
-                    "              Debug infor:</br>\n" +
-                    "              -------------------------------------</br>\n" +
+            debug = "           <div id='debug' style='float:left;width:100%;'>\n " +
+                    "              <hr>\n" +
+                    "              <center>Debug infor</center></br>\n" +
                     "              Level:" + card.getLevel() + "</br>\n" +
-                    "              lat_ivl:" + card.getLast_ivl() + "</br>\n" +
-                    "              Factor:" + card.getFactor() + "</br>\n" +
-                    "              Rev_count:" + card.getRev_count() + "</br>\n" +
+                    "              Last interval:" + card.getLast_ivl() + "</br>\n" +
+                    "              Easy factor:" + card.getFactor() + "</br>\n" +
+                    "              Review count(s):" + card.getRev_count() + "</br>\n" +
                     "              Queue:" + card.getQueue() + "</br>\n" +
-                    "              Due:" + card.getDue() + "-----" + getDate(card.getDue() * 1000) + "</br>\n" +
-                    "              -------------------------------------</br>\n" +
+                    "              Due date:" + card.getDue() + "-----" + getDate(card.getDue() * 1000) + "</br>\n" +
+
                     "           </div>\n" +
                     "   </body>\n" +
                     "</html>\n";
