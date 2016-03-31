@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
         //Define Search Dictionary box
         mSearchCardBox = (SearchView) findViewById(R.id.mSearchCard);
         mSearchCardBox.setIconifiedByDefault(false);
-        mSearchCardBox.setQueryHint("Dictionary");
+        mSearchCardBox.setQueryHint(getString(R.string.drawer_dictionary));
 
         //set provaider search
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -293,6 +293,13 @@ public class MainActivity extends AppCompatActivity
         if (!first_run_app) {
             _showHelp();
             sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).commit();
+            dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
+            LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
+        }
+        String onoffNotification = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+        if (onoffNotification == null) {
+            dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
+            LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
         }
         KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
 

@@ -438,8 +438,8 @@ public class RecyclerViewSettingListAdapter extends
         String hour_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         String minute_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         if (value == null) {
-            mSwitch.setChecked(false);
-            mSetUpNotification.setVisibility(View.GONE);
+            mSwitch.setChecked(true);
+            mSetUpNotification.setVisibility(View.VISIBLE);
         } else if (value.equals(LazzyBeeShare.ON)) {
             mSetUpNotification.setVisibility(View.VISIBLE);
             mSwitch.setChecked(true);
@@ -466,9 +466,9 @@ public class RecyclerViewSettingListAdapter extends
                 minute_str = "0" + minute;
             }
             time = hour_str + ":" + minute_str;
+            txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
         }
 
-        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
 
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

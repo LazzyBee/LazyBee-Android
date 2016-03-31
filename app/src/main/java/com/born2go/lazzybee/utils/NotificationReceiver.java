@@ -77,8 +77,12 @@ public class NotificationReceiver extends BroadcastReceiver {
             String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
             if (onoffNotification.equals(LazzyBeeShare.ON))
                 notificationManager.notify(id, mBuilder.build());
-            else
-                Log.i(TAG, "Off notification");
+            else if (onoffNotification.equals(LazzyBeeShare.OFF))
+                Log.d(TAG, "Off notification");
+            else {
+                Log.d(TAG, "Notification null-->ON");
+                notificationManager.notify(id, mBuilder.build());
+            }
         } catch (Exception e) {
 
         }
