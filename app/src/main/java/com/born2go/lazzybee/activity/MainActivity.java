@@ -1186,15 +1186,16 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
                 snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
-
-                new CountDownTimer(3000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    public void onFinish() {
-                        snackbarTip.show();
-                    }
-                }.start();
+                
+                snackbarTip.show();
+//                new CountDownTimer(3000, 1000) {
+//                    public void onTick(long millisUntilFinished) {
+//                    }
+//
+//                    public void onFinish() {
+//
+//                    }
+//                }.start();
             } else {
                 Log.e(TAG, "popup_text null");
             }
