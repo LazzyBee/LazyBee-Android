@@ -484,7 +484,7 @@
     <string name="setting_back_up_database">Backup database</string>
     <string name="setting_back_up_database_dev" translatable="false">Backup database dev</string>
     <string name="setting_restore_database">Restore database</string>
-    <string name="setting_time_deday_show_answer">Watting time to show answer</string>
+    <string name="setting_time_deday_show_answer">Waiting time to show answer</string>
     <string name="show_answer_now">Immediately</string>
 
     <!-- TODO: Remove or change this placeholder text -->
