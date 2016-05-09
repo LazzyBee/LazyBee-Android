@@ -219,6 +219,7 @@
         <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
+        <item>@string/drawer_test_your_voca</item>
         <item>@string/drawer_line</item>
         <item>@string/drawer_dictionary</item>
         <!--  <item>@string/drawer_add_course</item>-->
@@ -337,6 +338,7 @@
     <string name="title_backup_database">Sao lưu dữ liệu</string>
     <string name="custom_study_error_input_value">Nhập giới hạn thẻ</string>
     <string name="setting_sub_header_more">Thêm</string>
+    <string name="drawer_test_your_voca">Kiểm tra từ vựng</string>
 
 
     <string-array name="subjects">
