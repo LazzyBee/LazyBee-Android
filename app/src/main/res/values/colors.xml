@@ -51,5 +51,6 @@
     <color name="background_btn_user_note">#3C9F1E</color>
     <color name="color_title_dialog_statitsic">@color/main_color</color>
     <color name="color_sub_header">@color/main_color</color>
+    <color name="color_eee">#eee</color>
 
 </resources>
