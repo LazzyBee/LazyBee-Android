@@ -312,6 +312,7 @@
         <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
+        <item>@string/drawer_test_your_voca</item>
         <item>@string/drawer_line</item>
         <item>@string/drawer_dictionary</item>
         <!--  <item>@string/drawer_add_course</item>-->
@@ -512,4 +513,6 @@
     <string name="custom_study_error_input_value">Please input limit</string>
     <string name="setting_sub_header_more">More</string>
     <string name="setting_sub_header_about">About</string>
+    <string name="drawer_test_your_voca">Test your vocabulary</string>
+    <string name="url_test_your_voca" translatable="false">http://www.lazzybee.com/testvocab/?menu=0</string>
 </resources>
