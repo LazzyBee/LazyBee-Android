@@ -18,7 +18,6 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewIncomingListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
@@ -138,8 +137,13 @@ public class IncomingListActivity extends AppCompatActivity {
         try {
             View mViewAdv =  findViewById(R.id.mViewAdv);
 
+            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
+                Log.d(TAG, "Refesh container holder");
+                LazzyBeeSingleton.getContainerHolder().refresh();
+            }
+
             //get value form task manager
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_id = null;
             if (container == null) {

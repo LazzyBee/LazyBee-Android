@@ -35,7 +35,6 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
@@ -122,7 +121,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             mViewAdv =  findViewById(R.id.mViewAdv);
             //get value form task manager
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_id = null;
             if (container == null) {
@@ -292,7 +291,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             //get base url in Task Manager
             String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
             if (server_base_url_sharing != null) {
                 if (server_base_url_sharing.length() > 0)
                     base_url_sharing = server_base_url_sharing;

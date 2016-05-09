@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,7 +39,6 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
@@ -446,6 +446,7 @@ public class SearchActivity extends AppCompatActivity implements
         dialog.show();
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void _doneCard(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
@@ -619,8 +620,12 @@ public class SearchActivity extends AppCompatActivity implements
     private void _initAdView() {
         try {
             mViewAdv = findViewById(R.id.mViewAdv);
+            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
+                Log.d(TAG, "Refesh container holder");
+                LazzyBeeSingleton.getContainerHolder().refresh();
+            }
             //get value form task manager
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_id = null;
             if (container == null) {

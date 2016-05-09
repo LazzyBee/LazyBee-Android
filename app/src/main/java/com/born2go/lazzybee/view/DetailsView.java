@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,6 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.StudyActivity;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
@@ -40,6 +40,7 @@ import java.util.List;
  * {@link OnDetailsViewListener} interface
  * to handle interaction events.
  */
+@SuppressLint("ValidFragment")
 public class DetailsView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "DetailsView";
@@ -259,11 +260,17 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private void _initAdView(View mViewAdv) {
         try {
+            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
+                Log.d(TAG, "Refesh container holder");
+                LazzyBeeSingleton.getContainerHolder().refresh();
+            }
+
             //get value form task manager
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_id = null;
             if (container == null) {
+                Log.d(TAG, "Container Holder Null");
             } else {
                 admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
                 adv_id = container.getString(LazzyBeeShare.ADV_LEARN_DETAIL_ID);
@@ -286,7 +293,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                             .addTestDevice(getResources().getStringArray(R.array.devices)[0])
                             .addTestDevice(getResources().getStringArray(R.array.devices)[1])
                             .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                            //.addTestDevice(getResources().getStringArray(R.array.devices)[3])
                             .build();
 
                     mAdView.loadAd(adRequest);
@@ -364,7 +371,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         try {
             //get base url in Task Manager
             String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
             if (server_base_url_sharing != null) {
                 if (server_base_url_sharing.length() > 0)
                     base_url_sharing = server_base_url_sharing;

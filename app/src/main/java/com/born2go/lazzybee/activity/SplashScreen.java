@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,7 +13,6 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.common.api.PendingResult;
@@ -70,14 +68,14 @@ public class SplashScreen extends Activity {
                         _initSQlIte();
                         _changeLanguage();
                         //init Container
-                        ContainerHolderSingleton.setContainerHolder(containerHolder);
+                        LazzyBeeSingleton.setContainerHolder(containerHolder);
                         Container container = containerHolder.getContainer();
                         if (!containerHolder.getStatus().isSuccess()) {
                             Log.e("LazzyBee", "failure loading container for GTag");
                             displayErrorToUser(R.string.gtag_container_load_error);
-                            //return;
-                        } else {
-                            ContainerHolderSingleton.setContainerHolder(containerHolder);
+                            return;
+                        }else {
+                            LazzyBeeSingleton.setContainerHolder(containerHolder);
                             ContainerLoadedCallback.registerCallbacksForContainer(container);
                             containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
                         }
@@ -184,7 +182,7 @@ public class SplashScreen extends Activity {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(0));
 //        //get GAE_DB_VERSION in Server
-        String gae_db_version = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
+        String gae_db_version = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
         Log.i(TAG, "Get gae_db_version on TaskManager =" + gae_db_version);
 //        //put GAE_DB_VERSION to Client
         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, (gae_db_version == null || gae_db_version.isEmpty()) ? String.valueOf(0) : gae_db_version);

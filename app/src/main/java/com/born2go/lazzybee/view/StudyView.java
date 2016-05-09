@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +40,6 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -81,6 +82,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     TextView lbCountAgain;
     TextView lbCountDue;
 
+    ImageView imgGotoDictionary;
+
     CardView mCardViewHelpandAdMod;
     RelativeLayout mShowAnswer;
 
@@ -115,6 +118,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         this.beforeCard = beforeCard;
     }
 
+    @SuppressLint("ValidFragment")
     public StudyView(Context context, Intent intent, CustomViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
         this.card = card;
         this.context = context;
@@ -154,6 +158,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             _showAnswer();
             mListener.setCurrentCard(currentCard);
             mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+            imgGotoDictionary.setVisibility(View.VISIBLE);
 
 
         }
@@ -281,6 +286,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         lbCountAgain = (TextView) view.findViewById(R.id.lbCountAgainInday);
         lbCountDue = (TextView) view.findViewById(R.id.lbAgainDue);
 
+        imgGotoDictionary = (ImageView) view.findViewById(R.id.imgGotoDictionary);
+        imgGotoDictionary.setColorFilter(context.getResources().getColor(R.color.card_due_color));
+
         final RelativeLayout mDisplay = (RelativeLayout) view.findViewById(R.id.mDisplay);
 
 
@@ -309,6 +317,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
+        _handlerNote();
+
+        _handlerImgGotoDictionary();
+    }
+
+    private void _handlerNote() {
         //Handler onclick
         mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -387,6 +401,16 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
 
         });
+    }
+
+    private void _handlerImgGotoDictionary() {
+        imgGotoDictionary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(1);
+            }
+        });
+
     }
 
     private void setEnableShowDictionary(boolean enable) {
@@ -815,6 +839,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
                 _nextCard(currentQueue);//next Card by Queue
                 mFloatActionButtonUserNote.setVisibility(View.GONE);
+                imgGotoDictionary.setVisibility(View.GONE);
 
             } else {
                 Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");
@@ -1220,7 +1245,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         try {
             //get base url in Task Manager
             String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
             if (server_base_url_sharing != null) {
                 if (server_base_url_sharing.length() > 0)
                     base_url_sharing = server_base_url_sharing;

@@ -30,7 +30,6 @@ import com.born2go.lazzybee.activity.SettingActivity;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.CustomTimePickerDialog;
@@ -1093,7 +1092,7 @@ public class RecyclerViewSettingListAdapter extends
 
     private void _downloadFile() {
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String base_url;
             if (container == null) {
                 base_url = context.getString(R.string.url_lazzybee_website);

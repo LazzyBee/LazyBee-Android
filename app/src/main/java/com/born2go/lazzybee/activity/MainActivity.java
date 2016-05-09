@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.provider.BaseColumns;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -49,7 +50,6 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.view.dialog.DialogHelp;
 import com.born2go.lazzybee.view.dialog.DialogStatistics;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
@@ -199,7 +199,12 @@ public class MainActivity extends AppCompatActivity
 
     private void _initInterstitialAd() {
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
+                Log.d(TAG, "Refesh container holder");
+                LazzyBeeSingleton.getContainerHolder().refresh();
+            }
+
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_fullscreen_id = null;
             if (container != null) {
@@ -427,6 +432,9 @@ public class MainActivity extends AppCompatActivity
                 case LazzyBeeShare.DRAWER_HOME_INDEX:
                     _goHome();
                     break;
+                case LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX:
+                    _goTestYourVoca();
+                    break;
                 default:
                     break;
             }
@@ -435,6 +443,12 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+
+    private void _goTestYourVoca() {
+        Intent intent = new Intent(context, TestYourVoca.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
     }
 
     private void _goHome() {
@@ -880,7 +894,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+        Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
         String base_url;
         if (container == null) {
             base_url = getString(R.string.url_lazzybee_website);
@@ -1142,13 +1156,13 @@ public class MainActivity extends AppCompatActivity
 
     private void _showDialogTip() {
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String pop_up_maxnum;
             String popup_text;
             String popup_url = LazzyBeeShare.EMPTY;
             if (container == null) {
                 popup_text = null;
-                Log.d(TAG, "ContainerHolderSingleton Null");
+                Log.d(TAG, "ContainerHolder Null");
             } else {
                 pop_up_maxnum = container.getString(LazzyBeeShare.POPUP_MAXNUM);
                 if (pop_up_maxnum == null || pop_up_maxnum.equals(LazzyBeeShare.EMPTY)) {
@@ -1169,7 +1183,8 @@ public class MainActivity extends AppCompatActivity
             if (popup_text != null) {
                 snackbarTip =
                         Snackbar
-                                .make(this.container, popup_text, Snackbar.LENGTH_LONG);
+                                .make(this.container, popup_text, Snackbar.LENGTH_INDEFINITE);
+
                 View snackBarView = snackbarTip.getView();
                 final String finalPopup_url = popup_url;
                 snackBarView.setOnClickListener(new View.OnClickListener() {
@@ -1186,8 +1201,15 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
                 snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
-                
+
                 snackbarTip.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        snackbarTip.dismiss();
+                    }
+                }, 7000);
 //                new CountDownTimer(3000, 1000) {
 //                    public void onTick(long millisUntilFinished) {
 //                    }
