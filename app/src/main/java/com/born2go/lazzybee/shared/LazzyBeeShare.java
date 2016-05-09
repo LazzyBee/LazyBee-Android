@@ -83,6 +83,7 @@ public class LazzyBeeShare {
     public static final int DRAWER_HELP_INDEX = 7;
     public static final int DRAWER_STATISTICAL_INDEX = 8;
     public static final int DRAWER_HOME_INDEX = 9;
+    public static final int DRAWER_TEST_YOUR_VOCA_INDEX = 10;
     public static final int CODE_COMPLETE_STUDY_1000 = 1000;
 
     public static final int CODE_SEARCH_RESULT = 1001;
