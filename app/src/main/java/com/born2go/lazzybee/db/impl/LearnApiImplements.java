@@ -1118,6 +1118,9 @@ public class LearnApiImplements implements LearnApi {
             Log.i(TAG, "my_level:" + myLevel);
             if (myLevel == 0)
                 myLevel = 2;
+            else if (myLevel > 6) {
+                myLevel = 6;
+            }
             int limit = 100;
             String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
                     " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + "" + " LIMIT " + limit;
