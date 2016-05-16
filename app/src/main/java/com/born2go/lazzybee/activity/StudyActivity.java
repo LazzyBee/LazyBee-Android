@@ -44,7 +44,6 @@ import com.born2go.lazzybee.view.StudyView.OnStudyViewListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
-import com.born2go.lazzybee.view.dialog.DialogCompleteStudyMore;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
@@ -159,8 +158,7 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showDialogCompleteMore() {
-//        DialogCompleteStudyMore studyMore = new DialogCompleteStudyMore(context);
-//        studyMore.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage("Complete study!!!");
@@ -183,20 +181,8 @@ public class StudyActivity extends AppCompatActivity
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
         } else {
-            DialogCompleteStudyMore studyMore = new DialogCompleteStudyMore(context);
-            studyMore.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+            _showDialogCompleteMore();
         }
-//        final Dialog dialog = new Dialog(this, R.style.full_screen_dialog) {
-//            @Override
-//            protected void onCreate(Bundle savedInstanceState) {
-//                super.onCreate(savedInstanceState);
-//                setContentView(R.layout.fragment_dialog_complete_study);
-//
-//
-//
-//            }
-//        };
-//        dialog.show();
     }
 
     /**
