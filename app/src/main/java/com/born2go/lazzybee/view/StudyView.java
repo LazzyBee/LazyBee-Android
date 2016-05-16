@@ -3,14 +3,18 @@ package com.born2go.lazzybee.view;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -58,6 +62,7 @@ import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 public class StudyView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyView";
+    private static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
     private final CardSched cardSched = new CardSched();
     private final Context context;
     private OnStudyViewListener mListener;
@@ -145,26 +150,55 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         _initView(view);
 
         _setUpStudy();
-        _handlerButton();
+        _handlerButtonAnswer();
         return view;
     }
 
     View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //mViewPager.setPagingEnabled(true);
-            setEnableShowDictionary(true);
-            answerDisplay = true;
-            _showAnswer();
-            mListener.setCurrentCard(currentCard);
-            mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
-            imgGotoDictionary.setVisibility(View.VISIBLE);
-
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            boolean firstTime = sharedPreferences.getBoolean(FIRST_TIME_SHOW_ANSWER, false);
+            onClickShowAnswer();
+            if (firstTime)
+                _showDialogTipAnswerCard();
 
         }
     };
 
-    private void _handlerButton() {
+    private void onClickShowAnswer() {
+        setEnableShowDictionary(true);
+        answerDisplay = true;
+        _showAnswer();
+        mListener.setCurrentCard(currentCard);
+        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+        imgGotoDictionary.setVisibility(View.VISIBLE);
+    }
+
+    private void _showDialogTipAnswerCard() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+        builder.setTitle("Tip");
+        builder.setMessage(R.string.msg_tip_answer_card);
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.got_it, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                sharedPreferences.edit().putBoolean(FIRST_TIME_SHOW_ANSWER, true).commit();
+            }
+        });
+        builder.create().show();
+
+    }
+
+    private void _handlerButtonAnswer() {
         btnHard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -929,8 +963,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
         sTimeShowAnswer = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);
-
-
     }
 
     @Override
