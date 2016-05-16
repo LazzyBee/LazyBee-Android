@@ -339,7 +339,8 @@
     <string name="custom_study_error_input_value">Nhập giới hạn thẻ</string>
     <string name="setting_sub_header_more">Thêm</string>
     <string name="drawer_test_your_voca">Kiểm tra từ vựng</string>
-
+    <string name="msg_tip_answer_card">Tùy vào việc bạn tự đánh giá khả năng nhớ của bạn, ứng dụng sẽ đưa từ này ra ôn lại theo các khoảng thời gian tương ứng bên dưới.</string>
+    <string name="got_it">Đã hiểu</string>
 
     <string-array name="subjects">
         <item>@string/subject_it</item>
