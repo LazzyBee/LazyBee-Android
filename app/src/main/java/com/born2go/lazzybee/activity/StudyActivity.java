@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,6 +44,7 @@ import com.born2go.lazzybee.view.StudyView.OnStudyViewListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
+import com.born2go.lazzybee.view.dialog.DialogCompleteStudyMore;
 import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.ArrayList;
@@ -107,7 +109,7 @@ public class StudyActivity extends AppCompatActivity
             pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy", e);
+            LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy()", e);
         }
     }
 
@@ -141,8 +143,12 @@ public class StudyActivity extends AppCompatActivity
             if (result > -1) {
                 _showDialogComplete();
             } else {
-                setResult(RESULT_CANCELED, new Intent());
-                finish();
+                if (learn_more)
+                    _showDialogCompleteMore();
+                else {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                }
             }
         } else {
             setResult(RESULT_CANCELED, new Intent());
@@ -152,14 +158,33 @@ public class StudyActivity extends AppCompatActivity
 
     }
 
+    private void _showDialogCompleteMore() {
+//        DialogCompleteStudyMore studyMore = new DialogCompleteStudyMore(context);
+//        studyMore.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+        builder.setTitle("Ops!");
+        builder.setMessage("Complete study!!!");
+        builder.setCancelable(false);
+        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                setResult(RESULT_CANCELED, new Intent());
+                finish();
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void _showDialogComplete() {
         if (learn_more == false) {
             //Show dialog complete learn
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
         } else {
-            setResult(completeStudy, new Intent());
-            finish();
+            DialogCompleteStudyMore studyMore = new DialogCompleteStudyMore(context);
+            studyMore.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
         }
 //        final Dialog dialog = new Dialog(this, R.style.full_screen_dialog) {
 //            @Override
