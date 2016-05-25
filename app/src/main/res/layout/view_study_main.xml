@@ -42,6 +42,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_note_white_24dp"
+                ads:elevation="0dp"
                 ads:backgroundTint="@color/background_btn_user_note"
                 android:visibility="gone" />
 
