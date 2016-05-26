@@ -521,4 +521,7 @@
     <string name="reverse">Reverse</string>
     <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
     <string name="reverse_next">Next</string>
+    <string name="complele_text_display"><u>2000 words/year with 5 minutes per day.</u></string>
+    <string name="complele_text_display_link" translatable="false">http://www.lazzybee.com/blog/can_you_learn_2000_words_per_year</string>
+    <string name="msg_finishing_your_daily_target">Please come back after finishing your daily target.</string>
 </resources>

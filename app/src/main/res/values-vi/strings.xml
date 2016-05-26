@@ -344,6 +344,8 @@
     <string name="reverse">Reverse</string>
     <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
     <string name="reverse_next">Tiếp theo</string>
+    <string name="complele_text_display"><u>2000 từ/năm với 5 phút mỗi ngày.</u></string>
+    <string name="msg_finishing_your_daily_target">Vui lòng quay lại sau khi bạn đã hoàn thành mục tiêu hàng ngày.</string>
 
     <string-array name="subjects">
         <item>@string/subject_it</item>
