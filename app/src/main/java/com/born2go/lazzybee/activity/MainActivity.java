@@ -16,6 +16,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.BaseColumns;
 import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity
     Snackbar snackbarTip;
 
     SearchView mSearchCardBox;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +328,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _intInterfaceView() {
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
         container = (FrameLayout) findViewById(R.id.mContainer);
         container.requestFocus();
     }
@@ -339,7 +343,7 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogCongraturation(String messgage_congratilation) {
         snackbarCongraturation =
                 Snackbar
-                        .make(this.container, messgage_congratilation, Snackbar.LENGTH_LONG);
+                        .make(this.coordinatorLayout, messgage_congratilation, Snackbar.LENGTH_LONG);
         View snackBarView = snackbarCongraturation.getView();
         snackBarView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1000,6 +1004,7 @@ public class MainActivity extends AppCompatActivity
         //goto_study_code1 learnmore
         studyComplete = false;
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.setAction(LazzyBeeShare.STUDY);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
@@ -1183,7 +1188,7 @@ public class MainActivity extends AppCompatActivity
             if (popup_text != null) {
                 snackbarTip =
                         Snackbar
-                                .make(this.container, popup_text, Snackbar.LENGTH_INDEFINITE);
+                                .make(this.coordinatorLayout, popup_text, Snackbar.LENGTH_INDEFINITE);
 
                 View snackBarView = snackbarTip.getView();
                 final String finalPopup_url = popup_url;
@@ -1295,6 +1300,42 @@ public class MainActivity extends AppCompatActivity
         //hide keyboad
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public void onBtnStudyReverseOnClick(View view) {
+        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+        if (countDue > 0) {
+            Log.d(TAG, "onBtnStudyReverseOnClick() -countDue :" + countDue);
+            _showDialogWithMessage(getString(R.string.message_you_not_complete));
+        } else {
+            int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+            if (countAgain > 0) {
+                Log.d(TAG, "onBtnStudyReverseOnClick() -countAgain :" + countAgain);
+                _showDialogWithMessage(getString(R.string.message_you_not_complete));
+            } else {
+                int check = dataBaseHelper._checkListTodayExit();
+                Log.d(TAG, "onBtnStudyReverseOnClick() -queueList :" + check);
+                if (check == -1 || check == -2 || check > 0) {
+                    _showDialogWithMessage(getString(R.string.message_you_not_complete));
+                } else if (check == 0) {
+                    int countCardLearner = dataBaseHelper._getCountListCardLearned();
+                    Log.d(TAG, "onBtnStudyReverseOnClick() -countCardLearner :" + countCardLearner);
+                    if (countCardLearner >= LazzyBeeShare.LIMIT_UNLOCK_FERTURE_STUDY_REVERSER) {
+                        studyReverse();
+                    } else {
+                        _showDialogWithMessage(getString(R.string.msg_limit_unlock_feture_study_reverse));
+                    }
+                }
+            }
+        }
+    }
+
+    private void studyReverse() {
+        studyComplete = false;
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.setAction(LazzyBeeShare.REVERSE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        this.startActivity(intent);
     }
 }
 
