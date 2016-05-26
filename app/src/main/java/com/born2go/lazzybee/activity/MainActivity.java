@@ -1340,7 +1340,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
         intent.setAction(LazzyBeeShare.REVERSE);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        this.startActivity(intent);
+        this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
     }
 }
 
