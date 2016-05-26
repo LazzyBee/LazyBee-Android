@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
@@ -51,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements
-        GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
+        GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
@@ -71,6 +72,7 @@ public class SearchActivity extends AppCompatActivity implements
     View mViewAdv;
     SearchView.SearchAutoComplete mSuggerstionCard;
     List<Card> dictionaryCardList;
+    private SwipeRefreshLayout mRefeshSearch;
 
 
     @Override
@@ -101,6 +103,8 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void _initRecyclerViewSearchResults() {
+        mRefeshSearch = (SwipeRefreshLayout) findViewById(R.id.mRefeshSearch);
+        mRefeshSearch.setOnRefreshListener(this);
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
@@ -184,7 +188,7 @@ public class SearchActivity extends AppCompatActivity implements
 
         if (mSuggerstionCard != null) {
             //set Enable Spelling Suggestions
-            mSuggerstionCard.setInputType( InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+            mSuggerstionCard.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = mSuggerstionCard.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -682,5 +686,11 @@ public class SearchActivity extends AppCompatActivity implements
         Log.d(TAG, "Action:" + getIntent().getAction());
         //finish();
         super.onBackPressed();
+    }
+
+    @Override
+    public void onRefresh() {
+        _search(query_text, display_type, false);
+        mRefeshSearch.setRefreshing(false);
     }
 }
