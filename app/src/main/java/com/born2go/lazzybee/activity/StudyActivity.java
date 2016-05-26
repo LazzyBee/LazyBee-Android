@@ -475,4 +475,5 @@ public class StudyActivity extends AppCompatActivity
     public void setCurrentCard(Card card) {
         currentCard = card;
     }
+
 }

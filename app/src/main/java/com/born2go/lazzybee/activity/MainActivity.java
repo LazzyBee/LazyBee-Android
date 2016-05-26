@@ -11,12 +11,14 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.BaseColumns;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity
 
     SearchView mSearchCardBox;
     private CoordinatorLayout coordinatorLayout;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -332,6 +335,8 @@ public class MainActivity extends AppCompatActivity
                 .coordinatorLayout);
         container = (FrameLayout) findViewById(R.id.mContainer);
         container.requestFocus();
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        floatingActionButton.setPadding(0, 0, 0, 0);
     }
 
     public void onlbTipHelpClick(View view) {
@@ -1306,17 +1311,17 @@ public class MainActivity extends AppCompatActivity
         int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
         if (countDue > 0) {
             Log.d(TAG, "onBtnStudyReverseOnClick() -countDue :" + countDue);
-            _showDialogWithMessage(getString(R.string.message_you_not_complete));
+            _showDialogWithMessage(getString(R.string.msg_finishing_your_daily_target));
         } else {
             int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
             if (countAgain > 0) {
                 Log.d(TAG, "onBtnStudyReverseOnClick() -countAgain :" + countAgain);
-                _showDialogWithMessage(getString(R.string.message_you_not_complete));
+                _showDialogWithMessage(getString(R.string.msg_finishing_your_daily_target));
             } else {
                 int check = dataBaseHelper._checkListTodayExit();
                 Log.d(TAG, "onBtnStudyReverseOnClick() -queueList :" + check);
                 if (check == -1 || check == -2 || check > 0) {
-                    _showDialogWithMessage(getString(R.string.message_you_not_complete));
+                    _showDialogWithMessage(getString(R.string.msg_finishing_your_daily_target));
                 } else if (check == 0) {
                     int countCardLearner = dataBaseHelper._getCountListCardLearned();
                     Log.d(TAG, "onBtnStudyReverseOnClick() -countCardLearner :" + countCardLearner);
