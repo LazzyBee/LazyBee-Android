@@ -132,6 +132,9 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_DISPLAY_MEANING = "display_meaning";
     public static final String ACTION_GOTO_DICTIONARY = "goto_dictionary";
     public static final int ACTION_CODE_GOTO_STUDY = 101;
+    public static final int LIMIT_UNLOCK_FERTURE_STUDY_REVERSER = 50;
+    public static final String STUDY = "study";
+    public static final String REVERSE = "reverse";
 
 
     public static String mime = "text/html";
@@ -283,6 +286,28 @@ public class LazzyBeeShare {
         return html;
     }
 
+    public static String _getReverseQuestionDisplay(Context context, Card card) {
+
+        String html =
+                "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<head>\n" +
+                        "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                        "name=\"viewport\">\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<div style='width:100%'>\n" +
+
+                        "<div style='float:left;width: 90%;text-align: center;'>" +
+                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_reverse_question_size) + "pt;font-weight: bold;'>" + _getValueFromKey(card.getAnswers(), CARD_MEANING) + "</span>" +
+                        "</div>" +
+                        "</div>\n" +
+                        "</body>\n" +
+                        "</html>";
+        //Log.v(TAG, html);
+        return html;
+    }
+
 
     public static String _getValueFromKey(String answer, String key) {
         String value = EMPTY;
@@ -341,6 +366,7 @@ public class LazzyBeeShare {
         String exampleTagA = EMPTY;
         String imageURL = EMPTY;
         String debug = "</body>\n</html>\n";
+        String user_note = "";
         String _example = context.getResources().getString(R.string.example);
         Object _explain = context.getResources().getString(R.string.explain);
 
@@ -444,6 +470,14 @@ public class LazzyBeeShare {
                 + meaningDOWN +
                 "   </div>\n";
 
+        user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
+                "              <hr>\n" +
+                "              <center>User note</center></br>\n" +
+                card.getUser_note() +
+                "           </div>\n" +
+                "   </body>\n" +
+                "</html>\n";
+        html += user_note;
         if (DEBUG) {
             debug = "           <div id='debug' style='float:left;width:100%;'>\n " +
                     "              <hr>\n" +
