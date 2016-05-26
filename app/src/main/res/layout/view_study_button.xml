@@ -1,46 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:background="#ffffff">
+    android:orientation="horizontal">
 
     <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-      <!-->-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!-->-->
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="70dp"-->
-            <!--android:orientation="horizontal">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="70dp"-->
+    <!--android:orientation="horizontal">-->
 
-            <RelativeLayout
 
-                android:id="@+id/mShowAnswer"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:background="@color/button_green_color"
-                android:onClick="onbtnShowAnswerClick"
-                android:visibility="visible"
-                android:layout_margin="3dp">
+    <android.support.v7.widget.CardView
+        android:id="@+id/mShowAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+        app:cardCornerRadius="2dp">
 
-                <TextView
-                    android:id="@+id/btnShowAnswer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@color/button_green_color"
-                    android:onClick="onbtnShowAnswerClick"
-                    android:text="@string/show_answer"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/white"
-                    android:clickable="true" />
-            </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/show_answer"
+            android:background="@color/colorPrimary"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:id="@+id/lbShowAnswer"/>
+    </android.support.v7.widget.CardView>
 
-            <include layout="@layout/view_button_answer" />
+    <include layout="@layout/view_button_answer" />
 
-        <!--</LinearLayout>-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/btnNextReverseCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="2dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/reverse_next"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+    </android.support.v7.widget.CardView>
+
+
+    <!--</LinearLayout>-->
     <!--</android.support.v7.widget.CardView>-->
 </LinearLayout>
