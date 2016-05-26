@@ -1768,4 +1768,24 @@ public class LearnApiImplements implements LearnApi {
         db.close();
         return update_result;
     }
+
+    public Card getReverseCard() {
+        Card card = new Card();
+        try {
+            String selectbyIDQuery = "SELECT " + selectFull + " FROM vocabulary Where vocabulary.due>0 ORDER BY RANDOM() LIMIT 1";
+            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+
+            //query for cursor
+            Cursor cursor = db.rawQuery(selectbyIDQuery, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0)
+                    do {
+                        card = _defineCardbyCursor(cursor, TYPE_CARD_DETAILS_0);
+                    } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return card;
+    }
 }
