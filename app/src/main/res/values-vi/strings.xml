@@ -341,7 +341,7 @@
     <string name="drawer_test_your_voca">Kiểm tra từ vựng</string>
     <string name="msg_tip_answer_card">Tùy vào việc bạn tự đánh giá khả năng nhớ của bạn, ứng dụng sẽ đưa từ này ra ôn lại theo các khoảng thời gian tương ứng bên dưới.</string>
     <string name="got_it">Đã hiểu</string>
-    <string name="reverse">Reverse</string>
+    <string name="reverse">Dịch ngược</string>
     <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
     <string name="reverse_next">Tiếp theo</string>
     <string name="complele_text_display"><u>2000 từ/năm với 5 phút mỗi ngày.</u></string>
