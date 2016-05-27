@@ -135,6 +135,7 @@ public class LazzyBeeShare {
     public static final int LIMIT_UNLOCK_FERTURE_STUDY_REVERSER = 50;
     public static final String STUDY = "study";
     public static final String REVERSE = "reverse";
+    public static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
 
 
     public static String mime = "text/html";
