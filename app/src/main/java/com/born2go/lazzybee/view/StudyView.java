@@ -44,6 +44,7 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.view.dialog.DialogFirstShowAnswer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,7 +61,6 @@ import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
 public class StudyView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyView";
-    private static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
     private final CardSched cardSched = new CardSched();
     private final Context context;
     private final String studyAction;
@@ -156,15 +156,16 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         return view;
     }
 
-    View.OnClickListener showAnswer = new View.OnClickListener() {
+    private View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            boolean firstTime = sharedPreferences.getBoolean(FIRST_TIME_SHOW_ANSWER, false);
+            boolean firstTime = sharedPreferences.getBoolean(LazzyBeeShare.FIRST_TIME_SHOW_ANSWER, false);
+            Log.d(TAG, LazzyBeeShare.FIRST_TIME_SHOW_ANSWER + ":" + firstTime);
             if (studyAction.equals(LazzyBeeShare.STUDY)) {
                 onClickShowAnswer();
-                //if (firstTime)
-                _showDialogTipAnswerCard();
+                if (firstTime)
+                    _showDialogTipAnswerCard();
 
             } else if (studyAction.equals(LazzyBeeShare.REVERSE)) {
                 showNextReverseCard();
@@ -200,28 +201,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _showDialogTipAnswerCard() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
-//        builder.setTitle("Tip");
-//        builder.setMessage(R.string.msg_tip_answer_card);
-//        builder.setCancelable(false);
-//        builder.setView(R.layout.view_tip_first_show_answer);
-//        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//            }
-//        });
-//        builder.setNegativeButton(R.string.got_it, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//                sharedPreferences.edit().putBoolean(FIRST_TIME_SHOW_ANSWER, true).commit();
-//            }
-//        });
-//        builder.create().show();
-//        DialogFirstShowAnswer firstShowAnswer = new DialogFirstShowAnswer(context);
-//        firstShowAnswer.show(getFragmentManager(), "");
+        DialogFirstShowAnswer firstShowAnswer = new DialogFirstShowAnswer(context);
+        firstShowAnswer.show(getFragmentManager(), "");
 
     }
 
