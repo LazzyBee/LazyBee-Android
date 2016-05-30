@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#9E9E9E">
+    android:padding="5dp"
+    android:background="#fff">
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/height_study_count_and_swipe"
                 android:orientation="horizontal"
-                android:background="#9E9E9E">
+                android:background="@drawable/bg_study_count">
 
 
                 <TextView
@@ -65,7 +66,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_dictionary"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="11dp"
         android:visibility="gone" />
 
 
