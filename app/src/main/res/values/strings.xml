@@ -516,7 +516,7 @@
     <string name="setting_sub_header_about">About</string>
     <string name="drawer_test_your_voca">Test your vocabulary</string>
     <string name="url_test_your_voca" translatable="false">http://www.lazzybee.com/testvocab/?menu=0</string>
-    <string name="msg_tip_answer_card">Upon to your self-evaluation of memorial quality, application will give this word to review respectively to the following periods.</string>
+    <string name="msg_tip_answer_card">Upon to your self-evaluation of memory quality, please choose the most appropriate span for the next review.</string>
     <string name="got_it">Got it</string>
     <string name="reverse">Reverse</string>
     <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
