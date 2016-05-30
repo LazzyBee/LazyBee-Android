@@ -470,14 +470,15 @@ public class LazzyBeeShare {
                 "       </div>\n"
                 + meaningDOWN +
                 "   </div>\n";
-
-        user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
-                "              <hr>\n" +
-                "              <center>User note</center></br>\n" +
-                card.getUser_note() +
-                "           </div>\n" +
-                "   </body>\n" +
-                "</html>\n";
+        if (card.getUser_note() != null) {
+            user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
+                    "              <hr>\n" +
+                    "              <center>User note</center></br>\n" +
+                    card.getUser_note() +
+                    "           </div>\n" +
+                    "   </body>\n" +
+                    "</html>\n";
+        }
         html += user_note;
         if (DEBUG) {
             debug = "           <div id='debug' style='float:left;width:100%;'>\n " +
