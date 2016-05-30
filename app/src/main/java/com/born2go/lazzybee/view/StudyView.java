@@ -156,18 +156,23 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         return view;
     }
 
+    private boolean firstTime = false;
     private View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            boolean firstTime = sharedPreferences.getBoolean(LazzyBeeShare.FIRST_TIME_SHOW_ANSWER, false);
-            Log.d(TAG, LazzyBeeShare.FIRST_TIME_SHOW_ANSWER + ":" + firstTime);
+            boolean firstTimeGotIt = sharedPreferences.getBoolean(LazzyBeeShare.FIRST_TIME_SHOW_ANSWER, false);
+            Log.d(TAG, LazzyBeeShare.FIRST_TIME_SHOW_ANSWER + ":" + firstTimeGotIt + ", firstTime:" + firstTime);
             if (studyAction.equals(LazzyBeeShare.STUDY)) {
                 onClickShowAnswer();
-                if (firstTime)
+                if (!firstTimeGotIt && !firstTime) {
+                    firstTime = true;
                     _showDialogTipAnswerCard();
+                }
 
-            } else if (studyAction.equals(LazzyBeeShare.REVERSE)) {
+            } else if (studyAction.equals(LazzyBeeShare.REVERSE))
+
+            {
                 showNextReverseCard();
             }
 
@@ -302,6 +307,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         void _displayUserNote(Card card);
 
         void setCurrentCard(Card card);
+
     }
 
     private void _initDatabase() {
