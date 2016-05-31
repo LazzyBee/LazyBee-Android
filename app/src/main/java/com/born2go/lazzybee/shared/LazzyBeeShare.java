@@ -517,7 +517,7 @@ public class LazzyBeeShare {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_POSITION_MEANIG);
         if (value == null)
-            POSITION_MEANING = false;
+            POSITION_MEANING = true;
         else if (value.equals(UP)) {
             POSITION_MEANING = false;
         } else if (value.equals(DOWN)) {
