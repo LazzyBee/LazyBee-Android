@@ -455,9 +455,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _goTestYourVoca() {
-        Intent intent = new Intent(context, TestYourVoca.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivity(intent);
+        if (LazzyBeeShare.checkConn(context)) {
+            Intent intent = new Intent(context, TestYourVoca.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            this.startActivity(intent);
+        } else {
+            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void _goHome() {
