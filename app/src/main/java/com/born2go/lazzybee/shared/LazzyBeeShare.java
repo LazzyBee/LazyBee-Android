@@ -555,22 +555,7 @@ public class LazzyBeeShare {
 
     public static String getDictionaryHTML(String l_vn) {
         String html =
-                "<html><head><style>.outer {\n" +
-                        "display: table;\n" +
-                        "position: absolute;\n" +
-                        "height: 100%;\n" +
-                        "width: 100%;\n" +
-                        "} \n" +
-                        ".middle {\n" +
-                        "display: table-cell;\n" +
-                        "vertical-align: middle;                        \n" +
-                        "}\n" +
-                        ".inner {\n" +
-                        "margin-left: auto;\n" +
-                        "margin-right: auto;                        \n" +
-                        "width: /*whatever width you want*/;\n" +
-                        "}\n" +
-                        "                        </style>\n" +
+                "<html><head><style> </style>\n" +
                         "                        </head><body>\n" +
                         "                        <div class=\"outer\">\n" +
                         "                        <div class=\"middle\">\n" +
@@ -600,6 +585,86 @@ public class LazzyBeeShare {
                                 ".ex {\n" +
                                 "    color: gray;\n" +
                                 "    margin-left: 15px;\n" +
+                                "}" +
+                                ".sense-block {margin: 15px 5px 10px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".def-block {\n" +
+                                "\tmargin-top: 5px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".def-head {\n" +
+                                "\tdisplay: block;\n" +
+                                "\ttext-indent: -1.5em;\n" +
+                                "\tpadding-left: 1.5em;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".def {\n" +
+                                "\tfont-weight: bold;\n" +
+                                "\tcolor: #a8397a;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".eg {\n" +
+                                "\tcolor: #555;\n" +
+                                "\tfont-style: italic;\n" +
+                                "\tcolor: gray;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".epp-xref, .freq {\n" +
+                                "\tmargin: 0;\n" +
+                                "\tpadding: 0;\n" +
+                                "\tborder: 0;\n" +
+                                "\ttext-indent: 0;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".examp {\n" +
+                                "\tmargin: .25em 0 .25em 1.5em;\n" +
+                                "\tdisplay: block;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".epp-xref {\n" +
+                                "\tpadding: 0 2px;\n" +
+                                "\tdisplay: inline-block;\n" +
+                                "\tmin-width: 14px;\n" +
+                                "\ttext-align: center;\n" +
+                                "\tcolor: #fff;\n" +
+                                "\tfont-size: 80%;\n" +
+                                "\tfont-family: \"Verdana\", sans-serif;\n" +
+                                "\tbackground-color: #2060c0;\n" +
+                                "\tborder-radius: 4px;\n" +
+                                "\t-moz-border-radius: 4px;\n" +
+                                "\t-webkit-border-radius: 4px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".freq {\n" +
+                                "\tpadding: 0 2px;\n" +
+                                "\tdisplay: inline-block;\n" +
+                                "\tmin-width: 14px;\n" +
+                                "\ttext-align: center;\n" +
+                                "\tcolor: #fff;\n" +
+                                "\tfont-size: 80%;\n" +
+                                "\tfont-family: \"Verdana\", sans-serif;\n" +
+                                "\tbackground-color: #2060c0;\n" +
+                                "\tborder-radius: 4px;\n" +
+                                "\t-moz-border-radius: 4px;\n" +
+                                "\t-webkit-border-radius: 4px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".usage {\n" +
+                                "\tfont-variant: small-caps;\n" +
+                                "\tcolor: #000;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".hw {\n" +
+                                "\tcolor: #008;\n" +
+                                "\tborder: 0;\n" +
+                                "\tfont-weight: bold;\n" +
+                                "\tfont-family: sans-serif;\n" +
+                                "\tfont-size: 14px;\n" +
+                                "}\n" +
+                                "ul.tabs {\n" +
+                                "    list-style: none;\n" +
+                                "    padding: 0;\n" +
                                 "}" +
                                 "</style>" +
                                 "</head>\n" +
