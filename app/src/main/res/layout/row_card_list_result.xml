@@ -99,7 +99,8 @@
                 android:layout_marginStart="200dp"
                 android:text="pronoun"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/grey_900" />
+                android:textColor="@color/grey_900"
+                android:layout_marginLeft="150dp" />
 
         </RelativeLayout>
         <!--</android.support.v7.widget.CardView>-->

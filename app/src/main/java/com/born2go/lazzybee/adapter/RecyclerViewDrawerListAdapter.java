@@ -103,6 +103,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                             lbCount.setText(context.getString(R.string.subject_medical));
                         else if (my_subject.equals(context.getString(R.string.subject_ielts_value)))
                             lbCount.setText(context.getString(R.string.subject_ielts));
+                        else if (my_subject.equals(context.getString(R.string.subject_600_toeic_value)))
+                            lbCount.setText(context.getString(R.string.subject_600toeic));
                         else
                             lbCount.setText(LazzyBeeShare.EMPTY);
                     }
@@ -113,6 +115,10 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                     mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_graph));
                 } else if (objectList.get(position).equals(context.getString(R.string.drawer_home))) {
                     mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_home));
+                }else if (objectList.get(position).equals(context.getString(R.string.drawer_test_your_voca))) {
+                    mImg.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_extension_black_24dp));
+                    mImg.setColorFilter(context.getResources().getColor(android.R.color.darker_gray));
+
                 }
             } else if (holder.viewType == TYPE_ADD_COURCE) {
 
@@ -152,6 +158,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         if (objectList.get(position).equals("English Word")
                 || objectList.get(position).equals(context.getString(R.string.drawer_home))
                 || objectList.get(position).equals(context.getString(R.string.drawer_dictionary))
+                || objectList.get(position).equals(context.getString(R.string.drawer_test_your_voca))
                 || objectList.get(position).equals(context.getString(R.string.drawer_statistical))
                 || objectList.get(position).equals(context.getString(R.string.drawer_subject)))
 

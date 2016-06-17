@@ -5,10 +5,11 @@
     android:layout_height="fill_parent"
 
     android:paddingBottom="5dp"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
     android:paddingTop="5dp"
-    android:weightSum="4.9">
+    android:weightSum="4.9"
+    android:background="#ffffff">
 
     <TextView
         android:id="@+id/btnAgain0"
@@ -16,7 +17,7 @@
         android:layout_height="fill_parent"
         android:layout_marginRight="5dp"
         android:layout_weight="1.23"
-        android:background="@color/button_green_color"
+        android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onbtnAgainClick"
@@ -30,7 +31,7 @@
         android:layout_height="fill_parent"
         android:layout_marginRight="5dp"
         android:layout_weight="1.23"
-        android:background="@color/button_green_color"
+        android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onbtnHardClick"
@@ -43,7 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_marginRight="5dp"
-        android:background="@color/button_green_color"
+        android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onbtnGoodClick"
@@ -55,8 +56,8 @@
         android:id="@+id/btnEasy3"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="1.23"
-        android:background="@color/button_green_color"
+        android:layout_weight="1.20"
+        android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onbtnEasyClick"

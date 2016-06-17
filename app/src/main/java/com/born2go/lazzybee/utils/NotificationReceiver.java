@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.SplashScreen;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.tagmanager.Container;
@@ -48,7 +47,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         String message;
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             if (container == null) {
                 message = context.getString(R.string.notification_message);
             } else {
@@ -77,8 +76,12 @@ public class NotificationReceiver extends BroadcastReceiver {
             String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
             if (onoffNotification.equals(LazzyBeeShare.ON))
                 notificationManager.notify(id, mBuilder.build());
-            else
-                Log.i(TAG, "Off notification");
+            else if (onoffNotification.equals(LazzyBeeShare.OFF))
+                Log.d(TAG, "Off notification");
+            else {
+                Log.d(TAG, "Notification null-->ON");
+                notificationManager.notify(id, mBuilder.build());
+            }
         } catch (Exception e) {
 
         }

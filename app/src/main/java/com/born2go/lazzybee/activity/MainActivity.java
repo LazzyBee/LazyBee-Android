@@ -11,9 +11,14 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.provider.BaseColumns;
+import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
@@ -24,6 +29,7 @@ import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.BackUpDatabaseToCSV;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
 import com.born2go.lazzybee.db.Card;
@@ -46,7 +53,6 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.view.dialog.DialogHelp;
 import com.born2go.lazzybee.view.dialog.DialogStatistics;
 import com.born2go.lazzybee.fragment.NavigationDrawerFragment;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
@@ -73,7 +79,7 @@ public class MainActivity extends AppCompatActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
+    private MainActivity activity;
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements dataBaseHelper;
@@ -93,13 +99,15 @@ public class MainActivity extends AppCompatActivity
     Snackbar snackbarTip;
 
     SearchView mSearchCardBox;
+    private CoordinatorLayout coordinatorLayout;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
+        this.activity = this;
         _initSQlIte();
         _initSettingApplication();
 
@@ -122,7 +130,7 @@ public class MainActivity extends AppCompatActivity
         //Define Search Dictionary box
         mSearchCardBox = (SearchView) findViewById(R.id.mSearchCard);
         mSearchCardBox.setIconifiedByDefault(false);
-        mSearchCardBox.setQueryHint("Dictionary");
+        mSearchCardBox.setQueryHint(getString(R.string.drawer_dictionary));
 
         //set provaider search
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -133,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         // Hide icon search in searchView and set clear text icon
         ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
         if (search_close_btn != null) {
-            search_close_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_black_18dp));
+            search_close_btn.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_clear_black_18dp));
         }
         ImageView magImage = (ImageView) mSearchCardBox.findViewById(R.id.search_mag_icon);
         if (magImage != null) {
@@ -142,6 +150,8 @@ public class MainActivity extends AppCompatActivity
         }
         //set color..
         if (autoCompleteTextView != null) {
+            //set Enable Spelling Suggestions
+            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -194,7 +204,12 @@ public class MainActivity extends AppCompatActivity
 
     private void _initInterstitialAd() {
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
+                Log.d(TAG, "Refesh container holder");
+                LazzyBeeSingleton.getContainerHolder().refresh();
+            }
+
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_fullscreen_id = null;
             if (container != null) {
@@ -288,6 +303,13 @@ public class MainActivity extends AppCompatActivity
         if (!first_run_app) {
             _showHelp();
             sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).commit();
+            dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
+            LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
+        }
+        String onoffNotification = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+        if (onoffNotification == null) {
+            dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
+            LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
         }
         KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT = dataBaseHelper.getSettingIntergerValuebyKey(String.valueOf(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT));
 
@@ -309,8 +331,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _intInterfaceView() {
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
         container = (FrameLayout) findViewById(R.id.mContainer);
         container.requestFocus();
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        floatingActionButton.setPadding(0, 0, 0, 0);
     }
 
     public void onlbTipHelpClick(View view) {
@@ -322,7 +348,7 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogCongraturation(String messgage_congratilation) {
         snackbarCongraturation =
                 Snackbar
-                        .make(this.container, messgage_congratilation, Snackbar.LENGTH_LONG);
+                        .make(this.coordinatorLayout, messgage_congratilation, Snackbar.LENGTH_LONG);
         View snackBarView = snackbarCongraturation.getView();
         snackBarView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,6 +441,9 @@ public class MainActivity extends AppCompatActivity
                 case LazzyBeeShare.DRAWER_HOME_INDEX:
                     _goHome();
                     break;
+                case LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX:
+                    _goTestYourVoca();
+                    break;
                 default:
                     break;
             }
@@ -425,13 +454,28 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void _goTestYourVoca() {
+        if (LazzyBeeShare.checkConn(context)) {
+            Intent intent = new Intent(context, TestYourVoca.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            this.startActivity(intent);
+        } else {
+            Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void _goHome() {
         //getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
     }
 
     private void _showStatistical() {
-        DialogStatistics dialogStatistics = new DialogStatistics(context);
-        dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
+        try {
+            DialogStatistics dialogStatistics = new DialogStatistics(context);
+            dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, "_showStatistical", e);
+        }
+
     }
 
     private void showSelectSubject() {
@@ -441,6 +485,7 @@ public class MainActivity extends AppCompatActivity
         final CheckBox cbScience = (CheckBox) mSelectMajor.findViewById(R.id.cbScience);
         final CheckBox cbMedicine = (CheckBox) mSelectMajor.findViewById(R.id.cbMedicine);
         final CheckBox cbIelts = (CheckBox) mSelectMajor.findViewById(R.id.cbIelts);
+        final CheckBox cbx600Toeic = (CheckBox) mSelectMajor.findViewById(R.id.cbx600Toeic);
 
         //get my subbject
         String my_subject = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
@@ -450,16 +495,22 @@ public class MainActivity extends AppCompatActivity
             cbMedicine.setChecked(false);
             cbIelts.setChecked(false);
             cbIt.setChecked(false);
-        } else if (my_subject.equals(getString(R.string.subject_it_value))) {
-            cbIt.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
-            cbEconomy.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_science_value))) {
-            cbScience.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
-            cbMedicine.setChecked(true);
-        } else if (my_subject.equals(getString(R.string.subject_ielts_value))) {
-            cbIelts.setChecked(true);
+            cbx600Toeic.setChecked(false);
+        } else {
+            Log.d(TAG, "MY_SUBJECT:" + my_subject);
+            if (my_subject.equals(getString(R.string.subject_it_value))) {
+                cbIt.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_economy_value))) {
+                cbEconomy.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_science_value))) {
+                cbScience.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_medical_value))) {
+                cbMedicine.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_ielts_value))) {
+                cbIelts.setChecked(true);
+            } else if (my_subject.equals(getString(R.string.subject_600_toeic_value))) {
+                cbx600Toeic.setChecked(true);
+            }
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
@@ -477,6 +528,7 @@ public class MainActivity extends AppCompatActivity
                     cbScience.setChecked(false);
                     cbMedicine.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 0;
                 } else {
                     checker[0] = -2;
@@ -493,6 +545,7 @@ public class MainActivity extends AppCompatActivity
                     cbScience.setChecked(false);
                     cbMedicine.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 1;
                 } else {
                     checker[0] = -2;
@@ -509,6 +562,7 @@ public class MainActivity extends AppCompatActivity
                     cbEconomy.setChecked(false);
                     cbMedicine.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 2;
                 } else {
                     checker[0] = -2;
@@ -525,6 +579,7 @@ public class MainActivity extends AppCompatActivity
                     cbEconomy.setChecked(false);
                     cbScience.setChecked(false);
                     cbIelts.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 3;
                 } else {
                     checker[0] = -2;
@@ -541,7 +596,25 @@ public class MainActivity extends AppCompatActivity
                     cbEconomy.setChecked(false);
                     cbScience.setChecked(false);
                     cbMedicine.setChecked(false);
+                    cbx600Toeic.setChecked(false);
                     checker[0] = 4;
+                } else {
+                    checker[0] = -2;
+                }
+            }
+        });
+        cbx600Toeic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    // Put some meat on the sandwich
+                    cbIt.setChecked(false);
+                    cbEconomy.setChecked(false);
+                    cbScience.setChecked(false);
+                    cbMedicine.setChecked(false);
+                    cbIelts.setChecked(false);
+                    checker[0] = 5;
                 } else {
                     checker[0] = -2;
                 }
@@ -642,6 +715,7 @@ public class MainActivity extends AppCompatActivity
                 // _defineSearchView(menu);
                 _restoreActionBar();
             } else {
+                _hideKeyboard();
                 _dismissTip();
             }
         } catch (Exception e) {
@@ -833,7 +907,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+        Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
         String base_url;
         if (container == null) {
             base_url = getString(R.string.url_lazzybee_website);
@@ -939,6 +1013,7 @@ public class MainActivity extends AppCompatActivity
         //goto_study_code1 learnmore
         studyComplete = false;
         Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.setAction(LazzyBeeShare.STUDY);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if (type == getResources().getInteger(R.integer.goto_study_code0)) {
             this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
@@ -1030,10 +1105,16 @@ public class MainActivity extends AppCompatActivity
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
 
-                //Show message congratilation
-                String messgage_congratilation = getString(R.string.congratulations);
-                _showDialogCongraturation(messgage_congratilation);
-                //studyComplete = true;
+                int count = dataBaseHelper._getCountStreak();
+                if (count % 10 == 0) {
+                    //Show dialog backup db
+                    _showDialogBackupDataBase();
+                } else {
+                    //Show message congratilation
+                    String messgage_congratilation = getString(R.string.congratulations);
+                    _showDialogCongraturation(messgage_congratilation);
+                }
+
 
                 //Save time congratilation in SharedPreferences
                 SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -1047,6 +1128,37 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void _showDialogBackupDataBase() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+
+        // Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.message_backup_database)
+                .setTitle(R.string.title_backup_database);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.btnBackUp, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //  _updateDB(type);
+                String device_id = Settings.Secure.getString(context.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                int mini = 1;
+                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
+                exportDatabaseToCSV.execute();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
+
 //    private void _restoreSearchView() {
 //        if (searchView != null) {
 //            searchView.setQuery(LazzyBeeShare.EMPTY, false);
@@ -1058,13 +1170,13 @@ public class MainActivity extends AppCompatActivity
 
     private void _showDialogTip() {
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String pop_up_maxnum;
             String popup_text;
             String popup_url = LazzyBeeShare.EMPTY;
             if (container == null) {
                 popup_text = null;
-                Log.d(TAG, "ContainerHolderSingleton Null");
+                Log.d(TAG, "ContainerHolder Null");
             } else {
                 pop_up_maxnum = container.getString(LazzyBeeShare.POPUP_MAXNUM);
                 if (pop_up_maxnum == null || pop_up_maxnum.equals(LazzyBeeShare.EMPTY)) {
@@ -1085,7 +1197,8 @@ public class MainActivity extends AppCompatActivity
             if (popup_text != null) {
                 snackbarTip =
                         Snackbar
-                                .make(this.container, popup_text, Snackbar.LENGTH_LONG);
+                                .make(this.coordinatorLayout, popup_text, Snackbar.LENGTH_INDEFINITE);
+
                 View snackBarView = snackbarTip.getView();
                 final String finalPopup_url = popup_url;
                 snackBarView.setOnClickListener(new View.OnClickListener() {
@@ -1103,14 +1216,22 @@ public class MainActivity extends AppCompatActivity
                 });
                 snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
 
-                new CountDownTimer(3000, 1000) {
-                    public void onTick(long millisUntilFinished) {
+                snackbarTip.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        snackbarTip.dismiss();
                     }
-
-                    public void onFinish() {
-                        snackbarTip.show();
-                    }
-                }.start();
+                }, 7000);
+//                new CountDownTimer(3000, 1000) {
+//                    public void onTick(long millisUntilFinished) {
+//                    }
+//
+//                    public void onFinish() {
+//
+//                    }
+//                }.start();
             } else {
                 Log.e(TAG, "popup_text null");
             }
@@ -1181,10 +1302,49 @@ public class MainActivity extends AppCompatActivity
 
         mSearchCardBox.clearFocus();
 
+        _hideKeyboard();
+    }
+
+    public void _hideKeyboard() {
         //hide keyboad
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+    public void onBtnStudyReverseOnClick(View view) {
+        int countDue = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_REV2, KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+        if (countDue > 0) {
+            Log.d(TAG, "onBtnStudyReverseOnClick() -countDue :" + countDue);
+            _showDialogWithMessage(getString(R.string.msg_finishing_your_daily_target));
+        } else {
+            int countAgain = dataBaseHelper._getCountListCardByQueue(Card.QUEUE_LNR1, 0);
+            if (countAgain > 0) {
+                Log.d(TAG, "onBtnStudyReverseOnClick() -countAgain :" + countAgain);
+                _showDialogWithMessage(getString(R.string.msg_finishing_your_daily_target));
+            } else {
+                int check = dataBaseHelper._checkListTodayExit();
+                Log.d(TAG, "onBtnStudyReverseOnClick() -queueList :" + check);
+                if (check == -1 || check == -2 || check > 0) {
+                    _showDialogWithMessage(getString(R.string.msg_finishing_your_daily_target));
+                } else if (check == 0) {
+                    int countCardLearner = dataBaseHelper._getCountListCardLearned();
+                    Log.d(TAG, "onBtnStudyReverseOnClick() -countCardLearner :" + countCardLearner);
+                    if (countCardLearner >= LazzyBeeShare.LIMIT_UNLOCK_FERTURE_STUDY_REVERSER) {
+                        studyReverse();
+                    } else {
+                        _showDialogWithMessage(getString(R.string.msg_limit_unlock_feture_study_reverse));
+                    }
+                }
+            }
+        }
+    }
+
+    private void studyReverse() {
+        studyComplete = false;
+        Intent intent = new Intent(getApplicationContext(), StudyActivity.class);
+        intent.setAction(LazzyBeeShare.REVERSE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
+    }
 }
 

@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
@@ -19,6 +21,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,7 +40,6 @@ import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdRequest;
@@ -50,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements
-        GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
+        GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "SearchActivity";
     public static final String QUERY_TEXT = "query_text";
@@ -70,6 +72,7 @@ public class SearchActivity extends AppCompatActivity implements
     View mViewAdv;
     SearchView.SearchAutoComplete mSuggerstionCard;
     List<Card> dictionaryCardList;
+    private SwipeRefreshLayout mRefeshSearch;
 
 
     @Override
@@ -79,8 +82,6 @@ public class SearchActivity extends AppCompatActivity implements
         context = this;
 
         _initLazzyBeeSingleton();
-
-        dictionaryCardList = dataBaseHelper._searchCardOrGotoDictionary(LazzyBeeShare.EMPTY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
 
         _initRecyclerViewSearchResults();
 
@@ -102,6 +103,8 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void _initRecyclerViewSearchResults() {
+        mRefeshSearch = (SwipeRefreshLayout) findViewById(R.id.mRefeshSearch);
+        mRefeshSearch.setOnRefreshListener(this);
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
@@ -184,6 +187,8 @@ public class SearchActivity extends AppCompatActivity implements
         mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
 
         if (mSuggerstionCard != null) {
+            //set Enable Spelling Suggestions
+            mSuggerstionCard.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = mSuggerstionCard.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -335,7 +340,11 @@ public class SearchActivity extends AppCompatActivity implements
             _trackerApplication(GA_SCREEN);
         } else if (LazzyBeeShare.ACTION_GOTO_DICTIONARY.equals(action)) {
             Log.d(TAG, "ACTION_DICTIONARY");
+            //init dic
+            dictionaryCardList = dataBaseHelper._searchCardOrGotoDictionary(LazzyBeeShare.EMPTY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
             _displayDictionary();
+        } else {
+            Log.d(TAG, "ACTION_DIF");
         }
 
 
@@ -378,7 +387,7 @@ public class SearchActivity extends AppCompatActivity implements
                 } else {
                     //failed to connect to internet
                     Log.d(TAG, getString(R.string.failed_to_connect_to_server));
-                    List<Card> cardList = dataBaseHelper._searchCardOrGotoDictionary(query, display_type);
+                    List<Card> cardList = dataBaseHelper._searchCard(query);
                     int result_count = cardList.size();
                     Log.i(TAG, "Search result_count:" + result_count);
                     if (result_count > 0) {
@@ -441,6 +450,7 @@ public class SearchActivity extends AppCompatActivity implements
         dialog.show();
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void _doneCard(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
@@ -614,8 +624,12 @@ public class SearchActivity extends AppCompatActivity implements
     private void _initAdView() {
         try {
             mViewAdv = findViewById(R.id.mViewAdv);
+            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
+                Log.d(TAG, "Refesh container holder");
+                LazzyBeeSingleton.getContainerHolder().refresh();
+            }
             //get value form task manager
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_id = null;
             if (container == null) {
@@ -672,5 +686,11 @@ public class SearchActivity extends AppCompatActivity implements
         Log.d(TAG, "Action:" + getIntent().getAction());
         //finish();
         super.onBackPressed();
+    }
+
+    @Override
+    public void onRefresh() {
+        _search(query_text, display_type, false);
+        mRefeshSearch.setRefreshing(false);
     }
 }

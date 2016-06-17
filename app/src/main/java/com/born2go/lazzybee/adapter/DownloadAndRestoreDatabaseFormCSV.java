@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -286,9 +287,10 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                 CSVReader reader = new CSVReader(fReader);
                 try {
                     String[] nextLine;
+                    LazzyBeeSingleton.learnApiImplements.deteteStreak();
                     while ((nextLine = reader.readNext()) != null) {
                         int day = Integer.parseInt(nextLine[0]);
-                        int results = LazzyBeeSingleton.learnApiImplements.updateStreakDay(day);
+                        int results = LazzyBeeSingleton.learnApiImplements.restoreStreakDay(day);
                         Log.d(TAG, "Restore streak day =" + day + ((results > 0) ? " : Ok" : " : Fails"));
                     }
                     restore = 1;

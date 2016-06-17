@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="left|top"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/color_title_dialog_statitsic">
 
         <ImageView
             android:id="@+id/mClose"

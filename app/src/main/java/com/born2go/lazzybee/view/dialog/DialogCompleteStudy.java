@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,7 +62,7 @@ public class DialogCompleteStudy extends DialogFragment {
             int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
             _initStreakCount(view, count);
             _initStreakDays(view, inflater, count);
-
+            _handlerCompleteStudyLinkClick(view);
             //Play media
             MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.magic);
             mediaPlayer.start();
@@ -74,11 +76,23 @@ public class DialogCompleteStudy extends DialogFragment {
             @Override
             public void onClick(View v) {
                 getDialog().cancel();
-                 iCompleteSutdy.close();
+                iCompleteSutdy.close();
             }
         });
 
         return view;
+    }
+
+    private void _handlerCompleteStudyLinkClick(View view) {
+        view.findViewById(R.id.lbCompleteLink).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = getString(R.string.complele_text_display_link);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
 
     private void _initStreakCount(View view, int count) {

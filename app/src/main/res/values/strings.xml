@@ -111,14 +111,15 @@
     <string name="setting_max_learn_more_per_day">Max learn more per day</string>
     <string name="setting_total_learn_per_day">Total card per day</string>
 
-    <string name="setting_about">About</string>
-    <string name="setting_update_title">Update Database</string>
+    <string name="setting_about" translatable="false">-About</string>
+    <string name="setting_update_title">Database</string>
     <string name="setting_notification">Notification</string>
     <string name="setting_check_update">Check update</string>
     <string name="setting_auto_check_update">Auto check update</string>
     <string name="setting_debug_info">Debug Infor</string>
     <string name="setting_language" translatable="false">Language/Ngôn ngữ</string>
     <string name="setting_lines" translatable="false">LINE</string>
+    <string name="setting_lines_child" translatable="false">LINE CHILD</string>
     <string name="setting_limit_card_number">%d Card</string>
 
     <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
@@ -145,7 +146,7 @@
 
     <string name="notification_title">%1$s %2$s</string>
     <string name="message_hellp_study">Tip/help panel(under construction)</string>
-    <string name="setting_speech_rate">Speech rate</string>
+    <string name="setting_speech_rate">Speaking speed</string>
     <string name="setting_speech_rate_slider" translatable="false">SpeechSlider</string>
     <string name="action_change_speech_rate">Speech rate</string>
 
@@ -175,7 +176,7 @@
     <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
     <string name="gtag_container_load_error" translatable="false">Failed to load container</string>
 
-    <string name="notification_message" translatable="false">It\'s time to learn few English!</string>
+    <string name="notification_message" translatable="false">It\'s time to learn few English words!</string>
     <string name="local_service_started" translatable="false">no</string>
 
     <string name="setting_reset_to_default">Reset to default</string>
@@ -191,68 +192,79 @@
 
 
     <string-array name="settings">
-        <!--<item>@string/setting_learn_title</item>
-        <item>@string/setting_total_learn_per_day</item>
-        <item>@string/setting_today_new_card_limit</item>-->
-        <!--<item>@string/setting_today_review_card_limit</item>-->
-        <!--<item>@string/setting_custom_study_title</item>-->
+        <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
-        <!--<item>@string/setting_speech_rate</item>-->
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_notification</item>
-        <item>@string/setting_lines</item>
 
-        <item>@string/setting_update_title</item>
-        <item>@string/setting_check_update</item>
-        <!--<item>@string/setting_auto_check_update</item>-->
+        <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
-        <item>@string/setting_reset_cache</item>
-        <!--<item>@string/setting_export_database</item>-->
-        <!--<item>@string/setting_update_db_form_query</item>-->
-        <item>@string/setting_lines</item>
-        <item>@string/setting_backup_and_restore_database_title</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_back_up_database</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_more</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_about</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_all_right</item>
     </string-array>
 
     <string-array name="settings_dev">
+        <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_speech_rate_slider</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_notification</item>
-        <item>@string/setting_lines</item>
 
-        <item>@string/setting_update_title</item>
-        <item>@string/setting_check_update</item>
+        <item>@string/setting_notification</item>
         <item>@string/setting_lines</item>
 
         <item>@string/setting_language</item>
         <item>@string/setting_lines</item>
 
-        <item>@string/setting_debug_info</item>
-        <item>@string/setting_reset_cache</item>
-        <item>@string/setting_export_database</item>
-        <item>@string/setting_update_db_form_query</item>
-        <item>@string/setting_lines</item>
+        <item>@string/setting_update_title</item>
+        <item>@string/setting_check_update</item>
+        <item>@string/setting_lines_child</item>
 
-        <item>@string/setting_backup_and_restore_database_title</item>
         <item>@string/setting_back_up_database</item>
+        <item>@string/setting_lines_child</item>
+
         <item>@string/setting_restore_database</item>
         <item>@string/setting_lines</item>
 
+        <item>@string/setting_sub_header_more</item>
+        <item>@string/setting_debug_info</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_reset_cache</item>
+        <item>@string/setting_lines_child</item>
+
+        <item>@string/setting_export_database</item>
+
+        <item>@string/setting_lines_child</item>
+        <item>@string/setting_update_db_form_query</item>
+
+        <item>@string/setting_lines</item>
+
+        <item>@string/setting_sub_header_about</item>
         <item>@string/setting_about</item>
-        <item>@string/setting_all_right</item>
+
     </string-array>
 
     <string-array name="custom_study">
@@ -300,6 +312,7 @@
         <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
+        <item>@string/drawer_test_your_voca</item>
         <item>@string/drawer_line</item>
         <item>@string/drawer_dictionary</item>
         <!--  <item>@string/drawer_add_course</item>-->
@@ -415,6 +428,7 @@
         <item>@string/subject_science</item>
         <item>@string/subject_medical</item>
         <item>@string/subject_ielts</item>
+        <item>@string/subject_600toeic</item>
     </string-array>
 
     <string-array name="subjects_value" translatable="false">
@@ -423,6 +437,7 @@
         <item>@string/subject_science_value</item>
         <item>@string/subject_medical_value</item>
         <item>@string/subject_ielts_value</item>
+        <item>@string/subject_600_toeic_value</item>
     </string-array>
     <string-array name="devices_dev_id" translatable="false">
         <item>b6fe9200bf21fe7e</item>
@@ -430,7 +445,8 @@
         <item>b5a8fa6f8c1ba689<!--A890--></item>
         <item>501847cbba33a2e <!--A820--></item>
         <item>a23c44db2bc85af9<!--geny n7 5.0--></item>
-        <item>f130a1e2a7076611<!--blue stask--></item>
+        <item>a24a1e2a58a3432c<!--geny n4 4.4.4--></item>
+        <!-- <item>f130a1e2a7076611&lt;!&ndash;blue stask&ndash;&gt;</item>-->
     </string-array>
 
     <string name="title_dialog_daily_target_completed">Daily target completed</string>
@@ -470,7 +486,7 @@
     <string name="setting_back_up_database">Backup database</string>
     <string name="setting_back_up_database_dev" translatable="false">Backup database dev</string>
     <string name="setting_restore_database">Restore database</string>
-    <string name="setting_time_deday_show_answer">Watting time to show answer</string>
+    <string name="setting_time_deday_show_answer">Waiting time to show answer</string>
     <string name="show_answer_now">Immediately</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -490,4 +506,22 @@
     <string name="restore_database_wrong_code">Wrong code, please try again.</string>
     <string name="swipe_action_add">Learn</string>
     <string name="setting_display_meaning">Display meaning</string>
+    <string name="btnBackUp">Backup</string>
+    <string name="message_backup_database">LazzyBee is going to backup data to save your progress. Proceed?</string>
+    <string name="title_backup_database">Backup database</string>
+    <string name="subject_600toeic" translatable="false">600 toeic</string>
+    <string name="subject_600_toeic_value">toeic</string>
+    <string name="custom_study_error_input_value">Please input limit</string>
+    <string name="setting_sub_header_more">More</string>
+    <string name="setting_sub_header_about">About</string>
+    <string name="drawer_test_your_voca">Test your vocabulary</string>
+    <string name="url_test_your_voca" translatable="false">http://www.lazzybee.com/testvocab/?menu=0</string>
+    <string name="msg_tip_answer_card">Upon to your self-evaluation of memory quality, please choose the most appropriate span for the next review.</string>
+    <string name="got_it">Got it</string>
+    <string name="reverse">Reverse</string>
+    <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
+    <string name="reverse_next">Next</string>
+    <string name="complele_text_display"><u>2000 words/year with 5 minutes per day.</u></string>
+    <string name="complele_text_display_link" translatable="false">http://www.lazzybee.com/blog/can_you_learn_2000_words_per_year</string>
+    <string name="msg_finishing_your_daily_target">Please come back after finishing your daily target.</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -106,7 +108,7 @@ public class StudyActivity extends AppCompatActivity
             pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy", e);
+            LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy()", e);
         }
     }
 
@@ -140,8 +142,12 @@ public class StudyActivity extends AppCompatActivity
             if (result > -1) {
                 _showDialogComplete();
             } else {
-                setResult(RESULT_CANCELED, new Intent());
-                finish();
+                if (learn_more)
+                    _showDialogCompleteMore();
+                else {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                }
             }
         } else {
             setResult(RESULT_CANCELED, new Intent());
@@ -151,26 +157,32 @@ public class StudyActivity extends AppCompatActivity
 
     }
 
+    private void _showDialogCompleteMore() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+        builder.setTitle("Ops!");
+        builder.setMessage("Complete study!!!");
+        builder.setCancelable(false);
+        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                setResult(RESULT_CANCELED, new Intent());
+                finish();
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void _showDialogComplete() {
         if (learn_more == false) {
             //Show dialog complete learn
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
         } else {
-            setResult(completeStudy, new Intent());
-            finish();
+            _showDialogCompleteMore();
         }
-//        final Dialog dialog = new Dialog(this, R.style.full_screen_dialog) {
-//            @Override
-//            protected void onCreate(Bundle savedInstanceState) {
-//                super.onCreate(savedInstanceState);
-//                setContentView(R.layout.fragment_dialog_complete_study);
-//
-//
-//
-//            }
-//        };
-//        dialog.show();
     }
 
     /**
@@ -240,6 +252,8 @@ public class StudyActivity extends AppCompatActivity
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
+            //set Enable Spelling Suggestions
+            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -374,6 +388,9 @@ public class StudyActivity extends AppCompatActivity
         _completeLean(complete);
     }
 
+
+
+
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private int pageCount = 2;
 
@@ -408,6 +425,20 @@ public class StudyActivity extends AppCompatActivity
         public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
         }
+
+        private Fragment mCurrentFragment;
+
+        public Fragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = ((Fragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
+        }
     }
 
     @Override
@@ -429,10 +460,9 @@ public class StudyActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String user_note = txtUserNote.getText().toString();
-                if (!user_note.isEmpty()) {
-                    currentCard.setUser_note(user_note);
-                    dataBaseHelper._updateUserNoteCard(currentCard);
-                }
+                currentCard.setUser_note(user_note);
+                dataBaseHelper._updateUserNoteCard(currentCard);
+                ((StudyView)pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
                 dialog.dismiss();
             }
         });
@@ -461,4 +491,5 @@ public class StudyActivity extends AppCompatActivity
     public void setCurrentCard(Card card) {
         currentCard = card;
     }
+
 }

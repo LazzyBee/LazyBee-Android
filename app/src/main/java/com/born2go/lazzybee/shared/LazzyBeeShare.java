@@ -83,6 +83,7 @@ public class LazzyBeeShare {
     public static final int DRAWER_HELP_INDEX = 7;
     public static final int DRAWER_STATISTICAL_INDEX = 8;
     public static final int DRAWER_HOME_INDEX = 9;
+    public static final int DRAWER_TEST_YOUR_VOCA_INDEX = 10;
     public static final int CODE_COMPLETE_STUDY_1000 = 1000;
 
     public static final int CODE_SEARCH_RESULT = 1001;
@@ -131,6 +132,10 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_DISPLAY_MEANING = "display_meaning";
     public static final String ACTION_GOTO_DICTIONARY = "goto_dictionary";
     public static final int ACTION_CODE_GOTO_STUDY = 101;
+    public static final int LIMIT_UNLOCK_FERTURE_STUDY_REVERSER = 50;
+    public static final String STUDY = "study";
+    public static final String REVERSE = "reverse";
+    public static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
 
 
     public static String mime = "text/html";
@@ -138,7 +143,7 @@ public class LazzyBeeShare {
 
 
     public static String ASSETS = "file:///android_asset/";
-    public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 10;
+    public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 5;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
 
     //Default setting
@@ -282,6 +287,28 @@ public class LazzyBeeShare {
         return html;
     }
 
+    public static String _getReverseQuestionDisplay(Context context, Card card) {
+
+        String html =
+                "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<head>\n" +
+                        "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                        "name=\"viewport\">\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<div style='width:100%'>\n" +
+
+                        "<div style='float:left;width: 90%;text-align: center;'>" +
+                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_reverse_question_size) + "pt;font-weight: bold;'>" + _getValueFromKey(card.getAnswers(), CARD_MEANING) + "</span>" +
+                        "</div>" +
+                        "</div>\n" +
+                        "</body>\n" +
+                        "</html>";
+        //Log.v(TAG, html);
+        return html;
+    }
+
 
     public static String _getValueFromKey(String answer, String key) {
         String value = EMPTY;
@@ -340,6 +367,7 @@ public class LazzyBeeShare {
         String exampleTagA = EMPTY;
         String imageURL = EMPTY;
         String debug = "</body>\n</html>\n";
+        String user_note = "";
         String _example = context.getResources().getString(R.string.example);
         Object _explain = context.getResources().getString(R.string.explain);
 
@@ -442,18 +470,28 @@ public class LazzyBeeShare {
                 "       </div>\n"
                 + meaningDOWN +
                 "   </div>\n";
+        if (card.getUser_note() != null && card.getUser_note().trim().length() > 0) {
 
+            user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
+                    "              <hr>\n" +
+                    "              <center>User note</center></br>\n" +
+                    card.getUser_note() +
+                    "           </div>\n" +
+                    "   </body>\n" +
+                    "</html>\n";
+        }
+        html += user_note;
         if (DEBUG) {
-            debug = "           <div id='debug'>\n " +
-                    "              Debug infor:</br>\n" +
-                    "              -------------------------------------</br>\n" +
+            debug = "           <div id='debug' style='float:left;width:100%;'>\n " +
+                    "              <hr>\n" +
+                    "              <center>Debug infor</center></br>\n" +
                     "              Level:" + card.getLevel() + "</br>\n" +
-                    "              lat_ivl:" + card.getLast_ivl() + "</br>\n" +
-                    "              Factor:" + card.getFactor() + "</br>\n" +
-                    "              Rev_count:" + card.getRev_count() + "</br>\n" +
+                    "              Last interval:" + card.getLast_ivl() + "</br>\n" +
+                    "              Easy factor:" + card.getFactor() + "</br>\n" +
+                    "              Review count(s):" + card.getRev_count() + "</br>\n" +
                     "              Queue:" + card.getQueue() + "</br>\n" +
-                    "              Due:" + card.getDue() + "-----" + getDate(card.getDue() * 1000) + "</br>\n" +
-                    "              -------------------------------------</br>\n" +
+                    "              Due date:" + card.getDue() + "-----" + getDate(card.getDue() * 1000) + "</br>\n" +
+
                     "           </div>\n" +
                     "   </body>\n" +
                     "</html>\n";
@@ -480,7 +518,7 @@ public class LazzyBeeShare {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_POSITION_MEANIG);
         if (value == null)
-            POSITION_MEANING = false;
+            POSITION_MEANING = true;
         else if (value.equals(UP)) {
             POSITION_MEANING = false;
         } else if (value.equals(DOWN)) {
@@ -518,22 +556,7 @@ public class LazzyBeeShare {
 
     public static String getDictionaryHTML(String l_vn) {
         String html =
-                "<html><head><style>.outer {\n" +
-                        "display: table;\n" +
-                        "position: absolute;\n" +
-                        "height: 100%;\n" +
-                        "width: 100%;\n" +
-                        "} \n" +
-                        ".middle {\n" +
-                        "display: table-cell;\n" +
-                        "vertical-align: middle;                        \n" +
-                        "}\n" +
-                        ".inner {\n" +
-                        "margin-left: auto;\n" +
-                        "margin-right: auto;                        \n" +
-                        "width: /*whatever width you want*/;\n" +
-                        "}\n" +
-                        "                        </style>\n" +
+                "<html><head><style> </style>\n" +
                         "                        </head><body>\n" +
                         "                        <div class=\"outer\">\n" +
                         "                        <div class=\"middle\">\n" +
@@ -563,6 +586,86 @@ public class LazzyBeeShare {
                                 ".ex {\n" +
                                 "    color: gray;\n" +
                                 "    margin-left: 15px;\n" +
+                                "}" +
+                                ".sense-block {margin: 15px 5px 10px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".def-block {\n" +
+                                "\tmargin-top: 5px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".def-head {\n" +
+                                "\tdisplay: block;\n" +
+                                "\ttext-indent: -1.5em;\n" +
+                                "\tpadding-left: 1.5em;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".def {\n" +
+                                "\tfont-weight: bold;\n" +
+                                "\tcolor: #a8397a;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".eg {\n" +
+                                "\tcolor: #555;\n" +
+                                "\tfont-style: italic;\n" +
+                                "\tcolor: #444444;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".epp-xref, .freq {\n" +
+                                "\tmargin: 0;\n" +
+                                "\tpadding: 0;\n" +
+                                "\tborder: 0;\n" +
+                                "\ttext-indent: 0;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".examp {\n" +
+                                "\tmargin: .25em 0 .25em 1.5em;\n" +
+                                "\tdisplay: block;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".epp-xref {\n" +
+                                "\tpadding: 0 2px;\n" +
+                                "\tdisplay: inline-block;\n" +
+                                "\tmin-width: 14px;\n" +
+                                "\ttext-align: center;\n" +
+                                "\tcolor: #fff;\n" +
+                                "\tfont-size: 80%;\n" +
+                                "\tfont-family: \"Verdana\", sans-serif;\n" +
+                                "\tbackground-color: #2060c0;\n" +
+                                "\tborder-radius: 4px;\n" +
+                                "\t-moz-border-radius: 4px;\n" +
+                                "\t-webkit-border-radius: 4px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".freq {\n" +
+                                "\tpadding: 0 2px;\n" +
+                                "\tdisplay: inline-block;\n" +
+                                "\tmin-width: 14px;\n" +
+                                "\ttext-align: center;\n" +
+                                "\tcolor: #fff;\n" +
+                                "\tfont-size: 80%;\n" +
+                                "\tfont-family: \"Verdana\", sans-serif;\n" +
+                                "\tbackground-color: #2060c0;\n" +
+                                "\tborder-radius: 4px;\n" +
+                                "\t-moz-border-radius: 4px;\n" +
+                                "\t-webkit-border-radius: 4px;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".usage {\n" +
+                                "\tfont-variant: small-caps;\n" +
+                                "\tcolor: #000;\n" +
+                                "}\n" +
+                                "\n" +
+                                ".hw {\n" +
+                                "\tcolor: #008;\n" +
+                                "\tborder: 0;\n" +
+                                "\tfont-weight: bold;\n" +
+                                "\tfont-family: sans-serif;\n" +
+                                "\tfont-size: 14px;\n" +
+                                "}\n" +
+                                "ul.tabs {\n" +
+                                "    list-style: none;\n" +
+                                "    padding: 0;\n" +
                                 "}" +
                                 "</style>" +
                                 "</head>\n" +

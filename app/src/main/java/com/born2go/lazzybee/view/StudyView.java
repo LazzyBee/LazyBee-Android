@@ -1,12 +1,15 @@
 package com.born2go.lazzybee.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,6 +17,7 @@ import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +29,8 @@ import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,9 +44,9 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.view.dialog.DialogFirstShowAnswer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +65,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private static final String TAG = "StudyView";
     private final CardSched cardSched = new CardSched();
     private final Context context;
+    private final String studyAction;
     private OnStudyViewListener mListener;
     private Card card;
     private LearnApiImplements dataBaseHelper;
@@ -81,13 +88,16 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     TextView lbCountAgain;
     TextView lbCountDue;
 
+    ImageView imgGotoDictionary;
+
     CardView mCardViewHelpandAdMod;
-    RelativeLayout mShowAnswer;
+    CardView mShowAnswer;
 
     List<Card> todayList = new ArrayList<Card>();
     List<Card> againList = new ArrayList<Card>();
     List<Card> dueList = new ArrayList<Card>();
     List<Card> cardListAddDueToDay = new ArrayList<Card>();
+    List<Card> reverseList = new ArrayList<Card>();
     //Current Card
     Card currentCard = new Card();
     //Define before card
@@ -109,18 +119,23 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     boolean sDEBUG = false;
     boolean sPOSITION_MEANING = false;
     int sTimeShowAnswer;
+    CardView btnNextReverseCard;
+    private View mCount;
+
 
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
     }
 
+    @SuppressLint("ValidFragment")
     public StudyView(Context context, Intent intent, CustomViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
         this.card = card;
         this.context = context;
         this.intent = intent;
         this.mViewPager = mViewPager;
         this.screenSlidePagerAdapter = screenSlidePagerAdapter;
+        this.studyAction = intent.getAction();
         _initDatabase();
         _initTextToSpeech();
     }
@@ -139,27 +154,67 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.view_study_main, container, false);
         _initView(view);
-
         _setUpStudy();
-        _handlerButton();
+        _handlerButtonAnswer();
         return view;
     }
 
-    View.OnClickListener showAnswer = new View.OnClickListener() {
+    private boolean firstTime = false;
+    private View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //mViewPager.setPagingEnabled(true);
-            setEnableShowDictionary(true);
-            answerDisplay = true;
-            _showAnswer();
-            mListener.setCurrentCard(currentCard);
-            mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            boolean firstTimeGotIt = sharedPreferences.getBoolean(LazzyBeeShare.FIRST_TIME_SHOW_ANSWER, false);
+            Log.d(TAG, LazzyBeeShare.FIRST_TIME_SHOW_ANSWER + ":" + firstTimeGotIt + ", firstTime:" + firstTime);
+            if (studyAction.equals(LazzyBeeShare.STUDY)) {
+                onClickShowAnswer();
+                if (!firstTimeGotIt && !firstTime) {
+                    firstTime = true;
+                    _showDialogTipAnswerCard();
+                }
 
+            } else if (studyAction.equals(LazzyBeeShare.REVERSE))
+
+            {
+                showNextReverseCard();
+            }
 
         }
     };
 
-    private void _handlerButton() {
+    private void showNextReverseCard() {
+        mShowAnswer.setVisibility(View.GONE);
+        btnShowAnswer.setVisibility(View.GONE);
+        mLayoutButton.setVisibility(View.GONE);
+        btnNextReverseCard.setVisibility(View.VISIBLE);
+        mListener.setCurrentCard(currentCard);
+        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+        imgGotoDictionary.setVisibility(View.VISIBLE);
+        setEnableShowDictionary(true);
+        //set Dictionary card
+        setDisplayCard(currentCard);
+        //Show answer question
+        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue(), 1);
+
+    }
+
+    private void onClickShowAnswer() {
+        btnNextReverseCard.setVisibility(View.GONE);
+        setEnableShowDictionary(true);
+        answerDisplay = true;
+        _showAnswer();
+        mListener.setCurrentCard(currentCard);
+        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+        imgGotoDictionary.setVisibility(View.VISIBLE);
+    }
+
+    private void _showDialogTipAnswerCard() {
+        DialogFirstShowAnswer firstShowAnswer = new DialogFirstShowAnswer(context);
+        firstShowAnswer.show(getFragmentManager(), "");
+
+    }
+
+    private void _handlerButtonAnswer() {
         btnHard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,13 +304,18 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         }
     }
 
+    public void setResetUserNote(String resetUserNote) {
+        currentCard.setUser_note(resetUserNote);
+        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), 10, 1);
+    }
+
+
     public interface OnStudyViewListener {
         void completeLearn(boolean complete);
 
         void _displayUserNote(Card card);
 
         void setCurrentCard(Card card);
-
 
     }
 
@@ -266,9 +326,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private void _initView(final View view) {
         container = (LinearLayout) view.findViewById(R.id.container);
         //init button
-        mShowAnswer = (RelativeLayout) view.findViewById(R.id.mShowAnswer);
+        mShowAnswer = (CardView) view.findViewById(R.id.mShowAnswer);
+        btnNextReverseCard = (CardView) view.findViewById(R.id.btnNextReverseCard);
+        mCount = view.findViewById(R.id.mCount);
 
-        btnShowAnswer = (TextView) view.findViewById(R.id.btnShowAnswer);
+        btnShowAnswer = (TextView) view.findViewById(R.id.lbShowAnswer);
         mLayoutButton = (LinearLayout) view.findViewById(R.id.mLayoutButton);
 
         btnAgain0 = (TextView) view.findViewById(R.id.btnAgain0);
@@ -280,6 +342,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         lbCountNew = (TextView) view.findViewById(R.id.lbCountTotalVocabulary);
         lbCountAgain = (TextView) view.findViewById(R.id.lbCountAgainInday);
         lbCountDue = (TextView) view.findViewById(R.id.lbAgainDue);
+
+        imgGotoDictionary = (ImageView) view.findViewById(R.id.imgGotoDictionary);
+        imgGotoDictionary.setColorFilter(context.getResources().getColor(R.color.card_due_color));
 
         final RelativeLayout mDisplay = (RelativeLayout) view.findViewById(R.id.mDisplay);
 
@@ -309,6 +374,13 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
+        _handlerNote();
+
+        _handlerImgGotoDictionary();
+    }
+
+    private void _handlerNote() {
+        //Handler onclick
         mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -316,30 +388,48 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
             }
         });
+
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         final int densityDpi = (int) (metrics.density * 160f);
         Log.d(TAG, "DPI:" + densityDpi);
+
+
+
         mFloatActionButtonUserNote.setOnTouchListener(new View.OnTouchListener() {
             public boolean shouldClick;
+            int move = 0;
             float dX, dY;
+            boolean isMove = false;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d(TAG, "On touch");
+
+                // your code for move and drag
                 setEnableShowDictionary(true);
-                switch (event.getActionMasked()) {
+
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
 
                     case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG, "ACTION_DOWN");
                         shouldClick = true;
+                        isMove = false;
                         dX = (mFloatActionButtonUserNote.getX() - event.getRawX());
                         dY = (mFloatActionButtonUserNote.getY() - event.getRawY());
+                        move = 1;
                         break;
+
                     case MotionEvent.ACTION_UP:
-                        if (shouldClick)
-                            mFloatActionButtonUserNote.performClick();//call click
+                        Log.d(TAG, "ACTION_UP -move:" + move);
+                        if (shouldClick || move < 10) {
+                            Log.d(TAG, "performClick:" + mFloatActionButtonUserNote.performClick());//call on move
+                        }
+                        move = 0;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
+                        isMove = true;
+                        Log.d(TAG, "ACTION_MOVE");
+                        move++;
                         shouldClick = false;
                         float eX = (event.getRawX() + dX);//define position X
                         float eY = (event.getRawY() + dY);//define position Y
@@ -364,17 +454,26 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                                 .setDuration(0)
                                 .start();
                         setEnableShowDictionary(false);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        Log.d(TAG, "Action cancel");
-                        break;
 
+                        break;
+                    case MotionEvent.ACTION_HOVER_MOVE:
+                        Log.d(TAG, "ACTION_MOVE");
+                        break;
                     default:
-                        return false;
+                        return true;
                 }
                 return true;
             }
 
+        });
+    }
+
+    private void _handlerImgGotoDictionary() {
+        imgGotoDictionary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(1);
+            }
         });
 
     }
@@ -403,99 +502,92 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     private void _setUpStudy() {
         try {
-            //get lean_more form intern
-            learn_more = intent.getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
-
-            //get custom setting study
-            int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-            int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
-
-            //get card due today & agin
-            dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
-
-
-            int dueCount = dueList.size(); //Define Count due
-            int numberAgainCard = total_learn_per_day - dueCount;
-            Log.d(TAG, "numberAgainCard:" + numberAgainCard);
-            todayList = new ArrayList<Card>();
-            int againCount = 0;//Define count again
-            if (numberAgainCard > 0) {
-                againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, numberAgainCard);
-                againCount = againList.size();
-                int numberNewCard = total_learn_per_day - (dueCount + againCount);
-                if (numberNewCard > 0) {
-                    if (numberNewCard > limit_today)
-                        numberNewCard = limit_today;
-                    Log.d(TAG, "numberNewCard:" + numberNewCard);
-                    //Define todayList
-                    todayList = dataBaseHelper._getRandomCard(numberNewCard, learn_more);
-                }
-            }
-
-
-//            if (dueCount > 0 && dueCount < total_learn_per_day) {
-//
-//            }else if (dueCount > 0){
-//                limit_today = total_learn_per_day;
-//            }
-            //get new random card list to day
-            //int newCount =
-            //if (newCount > 0)
-            //  todayList = dataBaseHelper._getRandomCard(newCount);
-//            if (dueCount == 0) {
-//                Log.i(TAG, "_setUpStudy()  dueCount == 0");
-//            } else {
-//
-//                Log.i(TAG, "_setUpStudy()  dueCount != 0");
-//
-//                if (dueCount < total_learn_per_day) {
-//
-//                    Log.i(TAG, "_setUpStudy()  dueCount < total_learn_per_day");
-//
-//                    if (total_learn_per_day - dueCount < limit_today) {
-//
-//                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount < limit_today");
-//                        limit_today = total_learn_per_day - dueCount;
-//
-//                    } else if (total_learn_per_day - dueCount > limit_today) {
-//
-//                        Log.i(TAG, "_setUpStudy()  total_learn_per_day - dueCount > limit_today");
-//                    }
-//                } else if (dueCount >= total_learn_per_day) {
-//
-//                    Log.i(TAG, "_setUpStudy()  dueCount >= total_learn_per_day");
-//                    limit_today = 0;
-//                }
-//                learn_more = false;
-//            }
-
-
-            int todayCount = todayList.size();
-            Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
-
-            //Define check_learn
-            //check_learn==true Study
-            //check_learn==false Complete Study
-            boolean check_learn = (againCount + dueCount + todayCount) > 0;
-
-            Log.d(TAG, "check_learn:" + (check_learn));
-
-            if (check_learn) {
+            if (studyAction.equals(LazzyBeeShare.REVERSE)) {
+                mCount.setVisibility(View.GONE);
+                reverseList.add(dataBaseHelper.getReverseCard());
+                sTimeShowAnswer = -1;
                 _showFirstCard();
-//                set again count
-                _setCountAgain();
-                //set new Count
-                _setCountNew();
-                //set Due Count
-                _setCountDue();
+                _handlerNextCardReverse();
             } else {
-                Log.i(TAG, "_completeLean");
-                _completeLean(false);
+                mCount.setVisibility(View.VISIBLE);
+                int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
+                //get lean_more form intern
+                learn_more = intent.getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
+
+                //get custom setting study
+                int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+                int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+
+                //get card due today & agin
+                dueList = dataBaseHelper._getListCardByQueue(Card.QUEUE_REV2, total_learn_per_day);
+
+
+                dueCount = dueList.size(); //Define Count due
+                int numberAgainCard = total_learn_per_day - dueCount;
+                Log.d(TAG, "numberAgainCard:" + numberAgainCard);
+                todayList = new ArrayList<Card>();
+
+                if (numberAgainCard > 0) {
+                    againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, numberAgainCard);
+                    againCount = againList.size();
+                    int numberNewCard = total_learn_per_day - (dueCount + againCount);
+                    if (numberNewCard > 0) {
+                        if (numberNewCard > limit_today)
+                            numberNewCard = limit_today;
+                        Log.d(TAG, "numberNewCard:" + numberNewCard);
+                        //Define todayList
+                        todayList = dataBaseHelper._getRandomCard(numberNewCard, learn_more);
+                    }
+                }
+
+                todayCount = todayList.size();
+                Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
+
+                //Define check_learn
+                //check_learn==true Study
+                //check_learn==false Complete Study
+                boolean check_learn = (againCount + dueCount + todayCount) > 0;
+
+                Log.d(TAG, "check_learn:" + (check_learn));
+                if (check_learn) {
+                    _showFirstCard();
+//                set again count
+                    _setCountAgain();
+                    //set new Count
+                    _setCountNew();
+                    //set Due Count
+                    _setCountDue();
+                } else {
+                    Log.i(TAG, "_completeLean");
+                    _completeLean(false);
+                }
+
             }
+
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_setUpStudy", e);
         }
     }
+
+    private void _handlerNextCardReverse() {
+        btnNextReverseCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reverseList.remove(0);//Remove revese
+                reverseList.add(dataBaseHelper.getReverseCard());//get new random reverse Card
+                _showBtnAnswer();
+                setEnableShowDictionary(false);
+                _nextReverseCard();
+                _handlerTimeShowAswerButton();
+                //
+                mShowAnswer.setVisibility(View.VISIBLE);
+                mFloatActionButtonUserNote.setVisibility(View.GONE);
+                imgGotoDictionary.setVisibility(View.GONE);
+            }
+        });
+    }
+
 
     private void _completeLean(boolean b) {
         mListener.completeLearn(b);
@@ -519,11 +611,31 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             //Load first card is new card
             _nextNewCard();
             show = true;
+        } else if (reverseList.size() > 0) {
+            //Load first card is new card
+            _nextReverseCard();
+            show = true;
         } else {
             _completeLean(false);
         }
         if (show) {
             _handlerTimeShowAswerButton();
+        }
+    }
+
+    private void _nextReverseCard() {
+        try {
+            Log.i(TAG, "---------_nextReverseCard--------");
+            if (reverseList.size() > 0) {
+                currentCard = reverseList.get(0);//get next new card
+                _loadWebView(LazzyBeeShare._getReverseQuestionDisplay(context, currentCard), QUEUE_NEW_CRAM0, 0);//Display question
+            } else {
+                Log.i(TAG, "_nextReverseCard() finish reverse study.");
+                _completeLean(true);
+            }
+            Log.i(TAG, "--------------END------------");
+        } catch (Exception e) {
+            LazzyBeeShare.showErrorOccurred(context, "_nextNewCard", e);
         }
     }
 
@@ -634,6 +746,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
         } else if (queue == 10) {
         }
+        mWebViewLeadDetails.setBackgroundColor(0);
+        mWebViewLeadDetails.setScrollContainer(false);
         //Set Data
         mWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, questionDisplay, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
 
@@ -805,6 +919,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
                 _nextCard(currentQueue);//next Card by Queue
                 mFloatActionButtonUserNote.setVisibility(View.GONE);
+                imgGotoDictionary.setVisibility(View.GONE);
 
             } else {
                 Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");
@@ -894,8 +1009,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
         sTimeShowAnswer = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);
-
-
     }
 
     @Override
@@ -943,11 +1056,20 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     private void _initMenuItem(Menu menu) {
         btnBackBeforeCard = menu.findItem(R.id.action_back_before_card);
-        btnBackBeforeCard.setVisible(false);
         itemIgnore = menu.findItem(R.id.action_ignore);
         itemLearn = menu.findItem(R.id.action_learnt);
         MenuItem itemDictionary = menu.findItem(R.id.action_goto_dictionary);
-        itemDictionary.setVisible(false);
+        if (studyAction.equals(LazzyBeeShare.STUDY)) {
+            btnBackBeforeCard.setVisible(false);
+            itemDictionary.setVisible(false);
+            itemIgnore.setVisible(true);
+            itemLearn.setVisible(true);
+        } else if (studyAction.equals(LazzyBeeShare.REVERSE)) {
+            btnBackBeforeCard.setVisible(false);
+            itemDictionary.setVisible(false);
+            itemIgnore.setVisible(false);
+            itemLearn.setVisible(false);
+        }
     }
 
     private void _learntorIgnoreCardbyQueue(int queue) {
@@ -1051,7 +1173,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         if (sTimeShowAnswer > -1) {
             mShowAnswer.setOnClickListener(null);
             btnShowAnswer.setOnClickListener(null);
-            mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
+            mShowAnswer.setCardBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
             btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.color_watting_show_answer));
             if (countDownTimer != null) {
                 countDownTimer.cancel();
@@ -1067,7 +1189,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     btnShowAnswer.setText(R.string.show_answer);
                     mShowAnswer.setOnClickListener(showAnswer);
                     btnShowAnswer.setOnClickListener(showAnswer);
-                    mShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.button_green_color));
+                    mShowAnswer.setCardBackgroundColor(context.getResources().getColor(R.color.button_green_color));
                     btnShowAnswer.setBackgroundColor(context.getResources().getColor(R.color.button_green_color));
                 }
             }.start();
@@ -1210,7 +1332,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         try {
             //get base url in Task Manager
             String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
             if (server_base_url_sharing != null) {
                 if (server_base_url_sharing.length() > 0)
                     base_url_sharing = server_base_url_sharing;
@@ -1247,5 +1369,4 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             LazzyBeeShare.showErrorOccurred(context, "_reportCard", e);
         }
     }
-
 }

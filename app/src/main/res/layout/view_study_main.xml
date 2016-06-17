@@ -6,11 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="com.born2go.lazzybee.fragment.FragmentStudy">
+    tools:context="com.born2go.lazzybee.view.StudyView">
 
     <include layout="@layout/view_study_count"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/mCount"/>
 
     <!--<android.support.v7.widget.CardView-->
         <!--android:id="@+id/mDisplay"-->
@@ -30,7 +31,8 @@
                 android:id="@+id/mWebViewLeadDetaisl"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="#fff" />
 
             <android.support.design.widget.FloatingActionButton
 
@@ -41,7 +43,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_insert_drive_file_white_48dp"
+                android:src="@drawable/ic_note_white_24dp"
+                ads:elevation="0dp"
+                ads:backgroundTint="@color/background_btn_user_note"
                 android:visibility="gone" />
 
 

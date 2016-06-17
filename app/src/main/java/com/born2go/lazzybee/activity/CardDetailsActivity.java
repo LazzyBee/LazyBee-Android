@@ -17,6 +17,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +35,6 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
@@ -60,12 +60,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     LinearLayout container;
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
-
-    MenuItem itemFavorite;
-
     WebView mWebViewLeadDetails;
     View mViewAdv;
-    private String carID;
     String mySubject = "common";
     boolean sDEBUG = false;
     boolean sPOSITION_MEANING = false;
@@ -125,7 +121,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         try {
             mViewAdv =  findViewById(R.id.mViewAdv);
             //get value form task manager
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String admob_pub_id = null;
             String adv_id = null;
             if (container == null) {
@@ -194,6 +190,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
+            //set Enable Spelling Suggestions
+            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -293,7 +291,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             //get base url in Task Manager
             String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = ContainerHolderSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
             if (server_base_url_sharing != null) {
                 if (server_base_url_sharing.length() > 0)
                     base_url_sharing = server_base_url_sharing;
@@ -634,12 +632,4 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             LazzyBeeSingleton.textToSpeech.stop();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mViewPager.getCurrentItem() == 0) {
-            super.onBackPressed();
-        } else {
-            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-        }
-    }
 }

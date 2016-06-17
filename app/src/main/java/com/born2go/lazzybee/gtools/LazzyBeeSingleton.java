@@ -7,6 +7,7 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 
@@ -24,6 +25,7 @@ public class LazzyBeeSingleton {
     public static TextToSpeech textToSpeech;
     public static ConnectGdatabase connectGdatabase;
     public static DataLayer mDataLayer;
+    private static ContainerHolder containerHolder;
 
     public LazzyBeeSingleton(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
@@ -51,5 +53,13 @@ public class LazzyBeeSingleton {
     public static LazzyBeeSingleton getInstance() {
         // Return the instance
         return instance;
+    }
+
+    public static ContainerHolder getContainerHolder() {
+        return containerHolder;
+    }
+
+    public static void setContainerHolder(ContainerHolder c) {
+        containerHolder = c;
     }
 }

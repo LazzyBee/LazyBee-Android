@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -29,7 +30,6 @@ import com.born2go.lazzybee.activity.SettingActivity;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gtools.ContainerHolderSingleton;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.CustomTimePickerDialog;
@@ -52,7 +52,8 @@ public class RecyclerViewSettingListAdapter extends
     LearnApiImplements learnApiImplements;
     DatabaseUpgrade databaseUpgrade;
     int TYPE_LINE = -1;
-    int TYPE_TITLE = 0;
+    int TYPE_LINE_CHILD = -2;
+    int TYPE_SUB_HEADER = 0;
     int TYPE_SETTING_NAME = 1;
     int TYPE_SETTING_SWITCH = 2;
     int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
@@ -82,8 +83,10 @@ public class RecyclerViewSettingListAdapter extends
     @Override
     public RecyclerViewSettingListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        if (viewType == TYPE_TITLE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
+        if (viewType == TYPE_SUB_HEADER) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_sub_header, parent, false); //Inflating the layout
+        } else if (viewType == TYPE_LINE_CHILD) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_line_child, parent, false); //Inflating the layout
         } else if (viewType == TYPE_SETTING_NAME) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
         } else if (viewType == TYPE_SETTING_SWITCH) {
@@ -118,14 +121,14 @@ public class RecyclerViewSettingListAdapter extends
 
 
         try {
-            if (holder.viewType == TYPE_TITLE) {
+            if (holder.viewType == TYPE_SUB_HEADER) {
                 lbSettingName.setText(settings.get(position));
-                mSwitch.setVisibility(View.GONE);
-                lbLimit.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
+//                mSwitch.setVisibility(View.GONE);
+//                lbLimit.setVisibility(View.GONE);
+//                imageView.setVisibility(View.GONE);
 
                 lbSettingName.setTextSize(15f);
-                lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                lbSettingName.setTextColor(context.getResources().getColor(R.color.color_sub_header));
             } else if (holder.viewType == TYPE_SETTING_NAME) {
                 //TODO:TYPE_SETTING_NAME
 
@@ -228,7 +231,7 @@ public class RecyclerViewSettingListAdapter extends
 
 
             } else if (holder.viewType == TYPE_SETTING_NOTIFICATION) {
-                RelativeLayout mSetUpNotification = (RelativeLayout) view.findViewById(R.id.mSetUpNotification);
+                LinearLayout mSetUpNotification = (LinearLayout) view.findViewById(R.id.mSetUpNotification);
                 //getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
                 getSettingNotificationAndUpdateWithSwitch(mCardView, mSetUpNotification);
             } else if (holder.viewType == TYPE_SETTING_SPEECH_RATE_SLIDE) {
@@ -426,7 +429,7 @@ public class RecyclerViewSettingListAdapter extends
         });
     }
 
-    private void getSettingNotificationAndUpdateWithSwitch(RelativeLayout mCardView, final RelativeLayout mSetUpNotification) {
+    private void getSettingNotificationAndUpdateWithSwitch(RelativeLayout mCardView, final LinearLayout mSetUpNotification) {
         final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
         final TextView txtTimeNotification = (TextView) mSetUpNotification.findViewById(R.id.txtTimeNotification);
         String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
@@ -434,8 +437,8 @@ public class RecyclerViewSettingListAdapter extends
         String hour_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
         String minute_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
         if (value == null) {
-            mSwitch.setChecked(false);
-            mSetUpNotification.setVisibility(View.GONE);
+            mSwitch.setChecked(true);
+            mSetUpNotification.setVisibility(View.VISIBLE);
         } else if (value.equals(LazzyBeeShare.ON)) {
             mSetUpNotification.setVisibility(View.VISIBLE);
             mSwitch.setChecked(true);
@@ -462,9 +465,9 @@ public class RecyclerViewSettingListAdapter extends
                 minute_str = "0" + minute;
             }
             time = hour_str + ":" + minute_str;
+            txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
         }
 
-        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
 
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -915,9 +918,11 @@ public class RecyclerViewSettingListAdapter extends
         if (setting.equals(context.getString(R.string.setting_learn_title))
                 || setting.equals(context.getString(R.string.setting_update_title))
                 || setting.equals(context.getString(R.string.setting_backup_and_restore_database_title))
+                || setting.equals(context.getString(R.string.setting_sub_header_more))
+                || setting.equals(context.getString(R.string.setting_sub_header_about))
                 || setting.equals(context.getString(R.string.setting_speech_rate))
                 ) {
-            return TYPE_TITLE;
+            return TYPE_SUB_HEADER;
         } else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_language))
@@ -954,8 +959,11 @@ public class RecyclerViewSettingListAdapter extends
         else if (setting.equals(context.getString(R.string.setting_check_update)))
 
             return TYPE_SETTING_NAME;
+        else if (setting.equals(context.getString(R.string.setting_lines_child)))
+
+            return TYPE_LINE_CHILD;
         else
-            return -1;
+            return TYPE_LINE;
     }
 
     @Override
@@ -1084,7 +1092,7 @@ public class RecyclerViewSettingListAdapter extends
 
     private void _downloadFile() {
         try {
-            Container container = ContainerHolderSingleton.getContainerHolder().getContainer();
+            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
             String base_url;
             if (container == null) {
                 base_url = context.getString(R.string.url_lazzybee_website);

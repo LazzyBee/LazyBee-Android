@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="72dp">
+    android:layout_width="match_parent" android:layout_height="65dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/setting_about"
-        android:id="@+id/textView13"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/grey_600" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/lbAppVersion"
-        android:layout_below="@+id/textView13"
-        android:textColor="@color/grey_300"
-        android:layout_marginLeft="16dp" />
+        android:textColor="#616161"
+        android:layout_marginLeft="16dp"
+        android:layout_above="@+id/lbDbVersion"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/lbDbVersion"
-        android:layout_below="@+id/lbAppVersion"
-        android:textColor="@color/grey_300"
-        android:layout_marginLeft="16dp" />
+        android:textColor="#616161"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/lbAppVersion"
+        android:layout_alignStart="@+id/lbAppVersion" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setting_all_right"
+        android:id="@+id/textView4"
+        android:textColor="#616161"
+        android:layout_below="@+id/lbDbVersion"
+        android:layout_alignLeft="@+id/lbDbVersion"
+        android:layout_alignStart="@+id/lbDbVersion" />
 
 </RelativeLayout>

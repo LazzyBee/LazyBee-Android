@@ -60,4 +60,15 @@
         android:singleLine="false"
         android:textColor="@color/grey_900"
         android:textSize="8pt" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subject_600toeic"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:button="@null"
+        android:id="@+id/cbx600Toeic"
+        android:singleLine="false"
+        android:textColor="@color/grey_900"
+        android:textSize="8pt" />
 </LinearLayout>
