@@ -388,6 +388,9 @@ public class StudyActivity extends AppCompatActivity
         _completeLean(complete);
     }
 
+
+
+
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private int pageCount = 2;
 
@@ -422,6 +425,20 @@ public class StudyActivity extends AppCompatActivity
         public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
         }
+
+        private Fragment mCurrentFragment;
+
+        public Fragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = ((Fragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
+        }
     }
 
     @Override
@@ -443,10 +460,9 @@ public class StudyActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String user_note = txtUserNote.getText().toString();
-                if (!user_note.isEmpty()) {
-                    currentCard.setUser_note(user_note);
-                    dataBaseHelper._updateUserNoteCard(currentCard);
-                }
+                currentCard.setUser_note(user_note);
+                dataBaseHelper._updateUserNoteCard(currentCard);
+                ((StudyView)pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
                 dialog.dismiss();
             }
         });
