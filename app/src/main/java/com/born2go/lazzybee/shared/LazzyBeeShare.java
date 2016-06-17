@@ -608,7 +608,7 @@ public class LazzyBeeShare {
                                 ".eg {\n" +
                                 "\tcolor: #555;\n" +
                                 "\tfont-style: italic;\n" +
-                                "\tcolor: gray;\n" +
+                                "\tcolor: #444444;\n" +
                                 "}\n" +
                                 "\n" +
                                 ".epp-xref, .freq {\n" +
