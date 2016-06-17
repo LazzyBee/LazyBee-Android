@@ -470,7 +470,8 @@ public class LazzyBeeShare {
                 "       </div>\n"
                 + meaningDOWN +
                 "   </div>\n";
-        if (card.getUser_note() != null) {
+        if (card.getUser_note() != null && card.getUser_note().trim().length() > 0) {
+
             user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
                     "              <hr>\n" +
                     "              <center>User note</center></br>\n" +
