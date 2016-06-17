@@ -17,6 +17,7 @@ import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,7 @@ import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -119,6 +121,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
+
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -301,6 +304,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         }
     }
 
+    public void setResetUserNote(String resetUserNote) {
+        currentCard.setUser_note(resetUserNote);
+        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), 10, 1);
+    }
+
+
     public interface OnStudyViewListener {
         void completeLearn(boolean complete);
 
@@ -384,33 +393,41 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         final int densityDpi = (int) (metrics.density * 160f);
         Log.d(TAG, "DPI:" + densityDpi);
 
+
+
         mFloatActionButtonUserNote.setOnTouchListener(new View.OnTouchListener() {
             public boolean shouldClick;
             int move = 0;
             float dX, dY;
+            boolean isMove = false;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                Log.d(TAG, "On touch");
+
+                // your code for move and drag
                 setEnableShowDictionary(true);
+
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
 
                     case MotionEvent.ACTION_DOWN:
                         Log.d(TAG, "ACTION_DOWN");
                         shouldClick = true;
+                        isMove = false;
                         dX = (mFloatActionButtonUserNote.getX() - event.getRawX());
                         dY = (mFloatActionButtonUserNote.getY() - event.getRawY());
                         move = 1;
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        Log.d(TAG, "ACTION_UP -shouldClick:" + shouldClick);
-                        if (shouldClick || move == 2)
+                        Log.d(TAG, "ACTION_UP -move:" + move);
+                        if (shouldClick || move < 10) {
                             Log.d(TAG, "performClick:" + mFloatActionButtonUserNote.performClick());//call on move
-
+                        }
+                        move = 0;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
+                        isMove = true;
                         Log.d(TAG, "ACTION_MOVE");
                         move++;
                         shouldClick = false;
@@ -1352,5 +1369,4 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             LazzyBeeShare.showErrorOccurred(context, "_reportCard", e);
         }
     }
-
 }
