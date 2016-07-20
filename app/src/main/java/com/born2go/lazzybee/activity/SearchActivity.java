@@ -107,7 +107,7 @@ public class SearchActivity extends AppCompatActivity implements
         mRefeshSearch.setOnRefreshListener(this);
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
         lbResultCount = (TextView) findViewById(R.id.lbResultCount);
@@ -155,6 +155,30 @@ public class SearchActivity extends AppCompatActivity implements
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
 
         //  mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
+        mRecyclerViewSearchResults.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                // TODO Auto-generated method stub
+                super.onScrolled(recyclerView, dx, dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                // TODO Auto-generated method stub
+                //super.onScrollStateChanged(recyclerView, newState);
+                int firstPos=gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstPos>0)
+                {
+                    mRefeshSearch.setEnabled(false);
+                }
+                else {
+                    mRefeshSearch.setEnabled(true);
+                }
+            }
+        });
     }
 
     private void _initLazzyBeeSingleton() {
@@ -690,7 +714,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        _search(query_text, display_type, false);
         mRefeshSearch.setRefreshing(false);
+        _search(query_text, display_type, false);
     }
 }
