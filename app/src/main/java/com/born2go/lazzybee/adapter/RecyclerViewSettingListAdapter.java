@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -274,6 +275,15 @@ public class RecyclerViewSettingListAdapter extends
         //String hint_input_my_backup_key = context.getString(R.string.hint_input_my_backup_key);
         //lbMybackupkey.setHint(hint_input_my_backup_key);
         //
+
+        lbMybackupkey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
         builder.setView(viewDialog);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -294,6 +304,11 @@ public class RecyclerViewSettingListAdapter extends
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void showFileChooser() {
