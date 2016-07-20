@@ -289,10 +289,11 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String getBackupKey = lbMybackupkey.getText().toString();
+                lbMybackupkey.clearFocus();
                 //Toast.makeText(context, "My Backup key:" + getBackupKey, Toast.LENGTH_SHORT).show();
                 DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, false, LazzyBeeShare.EMPTY, getBackupKey);
                 downloadAndRestoreDatabaseFormCSV.execute();
-                //dialog.dismiss();
+                dialog.dismiss();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
