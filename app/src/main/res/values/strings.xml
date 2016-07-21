@@ -446,6 +446,7 @@
         <item>501847cbba33a2e <!--A820--></item>
         <item>a23c44db2bc85af9<!--geny n7 5.0--></item>
         <item>a24a1e2a58a3432c<!--geny n4 4.4.4--></item>
+        <item>8308b273c51c1ed9<!--note 3 dcm --></item>
         <!-- <item>f130a1e2a7076611&lt;!&ndash;blue stask&ndash;&gt;</item>-->
     </string-array>
 
@@ -524,4 +525,5 @@
     <string name="complele_text_display"><u>2000 words/year with 5 minutes per day.</u></string>
     <string name="complele_text_display_link" translatable="false">http://www.lazzybee.com/blog/can_you_learn_2000_words_per_year</string>
     <string name="msg_finishing_your_daily_target">Please come back after finishing your daily target.</string>
+    <string name="msg_restore_data">It may take a few minutes to restore data. Please wait.</string>
 </resources>
