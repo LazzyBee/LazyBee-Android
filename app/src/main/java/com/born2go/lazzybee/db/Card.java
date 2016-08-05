@@ -165,10 +165,17 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card { id=" + id +
+        return "Card{" +
+                "id=" + id +
+                ", gId=" + gId +
                 ", question='" + question + '\'' +
-                ", package='" + _package + '\'' +
+                ", queue=" + queue +
+                ", _package='" + _package + '\'' +
                 ", level=" + level +
+                ", rev_count=" + rev_count +
+                ", factor=" + factor +
+                ", last_ivl=" + last_ivl +
+                ", due=" + due +
                 '}';
     }
 

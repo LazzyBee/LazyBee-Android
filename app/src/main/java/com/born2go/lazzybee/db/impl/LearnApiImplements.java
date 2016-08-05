@@ -1278,6 +1278,8 @@ public class LearnApiImplements implements LearnApi {
 
         values.put(KEY_L_EN, card.getL_en());
         values.put(KEY_L_VN, card.getL_vn());
+        values.put(KEY_G_ID, card.getgId());
+
 
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_QUESTION + " = ?",
                 new String[]{card.getQuestion()});
@@ -1288,6 +1290,50 @@ public class LearnApiImplements implements LearnApi {
         } else {
             Log.i(TAG, "Update Card:" + (update_result == 1 ? "OK" : "False") + "_" + update_result);
         }
+
+        db.close();
+
+    }
+
+    public void _insertOrUpdateCardbyGId(Card card) {
+        //Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_G_ID, card.getgId());
+        values.put(KEY_QUESTION, card.getQuestion());
+        values.put(KEY_ANSWERS, card.getAnswers());
+        values.put(KEY_LEVEL, card.getLevel());
+        values.put(KEY_PACKAGES, card.getPackage());
+
+        values.put(KEY_L_EN, card.getL_en());
+        values.put(KEY_L_VN, card.getL_vn());
+
+        //        _card.setQueue(queue);
+//        _card.setDue(due);
+//        _card.setRev_count(rev_count);
+//        _card.setLast_ivl(last_ivl);
+//
+//        _card.setFactor(factor);
+//        _card.setUser_note(user_note);
+
+        values.put(KEY_QUEUE, card.getQueue());
+        values.put(KEY_DUE, card.getDue());
+        values.put(KEY_REV_COUNT, card.getRev_count());
+        values.put(KEY_FACTOR, card.getFactor());
+
+        values.put(KEY_USER_NOTE, card.getUser_note());
+
+
+        long insert = db.insert(TABLE_VOCABULARY, null, values);
+        Log.i(TAG, "_insertOrUpdateCardbyGId() \t -insert result=" + insert);
+//        int update_result = db.update(TABLE_VOCABULARY, values, KEY_G_ID + " = ?",
+//                new String[]{String.valueOf(card.getgId())});
+//        if (update_result == 0) {
+//        } else {
+//            Log.i(TAG, "_insertOrUpdateCardbyGId() \t -update : " + (update_result == 1 ? "OK " : "False ") + "_" + update_result);
+//        }
+
+        db.close();
 
     }
 
@@ -1714,20 +1760,24 @@ public class LearnApiImplements implements LearnApi {
 
     public int _updateCardFormCSV(long gId, int queue, int due, int rev_count, int last_ivl, int factor, String user_note) {
         int update_result = -2;
-        //Update staus card by id
-        if (gId > 0) {
-            SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(KEY_QUEUE, queue);
-            values.put(KEY_DUE, due);
-            values.put(KEY_REV_COUNT, rev_count);
-            values.put(KEY_LAT_IVL, last_ivl);
-            values.put(KEY_FACTOR, factor);
-            values.put(KEY_USER_NOTE, user_note);
+        try {
+            //Update staus card by id
+            if (gId > 0) {
+                SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put(KEY_QUEUE, queue);
+                values.put(KEY_DUE, due);
+                values.put(KEY_REV_COUNT, rev_count);
+                values.put(KEY_LAT_IVL, last_ivl);
+                values.put(KEY_FACTOR, factor);
+                values.put(KEY_USER_NOTE, user_note);
 
-            update_result = db.update(TABLE_VOCABULARY, values, KEY_G_ID + " = ?",
-                    new String[]{String.valueOf(gId)});
-            db.close();
+                update_result = db.update(TABLE_VOCABULARY, values, KEY_G_ID + " = ?",
+                        new String[]{String.valueOf(gId)});
+                db.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return update_result;
     }
