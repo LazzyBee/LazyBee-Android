@@ -11,6 +11,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import org.json.JSONArray;
@@ -1837,5 +1838,27 @@ public class LearnApiImplements implements LearnApi {
             e.printStackTrace();
         }
         return card;
+    }
+
+    public void addToIncomingList(GroupVoca groupVoca) {
+        String[] questions = groupVoca.getListVoca().split("\\n");
+        List<String> cardIds = new ArrayList<>();
+        for (String q : questions) {
+            int cardId = _getCardIDByQuestion(q);
+            if (cardId > 0) {
+                cardIds.add(String.valueOf(cardId));
+            }
+        }
+        String list100Card = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+        try {
+            JSONObject valueObj = new JSONObject(list100Card);
+            JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);
+            for (int i = 0; i < listIdArray.length(); i++) {
+                cardIds.add(listIdArray.getString(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        saveIncomingCardIdList(cardIds);
     }
 }
