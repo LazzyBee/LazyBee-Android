@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/restore_list_word"
+        android:title="@string/restore_list_work" />
+    <item
+        android:id="@+id/input_list_work"
+        android:title="@string/action_input_list_work" />
+</menu>
