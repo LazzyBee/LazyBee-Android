@@ -528,4 +528,9 @@
     <string name="msg_restore_data">It may take a few minutes to restore data. Please wait.</string>
     <string name="action_input_list_work">Input list work</string>
     <string name="restore_list_work">Restore list work</string>
+    <string name="msg_restore_word_list">Restore list word</string>
+    <string name="msg_please_input_restore_word_list_code">Please input code restore list word</string>
+    <string name="restore">Restore</string>
+    <string name="msg_input_word_list">Input word list</string>
+    <string name="msg_input_word_list_tip">(Please input word list)</string>
 </resources>

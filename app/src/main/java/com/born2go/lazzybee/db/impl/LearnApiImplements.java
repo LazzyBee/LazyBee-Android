@@ -11,6 +11,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -20,8 +21,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by Hue on 7/8/2015.
@@ -1489,17 +1492,18 @@ public class LearnApiImplements implements LearnApi {
     public int _getCardIDByQuestion(String question) {
         int id = 0;
         String selectbyQuestionQuery = "Select id from " + TABLE_VOCABULARY + " where vocabulary.question ='" + question + "'";
-        Log.i(TAG, "selectbyQuestionQuery=" + selectbyQuestionQuery);
         SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
         //query for cursor
         Cursor cursor = db.rawQuery(selectbyQuestionQuery, null);
         if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
+            if (cursor.getCount() > 0) {
                 do {
                     id = cursor.getInt(0);
                 } while (cursor.moveToNext());
+            }
         }
+        Log.i(TAG, "-query=" + selectbyQuestionQuery + ",id=" + id);
         return id;
     }
 
@@ -1842,23 +1846,40 @@ public class LearnApiImplements implements LearnApi {
 
     public void addToIncomingList(GroupVoca groupVoca) {
         String[] questions = groupVoca.getListVoca().split("\\n");
-        List<String> cardIds = new ArrayList<>();
-        for (String q : questions) {
-            int cardId = _getCardIDByQuestion(q);
-            if (cardId > 0) {
-                cardIds.add(String.valueOf(cardId));
-            }
-        }
         String list100Card = _getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+        List<String> incomingList = new ArrayList<>();
+        List<String> newIncomingList = new ArrayList<>();
+        List<String> defaultIncomingLists = new ArrayList<>();
         try {
+            for (String q : questions) {
+                int cardId = _getCardIDByQuestion(q);
+                if (cardId > 0) {
+                    newIncomingList.add(String.valueOf(cardId));
+                }
+            }
             JSONObject valueObj = new JSONObject(list100Card);
             JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);
             for (int i = 0; i < listIdArray.length(); i++) {
-                cardIds.add(listIdArray.getString(i));
+                String _cardId = listIdArray.getString(i);
+                defaultIncomingLists.add(String.valueOf(_cardId));
             }
-        } catch (JSONException e) {
+
+            List<String> clone_newIncomingList = new ArrayList<>(newIncomingList);
+            for (String cardId : clone_newIncomingList) {
+                if (defaultIncomingLists.contains(cardId)) {
+                    newIncomingList.remove(cardId);
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        saveIncomingCardIdList(cardIds);
+
+        incomingList.addAll(newIncomingList);
+        incomingList.addAll(defaultIncomingLists);
+        Log.d(TAG, "-new incoming list:" + newIncomingList.toString());
+        Log.d(TAG, "-default incoming list:" + defaultIncomingLists.toString());
+        Log.d(TAG, "-incoming list:" + incomingList.toString());
+
+        saveIncomingCardIdList(incomingList);
     }
 }

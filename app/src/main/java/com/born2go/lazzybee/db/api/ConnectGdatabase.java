@@ -13,6 +13,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /*
@@ -87,13 +88,14 @@ public class ConnectGdatabase {
         return word;
 
     }
+
     public GroupVoca _getGroupVoca(long id) {
         DataServiceApi.GetGroupVoca apiInst;
         GroupVoca groupVoca = null;
         try {
             api = getDataServiceApi();
             apiInst = api.getGroupVoca(id);
-            groupVoca=apiInst.execute();
+            groupVoca = apiInst.execute();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,5 +103,18 @@ public class ConnectGdatabase {
         }
         return groupVoca;
 
+    }
+
+    public VocaCollection _saveVoca(String wordList) {
+        DataServiceApi.ListVoca apiInst;
+        VocaCollection vocaCollection = null;
+        try {
+            api = getDataServiceApi();
+            apiInst = api.listVoca(wordList);
+            vocaCollection = apiInst.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return vocaCollection;
     }
 }

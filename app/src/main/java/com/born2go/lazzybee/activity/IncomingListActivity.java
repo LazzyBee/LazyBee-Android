@@ -3,11 +3,11 @@ package com.born2go.lazzybee.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,7 +26,6 @@ import com.born2go.lazzybee.adapter.GetGroupVoca;
 import com.born2go.lazzybee.adapter.RecyclerViewIncomingListAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -131,6 +130,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.input_list_work) {
+            inputWordList("");
             return true;
         } else if (id == R.id.restore_list_word) {
             restoreListIncomingWord();
@@ -140,21 +140,31 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         }
     }
 
+    private void inputWordList(String wordList) {
+        Intent intent = new Intent(thiz, CreateWordListActivity.class);
+        if (wordList != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(CreateWordListActivity.WORD_LIST, wordList);
+            intent.putExtras(bundle);
+        }
+        startActivityForResult(intent, CreateWordListActivity.REG_INPUT_WORD_LIST);
+    }
+
     private void restoreListIncomingWord() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Restore list word");
-        builder.setMessage("Please input code restore list word");
+        builder.setTitle(R.string.msg_restore_word_list);
+        builder.setMessage(R.string.msg_please_input_restore_word_list_code);
         View view = LayoutInflater.from(context).inflate(R.layout.code_restore_list_word, null);
         final EditText codeRestore = (EditText) view.findViewById(R.id.codeRestore);
         builder.setView(view);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 hideKeyBoard();
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // hideKeyBoard();
@@ -264,7 +274,18 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
 
     @Override
     public void processFinish(GroupVoca groupVoca) {
-        dataBaseHelper.addToIncomingList(groupVoca);
-        getIncomingList();
+        inputWordList(groupVoca.getListVoca());
+//        dataBaseHelper.addToIncomingList(groupVoca);
+//        getIncomingList();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CreateWordListActivity.REG_INPUT_WORD_LIST) {
+            if (resultCode == CreateWordListActivity.UPDATE_1) {
+                getIncomingList();
+            }
+        }
     }
 }

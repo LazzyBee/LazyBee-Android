@@ -47,26 +47,26 @@ public class GetGroupVoca extends AsyncTask<Long, Void, GroupVoca> {
         GroupVoca groupVoca = connectGdatabase._getGroupVoca(groupId);
         if (groupVoca != null) {
             Log.d(TAG, "List voca:" + groupVoca.getListVoca());
-            String[] questions = groupVoca.getListVoca().split("\\n");
-            for (String q : questions) {
-                int cardId = learnApiImplements._getCardIDByQuestion(q);
-                if (cardId <= 0) {
-                    Voca voca=connectGdatabase._getGdatabase_byQ(q);
-                    if (voca!=null){
-                        //Save new card
-                        Card card = new Card();
-
-                        card.setgId(voca.getGid());
-                        card.setQuestion(voca.getQ());
-                        card.setAnswers(voca.getA());
-                        card.setPackage(voca.getPackages());
-                        card.setLevel(Integer.valueOf(voca.getLevel()));
-                        card.setL_en(voca.getLEn());
-                        card.setL_vn(voca.getLVn());
-                        learnApiImplements._insertOrUpdateCard(card);
-                    }
-                }
-            }
+//            String[] questions = groupVoca.getListVoca().split("\\n");
+//            for (String q : questions) {
+//                int cardId = learnApiImplements._getCardIDByQuestion(q);
+//                if (cardId <= 0) {
+//                    Voca voca=connectGdatabase._getGdatabase_byQ(q);
+//                    if (voca!=null){
+//                        //Save new card
+//                        Card card = new Card();
+//
+//                        card.setgId(voca.getGid());
+//                        card.setQuestion(voca.getQ());
+//                        card.setAnswers(voca.getA());
+//                        card.setPackage(voca.getPackages());
+//                        card.setLevel(Integer.valueOf(voca.getLevel()));
+//                        card.setL_en(voca.getLEn());
+//                        card.setL_vn(voca.getLVn());
+//                        learnApiImplements._insertOrUpdateCard(card);
+//                    }
+//                }
+//            }
             return groupVoca;
         } else return null;
     }
