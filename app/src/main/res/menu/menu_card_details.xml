@@ -4,7 +4,7 @@
     tools:context="com.born2go.lazzybee.activity.CardDetailsActivity">
     <item
         android:id="@+id/search"
-        android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
+        android:src="@drawable/ic_search_black_18dp"
         android:title="@string/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|always"
