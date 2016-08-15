@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -249,7 +248,7 @@ public class RecyclerViewCustomStudyAdapter extends
     private void _showDialogSelectLevel(int finalLevel) {
 
         final String[] strlevels = {"1", "2", "3", "4", "5", "6"};
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 
         builder.setSingleChoiceItems(strlevels, (finalLevel == 1) ? 0 : finalLevel - 1, new DialogInterface.OnClickListener() {
@@ -270,7 +269,7 @@ public class RecyclerViewCustomStudyAdapter extends
 
     private void _showConfirmResetToDefauls() {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setTitle(R.string.dialog_title_reset_custom_study).setMessage(R.string.dialog_message_reset_custom_study);
@@ -391,7 +390,7 @@ public class RecyclerViewCustomStudyAdapter extends
         txtLimit.setFocusable(true);
         txtLimit.requestFocus();
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         // builder.setMessage(R.string.dialog_message_setting_today_new_card_limit_by);
@@ -521,7 +520,7 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
     private void _showDialogSetPositionMeaning(int index) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.title_change_position_meaning));
         final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
         final CharSequence[] values = {LazzyBeeShare.UP, LazzyBeeShare.DOWN};

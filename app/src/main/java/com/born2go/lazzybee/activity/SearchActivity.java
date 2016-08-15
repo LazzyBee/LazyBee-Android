@@ -16,7 +16,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -452,7 +451,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _optionList(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(card.getQuestion());
         final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -477,7 +476,7 @@ public class SearchActivity extends AppCompatActivity implements
     @SuppressLint("StringFormatInvalid")
     private void _doneCard(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(getString(R.string.dialog_message_delete_card, card.getQuestion()))
@@ -507,7 +506,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _addCardToQueue(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))

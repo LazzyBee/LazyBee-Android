@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -267,7 +266,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _restoreDatabase() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         builder.setTitle(R.string.setting_restore_database);
         View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
@@ -326,7 +325,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _backupDatabases_Dev(RelativeLayout mCardView) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         final CharSequence[] types = new CharSequence[2];
         types[0] = "Full-Card";
         types[1] = "Mini-Only Card Learned";
@@ -564,7 +563,7 @@ public class RecyclerViewSettingListAdapter extends
                 LayoutInflater li = LayoutInflater.from(context);
                 View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
                 builder.setView(dialogExecuteEuery);
 
@@ -607,7 +606,7 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
                 // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
                 // Chain together various setter methods to set the dialog characteristics
                 builder.setTitle(R.string.dialog_title_export_database);
@@ -638,7 +637,7 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
                 // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
                 // Chain together various setter methods to set the dialog characteristics
                 builder.setTitle(R.string.dialog_title_clear_cache_and_restart_app);
@@ -695,7 +694,7 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
                 builder.setTitle(context.getString(R.string.dialog_title_change_speech_rate));
 
 
@@ -777,7 +776,7 @@ public class RecyclerViewSettingListAdapter extends
         lbSettingLimitName.setText(message);
         txtLimit.setText(String.valueOf(value));
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         // builder.setMessage(R.string.dialog_message_setting_today_new_card_limit_by);
@@ -807,7 +806,7 @@ public class RecyclerViewSettingListAdapter extends
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
                 builder.setTitle(context.getString(R.string.change_language));
                 final CharSequence[] items = {context.getString(R.string.lang_english), context.getString(R.string.lang_viet)};
                 int index = 0;
@@ -851,7 +850,7 @@ public class RecyclerViewSettingListAdapter extends
 
     private void _showDialogConfirmRestartApp() {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_message_restart_app)
@@ -1070,7 +1069,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _showComfirmUpdateDatabase(final int type) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_update)

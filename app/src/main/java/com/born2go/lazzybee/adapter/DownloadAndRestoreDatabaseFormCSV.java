@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -345,7 +344,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(R.string.setting_restore_database);
         String message;
         if (results >= 1) {

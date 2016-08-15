@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -258,7 +257,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void _showDialogFailsBackupDatabase() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(R.string.try_again);
         builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

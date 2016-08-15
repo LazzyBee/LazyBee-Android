@@ -25,7 +25,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -59,6 +58,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity
 
         _goHome();
 
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        Log.d(TAG,"telephonyManager.getDeviceId():"+telephonyManager.getDeviceId());
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        Log.d(TAG, "telephonyManager.getDeviceId():" + telephonyManager.getDeviceId());
     }
 
 
@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "adv_fullscreen_id:" + adv_fullscreen_id);
             }
             if (admob_pub_id != null || adv_fullscreen_id != null) {
+                MobileAds.initialize(this, admob_pub_id);
                 String advId = admob_pub_id + "/" + adv_fullscreen_id;
                 Log.d(TAG, "InterstitialAdId:" + advId);
                 mInterstitialAd = new InterstitialAd(this);
@@ -308,6 +309,15 @@ public class MainActivity extends AppCompatActivity
             dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
             LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
         }
+
+        //
+        boolean custom_list = sharedpreferences.getBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, false);
+        if (!custom_list) {
+            dataBaseHelper.addColumCustomList();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).commit();
+        }
+
+
         String onoffNotification = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
         if (onoffNotification == null) {
             dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
@@ -515,7 +525,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.select_subject_title));
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
         final int[] seleted_index = {0};
@@ -675,7 +685,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogWithMessage(String message) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage(Html.fromHtml(message));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -855,7 +865,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _showComfirmUpdateDatabase(final int type) {
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_update)
@@ -1050,7 +1060,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _learnMore() {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_message_learn_more)
@@ -1131,7 +1141,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogBackupDataBase() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.message_backup_database)

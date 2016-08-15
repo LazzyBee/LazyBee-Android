@@ -21,7 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -448,7 +447,7 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showCardNote(final Card currentCard) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
         final EditText txtUserNote = (EditText) viewDialog.findViewById(R.id.txtUserNote);
