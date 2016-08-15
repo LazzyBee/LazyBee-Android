@@ -14,9 +14,9 @@
     <!-- Permission to use AlarmManager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-    <meta-data
-        android:name="com.google.android.gms.analytics.globalConfigResource"
-        android:resource="@xml/global_tracker" />
+    <!--<meta-data-->
+        <!--android:name="com.google.android.gms.analytics.globalConfigResource"-->
+        <!--android:resource="@xml/global_tracker" />-->
 
     <application
         android:name=".LazzyBeeApplication"
@@ -146,35 +146,35 @@
             android:enabled="true" />
 
         <receiver android:name=".utils.NotificationReceiver" />
-        <receiver
-            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name="com.google.android.gms.analytics.AnalyticsReceiver"-->
+            <!--android:enabled="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
-        <service
-            android:name="com.google.android.gms.analytics.AnalyticsService"
-            android:enabled="true"
-            android:exported="false" />
+        <!--<service-->
+            <!--android:name="com.google.android.gms.analytics.AnalyticsService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="false" />-->
 
-        <!-- Add preview activity. -->
-        <activity
-            android:name="com.google.android.gms.tagmanager.PreviewActivity"
-            android:label="@string/app_name"
-            android:noHistory="true">
+        <!--&lt;!&ndash; Add preview activity. &ndash;&gt;-->
+        <!--<activity-->
+            <!--android:name="com.google.android.gms.tagmanager.PreviewActivity"-->
+            <!--android:label="@string/app_name"-->
+            <!--android:noHistory="true">-->
 
-            <!-- optional, removes the previewActivity from the activity stack. -->
-            <intent-filter>
-                <data android:scheme="tagmanager.c.com.born2go.lazzybee" />
+            <!--&lt;!&ndash; optional, removes the previewActivity from the activity stack. &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<data android:scheme="tagmanager.c.com.born2go.lazzybee" />-->
 
-                <action android:name="android.intent.action.VIEW" />
+                <!--<action android:name="android.intent.action.VIEW" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/title_activity_about" />
