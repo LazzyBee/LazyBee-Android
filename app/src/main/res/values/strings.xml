@@ -339,6 +339,8 @@
         <!--A820-->
         <item>757E6C0437129F846D20D0B58D0BFA85</item>
         <!--A890-->
+        <item>F149F378960146C39B3759A5007A589D</item>
+        <!--note 3-->
 
     </string-array>
 
@@ -533,4 +535,6 @@
     <string name="restore">Restore</string>
     <string name="msg_input_word_list">Input word list</string>
     <string name="msg_input_word_list_tip">(Please input word list)</string>
+    <string name="custom_list">Custom list</string>
+    <string name="default_list">Default list</string>
 </resources>

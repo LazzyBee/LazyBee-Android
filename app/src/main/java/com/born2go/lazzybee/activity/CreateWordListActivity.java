@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,14 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.adapter.AddCustomListToIncomingList;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
-public class CreateWordListActivity extends AppCompatActivity {
+public class CreateWordListActivity extends AppCompatActivity implements AddCustomListToIncomingList.IAddCustomListToIncomingList {
 
     public static final String WORD_LIST = "word_list";
     public static final int REG_INPUT_WORD_LIST = 12345;
@@ -60,6 +63,11 @@ public class CreateWordListActivity extends AppCompatActivity {
     }
 
     private void inputNewWordList() {
+        //hide keyborad
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(txtwordList.getWindowToken(), 0);
+
+        //
         String wordList = txtwordList.getText().toString();
         if (wordList.trim().isEmpty()) {
             Toast.makeText(this, "Input new word list", Toast.LENGTH_SHORT).show();
@@ -78,30 +86,16 @@ public class CreateWordListActivity extends AppCompatActivity {
     }
 
     private void saveWordList(final GroupVoca groupVoca) {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setCancelable(false);
-        dialog.setTitle("Please waiting ...");
-        dialog.setMessage("Loading...");
-        dialog.show();
+        AddCustomListToIncomingList addCustomListToIncomingList = new AddCustomListToIncomingList(this);
+        addCustomListToIncomingList.execute(groupVoca);
+        addCustomListToIncomingList.iAddCustomListToIncomingList = this;
 
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                LazzyBeeSingleton.learnApiImplements.addToIncomingList(groupVoca);
-                return null;
-            }
+    }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                //Dismis dialog
-                if ((dialog != null) && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                setResult(UPDATE_1);
-                finish();
-            }
-        };
-        task.execute();
+    @Override
+    public void processFinish() {
+        setResult(UPDATE_1);
+        Toast.makeText(this, "Add custom list sucess", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

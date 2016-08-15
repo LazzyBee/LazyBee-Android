@@ -11,7 +11,6 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.api.LearnApi;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
@@ -21,10 +20,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Created by Hue on 7/8/2015.
@@ -67,6 +64,8 @@ public class LearnApiImplements implements LearnApi {
 
     public static final String TABLE_SUGGESTION = "suggestion";
     public static final java.lang.String CREATE_TABLE_SUGGESTION = "CREATE TABLE suggestion (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, suggestion TEXT UNIQUE);";
+    private static final String KEY_CUSTOM_LIST = "custom_list";
+
 
     public static int TYPE_SUGGESTION_QUESTION_CARD__SEARCH = 0;
     public static int TYPE_SUGGESTION_QUESTION_CARD__RECENT = 1;
@@ -109,6 +108,7 @@ public class LearnApiImplements implements LearnApi {
 
     public static final int CARD_INDEX_L_EN = 15;
     public static final int CARD_INDEX_L_VN = 16;
+    private static final int CARD_INDEX_CUSTOM_LIST_17 = 17;
 
     public static int CARD_INDEX_TAGS = 17;
     public static int CARD_INDEX_RELATED = 18;
@@ -118,7 +118,7 @@ public class LearnApiImplements implements LearnApi {
             "vocabulary.package,vocabulary.category," +
             "vocabulary.subcats,vocabulary.status,vocabulary.due,vocabulary.rev_count," +
             "vocabulary.user_note,vocabulary.last_ivl,vocabulary.e_factor,vocabulary.gid," +
-            "vocabulary.l_en,vocabulary.l_vn";
+            "vocabulary.l_en,vocabulary.l_vn,vocabulary.custom_list";
     private String selectList = "vocabulary.id,vocabulary.question,vocabulary.answers," +
             "vocabulary.queue,vocabulary.level";
     private String selectSuggestionList = "vocabulary.id,vocabulary.question,vocabulary.answers";
@@ -189,6 +189,8 @@ public class LearnApiImplements implements LearnApi {
                 if (cursor.getString(CARD_INDEX_L_VN) != null)
                     card.setL_vn(cursor.getString(CARD_INDEX_L_VN));
 
+                if (cursor.getString(CARD_INDEX_L_VN) != null)
+                    card.setCustom_list(cursor.getInt(CARD_INDEX_CUSTOM_LIST_17) > 0);
             } catch (Exception e) {
                 Log.e(TAG, "GetCardbyID Eror:" + e.getMessage());
                 card.setL_vn(LazzyBeeShare.EMPTY);
@@ -1850,36 +1852,81 @@ public class LearnApiImplements implements LearnApi {
         List<String> incomingList = new ArrayList<>();
         List<String> newIncomingList = new ArrayList<>();
         List<String> defaultIncomingLists = new ArrayList<>();
-        try {
-            for (String q : questions) {
-                int cardId = _getCardIDByQuestion(q);
-                if (cardId > 0) {
-                    newIncomingList.add(String.valueOf(cardId));
-                }
-            }
-            JSONObject valueObj = new JSONObject(list100Card);
-            JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);
-            for (int i = 0; i < listIdArray.length(); i++) {
-                String _cardId = listIdArray.getString(i);
-                defaultIncomingLists.add(String.valueOf(_cardId));
-            }
+        for (String q : questions) {
+            int cardId = _getCardIDByQuestion(q);
+            if (cardId > 0) {
+                newIncomingList.add(String.valueOf(cardId));
+                int update = markCustomList(cardId);
+                Log.d(TAG, "-Mark card Id : " + cardId + " into custom list,Update : " + update);
 
-            List<String> clone_newIncomingList = new ArrayList<>(newIncomingList);
-            for (String cardId : clone_newIncomingList) {
-                if (defaultIncomingLists.contains(cardId)) {
-                    newIncomingList.remove(cardId);
-                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        if (newIncomingList.size() > 0) {
+            try {
+                JSONObject valueObj = new JSONObject(list100Card);
+                JSONArray listIdArray = valueObj.getJSONArray(KEY_CARD_JSON);
+                for (int i = 0; i < listIdArray.length(); i++) {
+                    String _cardId = listIdArray.getString(i);
+                    defaultIncomingLists.add(String.valueOf(_cardId));
+                }
+
+                List<String> clone_newIncomingList = new ArrayList<>(newIncomingList);
+                for (String cardId : clone_newIncomingList) {
+                    if (defaultIncomingLists.contains(cardId)) {
+                        newIncomingList.remove(cardId);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            incomingList.addAll(newIncomingList);
+            incomingList.addAll(defaultIncomingLists);
+            Log.d(TAG, "-new incoming list:" + newIncomingList.toString());
+            Log.d(TAG, "-default incoming list:" + defaultIncomingLists.toString());
+            Log.d(TAG, "-incoming list:" + incomingList.toString());
+
+            saveIncomingCardIdList(incomingList);
+        } else {
+            Log.d(TAG, "-Empty new incoming list");
         }
 
-        incomingList.addAll(newIncomingList);
-        incomingList.addAll(defaultIncomingLists);
-        Log.d(TAG, "-new incoming list:" + newIncomingList.toString());
-        Log.d(TAG, "-default incoming list:" + defaultIncomingLists.toString());
-        Log.d(TAG, "-incoming list:" + incomingList.toString());
+    }
 
-        saveIncomingCardIdList(incomingList);
+    public int markCustomList(int cardId) {
+        //Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_CUSTOM_LIST, true);
+        int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(cardId)});
+        db.close();
+        return update_result;
+    }
+
+    public void addColumCustomList() {
+        int add = executeQuery("ALTER TABLE vocabulary ADD COLUMN custom_list BOOLEAN");
+        Log.d(TAG, "Add column custom_list " + add);
+    }
+
+    public long insertCard(Card card) {
+        //Update staus card by id
+        SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ANSWERS, card.getAnswers());
+        values.put(KEY_LEVEL, card.getLevel());
+        values.put(KEY_PACKAGES, card.getPackage());
+
+        values.put(KEY_L_EN, card.getL_en());
+        values.put(KEY_L_VN, card.getL_vn());
+        values.put(KEY_G_ID, card.getgId());
+
+
+        long insert;
+        values.put(KEY_QUESTION, card.getQuestion());
+        insert = db.insert(TABLE_VOCABULARY, null, values);
+        Log.i(TAG, "Insert New Card \t -result=" + insert);
+
+        db.close();
+        return insert;
     }
 }
