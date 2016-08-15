@@ -18,6 +18,7 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.daimajia.swipe.SwipeLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,9 @@ import java.util.List;
  */
 public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<RecyclerViewIncomingListAdapter.RecyclerViewReviewTodayListAdapterViewHolder> {
     private static final String TAG = "ReviewAdapter";
+    private static final int VIEW_CARD_1 = 1;
+    private static final int VIEW_SUB_HEARDER_0 = 0;
+    List<Object> objects = new ArrayList<>();
     List<Card> vocabularies;
     private Context context;
     private LearnApiImplements learnApiImplements;
@@ -37,12 +41,35 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.mRecyclerViewReviewTodayList = mRecyclerViewReviewTodayList;
         this.lbCountReviewCard = lbCountReviewCard;
+        List<Card> deafaultList = new ArrayList<>();
+        List<Card> customList = new ArrayList<>();
+        for (Card card : vocabularies) {
+            if (card.isCustom_list()) {
+                customList.add(card);
+            } else deafaultList.add(card);
+        }
+
+        if (customList.size() > 0) {
+            objects.add(context.getString(R.string.custom_list));
+            objects.addAll(customList);
+            objects.add(context.getString(R.string.default_list));
+            objects.addAll(deafaultList);
+        } else {
+            objects.addAll(deafaultList);
+        }
+
+
     }
 
     @Override
     public RecyclerViewReviewTodayListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
-        RecyclerViewReviewTodayListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewReviewTodayListAdapterViewHolder(view);
+        View view = null;
+        if (viewType == VIEW_CARD_1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
+        } else if (viewType == VIEW_SUB_HEARDER_0) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_incoming_list_sub_header, parent, false); //Inflating the layout
+        }
+        RecyclerViewReviewTodayListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewReviewTodayListAdapterViewHolder(view, viewType);
         return recyclerViewReviewTodayListAdapterViewHolder;
     }
 
@@ -50,6 +77,16 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(RecyclerViewReviewTodayListAdapterViewHolder holder, final int position) {
         //Define view
         final View view = holder.view;
+        if (holder.viewType == VIEW_CARD_1) {
+            defineCardView(view, position);
+        } else if (holder.viewType == VIEW_SUB_HEARDER_0) {
+            TextView textView = (TextView) view.findViewById(R.id.sub_header);
+            textView.setText(String.valueOf(objects.get(position)));
+        }
+
+    }
+
+    private void defineCardView(final View view, int position) {
         final SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipeLayout);
         TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
         TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
@@ -71,7 +108,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
 
 
             //get Card by position
-            final Card card = vocabularies.get(position);
+            final Card card = (Card) objects.get(position);
 
             String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
             String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
@@ -155,24 +192,26 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
 
     @Override
     public int getItemCount() {
-        return vocabularies.size();
+        return objects.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Object obj = objects.get(position);
+        if (obj instanceof String) return VIEW_SUB_HEARDER_0;
+        else if (obj instanceof Card) return VIEW_CARD_1;
+        else return -1;
+
     }
 
     public class RecyclerViewReviewTodayListAdapterViewHolder extends RecyclerView.ViewHolder {
         private View view;
+        private int viewType;
 
-        public RecyclerViewReviewTodayListAdapterViewHolder(View itemView) {
+        public RecyclerViewReviewTodayListAdapterViewHolder(View itemView, int viewType) {
             super(itemView);
             this.view = itemView;
+            this.viewType = viewType;
         }
     }
-
-    public List<Card> getVocabularies() {
-        return vocabularies;
-    }
-
-    public void setVocabularies(List<Card> vocabularies) {
-        this.vocabularies = vocabularies;
-    }
-
 }
