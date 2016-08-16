@@ -655,13 +655,16 @@ public class MainActivity extends AppCompatActivity
 
                     //reset incomming list
                     dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                    mFirebaseAnalytics.setUserProperty("Selected_major", String.valueOf(subjectSelected));
                 } else if (checker[0] == -2) {
                     //save my subjects
                     dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
 
                     //reset incomming list
                     dataBaseHelper._initIncomingCardIdList();
+                    mFirebaseAnalytics.setUserProperty("Selected_major", String.valueOf(""));
                 }
+
                 dialog.cancel();
             }
         });

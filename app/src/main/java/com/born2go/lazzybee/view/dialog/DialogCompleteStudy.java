@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,6 +97,8 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private void _initStreakCount(View view, int count) {
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        firebaseAnalytics.setUserProperty("Streak", String.valueOf(count));
         //Define view
         View mCount = view.findViewById(R.id.mCount);
         TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);

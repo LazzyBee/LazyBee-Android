@@ -157,7 +157,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         _initView(view);
         _setUpStudy();
         _handlerButtonAnswer();
-        mFirebaseAnalytics=FirebaseAnalytics.getInstance(getActivity());
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         return view;
     }
 
@@ -396,7 +396,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         Log.d(TAG, "DPI:" + densityDpi);
 
 
-
         mFloatActionButtonUserNote.setOnTouchListener(new View.OnTouchListener() {
             public boolean shouldClick;
             int move = 0;
@@ -511,10 +510,10 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 _showFirstCard();
                 _handlerNextCardReverse();
 
-                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_REVERSE,new Bundle());
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_REVERSE, new Bundle());
 
             } else {
-                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STUDY,new Bundle());
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STUDY, new Bundle());
                 mCount.setVisibility(View.VISIBLE);
                 int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
                 //get lean_more form intern
@@ -549,6 +548,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 todayCount = todayList.size();
                 Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
 
+                mFirebaseAnalytics.setUserProperty("Count_review_per_day", String.valueOf(dueCount + againCount));
 
                 //Define check_learn
                 //check_learn==true Study

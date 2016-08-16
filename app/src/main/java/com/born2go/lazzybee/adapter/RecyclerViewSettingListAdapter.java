@@ -36,6 +36,7 @@ import com.born2go.lazzybee.utils.CustomTimePickerDialog;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 
@@ -826,6 +827,8 @@ public class RecyclerViewSettingListAdapter extends
 
                 builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
+                        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(context);
+                        firebaseAnalytics.setUserProperty("Selected_language",String.valueOf(items[item]));
                         // Do something with the selection
                         if (items[item] == context.getString(R.string.lang_english)) {
                             //Log.i(TAG, getString(R.string.lang_english) + " click");

@@ -18,6 +18,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewCustomStudyAdapter;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +71,8 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         lbSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+                firebaseAnalytics.setUserProperty("Selected_waiting_time", String.valueOf(time));
                 Log.d(TAG, "time:" + time);
                 LazzyBeeSingleton.learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(time));
                 dialog.dismiss();

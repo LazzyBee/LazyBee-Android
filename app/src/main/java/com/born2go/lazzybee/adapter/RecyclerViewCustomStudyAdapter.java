@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogSetTimeShowAnswer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,7 +255,8 @@ public class RecyclerViewCustomStudyAdapter extends
 
         builder.setSingleChoiceItems(strlevels, (finalLevel == 1) ? 0 : finalLevel - 1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                firebaseAnalytics.setUserProperty("Selected_level", String.valueOf(strlevels[item]));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, strlevels[item]);
                 learnApiImplements._initIncomingCardIdListbyLevel(Integer.valueOf(strlevels[item]));
                 dialog.dismiss();
@@ -419,6 +422,8 @@ public class RecyclerViewCustomStudyAdapter extends
                     @Override
                     public void onClick(View view) {
                         try {
+                            FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(context);
+
                             String limit = LazzyBeeShare.EMPTY;
                             if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
                                 String erorr_message = LazzyBeeShare.EMPTY;
@@ -427,7 +432,7 @@ public class RecyclerViewCustomStudyAdapter extends
                                     lbEror.setText(erorr_message);
                                 } else {
                                     limit = txtLimit.getText().toString();
-                                    Log.e(TAG,LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT+":"+ limit);
+                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT + ":" + limit);
                                     int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
                                     if (Integer.valueOf(limit) > total) {
                                         erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_total_learn_per_day) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
@@ -438,6 +443,12 @@ public class RecyclerViewCustomStudyAdapter extends
                                         Log.e(TAG, erorr_message);
                                         lbEror.setText(erorr_message);
                                     } else {
+                                        firebaseAnalytics.setUserProperty("Daily_new_word",String.valueOf(limit));
+                                        Bundle bundle=new Bundle();
+                                        bundle.putString("count",limit);
+                                        firebaseAnalytics.logEvent("Daily_total_word",bundle);
+
+
                                         learnApiImplements._insertOrUpdateToSystemTable(key, limit);
                                         _resetQueueList(limit);
                                         dialog.dismiss();
@@ -453,7 +464,7 @@ public class RecyclerViewCustomStudyAdapter extends
                                     lbEror.setText(erorr_message);
                                 } else {
                                     limit = txtLimit.getText().toString();
-                                    Log.e(TAG,LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT+":"+ limit);
+                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT + ":" + limit);
                                     int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                                     if (Integer.valueOf(limit) < total) {
                                         erorr_message = context.getString(R.string.custom_study_eror_limit) + " > " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
@@ -475,13 +486,17 @@ public class RecyclerViewCustomStudyAdapter extends
                                     lbEror.setText(erorr_message);
                                 } else {
                                     limit = txtLimit.getText().toString();
-                                    Log.e(TAG,LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT+":"+ limit);
+                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT + ":" + limit);
                                     int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                                     if (Integer.valueOf(limit) > total) {
                                         erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
                                         Log.e(TAG, erorr_message);
                                         lbEror.setText(erorr_message);
                                     } else {
+                                        firebaseAnalytics.setUserProperty("Daily_total_word",String.valueOf(limit));
+                                        Bundle bundle=new Bundle();
+                                        bundle.putString("count",limit);
+                                        firebaseAnalytics.logEvent("Daily_total_word",bundle);
                                         learnApiImplements._insertOrUpdateToSystemTable(key, limit);
                                         // main.hide();
                                         dialog.dismiss();
