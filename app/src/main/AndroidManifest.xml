@@ -92,7 +92,7 @@
             android:name=".activity.IncomingListActivity"
             android:label="@string/title_activity_review_card"
             android:screenOrientation="portrait"
-            android:theme="@style/IncomingTHeme">
+            android:theme="@style/IncomingTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -196,7 +196,7 @@
             android:name=".activity.CreateWordListActivity"
             android:label="Input Word List"
             android:screenOrientation="portrait"
-            android:theme="@style/IncomingTHeme">
+            android:theme="@style/IncomingTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.IncomingListActivity" />

@@ -28,6 +28,7 @@
         android:background="@color/background_button_searchbox_home_screen"
         android:onClick="onSearchDictionary"
         android:src="@drawable/ic_search_black_18dp"
+        android:tint="@android:color/white"
         android:layout_alignParentTop="false"
         android:layout_centerVertical="true" />
 

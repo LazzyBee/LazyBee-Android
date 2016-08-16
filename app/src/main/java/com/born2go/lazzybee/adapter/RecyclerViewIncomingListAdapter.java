@@ -167,13 +167,14 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
     private void ignoreAndLearnedCard(int position, int queue) {
         try {
             Log.i(TAG, "position:" + position);
-            Card card = vocabularies.get(position);
+            Card card = (Card) objects.get(position);
             card.setQueue(queue);
 
             //Update Card in server
             learnApiImplements._updateCard(card);
 
             //re display Icoming list
+            objects.remove(card);
             vocabularies.remove(card);
 
             //remove card id in Incomming List

@@ -154,13 +154,14 @@ public class MainActivity extends AppCompatActivity
         if (autoCompleteTextView != null) {
             //set Enable Spelling Suggestions
             autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-            int color = Color.parseColor("#ffffffff");
+            int color = Color.parseColor("#FFFFFF");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
-            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+            drawable.setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.MULTIPLY);
 
             autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
             autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
             autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
+
 
         }
 

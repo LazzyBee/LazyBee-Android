@@ -38,7 +38,7 @@ import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.List;
 
-public class IncomingListActivity extends AppCompatActivity implements GetGroupVoca.IGetGroupVoca {
+public class IncomingListActivity extends AppCompatActivity implements GetGroupVoca.IGetGroupVoca, SwipeRefreshLayout.OnRefreshListener {
 
     private static final Object GA_SCREEN = "aIncomingListScreen";
     private static final String TAG = "IncomingList";
@@ -93,31 +93,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
 
         mRecyclerViewReviewTodayList.setAdapter(incomingListAdapter);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Refresh items
-                int count = (int) lbCountReviewCard.getTag();
-                if (count < 100) {
-                    //fill up incoming list
-                    int myLevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-                    dataBaseHelper._initIncomingCardIdList();
-                    //get new IncomingList
-                    List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
-
-                    //set count
-                    lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + fillUpCards.size());
-                    lbCountReviewCard.setTag(fillUpCards.size());
-
-                    //Reset adapter incoming list
-                    RecyclerViewIncomingListAdapter fillUpnewincomingAdapter =
-                            new RecyclerViewIncomingListAdapter(context, mRecyclerViewReviewTodayList, fillUpCards, lbCountReviewCard);
-                    mRecyclerViewReviewTodayList.setAdapter(fillUpnewincomingAdapter);
-                }
-
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -288,5 +264,29 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
                 getIncomingList();
             }
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        // Refresh items
+        int count = (int) lbCountReviewCard.getTag();
+        if (count < 100) {
+            //fill up incoming list
+           // int myLevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+            dataBaseHelper._initIncomingCardIdList();
+            //get new IncomingList
+            List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
+
+            //set count
+            lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + fillUpCards.size());
+            lbCountReviewCard.setTag(fillUpCards.size());
+
+            //Reset adapter incoming list
+            RecyclerViewIncomingListAdapter fillUpnewincomingAdapter =
+                    new RecyclerViewIncomingListAdapter(context, mRecyclerViewReviewTodayList, fillUpCards, lbCountReviewCard);
+            mRecyclerViewReviewTodayList.setAdapter(fillUpnewincomingAdapter);
+        }
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

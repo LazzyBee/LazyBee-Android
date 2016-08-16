@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -1112,7 +1113,17 @@ public class LearnApiImplements implements LearnApi {
         if (cardIds.size() < 0) {
             return -1;
         } else {
-            saveIncomingCardIdList(cardIds);
+            List<String> customListId = getCustomListId();
+            List<String> clone_DefaultList = new ArrayList<>(cardIds);
+            for (String cardId : customListId) {
+                if (cardIds.contains(cardId)) {
+                    clone_DefaultList.remove(cardId);
+                }
+            }
+            List<String> incomingList = new ArrayList<>();
+            incomingList.addAll(customListId);
+            incomingList.addAll(clone_DefaultList);
+            saveIncomingCardIdList(incomingList);
             return cardIds.size();
         }
     }
@@ -1146,7 +1157,18 @@ public class LearnApiImplements implements LearnApi {
             if (count < 0) {
                 return -1;
             } else {
-                saveIncomingCardIdList(cardIds);
+                List<String> customListId = getCustomListId();
+                List<String> clone_DefaultList = new ArrayList<>(cardIds);
+                for (String cardId : customListId) {
+                    if (cardIds.contains(cardId)) {
+                        clone_DefaultList.remove(cardId);
+                    }
+                }
+                List<String> incomingList = new ArrayList<>();
+
+                incomingList.addAll(customListId);
+                incomingList.addAll(clone_DefaultList);
+                saveIncomingCardIdList(incomingList);
                 return count;
             }
         } else {
@@ -1155,8 +1177,11 @@ public class LearnApiImplements implements LearnApi {
 
     }
 
-    public void saveIncomingCardIdList(List<String> cardIds) {
+    public void saveIncomingCardIdList(List<String> defaultsList) {
+        List<String> cardIds = new ArrayList<>();
+        cardIds.addAll(defaultsList);
         try {
+
             String key = LazzyBeeShare.PRE_FETCH_NEWCARD_LIST;
             JSONObject newcardlist = new JSONObject();
             JSONArray jsonArray = new JSONArray(cardIds);
@@ -1167,6 +1192,14 @@ public class LearnApiImplements implements LearnApi {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<String> getCustomListId() {
+        String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
+                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND custom_list = " + 1 + " LIMIT " + 100;
+        List<String> cardIds = new ArrayList<>();
+        cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+        return cardIds;
     }
 
 
@@ -1896,7 +1929,8 @@ public class LearnApiImplements implements LearnApi {
         //Update staus card by id
         SQLiteDatabase db = this.dataBaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_CUSTOM_LIST, true);
+        values.put(KEY_CUSTOM_LIST, 1);
+        values.put(KEY_QUEUE, 0);
         int update_result = db.update(TABLE_VOCABULARY, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(cardId)});
         db.close();
@@ -1904,7 +1938,7 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public void addColumCustomList() {
-        int add = executeQuery("ALTER TABLE vocabulary ADD COLUMN custom_list BOOLEAN");
+        int add = executeQuery("ALTER TABLE vocabulary ADD COLUMN custom_list INTEGER");
         Log.d(TAG, "Add column custom_list " + add);
     }
 
