@@ -47,6 +47,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogFirstShowAnswer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -156,6 +157,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         _initView(view);
         _setUpStudy();
         _handlerButtonAnswer();
+        mFirebaseAnalytics=FirebaseAnalytics.getInstance(getActivity());
         return view;
     }
 
@@ -508,7 +510,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 sTimeShowAnswer = -1;
                 _showFirstCard();
                 _handlerNextCardReverse();
+
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_REVERSE,new Bundle());
+
             } else {
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STUDY,new Bundle());
                 mCount.setVisibility(View.VISIBLE);
                 int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
                 //get lean_more form intern
@@ -542,6 +548,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
                 todayCount = todayList.size();
                 Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
+
 
                 //Define check_learn
                 //check_learn==true Study

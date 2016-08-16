@@ -61,6 +61,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity
     SearchView mSearchCardBox;
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton floatingActionButton;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +127,8 @@ public class MainActivity extends AppCompatActivity
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         Log.d(TAG, "telephonyManager.getDeviceId():" + telephonyManager.getDeviceId());
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
 
@@ -178,6 +182,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "onSuggestionClick:" + position);
                 try {
                     CursorAdapter c = mSearchCardBox.getSuggestionsAdapter();
+                    mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_HINT_HOME, new Bundle());
                     if (c != null) {
                         Cursor cur = c.getCursor();
                         cur.moveToPosition(position);
@@ -433,6 +438,7 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
                     _gotoSetting();
+
                     break;
                 case LazzyBeeShare.DRAWER_USER_INDEX:
                     //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
@@ -468,6 +474,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _goTestYourVoca() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_TEST_YOUR_VOCA, new Bundle());
         if (LazzyBeeShare.checkConn(context)) {
             Intent intent = new Intent(context, TestYourVoca.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -482,6 +489,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showStatistical() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
         try {
             DialogStatistics dialogStatistics = new DialogStatistics(context);
             dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
@@ -492,6 +500,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSelectSubject() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_CHOOSE_MAJOR, new Bundle());
         View mSelectMajor = View.inflate(context, R.layout.view_select_major, null);
         final CheckBox cbIt = (CheckBox) mSelectMajor.findViewById(R.id.cbIt);
         final CheckBox cbEconomy = (CheckBox) mSelectMajor.findViewById(R.id.cbEconomy);
@@ -668,6 +677,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY, new Bundle());
         //_gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, LazzyBeeShare.GOTO_DICTIONARY);
@@ -676,6 +686,7 @@ public class MainActivity extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
         //startActivity(intent);
+
 
     }
 
@@ -954,6 +965,7 @@ public class MainActivity extends AppCompatActivity
      * Goto setting
      */
     private void _gotoSetting() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SETTING, new Bundle());
         //_initInterstitialAd inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1101,6 +1113,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void _onbtnReviewOnClick(View view) {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_INCOMING, new Bundle());
         Intent intent = new Intent(this, IncomingListActivity.class);
         startActivity(intent);
     }

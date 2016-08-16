@@ -22,6 +22,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -36,13 +38,14 @@ public class SplashScreen extends Activity {
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements learnApiImplements;
+    private SplashScreen thiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash_screen);
-
+        thiz = this;
         new Handler().postDelayed(new Runnable() {
             /*
              * Showing splash screen with a timer. This will be useful when you
@@ -84,6 +87,9 @@ public class SplashScreen extends Activity {
                         _updateVersionDB();
 
                         learnApiImplements._get100Card();
+
+                        FirebaseOptions firebaseOptions = FirebaseOptions.fromResource(thiz);
+                        FirebaseApp firebaseApp = FirebaseApp.initializeApp(thiz, firebaseOptions);
 
                         startMainActivity();
                     }

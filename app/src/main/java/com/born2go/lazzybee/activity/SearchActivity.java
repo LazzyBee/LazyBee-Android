@@ -46,6 +46,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,7 @@ public class SearchActivity extends AppCompatActivity implements
     SearchView.SearchAutoComplete mSuggerstionCard;
     List<Card> dictionaryCardList;
     private SwipeRefreshLayout mRefeshSearch;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -79,6 +81,7 @@ public class SearchActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = this;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         _initLazzyBeeSingleton();
 
@@ -154,26 +157,21 @@ public class SearchActivity extends AppCompatActivity implements
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
 
         //  mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
-        mRecyclerViewSearchResults.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mRecyclerViewSearchResults.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
                 super.onScrolled(recyclerView, dx, dy);
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 // TODO Auto-generated method stub
                 //super.onScrollStateChanged(recyclerView, newState);
-                int firstPos=gridLayoutManager.findFirstCompletelyVisibleItemPosition();
-                if (firstPos>0)
-                {
+                int firstPos = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstPos > 0) {
                     mRefeshSearch.setEnabled(false);
-                }
-                else {
+                } else {
                     mRefeshSearch.setEnabled(true);
                 }
             }
@@ -254,6 +252,7 @@ public class SearchActivity extends AppCompatActivity implements
                 try {
                     CursorAdapter c = search.getSuggestionsAdapter();
                     if (c != null) {
+                        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_HINT, new Bundle());
                         Cursor cur = c.getCursor();
                         cur.moveToPosition(position);
 
@@ -445,6 +444,7 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void setAdapterListCard(List<Card> cardList) {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_RESULTS, new Bundle());
         RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
@@ -593,6 +593,10 @@ public class SearchActivity extends AppCompatActivity implements
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("searchNoResult", DataLayer.mapOf("wordError", query_text));
+            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+            firebaseAnalytics.logEvent("Search_not_found", new Bundle());
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerWorkNotFound", e);
         }

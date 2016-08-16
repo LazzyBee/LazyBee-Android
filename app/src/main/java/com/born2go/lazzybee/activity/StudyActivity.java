@@ -44,6 +44,7 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class StudyActivity extends AppCompatActivity
     private int currentPage = 0;
     private String detailViewTag;
     ScreenSlidePagerAdapter pagerAdapter;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -96,6 +98,8 @@ public class StudyActivity extends AppCompatActivity
 
         _initView();
         _definePagerStudy();
+
+        mFirebaseAnalytics= FirebaseAnalytics.getInstance(this);
 
     }
 
@@ -447,6 +451,7 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showCardNote(final Card currentCard) {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_A_NOTE,new Bundle());
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
@@ -475,6 +480,9 @@ public class StudyActivity extends AppCompatActivity
         final AlertDialog dialog = builder.create();
 
         dialog.show();
+
+
+
 
     }
 
