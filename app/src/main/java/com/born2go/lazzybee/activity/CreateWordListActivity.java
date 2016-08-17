@@ -1,10 +1,7 @@
 package com.born2go.lazzybee.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +13,6 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.AddCustomListToIncomingList;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
-import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 public class CreateWordListActivity extends AppCompatActivity implements AddCustomListToIncomingList.IAddCustomListToIncomingList {
 
@@ -52,7 +48,7 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_input) {
+        if (id == R.id.action_import) {
 
             inputNewWordList();
 
@@ -95,7 +91,7 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
     @Override
     public void processFinish() {
         setResult(UPDATE_1);
-        Toast.makeText(this, "Add custom list sucess", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.import_custom_list_sucessfully, Toast.LENGTH_SHORT).show();
         finish();
     }
 }

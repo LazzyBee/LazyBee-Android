@@ -366,6 +366,16 @@
         <item>@string/day_sat</item>
         <item>@string/day_sun</item>
     </string-array>
+    <string name="default_list">Danh sách mặc định</string>
+    <string name="msg_input_word_list">Xin mời thêm các từ mà bạn muốn học. Những từ này sẽ được ưu tiên để học trước.</string>
+    <string name="msg_input_word_list_tip">(Các từ cách nhau bằng dấu phẩy hoặc xuống dòng)</string>
+    <string name="msg_please_input_restore_word_list_code">Nhập mã mà bạn đã nhận được khi tạo danh sách từ mới bằng trình duyệt web.</string>
+    <string name="msg_restore_word_list">Nhập danh sách từ</string>
+    <string name="action_import">Nhập</string>
+    <string name="create_new_list">Tạo danh sách từ</string>
+    <string name="custom_list">Danh sách tùy chọn</string>
+    <string name="import_form_existed_list">Nhập từ danh sách đã có</string>
+    <string name="import_custom_list_sucessfully">Danh sách từ của bạn đã được nhập vào thành công.</string>
 
 
 </resources>

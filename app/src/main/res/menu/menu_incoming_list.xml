@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/restore_list_word"
-        android:title="@string/restore_list_work" />
-    <item
-        android:id="@+id/input_list_work"
-        android:title="@string/action_input_list_work" />
+        android:id="@+id/menu_search_option"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="Search Option"
+        app:showAsAction="ifRoom|withText">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/input_list_work"
+                    android:title="@string/create_new_list" />
+                <item
+                    android:id="@+id/restore_list_word"
+                    android:title="@string/import_form_existed_list" />
+            </group>
+        </menu>
+    </item>
+
 </menu>

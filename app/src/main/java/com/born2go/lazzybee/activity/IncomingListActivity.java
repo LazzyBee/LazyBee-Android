@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.GetGroupVoca;
@@ -141,7 +142,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // hideKeyBoard();
@@ -251,7 +252,11 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
 
     @Override
     public void processFinish(GroupVoca groupVoca) {
-        inputWordList(groupVoca.getListVoca());
+        if (groupVoca != null) {
+            inputWordList(groupVoca.getListVoca());
+        } else {
+            Toast.makeText(context, R.string.not_found, Toast.LENGTH_SHORT).show();
+        }
 //        dataBaseHelper.addToIncomingList(groupVoca);
 //        getIncomingList();
     }
@@ -272,7 +277,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         int count = (int) lbCountReviewCard.getTag();
         if (count < 100) {
             //fill up incoming list
-           // int myLevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+            // int myLevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
             dataBaseHelper._initIncomingCardIdList();
             //get new IncomingList
             List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
