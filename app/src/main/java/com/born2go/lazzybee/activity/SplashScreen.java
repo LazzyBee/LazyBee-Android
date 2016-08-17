@@ -88,9 +88,6 @@ public class SplashScreen extends Activity {
 
                         learnApiImplements._get100Card();
 
-                        FirebaseOptions firebaseOptions = FirebaseOptions.fromResource(thiz);
-                        FirebaseApp firebaseApp = FirebaseApp.initializeApp(thiz, firebaseOptions);
-
                         startMainActivity();
                     }
                 }, GTM_TIME_OUT, TimeUnit.MILLISECONDS);
