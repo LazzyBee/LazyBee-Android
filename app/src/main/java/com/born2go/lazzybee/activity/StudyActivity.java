@@ -183,6 +183,11 @@ public class StudyActivity extends AppCompatActivity
             //Show dialog complete learn
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+
+            int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+            Bundle bundle = new Bundle();
+            mFirebaseAnalytics.logEvent("Streak", bundle);
+            bundle.putString("count", String.valueOf(count));
         } else {
             _showDialogCompleteMore();
         }
