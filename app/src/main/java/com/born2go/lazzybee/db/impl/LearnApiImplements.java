@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -20,8 +21,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 /**
@@ -1113,19 +1117,39 @@ public class LearnApiImplements implements LearnApi {
         if (cardIds.size() < 0) {
             return -1;
         } else {
-            List<String> customListId = getCustomListId();
-            List<String> clone_DefaultList = new ArrayList<>(cardIds);
+            saveIncomingCardIdListwithCustomList(cardIds);
+            return cardIds.size();
+        }
+    }
+
+    private void saveIncomingCardIdListwithCustomList(List<String> cardIds) {
+        List<String> incomingList = new ArrayList<>();
+
+        //Clone default list
+        List<String> clone_DefaultList = new ArrayList<>(cardIds);
+
+        //Custom list
+        List<String> customListId = getCustomListId();
+
+        //remove duplicate
+        int customSize = customListId.size();
+        if (customSize > 0) {
             for (String cardId : customListId) {
                 if (cardIds.contains(cardId)) {
                     clone_DefaultList.remove(cardId);
                 }
             }
-            List<String> incomingList = new ArrayList<>();
             incomingList.addAll(customListId);
+            int sizeDefault = 100 - customSize;
+            for (int i = 0; i < sizeDefault; i++) {
+                incomingList.add(clone_DefaultList.get(i));
+            }
+        } else {
             incomingList.addAll(clone_DefaultList);
-            saveIncomingCardIdList(incomingList);
-            return cardIds.size();
         }
+
+
+        saveIncomingCardIdList(incomingList);
     }
 
     public int _initIncomingCardIdListbyLevel(int myLevel) {
@@ -1157,18 +1181,7 @@ public class LearnApiImplements implements LearnApi {
             if (count < 0) {
                 return -1;
             } else {
-                List<String> customListId = getCustomListId();
-                List<String> clone_DefaultList = new ArrayList<>(cardIds);
-                for (String cardId : customListId) {
-                    if (cardIds.contains(cardId)) {
-                        clone_DefaultList.remove(cardId);
-                    }
-                }
-                List<String> incomingList = new ArrayList<>();
-
-                incomingList.addAll(customListId);
-                incomingList.addAll(clone_DefaultList);
-                saveIncomingCardIdList(incomingList);
+                saveIncomingCardIdListwithCustomList(cardIds);
                 return count;
             }
         } else {
