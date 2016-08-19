@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.view.dialog;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -27,18 +28,16 @@ import android.widget.TextView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-
+@SuppressLint("ValidFragment")
 public class DialogCompleteStudy extends DialogFragment {
 
     private static final String TAG = "DialogCompleteStudy";
     private Context context;
-    private MediaPlayer mpintro;
 
     public DialogCompleteStudy(Context context) {
         this.context = context;
@@ -97,8 +96,6 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private void _initStreakCount(View view, int count) {
-        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-        firebaseAnalytics.setUserProperty("Streak", String.valueOf(count));
         //Define view
         View mCount = view.findViewById(R.id.mCount);
         TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
@@ -110,6 +107,8 @@ public class DialogCompleteStudy extends DialogFragment {
         Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
         a.setDuration(1000);
         streak_ring.startAnimation(a);
+
+
     }
 
     private void _initStreakDays(View view, LayoutInflater inflater, int countStreak) {

@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import java.util.TimerTask;
 /**
  * Created by Hue on 5/22/2016.
  */
+@SuppressLint("ValidFragment")
 public class DialogFirstShowAnswer extends DialogFragment {
     private Context context;
 

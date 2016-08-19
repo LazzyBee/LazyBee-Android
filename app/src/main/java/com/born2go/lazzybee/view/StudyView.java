@@ -61,6 +61,7 @@ import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
  * {@link OnStudyViewListener} interface
  * to handle interaction events.
  */
+@SuppressLint("ValidFragment")
 public class StudyView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyView";
