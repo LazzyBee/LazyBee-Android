@@ -299,7 +299,7 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_reset_to_default</item>
     </string-array>
-    <string-array name="time_show_answer">
+    <string-array name="time_show_answer" translatable="false">
         <item>3</item>
         <item>5</item>
         <item>7</item>
