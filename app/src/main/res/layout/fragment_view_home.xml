@@ -148,7 +148,6 @@
                             android:visibility="gone" />
 
                         <TextView
-                            android:id="@+id/mCardViewLearnMore"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_gravity="center_horizontal"
