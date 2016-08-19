@@ -261,7 +261,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         mListener = (OnStudyViewListener) activity;
     }
@@ -513,7 +513,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_REVERSE, new Bundle());
 
             } else {
-                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STUDY, new Bundle());
                 mCount.setVisibility(View.VISIBLE);
                 int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
                 //get lean_more form intern
@@ -547,8 +546,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
                 todayCount = todayList.size();
                 Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
-
-                mFirebaseAnalytics.setUserProperty("Count_review_per_day", String.valueOf(dueCount + againCount));
+//                Bundle bundle=new Bundle( );
+//                bundle.putString(FirebaseAnalytics.Param.VALUE,"1");
+//                mFirebaseAnalytics.logEvent("Count_review_per_day",bundle);
 
                 //Define check_learn
                 //check_learn==true Study
@@ -568,6 +568,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     Log.i(TAG, "_completeLean");
                     _completeLean(false);
                 }
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STUDY, new Bundle());
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.VALUE, String.valueOf("" + (dueCount + againCount)));
+                mFirebaseAnalytics.logEvent("Count_review_per_day", bundle);
+
 
             }
 
