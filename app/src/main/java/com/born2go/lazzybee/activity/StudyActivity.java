@@ -99,7 +99,7 @@ public class StudyActivity extends AppCompatActivity
         _initView();
         _definePagerStudy();
 
-        mFirebaseAnalytics= FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     }
 
@@ -161,7 +161,6 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showDialogCompleteMore() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage("Complete study!!!");
@@ -176,6 +175,7 @@ public class StudyActivity extends AppCompatActivity
         });
         Dialog dialog = builder.create();
         dialog.show();
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STREAK_CONGRATULATION, new Bundle());
     }
 
     private void _showDialogComplete() {
@@ -392,8 +392,6 @@ public class StudyActivity extends AppCompatActivity
     }
 
 
-
-
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private int pageCount = 2;
 
@@ -451,7 +449,7 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showCardNote(final Card currentCard) {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_A_NOTE,new Bundle());
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_A_NOTE, new Bundle());
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
@@ -466,7 +464,7 @@ public class StudyActivity extends AppCompatActivity
                 String user_note = txtUserNote.getText().toString();
                 currentCard.setUser_note(user_note);
                 dataBaseHelper._updateUserNoteCard(currentCard);
-                ((StudyView)pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
+                ((StudyView) pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
                 dialog.dismiss();
             }
         });
@@ -480,8 +478,6 @@ public class StudyActivity extends AppCompatActivity
         final AlertDialog dialog = builder.create();
 
         dialog.show();
-
-
 
 
     }

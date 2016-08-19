@@ -201,7 +201,7 @@ public class LazzyBeeShare {
     public static final String FA_OPEN_DICTIONARY= "Open_aDictionaryScreen";
     public static final String FA_OPEN_DICTIONARY_VIEW_WORD= "Open_aDictionaryViewWordScreen";
 
-    public static final String FA_OPEN_IMPORT_WORD_REPORT= "Open_aDictionaryViewWordScreen";
+    public static final String FA_OPEN_IMPORT_WORD_REPORT= "Open_aImport_wordScreen";
     public static final String FA_OPEN_INCOMING= "Open_aIncomingScreen";
 
     public static final String FA_OPEN_REVERSE= "Open_aReverseScreen";

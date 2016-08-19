@@ -43,6 +43,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
 import java.util.List;
@@ -90,6 +91,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         _initAdView();
 
         _trackerApplication();
+
+        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(this);
+        firebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY_VIEW_WORD,new Bundle());
 
     }
 

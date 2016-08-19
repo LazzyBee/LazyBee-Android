@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.AddCustomListToIncomingList;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class CreateWordListActivity extends AppCompatActivity implements AddCustomListToIncomingList.IAddCustomListToIncomingList {
 
@@ -35,6 +37,9 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
         if (wordList != null) {
             txtwordList.setText(wordList);
         }
+
+        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(this);
+        firebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_IMPORT_WORD_REPORT,new Bundle());
     }
 
     @Override
