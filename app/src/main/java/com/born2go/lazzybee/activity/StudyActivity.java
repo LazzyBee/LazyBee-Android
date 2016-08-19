@@ -260,6 +260,7 @@ public class StudyActivity extends AppCompatActivity
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
+            autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
             //set Enable Spelling Suggestions
             autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");

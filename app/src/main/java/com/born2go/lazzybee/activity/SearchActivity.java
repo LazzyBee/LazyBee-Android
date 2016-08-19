@@ -210,6 +210,7 @@ public class SearchActivity extends AppCompatActivity implements
         if (mSuggerstionCard != null) {
             //set Enable Spelling Suggestions
             mSuggerstionCard.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+            mSuggerstionCard.setDropDownBackgroundResource(android.R.color.white);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = mSuggerstionCard.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);

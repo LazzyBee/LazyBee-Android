@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity
         mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
 
+        autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
         //Custom search
         // Hide icon search in searchView and set clear text icon
         ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
