@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,9 +59,23 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
     protected Void doInBackground(GroupVoca... groupVocas) {
         //
         GroupVoca groupVoca = groupVocas[0];
-        // split groupVoca
-        String[] questions = groupVoca.getListVoca().split("\\n");
-        for (String q : questions) {
+
+        String listVoca = groupVoca.getListVoca();
+        // split break
+        String[] questions_n = listVoca.split("\\n");
+        List<String> question = new ArrayList<>();
+
+        for (String line : questions_n) {
+            //split commma
+            if (line.contains(",")) {
+                String[] questions_comma = line.split(",");
+                question.addAll(Arrays.asList(questions_comma));
+            } else {
+                question.add(line);
+            }
+        }
+
+        for (String q : question) {
             int cardId = learnApiImplements._getCardIDByQuestion(q.trim().toLowerCase());
             if (cardId > 0) {
                 newIncomingList.add(String.valueOf(cardId));
@@ -81,38 +96,39 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
 
                 }
             }
-
         }
 
-        if (newIncomingList.size() > 0) {
-            String list100Card = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
-            try {
-                JSONObject valueObj = new JSONObject(list100Card);
-                JSONArray listIdArray = valueObj.getJSONArray("card");
-                for (int i = 0; i < listIdArray.length(); i++) {
-                    String _cardId = listIdArray.getString(i);
-                    defaultIncomingLists.add(String.valueOf(_cardId));
-                }
+        learnApiImplements._initIncomingCardIdList();
+//        if (newIncomingList.size() > 0) {
+//            String list100Card = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.PRE_FETCH_NEWCARD_LIST);
+//            try {
+//                JSONObject valueObj = new JSONObject(list100Card);
+//                JSONArray listIdArray = valueObj.getJSONArray("card");
+//                for (int i = 0; i < listIdArray.length(); i++) {
+//                    String _cardId = listIdArray.getString(i);
+//                    defaultIncomingLists.add(String.valueOf(_cardId));
+//                }
+//
+//                List<String> clone_newIncomingList = new ArrayList<>(newIncomingList);
+//                for (String cardId : clone_newIncomingList) {
+//                    if (defaultIncomingLists.contains(cardId)) {
+//                        newIncomingList.remove(cardId);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            incomingList.addAll(newIncomingList);
+//            incomingList.addAll(defaultIncomingLists);
+//            Log.d(TAG, "-new incoming list:" + newIncomingList.toString());
+//            Log.d(TAG, "-default incoming list:" + defaultIncomingLists.toString());
+//            Log.d(TAG, "-incoming list:" + incomingList.toString());
+//
+//            learnApiImplements.saveIncomingCardIdList(incomingList);
+//        } else {
+//            Log.d(TAG, "-Empty new incoming list");
+//        }
 
-                List<String> clone_newIncomingList = new ArrayList<>(newIncomingList);
-                for (String cardId : clone_newIncomingList) {
-                    if (defaultIncomingLists.contains(cardId)) {
-                        newIncomingList.remove(cardId);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            incomingList.addAll(newIncomingList);
-            incomingList.addAll(defaultIncomingLists);
-            Log.d(TAG, "-new incoming list:" + newIncomingList.toString());
-            Log.d(TAG, "-default incoming list:" + defaultIncomingLists.toString());
-            Log.d(TAG, "-incoming list:" + incomingList.toString());
-
-            learnApiImplements.saveIncomingCardIdList(incomingList);
-        } else {
-            Log.d(TAG, "-Empty new incoming list");
-        }
         return null;
     }
 
