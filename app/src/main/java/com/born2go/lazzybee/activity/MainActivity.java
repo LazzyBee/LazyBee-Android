@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements dataBaseHelper;
 
-    FrameLayout container;
+    //FrameLayout container;
     DrawerLayout drawerLayout;
 
     InterstitialAd mInterstitialAd;
@@ -352,8 +352,8 @@ public class MainActivity extends AppCompatActivity
     private void _intInterfaceView() {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
-        container = (FrameLayout) findViewById(R.id.mContainer);
-        container.requestFocus();
+//        container = (FrameLayout) findViewById(R.id.mContainer);
+//        container.requestFocus();
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         floatingActionButton.setPadding(0, 0, 0, 0);
     }

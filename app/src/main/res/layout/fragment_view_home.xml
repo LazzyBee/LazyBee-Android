@@ -87,77 +87,83 @@
                     android:layout_marginTop="@dimen/main_top_bottom_magin_view"
                     android:orientation="horizontal">
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/mCardViewReView"
-                        android:layout_width="fill_parent"
+                    <!--<android.support.v7.widget.CardView-->
+                    <!--android:id="@+id/mCardViewReView"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="48dp"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_marginRight="3dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/button_green_color"-->
+                    <!--android:onClick="_onbtnReviewOnClick"-->
+                    <!--app:cardBackgroundColor="@color/button_green_color"-->
+                    <!--app:cardElevation="@dimen/setting_card_view_elevation">-->
+
+                    <!--<Button-->
+                    <!--android:id="@+id/btnReview"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="fill_parent"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:text="@string/review"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:visibility="gone" />-->
+
+                    <TextView
+                        android:id="@+id/lbReview"
+                        android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="3dp"
                         android:layout_weight="1"
                         android:background="@color/button_green_color"
+                        android:gravity="center"
                         android:onClick="_onbtnReviewOnClick"
-                        app:cardBackgroundColor="@color/button_green_color"
-                        app:cardElevation="@dimen/setting_card_view_elevation">
-
-                        <Button
-                            android:id="@+id/btnReview"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="1"
-                            android:background="@color/white"
-                            android:text="@string/review"
-                            android:textColor="@color/colorPrimary"
-                            android:visibility="gone" />
-
-                        <TextView
-                            android:id="@+id/lbReview"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="1"
-                            android:background="@color/button_green_color"
-                            android:gravity="center"
-                            android:text="@string/incoming"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/white" />
-                    </android.support.v7.widget.CardView>
+                        android:text="@string/incoming"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white" />
+                    <!--</android.support.v7.widget.CardView>-->
 
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/mCardViewLearnMore"
-                        android:layout_width="fill_parent"
+                    <!--<android.support.v7.widget.CardView-->
+                    <!--android:id="@+id/mCardViewLearnMore"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="48dp"-->
+                    <!--android:layout_marginLeft="3dp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/button_green_color"-->
+                    <!--android:onClick="_onLearnMoreClick"-->
+                    <!--app:cardBackgroundColor="@color/button_green_color"-->
+                    <!--app:cardElevation="@dimen/setting_card_view_elevation">-->
+
+                    <!--<Button-->
+                    <!--android:id="@+id/btnCustomStudy"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:text="@string/learn_more"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:visibility="gone" />-->
+
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="3dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:background="@color/button_green_color"
+                        android:gravity="center"
                         android:onClick="_onLearnMoreClick"
-                        app:cardBackgroundColor="@color/button_green_color"
-                        app:cardElevation="@dimen/setting_card_view_elevation">
-
-                        <Button
-                            android:id="@+id/btnCustomStudy"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="1"
-                            android:background="@color/white"
-                            android:text="@string/learn_more"
-                            android:textColor="@color/colorPrimary"
-                            android:visibility="gone" />
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="1"
-                            android:background="@color/button_green_color"
-                            android:gravity="center"
-                            android:text="@string/learn_more"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/white" />
-                    </android.support.v7.widget.CardView>
+                        android:text="@string/learn_more"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white" />
+                    <!--</android.support.v7.widget.CardView>-->
                 </LinearLayout>
 
                 <android.support.v7.widget.CardView
@@ -198,7 +204,7 @@
         android:layout_marginRight="16dp"
         android:onClick="onBtnStudyReverseOnClick"
         android:src="@drawable/ic_lightning"
+        app:backgroundTint="@color/button_green_color"
         app:borderWidth="0dp"
-        app:fabSize="mini"
-        app:backgroundTint="@color/button_green_color" />
+        app:fabSize="mini" />
 </android.support.design.widget.CoordinatorLayout>
