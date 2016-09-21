@@ -299,7 +299,7 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_reset_to_default</item>
     </string-array>
-    <string-array name="time_show_answer">
+    <string-array name="time_show_answer" translatable="false">
         <item>3</item>
         <item>5</item>
         <item>7</item>
@@ -339,6 +339,8 @@
         <!--A820-->
         <item>757E6C0437129F846D20D0B58D0BFA85</item>
         <!--A890-->
+        <item>F149F378960146C39B3759A5007A589D</item>
+        <!--note 3-->
 
     </string-array>
 
@@ -408,10 +410,10 @@
     <string name="subject_science">Science</string>
     <string name="subject_medical">Medicine</string>
 
-    <string name="subject_it_value">it</string>
-    <string name="subject_economy_value">economic</string>
-    <string name="subject_science_value">science</string>
-    <string name="subject_medical_value">medicine</string>
+    <string name="subject_it_value" translatable="false">it</string>
+    <string name="subject_economy_value" translatable="false">economic</string>
+    <string name="subject_science_value" translatable="false">science</string>
+    <string name="subject_medical_value" translatable="false">medicine</string>
 
     <string name="select_subject_title">Select major</string>
     <string name="drawer_help">Help</string>
@@ -446,6 +448,7 @@
         <item>501847cbba33a2e <!--A820--></item>
         <item>a23c44db2bc85af9<!--geny n7 5.0--></item>
         <item>a24a1e2a58a3432c<!--geny n4 4.4.4--></item>
+        <item>8308b273c51c1ed9<!--note 3 dcm --></item>
         <!-- <item>f130a1e2a7076611&lt;!&ndash;blue stask&ndash;&gt;</item>-->
     </string-array>
 
@@ -490,7 +493,7 @@
     <string name="show_answer_now">Immediately</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="drawer_home">Home</string>
     <string name="restore_database_sucessful">Your database have been restored successfully.</string>
     <string name="restore_database_fails">Can not restore database, please try again.</string>
@@ -510,10 +513,10 @@
     <string name="message_backup_database">LazzyBee is going to backup data to save your progress. Proceed?</string>
     <string name="title_backup_database">Backup database</string>
     <string name="subject_600toeic" translatable="false">600 toeic</string>
-    <string name="subject_600_toeic_value">toeic</string>
+    <string name="subject_600_toeic_value" translatable="false">toeic</string>
     <string name="custom_study_error_input_value">Please input limit</string>
     <string name="setting_sub_header_more">More</string>
-    <string name="setting_sub_header_about">About</string>
+    <string name="setting_sub_header_about" translatable="false">About</string>
     <string name="drawer_test_your_voca">Test your vocabulary</string>
     <string name="url_test_your_voca" translatable="false">http://www.lazzybee.com/testvocab/?menu=0</string>
     <string name="msg_tip_answer_card">Upon to your self-evaluation of memory quality, please choose the most appropriate span for the next review.</string>
@@ -524,4 +527,20 @@
     <string name="complele_text_display"><u>2000 words/year with 5 minutes per day.</u></string>
     <string name="complele_text_display_link" translatable="false">http://www.lazzybee.com/blog/can_you_learn_2000_words_per_year</string>
     <string name="msg_finishing_your_daily_target">Please come back after finishing your daily target.</string>
+    <string name="msg_restore_data">It may take a few minutes to restore data. Please wait.</string>
+
+    <string name="msg_input_word_list">Please add words that you want to learn. These words will be added to learn first.</string>
+    <string name="msg_input_word_list_tip">(Separate words by comma, break line)</string>
+
+    <string name="msg_restore_word_list">Import custom list</string>
+    <string name="msg_please_input_restore_word_list_code">Enter the code that you received when creating the custom word list by web browser</string>
+
+    <string name="create_new_list">Create new list</string>
+    <string name="import_form_existed_list">Import from existed list</string>
+
+    <string name="custom_list">Custom list</string>
+    <string name="default_list">Default list</string>
+
+    <string name="action_import">Import</string>
+    <string name="import_custom_list_sucessfully">Your custom list has been imported successfully.</string>
 </resources>

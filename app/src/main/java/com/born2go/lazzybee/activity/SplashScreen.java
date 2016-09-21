@@ -2,8 +2,10 @@ package com.born2go.lazzybee.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +22,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -34,13 +38,14 @@ public class SplashScreen extends Activity {
     DataBaseHelper myDbHelper;
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements learnApiImplements;
+    private SplashScreen thiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash_screen);
-
+        thiz = this;
         new Handler().postDelayed(new Runnable() {
             /*
              * Showing splash screen with a timer. This will be useful when you
@@ -74,7 +79,7 @@ public class SplashScreen extends Activity {
                             Log.e("LazzyBee", "failure loading container for GTag");
                             displayErrorToUser(R.string.gtag_container_load_error);
                             return;
-                        }else {
+                        } else {
                             LazzyBeeSingleton.setContainerHolder(containerHolder);
                             ContainerLoadedCallback.registerCallbacksForContainer(container);
                             containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
@@ -211,6 +216,13 @@ public class SplashScreen extends Activity {
             int add_colum_L_VN = learnApiImplements.executeQuery("ALTER TABLE " + LearnApiImplements.TABLE_VOCABULARY + " ADD COLUMN " + LearnApiImplements.KEY_L_VN + " TEXT;");
             Log.i(TAG, " ADD COLUMN " + LearnApiImplements.KEY_L_EN + "?" + ((add_colum_L_EN == 1) ? "TRUE" : "FALSE"));
             Log.i(TAG, " ADD COLUMN " + LearnApiImplements.KEY_L_VN + "?" + ((add_colum_L_VN == 1) ? "TRUE" : "FALSE"));
+        }
+
+        SharedPreferences sharedpreferences = getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
+        boolean custom_list = sharedpreferences.getBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, false);
+        if (!custom_list) {
+            learnApiImplements.addColumCustomList();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).commit();
         }
 
     }

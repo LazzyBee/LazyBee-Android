@@ -2,9 +2,9 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -24,6 +24,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogSetTimeShowAnswer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,12 +250,13 @@ public class RecyclerViewCustomStudyAdapter extends
     private void _showDialogSelectLevel(int finalLevel) {
 
         final String[] strlevels = {"1", "2", "3", "4", "5", "6"};
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 
         builder.setSingleChoiceItems(strlevels, (finalLevel == 1) ? 0 : finalLevel - 1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                firebaseAnalytics.setUserProperty("Selected_level", String.valueOf(strlevels[item]));
                 learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, strlevels[item]);
                 learnApiImplements._initIncomingCardIdListbyLevel(Integer.valueOf(strlevels[item]));
                 dialog.dismiss();
@@ -270,7 +272,7 @@ public class RecyclerViewCustomStudyAdapter extends
 
     private void _showConfirmResetToDefauls() {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setTitle(R.string.dialog_title_reset_custom_study).setMessage(R.string.dialog_message_reset_custom_study);
@@ -391,7 +393,7 @@ public class RecyclerViewCustomStudyAdapter extends
         txtLimit.setFocusable(true);
         txtLimit.requestFocus();
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         // builder.setMessage(R.string.dialog_message_setting_today_new_card_limit_by);
@@ -420,6 +422,8 @@ public class RecyclerViewCustomStudyAdapter extends
                     @Override
                     public void onClick(View view) {
                         try {
+                            FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(context);
+
                             String limit = LazzyBeeShare.EMPTY;
                             if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
                                 String erorr_message = LazzyBeeShare.EMPTY;
@@ -428,7 +432,7 @@ public class RecyclerViewCustomStudyAdapter extends
                                     lbEror.setText(erorr_message);
                                 } else {
                                     limit = txtLimit.getText().toString();
-                                    Log.e(TAG,LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT+":"+ limit);
+                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT + ":" + limit);
                                     int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
                                     if (Integer.valueOf(limit) > total) {
                                         erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_total_learn_per_day) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
@@ -439,6 +443,12 @@ public class RecyclerViewCustomStudyAdapter extends
                                         Log.e(TAG, erorr_message);
                                         lbEror.setText(erorr_message);
                                     } else {
+                                        firebaseAnalytics.setUserProperty("Daily_new_word",String.valueOf(limit));
+                                        Bundle bundle=new Bundle();
+                                        bundle.putString("count",limit);
+                                        firebaseAnalytics.logEvent("Daily_total_word",bundle);
+
+
                                         learnApiImplements._insertOrUpdateToSystemTable(key, limit);
                                         _resetQueueList(limit);
                                         dialog.dismiss();
@@ -454,7 +464,7 @@ public class RecyclerViewCustomStudyAdapter extends
                                     lbEror.setText(erorr_message);
                                 } else {
                                     limit = txtLimit.getText().toString();
-                                    Log.e(TAG,LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT+":"+ limit);
+                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT + ":" + limit);
                                     int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                                     if (Integer.valueOf(limit) < total) {
                                         erorr_message = context.getString(R.string.custom_study_eror_limit) + " > " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
@@ -476,13 +486,17 @@ public class RecyclerViewCustomStudyAdapter extends
                                     lbEror.setText(erorr_message);
                                 } else {
                                     limit = txtLimit.getText().toString();
-                                    Log.e(TAG,LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT+":"+ limit);
+                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT + ":" + limit);
                                     int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                                     if (Integer.valueOf(limit) > total) {
                                         erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
                                         Log.e(TAG, erorr_message);
                                         lbEror.setText(erorr_message);
                                     } else {
+                                        firebaseAnalytics.setUserProperty("Daily_total_word",String.valueOf(limit));
+                                        Bundle bundle=new Bundle();
+                                        bundle.putString("count",limit);
+                                        firebaseAnalytics.logEvent("Daily_total_word",bundle);
                                         learnApiImplements._insertOrUpdateToSystemTable(key, limit);
                                         // main.hide();
                                         dialog.dismiss();
@@ -521,7 +535,7 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
     private void _showDialogSetPositionMeaning(int index) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.title_change_position_meaning));
         final CharSequence[] items = {context.getString(R.string.position_meaning_up), context.getString(R.string.position_meaning_down)};
         final CharSequence[] values = {LazzyBeeShare.UP, LazzyBeeShare.DOWN};

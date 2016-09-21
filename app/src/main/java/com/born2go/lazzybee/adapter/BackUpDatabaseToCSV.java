@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -39,6 +38,7 @@ import java.io.FileWriter;
 public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "BackUpDatabaseToCSV";
+    private final String backup_key;
     private Activity activity;
     private Context context;
     private String device_id;
@@ -52,7 +52,8 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             "vocabulary.rev_count," +
             "vocabulary.last_ivl," +
             "vocabulary.e_factor," +
-            "vocabulary.user_note " +
+            "vocabulary.user_note, " +
+            "vocabulary.level " +
             "from vocabulary where vocabulary.gid not null";
     private int type;
     private String queryExportWordTableToCsv = "Select " +
@@ -62,7 +63,8 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             "vocabulary.rev_count," +
             "vocabulary.last_ivl," +
             "vocabulary.e_factor," +
-            "vocabulary.user_note " +
+            "vocabulary.user_note, " +
+            "vocabulary.level " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
     private String queryExportStreakTableToCsv = "select day from streak";
 
@@ -70,11 +72,13 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private String streakFileName = "streak.csv";
     private String backupFileName = "backup.zip";
     File exportDir;
+    private String dotZip = ".zip";
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
         this.activity = activity;
         this.context = context;
         this.device_id = device_id;
+        backup_key = device_id.substring(device_id.length() - 6, device_id.length());
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
         this.type = type;
@@ -99,7 +103,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                 Log.d(TAG, "Export db to csv:" + context.getString(R.string.successfully));
                 if (_zipFileBackUp()) {
                     Log.d(TAG, "Zip backup file:" + context.getString(R.string.successfully));
-                    boolean resultsBackupFile = postFile(exportDir.getPath() + "/" + backupFileName);
+                    boolean resultsBackupFile = postFile(exportDir.getPath() + "/" + backup_key + dotZip);
                     _deleteFile();
                     if (resultsBackupFile) {
                         Log.d(TAG, "Post backup file:" + context.getString(R.string.successfully));
@@ -120,10 +124,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void _deleteFile() {
-        File zipFile = new File(exportDir, backupFileName);
+        File zipFile = new File(exportDir, backup_key + dotZip);
         File wordFile = new File(exportDir, wordFileName);
         File streakFile = new File(exportDir, streakFileName);
-        Log.d(TAG, "Delete backup.zip file:" + (zipFile.delete() ? " Ok" : " Fails"));
+        Log.d(TAG, "Delete " + backup_key + dotZip + " file:" + (zipFile.delete() ? " Ok" : " Fails"));
         Log.d(TAG, "Delete word.csv:" + (wordFile.delete() ? " Ok" : " Fails"));
         Log.d(TAG, "Delete streak.csv:" + (streakFile.delete() ? " Ok" : " Fails"));
     }
@@ -157,7 +161,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                             } else {
                                 user_note = LazzyBeeShare.EMPTY;
                             }
-                            // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
+                            // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote,level
                             String arrStr[] = {
                                     curCSV.getString(0),
                                     curCSV.getString(1),
@@ -165,7 +169,8 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
                                     curCSV.getString(3),
                                     curCSV.getString(4),
                                     curCSV.getString(5),
-                                    String.valueOf(user_note)};
+                                    String.valueOf(user_note),
+                                    curCSV.getString(7)};
                             csvWrite.writeNext(arrStr, true);
                         } while (curCSV.moveToNext());
                 }
@@ -200,7 +205,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         String[] files = new String[2];
         files[0] = wordFile.getPath();
         files[1] = streakFile.getPath();
-        String fileZipPath = exportDir.getPath() + "/" + backupFileName;
+        String fileZipPath = exportDir.getPath() + "/" + backup_key + dotZip;
         return zipManager.zip(files, fileZipPath);
     }
 
@@ -241,7 +246,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             dialog.dismiss();
         }
         if (results) {
-            String backup_key = device_id.substring(device_id.length() - 6, device_id.length());
             //show backUp Key
             DialogMyCodeRestoreDB dialogMyCodeRestoreDB = new DialogMyCodeRestoreDB(backup_key);
             dialogMyCodeRestoreDB.show(activity.getFragmentManager(), DialogMyCodeRestoreDB.TAG);
@@ -253,7 +257,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void _showDialogFailsBackupDatabase() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(R.string.try_again);
         builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

@@ -19,8 +19,8 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
     private static final String TAG = "GetCardFormServer";
     private ProgressDialog dialog;
     private LearnApiImplements learnApiImplements;
-    public GetCardFormServerByQuestionResponse delegate = null;
     private ConnectGdatabase connectGdatabase;
+    public GetCardFormServerByQuestionResponse delegate = null;
 
     public GetCardFormServerByQuestion(Context context) {
         dialog = new ProgressDialog(context);

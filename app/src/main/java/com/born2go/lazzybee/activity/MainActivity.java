@@ -25,9 +25,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
@@ -58,8 +58,10 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     DatabaseUpgrade databaseUpgrade;
     LearnApiImplements dataBaseHelper;
 
-    FrameLayout container;
+    //FrameLayout container;
     DrawerLayout drawerLayout;
 
     InterstitialAd mInterstitialAd;
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity
     SearchView mSearchCardBox;
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton floatingActionButton;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +125,10 @@ public class MainActivity extends AppCompatActivity
 
         _goHome();
 
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        Log.d(TAG, "telephonyManager.getDeviceId():" + telephonyManager.getDeviceId());
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
 
@@ -137,6 +143,7 @@ public class MainActivity extends AppCompatActivity
         mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
 
+        autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
         //Custom search
         // Hide icon search in searchView and set clear text icon
         ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
@@ -152,13 +159,14 @@ public class MainActivity extends AppCompatActivity
         if (autoCompleteTextView != null) {
             //set Enable Spelling Suggestions
             autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-            int color = Color.parseColor("#ffffffff");
+            int color = Color.parseColor("#FFFFFF");
             Drawable drawable = autoCompleteTextView.getDropDownBackground();
-            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+            drawable.setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.MULTIPLY);
 
             autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
             autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
             autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
+
 
         }
 
@@ -175,6 +183,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "onSuggestionClick:" + position);
                 try {
                     CursorAdapter c = mSearchCardBox.getSuggestionsAdapter();
+                    mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_HINT_HOME, new Bundle());
                     if (c != null) {
                         Cursor cur = c.getCursor();
                         cur.moveToPosition(position);
@@ -219,6 +228,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "adv_fullscreen_id:" + adv_fullscreen_id);
             }
             if (admob_pub_id != null || adv_fullscreen_id != null) {
+                MobileAds.initialize(this, admob_pub_id);
                 String advId = admob_pub_id + "/" + adv_fullscreen_id;
                 Log.d(TAG, "InterstitialAdId:" + advId);
                 mInterstitialAd = new InterstitialAd(this);
@@ -306,6 +316,15 @@ public class MainActivity extends AppCompatActivity
             dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
             LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
         }
+
+        //
+        boolean custom_list = sharedpreferences.getBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, false);
+        if (!custom_list) {
+            dataBaseHelper.addColumCustomList();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).commit();
+        }
+
+
         String onoffNotification = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
         if (onoffNotification == null) {
             dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
@@ -333,8 +352,8 @@ public class MainActivity extends AppCompatActivity
     private void _intInterfaceView() {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
-        container = (FrameLayout) findViewById(R.id.mContainer);
-        container.requestFocus();
+//        container = (FrameLayout) findViewById(R.id.mContainer);
+//        container.requestFocus();
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         floatingActionButton.setPadding(0, 0, 0, 0);
     }
@@ -420,6 +439,7 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
                     _gotoSetting();
+
                     break;
                 case LazzyBeeShare.DRAWER_USER_INDEX:
                     //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
@@ -455,6 +475,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _goTestYourVoca() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_TEST_YOUR_VOCA, new Bundle());
         if (LazzyBeeShare.checkConn(context)) {
             Intent intent = new Intent(context, TestYourVoca.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -469,6 +490,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showStatistical() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
         try {
             DialogStatistics dialogStatistics = new DialogStatistics(context);
             dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
@@ -479,6 +501,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSelectSubject() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_CHOOSE_MAJOR, new Bundle());
         View mSelectMajor = View.inflate(context, R.layout.view_select_major, null);
         final CheckBox cbIt = (CheckBox) mSelectMajor.findViewById(R.id.cbIt);
         final CheckBox cbEconomy = (CheckBox) mSelectMajor.findViewById(R.id.cbEconomy);
@@ -513,7 +536,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.select_subject_title));
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
         final int[] seleted_index = {0};
@@ -633,13 +656,16 @@ public class MainActivity extends AppCompatActivity
 
                     //reset incomming list
                     dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                    mFirebaseAnalytics.setUserProperty("Selected_major", String.valueOf(subjectSelected));
                 } else if (checker[0] == -2) {
                     //save my subjects
                     dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
 
                     //reset incomming list
                     dataBaseHelper._initIncomingCardIdList();
+                    mFirebaseAnalytics.setUserProperty("Selected_major", String.valueOf(""));
                 }
+
                 dialog.cancel();
             }
         });
@@ -655,6 +681,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY, new Bundle());
         //_gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, LazzyBeeShare.GOTO_DICTIONARY);
@@ -663,6 +690,7 @@ public class MainActivity extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
         //startActivity(intent);
+
 
     }
 
@@ -673,7 +701,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogWithMessage(String message) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage(Html.fromHtml(message));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -853,7 +881,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _showComfirmUpdateDatabase(final int type) {
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_update)
@@ -941,6 +969,7 @@ public class MainActivity extends AppCompatActivity
      * Goto setting
      */
     private void _gotoSetting() {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SETTING, new Bundle());
         //_initInterstitialAd inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1048,7 +1077,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _learnMore() {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_message_learn_more)
@@ -1088,6 +1117,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void _onbtnReviewOnClick(View view) {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_INCOMING, new Bundle());
         Intent intent = new Intent(this, IncomingListActivity.class);
         startActivity(intent);
     }
@@ -1129,7 +1159,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showDialogBackupDataBase() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.message_backup_database)

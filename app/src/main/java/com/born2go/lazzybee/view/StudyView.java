@@ -47,6 +47,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogFirstShowAnswer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +61,7 @@ import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
  * {@link OnStudyViewListener} interface
  * to handle interaction events.
  */
+@SuppressLint("ValidFragment")
 public class StudyView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyView";
@@ -121,7 +123,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -156,6 +158,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         _initView(view);
         _setUpStudy();
         _handlerButtonAnswer();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         return view;
     }
 
@@ -259,7 +262,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         mListener = (OnStudyViewListener) activity;
     }
@@ -394,7 +397,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         Log.d(TAG, "DPI:" + densityDpi);
 
 
-
         mFloatActionButtonUserNote.setOnTouchListener(new View.OnTouchListener() {
             public boolean shouldClick;
             int move = 0;
@@ -508,6 +510,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 sTimeShowAnswer = -1;
                 _showFirstCard();
                 _handlerNextCardReverse();
+
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_REVERSE, new Bundle());
+
             } else {
                 mCount.setVisibility(View.VISIBLE);
                 int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
@@ -542,6 +547,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
                 todayCount = todayList.size();
                 Log.d(TAG, "dueCount:" + dueCount + ",againCount:" + againCount + ",today:" + todayCount);
+//                Bundle bundle=new Bundle( );
+//                bundle.putString(FirebaseAnalytics.Param.VALUE,"1");
+//                mFirebaseAnalytics.logEvent("Count_review_per_day",bundle);
 
                 //Define check_learn
                 //check_learn==true Study
@@ -561,6 +569,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     Log.i(TAG, "_completeLean");
                     _completeLean(false);
                 }
+                mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STUDY, new Bundle());
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.VALUE, String.valueOf("" + (dueCount + againCount)));
+                mFirebaseAnalytics.logEvent("Count_review_per_day", bundle);
+
 
             }
 

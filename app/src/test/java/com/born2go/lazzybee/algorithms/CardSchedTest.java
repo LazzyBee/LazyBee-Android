@@ -50,16 +50,16 @@ public class CardSchedTest extends CardSched{
     }
     @Test
     public void test_nextIntervalStr(){
-        System.out.println("===========Card 3 days: Next interval string=============");
-        System.out.println("Button AGAIN: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_AGAIN));
-        System.out.println("Button HARD: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_HARD));
-        System.out.println("Button GOOD: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_GOOD));
-        System.out.println("Button EASY: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_EASY));
-        System.out.println("===========Card 23 days: Next interval string=============");
-        System.out.println("Button AGAIN: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_AGAIN));
-        System.out.println("Button HARD: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_HARD));
-        System.out.println("Button GOOD: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_GOOD));
-        System.out.println("Button EASY: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_EASY));
+//        System.out.println("===========Card 3 days: Next interval string=============");
+//        System.out.println("Button AGAIN: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_AGAIN));
+//        System.out.println("Button HARD: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_HARD));
+//        System.out.println("Button GOOD: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_GOOD));
+//        System.out.println("Button EASY: " + scheduler._nextIvlStr(cardLast_ivl3days, Card.EASE_EASY));
+//        System.out.println("===========Card 23 days: Next interval string=============");
+//        System.out.println("Button AGAIN: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_AGAIN));
+//        System.out.println("Button HARD: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_HARD));
+//        System.out.println("Button GOOD: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_GOOD));
+//        System.out.println("Button EASY: " + scheduler._nextIvlStr(cardLast_ivl23days, Card.EASE_EASY));
     }
 
     @Test

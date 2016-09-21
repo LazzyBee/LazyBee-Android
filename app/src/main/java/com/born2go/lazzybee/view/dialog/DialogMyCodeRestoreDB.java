@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,6 +21,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 /**
  * Created by Hue on 1/7/2016.
  */
+@SuppressLint("ValidFragment")
 public class DialogMyCodeRestoreDB extends DialogFragment {
 
 

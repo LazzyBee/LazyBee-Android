@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -84,6 +85,9 @@ public class DialogStatistics extends DialogFragment {
 
                     screenViewChart();
                     _shareCard();
+
+                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
 
                 }
             });
@@ -150,85 +154,85 @@ public class DialogStatistics extends DialogFragment {
 
     private void generateDefaultData() {
         try {
-        List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
-        // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
-        List<Column> columns = new ArrayList<Column>();
-        List<SubcolumnValue> values;
+            List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
+            // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
+            List<Column> columns = new ArrayList<Column>();
+            List<SubcolumnValue> values;
 
 
-        List<AxisValue> axisXValues = new ArrayList<AxisValue>();
-        List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
-        List<AxisValue> axisYValues = new ArrayList<AxisValue>();
-        //Gestion of the two axes for the graphic
+            List<AxisValue> axisXValues = new ArrayList<AxisValue>();
+            List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
+            List<AxisValue> axisYValues = new ArrayList<AxisValue>();
+            //Gestion of the two axes for the graphic
 
-        int total = 0;
-        for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
-            values = new ArrayList<SubcolumnValue>();
-            int count = listCountCardbyLevel.get(i);
-            total += count;
-            axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
+            int total = 0;
+            for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
+                values = new ArrayList<SubcolumnValue>();
+                int count = listCountCardbyLevel.get(i);
+                total += count;
+                axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
 
-            axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
-            if (count > 0) {
-                SubcolumnValue valueColum =
-                        new SubcolumnValue(count, ChartUtils.pickColor()).setLabel(String.valueOf(count));//define Subcolum
+                axisTopValues.add(new AxisValue(i).setLabel(String.valueOf(count)));
+                if (count > 0) {
+                    SubcolumnValue valueColum =
+                            new SubcolumnValue(count, ChartUtils.pickColor()).setLabel(String.valueOf(count));//define Subcolum
 
-                values.add(valueColum);
-            }
-            Column column = new Column(values);
+                    values.add(valueColum);
+                }
+                Column column = new Column(values);
 
-            column.setHasLabels(hasLabels);
-            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+                column.setHasLabels(hasLabels);
+                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
 
-            columns.add(column);
-
-        }
-        axisYValues.add(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total)));
-
-        data = new ColumnChartData(columns);
-        Axis axeX = new Axis(axisXValues);
-        Axis axisTop = new Axis(axisTopValues).setHasLines(true);
-        axisTop.setName(context.getString(R.string.dialog_statistical_total, total));
-        axeX.setTextColor(R.color.text_color_number_count_card_by_level);
-        axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
-        axeX.setHasLines(true);
-        axeX.setName(context.getString(R.string.dialog_statistical_level));
-        data.setAxisXBottom(axeX);
-
-        data.setAxisXTop(axisTop);
-        chart.setColumnChartData(data);
-        chart.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
-            @Override
-            public void onValueSelected(int i, int i1, SubcolumnValue subcolumnValue) {
+                columns.add(column);
 
             }
+            axisYValues.add(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total)));
 
-            @Override
-            public void onValueDeselected() {
+            data = new ColumnChartData(columns);
+            Axis axeX = new Axis(axisXValues);
+            Axis axisTop = new Axis(axisTopValues).setHasLines(true);
+            axisTop.setName(context.getString(R.string.dialog_statistical_total, total));
+            axeX.setTextColor(R.color.text_color_number_count_card_by_level);
+            axisTop.setTextColor(R.color.text_color_number_count_card_by_level);
+            axeX.setHasLines(true);
+            axeX.setName(context.getString(R.string.dialog_statistical_level));
+            data.setAxisXBottom(axeX);
 
-            }
-        });
-        }catch (Exception e){
+            data.setAxisXTop(axisTop);
+            chart.setColumnChartData(data);
+            chart.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
+                @Override
+                public void onValueSelected(int i, int i1, SubcolumnValue subcolumnValue) {
+
+                }
+
+                @Override
+                public void onValueDeselected() {
+
+                }
+            });
+        } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "generateDefaultData", e);
         }
     }
 
     private void _initStreakCount(View view) {
-        try{
-        //get count
-        int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
-        //Define view
-        View mCount = view.findViewById(R.id.mCount);
-        TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
-        ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
-        //
-        lbCountStreak.setText(count + " " + getString(R.string.streak_day));
+        try {
+            //get count
+            int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+            //Define view
+            View mCount = view.findViewById(R.id.mCount);
+            TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
+            ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
+            //
+            lbCountStreak.setText(count + " " + getString(R.string.streak_day));
 
-        //set animation
-        Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
-        a.setDuration(1000);
-        streak_ring.startAnimation(a);
-        }catch (Exception e){
+            //set animation
+            Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
+            a.setDuration(1000);
+            streak_ring.startAnimation(a);
+        } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initStreakCount", e);
         }
     }

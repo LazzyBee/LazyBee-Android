@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +36,7 @@ import com.born2go.lazzybee.utils.CustomTimePickerDialog;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 
@@ -266,7 +267,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _restoreDatabase() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         builder.setTitle(R.string.setting_restore_database);
         View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
@@ -274,15 +275,24 @@ public class RecyclerViewSettingListAdapter extends
         //String hint_input_my_backup_key = context.getString(R.string.hint_input_my_backup_key);
         //lbMybackupkey.setHint(hint_input_my_backup_key);
         //
+
+        lbMybackupkey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
         builder.setView(viewDialog);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String getBackupKey = lbMybackupkey.getText().toString();
-                //Toast.makeText(context, "My Backup key:" + getBackupKey, Toast.LENGTH_SHORT).show();
+                lbMybackupkey.clearFocus();
                 DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, false, LazzyBeeShare.EMPTY, getBackupKey);
                 downloadAndRestoreDatabaseFormCSV.execute();
-                //dialog.dismiss();
+                dialog.dismiss();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -294,6 +304,11 @@ public class RecyclerViewSettingListAdapter extends
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void showFileChooser() {
@@ -311,7 +326,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _backupDatabases_Dev(RelativeLayout mCardView) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         final CharSequence[] types = new CharSequence[2];
         types[0] = "Full-Card";
         types[1] = "Mini-Only Card Learned";
@@ -549,7 +564,7 @@ public class RecyclerViewSettingListAdapter extends
                 LayoutInflater li = LayoutInflater.from(context);
                 View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
                 builder.setView(dialogExecuteEuery);
 
@@ -592,7 +607,7 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
                 // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
                 // Chain together various setter methods to set the dialog characteristics
                 builder.setTitle(R.string.dialog_title_export_database);
@@ -623,7 +638,7 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
                 // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
                 // Chain together various setter methods to set the dialog characteristics
                 builder.setTitle(R.string.dialog_title_clear_cache_and_restart_app);
@@ -680,7 +695,7 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onClick(View v) {
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
                 builder.setTitle(context.getString(R.string.dialog_title_change_speech_rate));
 
 
@@ -762,7 +777,7 @@ public class RecyclerViewSettingListAdapter extends
         lbSettingLimitName.setText(message);
         txtLimit.setText(String.valueOf(value));
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         // builder.setMessage(R.string.dialog_message_setting_today_new_card_limit_by);
@@ -792,7 +807,7 @@ public class RecyclerViewSettingListAdapter extends
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
                 builder.setTitle(context.getString(R.string.change_language));
                 final CharSequence[] items = {context.getString(R.string.lang_english), context.getString(R.string.lang_viet)};
                 int index = 0;
@@ -812,6 +827,8 @@ public class RecyclerViewSettingListAdapter extends
 
                 builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
+                        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(context);
+                        firebaseAnalytics.setUserProperty("Selected_language",String.valueOf(items[item]));
                         // Do something with the selection
                         if (items[item] == context.getString(R.string.lang_english)) {
                             //Log.i(TAG, getString(R.string.lang_english) + " click");
@@ -836,7 +853,7 @@ public class RecyclerViewSettingListAdapter extends
 
     private void _showDialogConfirmRestartApp() {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_message_restart_app)
@@ -1055,7 +1072,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _showComfirmUpdateDatabase(final int type) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_update)

@@ -16,7 +16,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -47,6 +46,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +73,7 @@ public class SearchActivity extends AppCompatActivity implements
     SearchView.SearchAutoComplete mSuggerstionCard;
     List<Card> dictionaryCardList;
     private SwipeRefreshLayout mRefeshSearch;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -80,6 +81,7 @@ public class SearchActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = this;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         _initLazzyBeeSingleton();
 
@@ -107,7 +109,7 @@ public class SearchActivity extends AppCompatActivity implements
         mRefeshSearch.setOnRefreshListener(this);
         //Init RecyclerView and Layout Manager
         mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
         lbResultCount = (TextView) findViewById(R.id.lbResultCount);
@@ -155,6 +157,25 @@ public class SearchActivity extends AppCompatActivity implements
         mRecyclerViewSearchResults.setLayoutManager(gridLayoutManager);
 
         //  mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
+        mRecyclerViewSearchResults.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                // TODO Auto-generated method stub
+                super.onScrolled(recyclerView, dx, dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // TODO Auto-generated method stub
+                //super.onScrollStateChanged(recyclerView, newState);
+                int firstPos = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstPos > 0) {
+                    mRefeshSearch.setEnabled(false);
+                } else {
+                    mRefeshSearch.setEnabled(true);
+                }
+            }
+        });
     }
 
     private void _initLazzyBeeSingleton() {
@@ -189,6 +210,7 @@ public class SearchActivity extends AppCompatActivity implements
         if (mSuggerstionCard != null) {
             //set Enable Spelling Suggestions
             mSuggerstionCard.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+            mSuggerstionCard.setDropDownBackgroundResource(android.R.color.white);
             int color = Color.parseColor("#ffffffff");
             Drawable drawable = mSuggerstionCard.getDropDownBackground();
             drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -231,6 +253,7 @@ public class SearchActivity extends AppCompatActivity implements
                 try {
                     CursorAdapter c = search.getSuggestionsAdapter();
                     if (c != null) {
+                        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_HINT, new Bundle());
                         Cursor cur = c.getCursor();
                         cur.moveToPosition(position);
 
@@ -422,13 +445,14 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void setAdapterListCard(List<Card> cardList) {
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_RESULTS, new Bundle());
         RecyclerViewSearchResultListAdapter recyclerViewReviewTodayListAdapter = new RecyclerViewSearchResultListAdapter(context, cardList);
         mRecyclerViewSearchResults.setAdapter(recyclerViewReviewTodayListAdapter);
     }
 
     private void _optionList(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(card.getQuestion());
         final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -453,7 +477,7 @@ public class SearchActivity extends AppCompatActivity implements
     @SuppressLint("StringFormatInvalid")
     private void _doneCard(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(getString(R.string.dialog_message_delete_card, card.getQuestion()))
@@ -483,7 +507,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _addCardToQueue(final Card card) {
         // Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
         builder.setMessage(getString(R.string.dialog_message_add_to_learn, card.getQuestion()))
@@ -570,6 +594,10 @@ public class SearchActivity extends AppCompatActivity implements
         try {
             DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
             mDataLayer.pushEvent("searchNoResult", DataLayer.mapOf("wordError", query_text));
+            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+            firebaseAnalytics.logEvent("Search_not_found", new Bundle());
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerWorkNotFound", e);
         }
@@ -690,7 +718,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        _search(query_text, display_type, false);
         mRefeshSearch.setRefreshing(false);
+        _search(query_text, display_type, false);
     }
 }

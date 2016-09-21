@@ -114,7 +114,7 @@
             android:paddingTop="8dp">
 
             <TextView
-                android:id="@+id/lbSetTime"
+                android:id="@+id/lbSetTime3s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -125,7 +125,7 @@
                 android:textColor="@color/grey_600" />
 
             <ImageView
-                android:id="@+id/imgDone"
+                android:id="@+id/imgDone3s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -150,7 +150,7 @@
             android:paddingTop="8dp">
 
             <TextView
-                android:id="@+id/lbSetTime"
+                android:id="@+id/lbSetTime5s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -161,7 +161,7 @@
                 android:textColor="@color/grey_600" />
 
             <ImageView
-                android:id="@+id/imgDone"
+                android:id="@+id/imgDone5s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -186,7 +186,7 @@
             android:paddingTop="8dp">
 
             <TextView
-                android:id="@+id/lbSetTime"
+                android:id="@+id/lbSetTime7s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -197,7 +197,7 @@
                 android:textColor="@color/grey_600" />
 
             <ImageView
-                android:id="@+id/imgDone"
+                android:id="@+id/imgDone7s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

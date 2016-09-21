@@ -136,6 +136,8 @@ public class LazzyBeeShare {
     public static final String STUDY = "study";
     public static final String REVERSE = "reverse";
     public static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
+    public static final String KEY_CUSTOM_LIST = "custom_list";
+
 
 
     public static String mime = "text/html";
@@ -193,6 +195,34 @@ public class LazzyBeeShare {
     public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
     public static String QUEUE_LIST = "queue_List";
+
+    public static final String FA_OPEN_A_NOTE = "Open_aNote";
+    public static final String FA_OPEN_CHOOSE_MAJOR = "Open_aChooseMajor";
+    public static final String FA_OPEN_DICTIONARY= "Open_aDictionaryScreen";
+    public static final String FA_OPEN_DICTIONARY_VIEW_WORD= "Open_aDictionaryViewWordScreen";
+
+    public static final String FA_OPEN_IMPORT_WORD_REPORT= "Open_aImport_wordScreen";
+    public static final String FA_OPEN_INCOMING= "Open_aIncomingScreen";
+
+    public static final String FA_OPEN_REVERSE= "Open_aReverseScreen";
+    public static final String FA_OPEN_SEARCH_HINT_HOME= "Open_aSearchHintHomeScreen";
+
+    public static final String FA_OPEN_SEARCH_HINT= "Open_aSearchHintScreen";
+
+    public static final String FA_OPEN_SEARCH_RESULTS= "Open_aSearchResultsScreen";
+
+    public static final String FA_OPEN_SETTING= "Open_aSettingScreen";
+
+    public static final String FA_OPEN_STREAK_CONGRATULATION= "Open_aStreakCongratulation";
+
+    public static final String FA_OPEN_STUDY= "Open_aStudyScreen";
+
+    public static final String FA_OPEN_TEST_YOUR_VOCA = "Open_aTestYouVoca";
+    public static final String FA_OPEN_LEARNING_PROGRESS = "Open_aLearingProgress";
+
+
+
+
 
 
     /**

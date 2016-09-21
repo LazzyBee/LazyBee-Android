@@ -6,14 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.DownloadTarget;
+import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.ZipManager;
@@ -34,7 +35,7 @@ import java.net.URL;
  * Created by Hue on 12/17/2015.
  */
 public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Integer> {
-    private static final String TAG = "DRDatabaseFormCSV";
+    private static final String TAG = DownloadAndRestoreDatabaseFormCSV.class.getSimpleName();
     private Context context;
     private String code;
     private String localPath;
@@ -42,6 +43,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
     ZipManager zipManager;
     private boolean debug = false;
     private String backupFileName = "backup.zip";
+    private String dotZip = ".zip";
     private String wordFileName = "word.csv";
     private String streakFileName = "streak.csv";
     String backupCVSFileName = "backup.csv";
@@ -62,8 +64,9 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
 
     protected void onPreExecute() {
 //        set up dialog
-        this.dialog.setMessage("Loading...");
+        this.dialog.setMessage(context.getString(R.string.msg_restore_data));
         this.dialog.show();
+        this.dialog.setCancelable(false);
     }
 
     @Override
@@ -129,13 +132,14 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             String wordFilePath = exportDir.getPath() + "/" + wordFileName;
             String backupCVSFilePath = exportDir.getPath() + "/" + backupCVSFileName;
             String streakFilePath = exportDir.getPath() + "/" + streakFileName;
-            File wordFileCsv = new File(backupCVSFilePath);
+            // File backUpFileCsv = new File(backupCVSFilePath);
+            File wordFileCsv = new File(wordFilePath);
             if (wordFileCsv.exists()) {
+                restore = _restoreWordTableFormCSV(wordFilePath) + _restoreStreakTableFormCSV(streakFilePath);
+            } else {
                 Log.d(TAG, "File in path : " + backupCVSFilePath + " exists");
                 wordFilePath = backupCVSFilePath;
                 restore = _restoreWordTableFormCSV(wordFilePath);
-            } else {
-                restore = _restoreWordTableFormCSV(wordFilePath) + _restoreStreakTableFormCSV(streakFilePath);
             }
         } else {
             Log.d(TAG, "unzip file Fails");
@@ -178,6 +182,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                         int queue = 0;
                         int rev_count = 0;
                         int due = 0;
+                        int level = -1;
                         String user_note = LazzyBeeShare.EMPTY;
 //                            // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
                         if (sLine[0] != null) {
@@ -249,19 +254,42 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                                     Log.d(TAG, "Error6:" + e.getMessage());
                                 }
                         }
+                        if (slength > 7) {
+                            if (sLine[(7)].length() > 0)
+                                try {
+                                    level = Integer.valueOf(sLine[(7)]);
+                                } catch (Exception e) {
+                                    Log.d(TAG, "Error7:" + e.getMessage());
+                                }
+                        }
                         int result = LazzyBeeSingleton.learnApiImplements._updateCardFormCSV(gId, queue, due, rev_count, last_ivl, factor, user_note);
-                        Log.d(TAG, "gId:" + gId
-                                + ",queue:" + queue
-                                + ",due:" + due
-                                + ",rev_count:" + rev_count
-                                + ",last_ivl:" + last_ivl
-                                + ",factor:" + factor
-                                + ",user_note:" + user_note
-                                + ",Update :" + ((result == 1) ? " OK" : " Fails"));
+                        Log.d(TAG, "gId:" + gId + ",-Update :" + ((result == 1) ? " OK" : " Fails"));
+                        if (result != 1) {
+                            if (level == 8 || level == -1) {
+                                Voca voca = LazzyBeeSingleton.connectGdatabase._getGdatabase_byID(gId);//get voca by gID
+                                if (voca != null) {
+                                    Card _card = new Card();
+                                    _card.setQueue(queue);
+                                    _card.setDue(due);
+                                    _card.setRev_count(rev_count);
+                                    _card.setLast_ivl(last_ivl);
+
+                                    _card.setFactor(factor);
+                                    _card.setUser_note(user_note);
+
+                                    Card card = defineCardbyVoca(_card, voca);
+                                    Log.d(TAG, "-Insert card value:" + card.toString());
+                                    LazzyBeeSingleton.learnApiImplements._insertOrUpdateCardbyGId(card);
+                                    totalResults += 1;
+                                }
+                            }
+                        } else {
+                            totalResults += result;
+                        }
                         restore = 1;
-                        totalResults += result;
+
                     }
-                    Log.d(TAG, "_update Ok:" + totalResults);
+                    Log.d(TAG, "-Total row update ok:" + totalResults);
                 } catch (Exception e) {
                     Log.d(TAG, "Error:" + e.getMessage());
                     e.printStackTrace();
@@ -316,7 +344,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(R.string.setting_restore_database);
         String message;
         if (results >= 1) {
@@ -339,5 +367,34 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         });
         android.support.v7.app.AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private Card defineCardbyVoca(Card _card, Voca voca) {
+        try {
+            Card card = new Card();
+
+            card.setgId(voca.getGid());
+            card.setQuestion(voca.getQ());
+            card.setAnswers(voca.getA());
+            card.setPackage(voca.getPackages());
+            card.setLevel(Integer.valueOf(voca.getLevel()));
+
+
+            card.setLast_ivl(_card.getLast_ivl());
+            card.setFactor(_card.getFactor());
+            card.setRev_count(_card.getRev_count());
+            card.setDue(_card.getDue());
+            card.setQueue(_card.getQueue());
+
+            card.setL_en(voca.getLEn());
+            card.setL_vn(voca.getLVn());
+
+
+            return card;
+        } catch (Exception e) {
+            Log.e(TAG, "Error getVoca:" + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }

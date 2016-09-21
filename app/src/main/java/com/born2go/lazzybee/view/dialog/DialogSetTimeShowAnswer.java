@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.RecyclerViewCustomStudyAdapter;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.List;
 /**
  * Created by Hue on 12/22/2015.
  */
+@SuppressLint("ValidFragment")
 public class DialogSetTimeShowAnswer extends DialogFragment {
 
 
@@ -70,6 +73,8 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         lbSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+                firebaseAnalytics.setUserProperty("Selected_waiting_time", String.valueOf(time));
                 Log.d(TAG, "time:" + time);
                 LazzyBeeSingleton.learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(time));
                 dialog.dismiss();
@@ -86,14 +91,14 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         View mSetTime7s = view.findViewById(R.id.mSetTime7s);
 
         TextView lbSetTimeNow = (TextView) mSetTimeNow.findViewById(R.id.lbSetTime);
-        TextView lbSetTime3s = (TextView) mSetTime3s.findViewById(R.id.lbSetTime);
-        TextView lbSetTime5s = (TextView) mSetTime5s.findViewById(R.id.lbSetTime);
-        TextView lbSetTime7s = (TextView) mSetTime7s.findViewById(R.id.lbSetTime);
+        TextView lbSetTime3s = (TextView) mSetTime3s.findViewById(R.id.lbSetTime3s);
+        TextView lbSetTime5s = (TextView) mSetTime5s.findViewById(R.id.lbSetTime5s);
+        TextView lbSetTime7s = (TextView) mSetTime7s.findViewById(R.id.lbSetTime7s);
 
         final ImageView imgDoneNow = (ImageView) mSetTimeNow.findViewById(R.id.imgDone);
-        final ImageView imgDone3s = (ImageView) mSetTime3s.findViewById(R.id.imgDone);
-        final ImageView imgDone5s = (ImageView) mSetTime5s.findViewById(R.id.imgDone);
-        final ImageView imgDone7s = (ImageView) mSetTime7s.findViewById(R.id.imgDone);
+        final ImageView imgDone3s = (ImageView) mSetTime3s.findViewById(R.id.imgDone3s);
+        final ImageView imgDone5s = (ImageView) mSetTime5s.findViewById(R.id.imgDone5s);
+        final ImageView imgDone7s = (ImageView) mSetTime7s.findViewById(R.id.imgDone7s);
 
         lbSetTimeNow.setText(context.getString(R.string.show_answer_now));
         lbSetTime3s.setText(seconds.get(0) + "s");

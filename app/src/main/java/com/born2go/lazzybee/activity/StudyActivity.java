@@ -21,7 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -45,6 +44,7 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
 import com.google.android.gms.tagmanager.DataLayer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +80,7 @@ public class StudyActivity extends AppCompatActivity
     private int currentPage = 0;
     private String detailViewTag;
     ScreenSlidePagerAdapter pagerAdapter;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -97,6 +98,8 @@ public class StudyActivity extends AppCompatActivity
 
         _initView();
         _definePagerStudy();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     }
 
@@ -158,7 +161,6 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showDialogCompleteMore() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage("Complete study!!!");
@@ -173,6 +175,7 @@ public class StudyActivity extends AppCompatActivity
         });
         Dialog dialog = builder.create();
         dialog.show();
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_STREAK_CONGRATULATION, new Bundle());
     }
 
     private void _showDialogComplete() {
@@ -180,6 +183,11 @@ public class StudyActivity extends AppCompatActivity
             //Show dialog complete learn
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+
+            int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
+            Bundle bundle = new Bundle();
+            mFirebaseAnalytics.logEvent("Streak", bundle);
+            bundle.putString("count", String.valueOf(count));
         } else {
             _showDialogCompleteMore();
         }
@@ -252,6 +260,7 @@ public class StudyActivity extends AppCompatActivity
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
+            autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
             //set Enable Spelling Suggestions
             autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
             int color = Color.parseColor("#ffffffff");
@@ -389,8 +398,6 @@ public class StudyActivity extends AppCompatActivity
     }
 
 
-
-
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private int pageCount = 2;
 
@@ -448,7 +455,8 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showCardNote(final Card currentCard) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.DialogLearnMore));
+        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_A_NOTE, new Bundle());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
         final EditText txtUserNote = (EditText) viewDialog.findViewById(R.id.txtUserNote);
@@ -462,7 +470,7 @@ public class StudyActivity extends AppCompatActivity
                 String user_note = txtUserNote.getText().toString();
                 currentCard.setUser_note(user_note);
                 dataBaseHelper._updateUserNoteCard(currentCard);
-                ((StudyView)pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
+                ((StudyView) pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
                 dialog.dismiss();
             }
         });
@@ -476,6 +484,7 @@ public class StudyActivity extends AppCompatActivity
         final AlertDialog dialog = builder.create();
 
         dialog.show();
+
 
     }
 

@@ -30,6 +30,8 @@ public class Card {
     String l_vn;
     String l_en;
 
+    boolean custom_list;
+
 
     /*Static variables for queue value in database*/
     public static final int QUEUE_NEW_CRAM0 = 0;
@@ -163,12 +165,27 @@ public class Card {
         this.last_ivl = last_ivl;
     }
 
+    public boolean isCustom_list() {
+        return custom_list;
+    }
+
+    public void setCustom_list(boolean custom_list) {
+        this.custom_list = custom_list;
+    }
+
     @Override
     public String toString() {
-        return "Card { id=" + id +
+        return "Card{" +
+                "id=" + id +
+                ", gId=" + gId +
                 ", question='" + question + '\'' +
-                ", package='" + _package + '\'' +
+                ", queue=" + queue +
+                ", _package='" + _package + '\'' +
                 ", level=" + level +
+                ", rev_count=" + rev_count +
+                ", factor=" + factor +
+                ", last_ivl=" + last_ivl +
+                ", due=" + due +
                 '}';
     }
 
