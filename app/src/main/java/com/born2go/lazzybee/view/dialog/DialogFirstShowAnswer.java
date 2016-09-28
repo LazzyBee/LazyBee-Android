@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -68,9 +71,13 @@ public class DialogFirstShowAnswer extends DialogFragment {
 
     private void _handlerChangeBackgroundTargerTip(final View view) {
         AnimationDrawable drawable = (AnimationDrawable) LazzyBeeShare.getDraweble(context, R.drawable.ani_bg_tip_show_answer_button);
-        view.findViewById(R.id.mTarget).setBackground(drawable);
+        LinearLayout mTarget = (LinearLayout) view.findViewById(R.id.mTarget);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mTarget.setBackground(drawable);
+        } else {
+            mTarget.setBackgroundDrawable(drawable);
+        }
         drawable.start();
-
     }
 
     @Override
