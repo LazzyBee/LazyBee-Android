@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="">
+        <group android:id="@+id/g1">
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_home"
+                android:title="@string/drawer_home" />
+            <item
+                android:id="@+id/nav_major"
+                android:icon="@drawable/ic_list"
+                android:title="@string/drawer_subject" />
+            <item
+                android:id="@+id/nav_statistical"
+                android:icon="@drawable/ic_graph"
+                android:title="@string/drawer_statistical" />
+            <item
+                android:id="@+id/nav_test_your_voca"
+                android:icon="@drawable/ic_extension_black_24dp"
+                android:title="@string/drawer_test_your_voca" />
+            <item
+                android:id="@+id/nav_dictionary"
+                android:icon="@drawable/ic_dictionary"
+                android:title="@string/drawer_dictionary" />
+        </group>
+    </item>
+    <item android:title="">
+        <group android:id="@+id/g2">
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_action_settings"
+                android:title="@string/drawer_setting" />
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_action_help"
+                android:title="@string/drawer_help" />
+        </group>
+    </item>
+</menu>

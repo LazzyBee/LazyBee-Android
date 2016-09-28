@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -19,10 +19,13 @@ import android.provider.BaseColumns;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -32,14 +35,13 @@ import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
@@ -70,8 +72,9 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        DownloadFileDatabaseResponse {
+        implements
+        DownloadFileDatabaseResponse,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private Context context = this;
     private static final String TAG = "MainActivity";
@@ -390,8 +393,63 @@ public class MainActivity extends AppCompatActivity
     private void _initToolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        _initNavigationDrawerFragment(toolbar);
+        //_initNavigationDrawerFragment(toolbar);
 
+        _initDrawer(toolbar);
+
+
+    }
+
+    private void _initDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                //reset major
+                String mMajorValue = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
+                String mMajor = null;
+                MenuItem mItemSelectMajor = navigationView.getMenu().getItem(1);
+                if (mMajorValue != null) {
+                    if (mMajorValue.equals(context.getString(R.string.subject_it_value)))
+                        mMajor = context.getString(R.string.subject_it);
+                    else if (mMajorValue.equals(context.getString(R.string.subject_economy_value)))
+                        mMajor = context.getString(R.string.subject_economy);
+                    else if (mMajorValue.equals(context.getString(R.string.subject_science_value)))
+                        mMajor = context.getString(R.string.subject_science);
+                    else if (mMajorValue.equals(context.getString(R.string.subject_medical_value)))
+                        mMajor = context.getString(R.string.subject_medical);
+                    else if (mMajorValue.equals(context.getString(R.string.subject_ielts_value)))
+                        mMajor = context.getString(R.string.subject_ielts);
+                    else if (mMajorValue.equals(context.getString(R.string.subject_600_toeic_value)))
+                        mMajor = context.getString(R.string.subject_600toeic);
+                    else
+                        mMajor = null;
+                }
+                if (mMajor != null) {
+                    mItemSelectMajor.setTitle(context.getString(R.string.drawer_subject) + " (" + mMajor + ")");
+                } else {
+                    mItemSelectMajor.setTitle(context.getString(R.string.drawer_subject));
+                }
+            }
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //set version app
+        try {
+            String versionName = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0).versionName;
+            TextView lbAppVersion = (TextView) findViewById(R.id.mVesionApp);
+            lbAppVersion.setText("Version:" + versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -412,68 +470,68 @@ public class MainActivity extends AppCompatActivity
      */
     private void _initNavigationDrawerFragment(Toolbar toolbar) {
         try {
-            mNavigationDrawerFragment = (NavigationDrawerFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            // Set up the drawer.
-            mNavigationDrawerFragment.setUp(
-                    R.id.navigation_drawer, toolbar,
-                    drawerLayout);
+//            mNavigationDrawerFragment = (NavigationDrawerFragment)
+//                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+//            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//            // Set up the drawer.
+//            mNavigationDrawerFragment.setUp(
+//                    R.id.navigation_drawer, toolbar,
+//                    drawerLayout);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initNavigationDrawerFragment", e);
         }
     }
 
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        try {
-            switch (position) {
-                case LazzyBeeShare.DRAWER_ABOUT_INDEX:
-                    //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
-                    _gotoAbout();
-                    break;
-                case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
-                    //_gotoAddCourse();
-                    Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
-                    break;
-                case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
-                    _gotoSetting();
-
-                    break;
-                case LazzyBeeShare.DRAWER_USER_INDEX:
-                    //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
-                    break;
-                case LazzyBeeShare.DRAWER_COURSE_INDEX:
-                    break;
-                case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
-                    _gotoDictionary();
-                    break;
-                case LazzyBeeShare.DRAWER_MAJOR_INDEX:
-                    showSelectSubject();
-                    break;
-                case LazzyBeeShare.DRAWER_HELP_INDEX:
-                    _showHelp();
-                    break;
-                case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
-                    _showStatistical();
-                    break;
-                case LazzyBeeShare.DRAWER_HOME_INDEX:
-                    _goHome();
-                    break;
-                case LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX:
-                    _goTestYourVoca();
-                    break;
-                default:
-                    break;
-            }
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, "onNavigationDrawerItemSelected", e);
-        }
-
-
-    }
-
+    //    @Override
+//    public void onNavigationDrawerItemSelected(int position) {
+//        try {
+//            switch (position) {
+//                case LazzyBeeShare.DRAWER_ABOUT_INDEX:
+//                    //Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+//                    _gotoAbout();
+//                    break;
+//                case LazzyBeeShare.DRAWER_ADD_COURSE_INDEX:
+//                    //_gotoAddCourse();
+//                    Toast.makeText(context, R.string.under_construction, Toast.LENGTH_SHORT).show();
+//                    break;
+//                case LazzyBeeShare.DRAWER_SETTINGS_INDEX:
+//                    _gotoSetting();
+//
+//                    break;
+//                case LazzyBeeShare.DRAWER_USER_INDEX:
+//                    //Toast.makeText(context, R.string.action_login, Toast.LENGTH_SHORT).show();
+//                    break;
+//                case LazzyBeeShare.DRAWER_COURSE_INDEX:
+//                    break;
+//                case LazzyBeeShare.DRAWER_DICTIONARY_INDEX:
+//                    _gotoDictionary();
+//                    break;
+//                case LazzyBeeShare.DRAWER_MAJOR_INDEX:
+//                    showSelectMajor();
+//                    break;
+//                case LazzyBeeShare.DRAWER_HELP_INDEX:
+//                    _showHelp();
+//                    break;
+//                case LazzyBeeShare.DRAWER_STATISTICAL_INDEX:
+//                    _showStatistical();
+//                    break;
+//                case LazzyBeeShare.DRAWER_HOME_INDEX:
+//                    _goHome();
+//                    break;
+//                case LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX:
+//                    _goTestYourVoca();
+//                    break;
+//                default:
+//                    break;
+//            }
+//        } catch (Exception e) {
+//            LazzyBeeShare.showErrorOccurred(context, "onNavigationDrawerItemSelected", e);
+//        }
+//
+//
+//    }
+//
     private void _goTestYourVoca() {
         mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_TEST_YOUR_VOCA, new Bundle());
         if (LazzyBeeShare.checkConn(context)) {
@@ -500,7 +558,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showSelectSubject() {
+    private void showSelectMajor() {
         mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_CHOOSE_MAJOR, new Bundle());
         View mSelectMajor = View.inflate(context, R.layout.view_select_major, null);
         final CheckBox cbIt = (CheckBox) mSelectMajor.findViewById(R.id.cbIt);
@@ -731,25 +789,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        try {
-            if (!mNavigationDrawerFragment.isDrawerOpen()) {
-                // Only show items in the action bar relevant to this screen
-                // if the drawer is not showing. Otherwise, let the drawer
-                // decide what to show in the action bar.
-                MenuInflater inflater = getMenuInflater();
-                // Inflate menu to add items to action bar if it is present.
-                inflater.inflate(R.menu.main, menu);
-                // Associate searchable configuration with the SearchView
-                // _defineSearchView(menu);
-                _restoreActionBar();
-            } else {
-                _hideKeyboard();
-                _dismissTip();
-            }
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, "onCreateOptionsMenu", e);
-        }
-        return super.onCreateOptionsMenu(menu);
+//        try {
+//            if (!mNavigationDrawerFragment.isDrawerOpen()) {
+//                // Only show items in the action bar relevant to this screen
+//                // if the drawer is not showing. Otherwise, let the drawer
+//                // decide what to show in the action bar.
+//                MenuInflater inflater = getMenuInflater();
+//                // Inflate menu to add items to action bar if it is present.
+//                inflater.inflate(R.menu.main, menu);
+//                // Associate searchable configuration with the SearchView
+//                // _defineSearchView(menu);
+//                _restoreActionBar();
+//            } else {
+//                _hideKeyboard();
+//                _dismissTip();
+//            }
+//        } catch (Exception e) {
+//            LazzyBeeShare.showErrorOccurred(context, "onCreateOptionsMenu", e);
+//        }
+//        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+
     }
 
     private void _dismissTip() {
@@ -1375,6 +1436,34 @@ public class MainActivity extends AppCompatActivity
         intent.setAction(LazzyBeeShare.REVERSE);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+        } else if (id == R.id.nav_major) {
+            showSelectMajor();
+        } else if (id == R.id.nav_statistical) {
+            _showStatistical();
+        } else if (id == R.id.nav_statistical) {
+            _showStatistical();
+        } else if (id == R.id.nav_test_your_voca) {
+            _goTestYourVoca();
+        } else if (id == R.id.nav_dictionary) {
+            _gotoDictionary();
+        } else if (id == R.id.nav_setting) {
+            _gotoSetting();
+        } else if (id == R.id.nav_help) {
+            _showHelp();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
 

@@ -140,7 +140,7 @@
     <string name="drawer_title_course" translatable="false">title_course</string>
     <string name="drawer_add_course" translatable="false">add_course</string>
     <string name="drawer_line" translatable="false">lines</string>
-    <string name="drawer_setting" translatable="false">settings</string>
+    <string name="drawer_setting" >Settings</string>
     <string name="setting_about_message" translatable="false">Born2Go © 2016</string>
     <string name="under_construction" translatable="false">Under construction</string>
 
@@ -306,22 +306,17 @@
     </string-array>
 
     <string-array name="drawer_list">
-        <!--<item>@string/drawer_user</item>-->
-        <!--<item>@string/drawer_title_course</item>-->
-        <!--<item>English Word</item>-->
         <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
         <item>@string/drawer_test_your_voca</item>
         <item>@string/drawer_line</item>
         <item>@string/drawer_dictionary</item>
-        <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
-        <!--<item>@string/drawer_about</item>-->
         <item>@string/drawer_help</item>
         <item>@string/drawer_line</item>
-        <!--<item>@string/setting_about_message</item>-->
+
     </string-array>
 
     <string-array name="speech_rate">

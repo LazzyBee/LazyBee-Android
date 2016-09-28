@@ -164,10 +164,11 @@ public class NavigationDrawerFragment extends Fragment {
                             } else if (o.equals(getString(R.string.drawer_test_your_voca))) {
                                 selectItem(LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX);
                             }
-                            mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
+
                         }
                     })
             );
+            mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
