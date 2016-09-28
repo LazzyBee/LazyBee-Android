@@ -18,8 +18,8 @@ android {
         applicationId "com.born2go.lazzybee"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 34
-        versionName "1.7.0"
+        versionCode 35
+        versionName "1.7.1"
         multiDexEnabled true
     }
     buildTypes {
