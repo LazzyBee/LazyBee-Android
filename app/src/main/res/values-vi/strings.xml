@@ -336,7 +336,7 @@
     <string name="msg_tip_answer_card">Tùy vào việc tự đánh giá khả năng nhớ của bạn, hãy chọn một khoảng thời gian phù hợp để nhắc lại từ.</string>
     <string name="got_it">Đã hiểu</string>
     <string name="reverse">Dịch ngược</string>
-    <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
+    <string name="msg_limit_unlock_feture_study_reverse">Bạn phải học ít nhất 50 từ</string>
     <string name="reverse_next">Tiếp theo</string>
     <string name="complele_text_display"><u>2000 từ/năm với 5 phút mỗi ngày.</u></string>
     <string name="msg_finishing_your_daily_target">Vui lòng quay lại sau khi bạn đã hoàn thành mục tiêu hàng ngày.</string>
@@ -370,6 +370,5 @@
     <string name="custom_list">Danh sách tùy chọn</string>
     <string name="import_form_existed_list">Nhập từ danh sách đã có</string>
     <string name="import_custom_list_sucessfully">Danh sách từ của bạn đã được nhập vào thành công.</string>
-
-
+    <string name="title_create_word_list">Tạo danh sách từ</string>
 </resources>

@@ -538,4 +538,5 @@
 
     <string name="action_import">Import</string>
     <string name="import_custom_list_sucessfully">Your custom list has been imported successfully.</string>
+    <string name="title_create_word_list">Input word list</string>
 </resources>
