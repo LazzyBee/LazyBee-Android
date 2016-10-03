@@ -255,8 +255,8 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        iCompleteSutdy = (ICompleteSutdy) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        iCompleteSutdy = (ICompleteSutdy) context;
     }
 }
