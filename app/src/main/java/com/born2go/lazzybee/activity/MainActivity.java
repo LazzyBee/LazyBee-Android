@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -15,14 +16,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.provider.BaseColumns;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -48,6 +47,7 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.BackUpDatabaseToCSV;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase;
 import com.born2go.lazzybee.adapter.DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse;
+import com.born2go.lazzybee.adapter.SuggestionCardAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
@@ -70,11 +70,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
+import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
+
 
 public class MainActivity extends AppCompatActivity
         implements
         DownloadFileDatabaseResponse,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        SearchView.OnQueryTextListener,
+        SearchView.OnSuggestionListener {
 
     private Context context = this;
     private static final String TAG = "MainActivity";
@@ -142,8 +147,10 @@ public class MainActivity extends AppCompatActivity
         mSearchCardBox.setQueryHint(getString(R.string.drawer_dictionary));
 
         //set provaider search
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        //mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
 
         autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
@@ -169,47 +176,49 @@ public class MainActivity extends AppCompatActivity
             autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
             autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
             autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
-
-
         }
 
-        //Handler click item suggesstion
-        mSearchCardBox.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                Log.d(TAG, "onSuggestionSelect:" + position);
-                return false;
-            }
+        //query
+        mSearchCardBox.setOnQueryTextListener(this);
+        mSearchCardBox.setOnSuggestionListener(this);
 
-            @Override
-            public boolean onSuggestionClick(int position) {
-                Log.d(TAG, "onSuggestionClick:" + position);
-                try {
-                    CursorAdapter c = mSearchCardBox.getSuggestionsAdapter();
-                    mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_HINT_HOME, new Bundle());
-                    if (c != null) {
-                        Cursor cur = c.getCursor();
-                        cur.moveToPosition(position);
-
-                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
-                        Log.d(TAG, "cardID:" + cardID);
-                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
-                        Log.d(TAG, "query:" + query);
-                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
-                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
-                        _gotoCardDetailbyCardId(cardID);
-
-                        //call back actionbar
-                        //mSearchCardBox.clearFocus();
-                    } else {
-                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
-                    }
-                } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
-                }
-                return true;
-            }
-        });
+//        //Handler click item suggesstion
+//        mSearchCardBox.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//            @Override
+//            public boolean onSuggestionSelect(int position) {
+//                Log.d(TAG, "onSuggestionSelect:" + position);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onSuggestionClick(int position) {
+//                Log.d(TAG, "onSuggestionClick:" + position);
+//                try {
+//                    CursorAdapter c = mSearchCardBox.getSuggestionsAdapter();
+//                    mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SEARCH_HINT_HOME, new Bundle());
+//                    if (c != null) {
+//                        Cursor cur = c.getCursor();
+//                        cur.moveToPosition(position);
+//
+//                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
+//                        Log.d(TAG, "cardID:" + cardID);
+//                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+//                        Log.d(TAG, "query:" + query);
+//                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
+//                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
+//                        _gotoCardDetailbyCardId(cardID);
+//
+//                        //call back actionbar
+//                        //mSearchCardBox.clearFocus();
+//                    } else {
+//                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
+//                    }
+//                } catch (Exception e) {
+//                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
+//                }
+//                return true;
+//            }
+//        });
 
     }
 
@@ -789,25 +798,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        try {
-//            if (!mNavigationDrawerFragment.isDrawerOpen()) {
-//                // Only show items in the action bar relevant to this screen
-//                // if the drawer is not showing. Otherwise, let the drawer
-//                // decide what to show in the action bar.
-//                MenuInflater inflater = getMenuInflater();
-//                // Inflate menu to add items to action bar if it is present.
-//                inflater.inflate(R.menu.main, menu);
-//                // Associate searchable configuration with the SearchView
-//                // _defineSearchView(menu);
-//                _restoreActionBar();
-//            } else {
-//                _hideKeyboard();
-//                _dismissTip();
-//            }
-//        } catch (Exception e) {
-//            LazzyBeeShare.showErrorOccurred(context, "onCreateOptionsMenu", e);
-//        }
-//        return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
 
@@ -824,78 +814,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void _defineSearchView(Menu menu) {
-        //final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        //final MenuItem searchItem = menu.findItem(R.id.menu_search);
-
-//        searchView =
-//                (SearchView) menu.findItem(R.id.menu_search).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//
-//        // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-//        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
-//
-//        if (autoCompleteTextView != null) {
-//            int color = Color.parseColor("#ffffffff");
-//            Drawable drawable = autoCompleteTextView.getDropDownBackground();
-//            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-//
-//            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-//            autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
-//        }
-//
-//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem item) {
-//                Log.d(TAG, "onMenuItemActionCollapse");
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem item) {
-//                Log.d(TAG, "onMenuItemActionExpand");
-//                return true;
-//            }
-//
-//        });
-//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-//            @Override
-//            public boolean onSuggestionSelect(int position) {
-//                Log.d(TAG, "onSuggestionSelect:" + position);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onSuggestionClick(int position) {
-//                Log.d(TAG, "onSuggestionClick:" + position);
-//                try {
-//                    CursorAdapter c = searchView.getSuggestionsAdapter();
-//                    if (c != null) {
-//                        Cursor cur = c.getCursor();
-//                        cur.moveToPosition(position);
-//
-//                        String cardID = cur.getString(cur.getColumnIndex(BaseColumns._ID));
-//                        Log.d(TAG, "cardID:" + cardID);
-//                        String query = cur.getString(cur.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
-//                        Log.d(TAG, "query:" + query);
-//                        int insertSuggesstionResults = dataBaseHelper._insertSuggesstion(cardID);
-//                        Log.d(TAG, "insertSuggesstionResults " + ((insertSuggesstionResults == -1) ? " OK" : " Fails"));
-//                        _gotoCardDetailbyCardId(cardID);
-//
-//                        //call back actionbar
-//                        searchItem.collapseActionView();
-//                    } else {
-//                        Log.d(TAG, "NUll searchView.getSuggestionsAdapter()");
-//                    }
-//                } catch (Exception e) {
-//                    LazzyBeeShare.showErrorOccurred(context, "_defineSearchView", e);
-//                }
-//                return true;
-//            }
-//        });
-
-    }
 
     private void _gotoCardDetailbyCardId(String cardId) {
         Intent intent = new Intent(this, CardDetailsActivity.class);
@@ -1465,5 +1383,53 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.trim() != null) {
+            if (newText.trim().length() > 2) {
+
+                String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                        + KEY_QUESTION + " like '" + newText + "%' OR "
+                        + KEY_QUESTION + " like '% " + newText + "%'"
+                        + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+
+                SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                try {
+                    Cursor cursor = db.rawQuery(likeQuery, null);
+                    SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                    mSearchCardBox.setSuggestionsAdapter(suggestionCardAdapter);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    Log.d(TAG, "query suggetion");
+                }
+                return true;
+            } else {
+                Log.d(TAG, "query is short");
+                return false;
+            }
+
+        } else {
+            Log.d(TAG, "query is empty");
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onSuggestionSelect(int position) {
+        return false;
+    }
+
+    @Override
+    public boolean onSuggestionClick(int position) {
+        return false;
+    }
+
 }
 

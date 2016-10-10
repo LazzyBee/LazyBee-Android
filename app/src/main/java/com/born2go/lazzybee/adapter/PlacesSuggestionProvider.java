@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
             BaseColumns._ID,
             SearchManager.SUGGEST_COLUMN_TEXT_1,
             SearchManager.SUGGEST_COLUMN_TEXT_2,
+            LazzyBeeShare.CARD_PRONOUN,
             SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
     };
 
@@ -82,6 +84,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
                 String query = uri.getLastPathSegment().toLowerCase().trim();
                 Log.d(LOG_TAG, "query:" + query);
                 MatrixCursor cursor = new MatrixCursor(SUGGEST_COLUMNS, 1);
+
                 List<Card> cards;
                 if (query != null || query.length() > 1) {
                     if (query.equals("search_suggest_query")) {
@@ -90,7 +93,8 @@ public class PlacesSuggestionProvider extends ContentProvider {
                         for (int i = 0; i < cards.size(); i++) {
                             Card card = cards.get(i);
                             String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-                            cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                            String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+                            cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, pronoun, String.valueOf(card.getId())});
                         }
                     } else if (query.length() > 1) {
                         Log.d(LOG_TAG, "Search suggestions requested.Query=" + query);
@@ -98,7 +102,8 @@ public class PlacesSuggestionProvider extends ContentProvider {
                         for (int i = 0; i < cards.size(); i++) {
                             Card card = cards.get(i);
                             String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-                            cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                            String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+                            cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, pronoun, String.valueOf(card.getId())});
                         }
 
                     }
@@ -108,7 +113,8 @@ public class PlacesSuggestionProvider extends ContentProvider {
                     for (int i = 0; i < cards.size(); i++) {
                         Card card = cards.get(i);
                         String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-                        cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, String.valueOf(card.getId())});
+                        String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+                        cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, pronoun, String.valueOf(card.getId())});
                     }
                 }
                 cursor.setNotificationUri(getContext().getContentResolver(), uri);
