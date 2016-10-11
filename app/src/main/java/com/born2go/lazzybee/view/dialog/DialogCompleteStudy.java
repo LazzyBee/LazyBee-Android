@@ -76,7 +76,16 @@ public class DialogCompleteStudy extends DialogFragment {
             @Override
             public void onClick(View v) {
                 getDialog().cancel();
-                iCompleteSutdy.close();
+                if (iCompleteSutdy != null) {
+                    iCompleteSutdy.close();
+                } else {
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                        getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000, new Intent());
+                    }
+                }
+
+
             }
         });
 
