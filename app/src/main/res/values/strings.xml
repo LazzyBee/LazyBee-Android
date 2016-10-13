@@ -281,6 +281,8 @@
         <item>@string/setting_display_meaning</item>
         <!--<item>@string/setting_position_meaning</item>-->
         <item>@string/setting_lines</item>
+        <item>@string/setting_auto_play_sound</item>
+        <item>@string/setting_lines</item>
         <item>@string/setting_time_deday_show_answer</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_reset_to_default</item>
@@ -294,6 +296,8 @@
         <item>@string/setting_lines</item>
         <item>@string/setting_display_meaning</item>
         <!--<item>@string/setting_position_meaning</item>-->
+        <item>@string/setting_lines</item>
+        <item>@string/setting_auto_play_sound</item>
         <item>@string/setting_lines</item>
         <item>@string/setting_time_deday_show_answer</item>
         <item>@string/setting_lines</item>
@@ -539,4 +543,6 @@
     <string name="action_import">Import</string>
     <string name="import_custom_list_sucessfully">Your custom list has been imported successfully.</string>
     <string name="title_create_word_list">Input word list</string>
+
+    <string name="setting_auto_play_sound">Auto play sound</string>
 </resources>
