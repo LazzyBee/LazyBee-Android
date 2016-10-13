@@ -505,7 +505,7 @@ public class LazzyBeeShare {
             user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
                     "              <hr>\n" +
                     "              <center>User note</center></br>\n" +
-                    card.getUser_note() +
+                    card.getUser_note().replaceAll("(\r\n|\n)", "<br />")+
                     "           </div>\n" +
                     "   </body>\n" +
                     "</html>\n";
