@@ -610,6 +610,14 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private void _showFirstCard() {
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            mWebViewLeadDetails.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }
+        else {
+            mWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         _addJavascriptInterface(mWebViewLeadDetails, currentCard);
         boolean show = false;
         //Load first card
