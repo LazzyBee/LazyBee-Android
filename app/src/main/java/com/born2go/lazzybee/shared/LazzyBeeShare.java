@@ -14,6 +14,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -236,23 +237,6 @@ public class LazzyBeeShare {
         return courses;
     }
 
-    /**
-     * init HTML answer
-     */
-    public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
-        boolean sDisplayPosition;
-        String value = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
-        if (value == null) {
-            sDisplayPosition = true;
-        } else if (value.equals(LazzyBeeShare.ON)) {
-            sDisplayPosition = true;
-        } else if (value.equals(LazzyBeeShare.OFF)) {
-            sDisplayPosition = false;
-        } else {
-            sDisplayPosition = false;
-        }
-        return getAnswerHTMLwithPackage(context, card, mySubject, sDisplayPosition, sPOSITION_MEANING, sDEBUG, false);
-    }
 
     /**
      * init HTML question
@@ -388,13 +372,31 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
-        String html = null;
-        String meaning = EMPTY;
-        String explain = EMPTY;
-        String example = EMPTY;
+    /**
+     * init HTML answer
+     */
+    public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
+        boolean sDisplayPosition;
+        String value = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
+        if (value == null) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.ON)) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.OFF)) {
+            sDisplayPosition = false;
+        } else {
+            sDisplayPosition = false;
+        }
+        return getAnswerHTMLwithPackage(context, card, mySubject, sDisplayPosition, sDEBUG, sPOSITION_MEANING, false);
+    }
 
-        String pronoun = EMPTY;
+    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean DEBUG, boolean POSITION_MEANING, boolean onload) {
+        String html = null;
+        String pronoun = card.getPronoun(packages);
+        String meaning = card.getMeaning(packages);
+        String explain = card.getExplain(packages);
+        String example = card.getExample(packages);
+
         String explainTagA = EMPTY;
         String exampleTagA = EMPTY;
         String imageURL = EMPTY;
@@ -405,30 +407,30 @@ public class LazzyBeeShare {
 
         //Log.i(TAG, "getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers());
         // System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
-        try {
-            JSONObject answerObj = new JSONObject(card.getAnswers());
-            pronoun = answerObj.getString("pronoun");
-            JSONObject packagesObj = answerObj.getJSONObject("packages");
-            // System.out.print("\npackagesObj.length():" + packagesObj.length());
-            if (packagesObj.length() > 0) {
-                if (packagesObj.isNull(packages)) {
-                    packages = "common";
-                }
-                JSONObject commonObj = packagesObj.getJSONObject(packages);
-                meaning = commonObj.getString("meaning");
-                explain = commonObj.getString("explain");
-                example = commonObj.getString("example");
-
-
-            } else {
-                _example = EMPTY;
-                _explain = EMPTY;
-                Log.e(TAG, "getAnswerHTMLwithPackage E:Passing JSON ERROR");
-            }
-
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
+//        try {
+//            JSONObject answerObj = new JSONObject(card.getAnswers());
+//            //pronoun = answerObj.getString("pronoun");
+//            JSONObject packagesObj = answerObj.getJSONObject("packages");
+//            // System.out.print("\npackagesObj.length():" + packagesObj.length());
+//            if (packagesObj.length() > 0) {
+//                if (packagesObj.isNull(packages)) {
+//                    packages = "common";
+//                }
+//                JSONObject commonObj = packagesObj.getJSONObject(packages);
+//                meaning = commonObj.getString("meaning");
+//                explain = commonObj.getString("explain");
+//                example = commonObj.getString("example");
+//
+//
+//            } else {
+//                _example = EMPTY;
+//                _explain = EMPTY;
+//                Log.e(TAG, "getAnswerHTMLwithPackage E:Passing JSON ERROR");
+//            }
+//
+//        } catch (Exception e) {
+//            // e.printStackTrace();
+//        }
 
         if (!explain.isEmpty()) {
             explainTagA = "<p style=''><a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a></p>";
@@ -963,5 +965,15 @@ public class LazzyBeeShare {
         }
     }
 
-
+    public static Spanned fromHtml(String html) {
+        Spanned value;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            value = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            value = Html.fromHtml(html);
+        }
+        return value;
+    }
 }
+
+

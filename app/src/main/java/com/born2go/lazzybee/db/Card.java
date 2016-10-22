@@ -1,5 +1,12 @@
 package com.born2go.lazzybee.db;
 
+import android.text.Html;
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import static com.born2go.lazzybee.R.string.result;
+
 /**
  * Created by Hue on 7/1/2015.
  */
@@ -29,6 +36,11 @@ public class Card {
 
     String l_vn;
     String l_en;
+
+    String pronoun;
+    String meaning;
+    String explain;
+    String example;
 
     boolean custom_list;
 
@@ -218,5 +230,81 @@ public class Card {
 
     public void setL_en(String l_en) {
         this.l_en = l_en;
+    }
+
+
+    public String getPronoun(String subject) {
+        try {
+            JSONObject answerObj = new JSONObject(answers);
+            pronoun = answerObj.getString("pronoun");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pronoun;
+    }
+
+    public String getMeaning(String subject) {
+        try {
+            JSONObject answerObj = new JSONObject(answers);
+            JSONObject packagesObj = answerObj.getJSONObject("packages");
+            // System.out.print("\npackagesObj.length():" + packagesObj.length());
+            if (packagesObj.length() > 0) {
+                if (packagesObj.isNull(subject)) {
+                    subject = "common";
+                }
+                JSONObject commonObj = packagesObj.getJSONObject(subject);
+                meaning = commonObj.getString("meaning");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return meaning;
+    }
+
+    public String getExplain(String subject) {
+        try {
+            JSONObject answerObj = new JSONObject(answers);
+            JSONObject packagesObj = answerObj.getJSONObject("packages");
+            // System.out.print("\npackagesObj.length():" + packagesObj.length());
+            if (packagesObj.length() > 0) {
+                if (packagesObj.isNull(subject)) {
+                    subject = "common";
+                }
+                JSONObject commonObj = packagesObj.getJSONObject(subject);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    explain = Html.fromHtml(commonObj.getString("explain"), Html.FROM_HTML_MODE_LEGACY).toString();
+                } else {
+                    explain = Html.fromHtml(commonObj.getString("explain")).toString();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return explain;
+    }
+
+    public String getExample(String subject) {
+        try {
+            JSONObject answerObj = new JSONObject(answers);
+            JSONObject packagesObj = answerObj.getJSONObject("packages");
+            // System.out.print("\npackagesObj.length():" + packagesObj.length());
+            if (packagesObj.length() > 0) {
+                if (packagesObj.isNull(subject)) {
+                    subject = "common";
+                }
+                JSONObject commonObj = packagesObj.getJSONObject(subject);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    example = Html.fromHtml(commonObj.getString("example"), Html.FROM_HTML_MODE_LEGACY).toString();
+                } else {
+                    example = Html.fromHtml(commonObj.getString("example")).toString();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return example;
     }
 }
