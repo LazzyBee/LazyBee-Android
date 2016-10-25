@@ -235,7 +235,7 @@ public class Card {
     }
 
 
-    public String getPronoun(String subject) {
+    public String getPronoun() {
         try {
             JSONObject answerObj = new JSONObject(answers);
             pronoun = answerObj.getString("pronoun");
@@ -255,7 +255,11 @@ public class Card {
                     subject = "common";
                 }
                 JSONObject commonObj = packagesObj.getJSONObject(subject);
-                meaning = commonObj.getString("meaning");
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    meaning = Html.fromHtml(commonObj.getString("meaning"), Html.FROM_HTML_MODE_LEGACY).toString();
+                } else {
+                    meaning =  Html.fromHtml(commonObj.getString("meaning")).toString();
+                }
             }
 
         } catch (Exception e) {

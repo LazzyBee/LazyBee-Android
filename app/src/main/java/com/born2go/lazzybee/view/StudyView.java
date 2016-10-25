@@ -1019,7 +1019,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _initSettingUser() {
-        mySubject = LazzyBeeShare.getSubjectSetting();
+        mySubject = LazzyBeeShare.getMySubject();
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
         sTimeShowAnswer = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);

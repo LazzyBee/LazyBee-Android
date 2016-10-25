@@ -34,6 +34,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
     private LearnApiImplements learnApiImplements;
     private RecyclerView mRecyclerViewReviewTodayList;
     private TextView lbCountReviewCard;
+    private String mySubject;
 
     public RecyclerViewIncomingListAdapter(Context context, RecyclerView mRecyclerViewReviewTodayList, List<Card> vocabularies, TextView lbCountReviewCard) {
         this.context = context;
@@ -41,6 +42,8 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.mRecyclerViewReviewTodayList = mRecyclerViewReviewTodayList;
         this.lbCountReviewCard = lbCountReviewCard;
+        this.mySubject=LazzyBeeShare.getMySubject();
+
         List<Card> deafaultList = new ArrayList<>();
         List<Card> customList = new ArrayList<>();
         for (Card card : vocabularies) {
@@ -110,8 +113,8 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
             //get Card by position
             final Card card = (Card) objects.get(position);
 
-            String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-            String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+            String pronoun = card.getPronoun();//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+            String meaning = card.getMeaning(mySubject);//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
 
             lbQuestion.setText(card.getQuestion());
             lbMeaning.setText(meaning);

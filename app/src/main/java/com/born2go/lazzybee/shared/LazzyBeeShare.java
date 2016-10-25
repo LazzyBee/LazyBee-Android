@@ -394,7 +394,7 @@ public class LazzyBeeShare {
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean DEBUG, boolean POSITION_MEANING, boolean onload) {
         String html = null;
-        String pronoun = card.getPronoun(packages);
+        String pronoun = card.getPronoun();
         String meaning = card.getMeaning(packages);
         String explain = card.getExplain(packages,LazzyBeeShare.TO_HTML_0);
         String example = card.getExample(packages,LazzyBeeShare.TO_HTML_0);
@@ -577,7 +577,7 @@ public class LazzyBeeShare {
         return DEBUG;
     }
 
-    public static String getSubjectSetting() {
+    public static String getMySubject() {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
         String mySubject = "common";
@@ -745,7 +745,6 @@ public class LazzyBeeShare {
 
 
     }
-
     /*
  *Java Scrip Object Question
  * */

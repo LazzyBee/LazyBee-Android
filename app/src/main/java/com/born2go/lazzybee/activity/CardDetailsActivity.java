@@ -496,7 +496,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     }
 
     private void _initSettingUser() {
-        mySubject = LazzyBeeShare.getSubjectSetting();
+        mySubject = LazzyBeeShare.getMySubject();
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
     }
@@ -624,8 +624,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 @JavascriptInterface
                 public void speechExplain() {
                     //get answer json
-                    String answer = card.getAnswers();
-                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
+                    //String answer = card.getAnswers();
+                    String toSpeech = card.getExplain(mySubject,LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "explain");
 
                     //Speak text
                     LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -635,8 +635,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 @JavascriptInterface
                 public void speechExample() {
                     //get answer json
-                    String answer = card.getAnswers();
-                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
+                   // String answer = card.getAnswers();
+                    String toSpeech = card.getExample(mySubject,LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "example");
 
                     //Speak text
                     LazzyBeeShare._speakText(toSpeech, finalSpeechRate);

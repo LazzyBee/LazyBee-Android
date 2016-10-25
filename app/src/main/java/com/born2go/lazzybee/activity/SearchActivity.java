@@ -462,6 +462,7 @@ public class SearchActivity extends AppCompatActivity implements
                         lbResultCount.setText(String.valueOf(result_count + " " + getString(R.string.result)));
                         //Init Adapter
                         setAdapterListCard(cardList);
+
                     } else if (result_count == 0) {//Check result_count==0 search in server
                         lbResultCount.setVisibility(View.GONE);
                         mRecyclerViewSearchResults.setVisibility(View.GONE);
