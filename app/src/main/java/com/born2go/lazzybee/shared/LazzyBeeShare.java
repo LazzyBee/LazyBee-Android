@@ -139,6 +139,8 @@ public class LazzyBeeShare {
     public static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
     public static final String KEY_CUSTOM_LIST = "custom_list";
     public static final String KEY_SETTING_AUTO_PLAY_SOUND = "auto_play_sound";
+    public static final int TO_HTML_0 = 0;
+    public static final int TO_SPEECH_1 = 1;
 
 
     public static String mime = "text/html";
@@ -394,8 +396,8 @@ public class LazzyBeeShare {
         String html = null;
         String pronoun = card.getPronoun(packages);
         String meaning = card.getMeaning(packages);
-        String explain = card.getExplain(packages);
-        String example = card.getExample(packages);
+        String explain = card.getExplain(packages,LazzyBeeShare.TO_HTML_0);
+        String example = card.getExample(packages,LazzyBeeShare.TO_HTML_0);
 
         String explainTagA = EMPTY;
         String exampleTagA = EMPTY;

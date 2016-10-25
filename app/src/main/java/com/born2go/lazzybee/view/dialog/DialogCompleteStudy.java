@@ -80,8 +80,8 @@ public class DialogCompleteStudy extends DialogFragment {
                     iCompleteSutdy.close();
                 } else {
                     if (getActivity() != null) {
+                        getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000);
                         getActivity().finish();
-                        getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000, new Intent());
                     }
                 }
 

@@ -3,6 +3,8 @@ package com.born2go.lazzybee.db;
 import android.text.Html;
 import android.util.Log;
 
+import com.born2go.lazzybee.shared.LazzyBeeShare;
+
 import org.json.JSONObject;
 
 import static com.born2go.lazzybee.R.string.result;
@@ -262,7 +264,7 @@ public class Card {
         return meaning;
     }
 
-    public String getExplain(String subject) {
+    public String getExplain(String subject, int type) {
         try {
             JSONObject answerObj = new JSONObject(answers);
             JSONObject packagesObj = answerObj.getJSONObject("packages");
@@ -272,11 +274,14 @@ public class Card {
                     subject = "common";
                 }
                 JSONObject commonObj = packagesObj.getJSONObject(subject);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    explain = Html.fromHtml(commonObj.getString("explain"), Html.FROM_HTML_MODE_LEGACY).toString();
-                } else {
-                    explain = Html.fromHtml(commonObj.getString("explain")).toString();
-                }
+                if (type == LazzyBeeShare.TO_SPEECH_1)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        explain = Html.fromHtml(commonObj.getString("explain"), Html.FROM_HTML_MODE_LEGACY).toString();
+                    } else {
+                        explain = Html.fromHtml(commonObj.getString("explain")).toString();
+                    }
+                else
+                    explain = commonObj.getString("explain");
             }
 
         } catch (Exception e) {
@@ -285,7 +290,7 @@ public class Card {
         return explain;
     }
 
-    public String getExample(String subject) {
+    public String getExample(String subject, int type) {
         try {
             JSONObject answerObj = new JSONObject(answers);
             JSONObject packagesObj = answerObj.getJSONObject("packages");
@@ -295,11 +300,14 @@ public class Card {
                     subject = "common";
                 }
                 JSONObject commonObj = packagesObj.getJSONObject(subject);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    example = Html.fromHtml(commonObj.getString("example"), Html.FROM_HTML_MODE_LEGACY).toString();
-                } else {
-                    example = Html.fromHtml(commonObj.getString("example")).toString();
-                }
+                if (type == LazzyBeeShare.TO_SPEECH_1)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        example = Html.fromHtml(commonObj.getString("example"), Html.FROM_HTML_MODE_LEGACY).toString();
+                    } else {
+                        example = Html.fromHtml(commonObj.getString("example")).toString();
+                    }
+                else
+                    example = commonObj.getString("example");
             }
 
         } catch (Exception e) {

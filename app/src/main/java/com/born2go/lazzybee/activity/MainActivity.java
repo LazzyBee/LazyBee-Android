@@ -1108,13 +1108,14 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.ACTION_CODE_GOTO_STUDY) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_1000) {
-                Log.d(TAG, "Congratilation study LazzyBee");
+               // Log.d(TAG, "Congratilation study LazzyBee");
 
                 //Reset notification
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
 
                 int count = dataBaseHelper._getCountStreak();
+                Log.d(TAG, "Congratilation study LazzyBee,Streak count:"+count);
                 if (count % 10 == 0) {
                     //Show dialog backup db
                     _showDialogBackupDataBase();

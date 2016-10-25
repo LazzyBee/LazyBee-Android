@@ -8,13 +8,11 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -994,7 +992,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             public void speechExplain() {
                 //get answer json
                 //String answer = currentCard.getAnswers();
-                String toSpeech = currentCard.getExplain(mySubject);//LazzyBeeShare._getValueFromKey(answer, "explain");
+                String toSpeech = currentCard.getExplain(mySubject, LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "explain");
 
                 //Speak text
                 LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -1005,7 +1003,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             public void speechExample() {
                 //get answer json
                 //String answer = currentCard.getAnswers();
-                String toSpeech =currentCard.getExample(mySubject); //LazzyBeeShare._getValueFromKey(answer, "example");
+                String toSpeech =currentCard.getExample(mySubject, LazzyBeeShare.TO_SPEECH_1); //LazzyBeeShare._getValueFromKey(answer, "example");
 
                 //Speak text
                 LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
