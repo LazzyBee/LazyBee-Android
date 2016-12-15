@@ -2,7 +2,9 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,34 +19,28 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.daimajia.swipe.SwipeLayout;
 
-import java.util.List;
 
 /**
- * Created by Hue on 7/7/2015.
+ * Created by NguyenHue on 10/5/2016.
  */
-public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<RecyclerViewSearchResultListAdapter.RecyclerViewSearchResultListAdapterViewHolder> {
-    private static final String TAG = "SearchAdapter";
-    private List<Card> vocabularies;
-    private Context context;
+
+public class SuggestionCardAdapter extends CursorAdapter {
+    private static final String TAG = SuggestionCardAdapter.class.getSimpleName();
     private String mySubject;
 
-    public RecyclerViewSearchResultListAdapter(Context context, List<Card> vocabularies) {
-        this.context = context;
-        this.vocabularies = vocabularies;
+    public SuggestionCardAdapter(Context context, Cursor c) {
+        super(context, c, 0);
         this.mySubject=LazzyBeeShare.getMySubject();
     }
 
     @Override
-    public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
-        RecyclerViewSearchResultListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewSearchResultListAdapterViewHolder(view);
-        return recyclerViewReviewTodayListAdapterViewHolder;
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return LayoutInflater.from(context).inflate(R.layout.row_card_list_result, parent, false);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewSearchResultListAdapterViewHolder holder, final int position) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         //
-        final View view = holder.view;
         TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
         TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
         TextView level = (TextView) view.findViewById(R.id.level);
@@ -65,7 +61,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
             swipeLayout.addDrag(SwipeLayout.DragEdge.Left, null);
             swipeLayout.addDrag(SwipeLayout.DragEdge.Right, view.findViewById(R.id.bottom_wrapper));
             //get Card by position
-            final Card card = vocabularies.get(position);
+            final Card card = _defineCardbyCursor(cursor);
 
             String pronoun = card.getPronoun();//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
             String meaning = card.getMeaning(mySubject);//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
@@ -88,6 +84,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
                 @Override
                 public void onClick(View v) {
                     String cardId = String.valueOf(card.getId());
+                    int insertSuggesstionResults = LazzyBeeSingleton.learnApiImplements._insertSuggesstion(cardId);
                     Intent intent = new Intent(context, CardDetailsActivity.class);
                     intent.putExtra(LazzyBeeShare.CARDID, cardId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -101,7 +98,6 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
                 public void onClick(View v) {
                     try {
                         LazzyBeeSingleton.learnApiImplements._addCardIdToQueueList(card);
-                        notifyItemChanged(position);
                         Toast.makeText(context, context.getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
@@ -114,18 +110,20 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return vocabularies.size();
-    }
+    private Card _defineCardbyCursor(Cursor cursor) {
+        Card card = new Card();
+        try {
+            //get data from sqlite
+            card.setId(cursor.getInt(0));
+            card.setQuestion(cursor.getString(1));
+            card.setAnswers(cursor.getString(2));
+            card.setLevel(cursor.getInt(3));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Log.d(TAG, "Define card");
 
-    public class RecyclerViewSearchResultListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-
-        public RecyclerViewSearchResultListAdapterViewHolder(View itemView) {
-            super(itemView);
-            this.view = itemView;
         }
+        return card;
     }
 }
-

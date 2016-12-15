@@ -38,15 +38,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
 
 
-    private static final String KEY_ID = "id";
-    private static final String KEY_QUESTION = "question";
-    private static final String KEY_ANSWERS = "answers";
-    private static final String KEY_CATEGORIES = "categories";
-    private static final String KEY_SUBCAT = "subcat";
-    private static final String KEY_STATUS = "status";
-    private static final String KEY_G_ID = "gid";
-    private static final String KEY_RELATED = "related";
-    private static final String KEY_TAGS = "tags";
+    public static final String KEY_ID = "id";
+    public static final String KEY_QUESTION = "question";
+    public static final String KEY_ANSWERS = "answers";
+    public static final String KEY_CATEGORIES = "categories";
+    public static final String KEY_SUBCAT = "subcat";
+    public static final String KEY_STATUS = "status";
+    public static final String KEY_G_ID = "gid";
+    public static final String KEY_RELATED = "related";
+    public static final String KEY_TAGS = "tags";
 
 
     /**

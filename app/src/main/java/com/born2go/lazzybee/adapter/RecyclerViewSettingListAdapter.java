@@ -131,7 +131,7 @@ public class RecyclerViewSettingListAdapter extends
                 lbSettingName.setTextSize(15f);
                 lbSettingName.setTextColor(context.getResources().getColor(R.color.color_sub_header));
             } else if (holder.viewType == TYPE_SETTING_NAME) {
-                //TODO:TYPE_SETTING_NAME
+                //TODO:TYPE_SETTING_NAME_1
 
                 lbSettingName.setText(settings.get(position));
                 mSwitch.setVisibility(View.GONE);

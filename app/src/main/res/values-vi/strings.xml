@@ -106,7 +106,7 @@
     <!-- <string name="notification_message">Học từ vựng tiếng Anh nào!</string>-->
 
     <string name="dialog_title_reset_custom_study">Thiết lập lại</string>
-
+    <string name="drawer_setting" >Cài đặt</string>
     <string-array name="settings">
         <item>@string/setting_lines</item>
         <item>@string/setting_custom_study</item>
@@ -186,49 +186,57 @@
     <string-array name="custom_study">
         <item>@string/setting_my_level</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_display_meaning</item>
-        <!--<item>@string/setting_position_meaning</item>-->
+
+        <item>@string/setting_auto_play_sound</item>
         <item>@string/setting_lines</item>
+
+        <item>@string/setting_display_meaning</item>
+        <item>@string/setting_lines</item>
+
         <item>@string/setting_time_deday_show_answer</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_reset_to_default</item>
     </string-array>
     <string-array name="custom_study_dev">
         <item>@string/setting_my_level</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_total_learn_per_day</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_today_new_card_limit</item>
         <item>@string/setting_lines</item>
-        <item>@string/setting_display_meaning</item>
-        <!--<item>@string/setting_position_meaning</item>-->
+
+        <item>@string/setting_auto_play_sound</item>
         <item>@string/setting_lines</item>
+
+        <item>@string/setting_display_meaning</item>
+        <item>@string/setting_lines</item>
+
         <item>@string/setting_time_deday_show_answer</item>
         <item>@string/setting_lines</item>
+
         <item>@string/setting_reset_to_default</item>
     </string-array>
 
     <string-array name="drawer_list">
-        <!--<item>@string/drawer_user</item>-->
-        <!--<item>@string/drawer_title_course</item>-->
-        <!--<item>English Word</item>-->
         <item>@string/drawer_home</item>
         <item>@string/drawer_subject</item>
         <item>@string/drawer_statistical</item>
         <item>@string/drawer_test_your_voca</item>
         <item>@string/drawer_line</item>
         <item>@string/drawer_dictionary</item>
-        <!--  <item>@string/drawer_add_course</item>-->
         <item>@string/drawer_line</item>
         <item>@string/drawer_setting</item>
-        <!--<item>@string/drawer_about</item>-->
         <item>@string/drawer_help</item>
         <item>@string/drawer_line</item>
-        <!--<item>@string/setting_about_message</item>-->
     </string-array>
 
     <string-array name="speech_rate">
@@ -342,7 +350,7 @@
     <string name="msg_tip_answer_card">Tùy vào việc tự đánh giá khả năng nhớ của bạn, hãy chọn một khoảng thời gian phù hợp để nhắc lại từ.</string>
     <string name="got_it">Đã hiểu</string>
     <string name="reverse">Dịch ngược</string>
-    <string name="msg_limit_unlock_feture_study_reverse">You can learn 50 word</string>
+    <string name="msg_limit_unlock_feture_study_reverse">Bạn phải học ít nhất 50 từ</string>
     <string name="reverse_next">Tiếp theo</string>
     <string name="complele_text_display"><u>2000 từ/năm với 5 phút mỗi ngày.</u></string>
     <string name="msg_finishing_your_daily_target">Vui lòng quay lại sau khi bạn đã hoàn thành mục tiêu hàng ngày.</string>
@@ -376,6 +384,6 @@
     <string name="custom_list">Danh sách tùy chọn</string>
     <string name="import_form_existed_list">Nhập từ danh sách đã có</string>
     <string name="import_custom_list_sucessfully">Danh sách từ của bạn đã được nhập vào thành công.</string>
-
-
+    <string name="title_create_word_list">Tạo danh sách từ</string>
+    <string name="setting_auto_play_sound">Tự động đọc từ</string>
 </resources>

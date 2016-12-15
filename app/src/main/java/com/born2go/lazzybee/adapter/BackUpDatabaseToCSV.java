@@ -93,6 +93,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     protected void onPreExecute() {
         //set up dialog
         this.dialog.setMessage("Loading...");
+        this.dialog.setCancelable(false);
         this.dialog.show();
     }
 

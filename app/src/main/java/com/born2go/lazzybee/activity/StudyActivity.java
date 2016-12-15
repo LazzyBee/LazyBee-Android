@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -34,6 +35,7 @@ import android.widget.LinearLayout;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.CustomViewPager;
+import com.born2go.lazzybee.adapter.SuggestionCardAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.view.DetailsView;
@@ -48,6 +50,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
+import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
 
 public class StudyActivity extends AppCompatActivity
         implements DialogCompleteStudy.ICompleteSutdy, OnStudyViewListener {
@@ -250,11 +255,11 @@ public class StudyActivity extends AppCompatActivity
 
 
     private void _defineSearchView(Menu menu) {
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
         SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
@@ -287,6 +292,52 @@ public class StudyActivity extends AppCompatActivity
             }
 
         });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.trim() != null) {
+                    if (query.trim().length() > 2) {
+                        Intent intent = new Intent(context, SearchActivity.class);
+                        intent.setAction(Intent.ACTION_SEARCH);
+                        intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                        intent.putExtra(SearchManager.QUERY,query);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                    }
+                    return true;
+                } else
+                    return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim() != null) {
+                    if (newText.trim().length() > 2) {
+
+                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                                + KEY_QUESTION + " like '" + newText + "%' OR "
+                                + KEY_QUESTION + " like '% " + newText + "%'"
+                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+
+                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                        try {
+                            Cursor cursor = db.rawQuery(likeQuery, null);
+                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                            searchView.setSuggestionsAdapter(suggestionCardAdapter);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            Log.d(TAG, "query suggetion");
+                        }
+
+                    }
+                    return true;
+                } else
+                    return false;
+            }
+        });
+
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {

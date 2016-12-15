@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/main">
+        android:orientation="vertical">
+
         <include
             android:id="@+id/toolbar"
             layout="@layout/tool_bar"
@@ -18,24 +19,44 @@
             android:layout_height="wrap_content" />
 
         <!--<FrameLayout-->
-            <!--android:id="@+id/mContainer"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_gravity="center">-->
+        <!--android:id="@+id/mContainer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center">-->
 
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                layout="@layout/fragment_view_home"
-                android:layout_gravity="center" />
+        <include
+            layout="@layout/fragment_view_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
         <!--</FrameLayout>-->
     </LinearLayout>
-    <fragment
-        android:id="@+id/navigation_drawer"
-        android:name="com.born2go.lazzybee.fragment.NavigationDrawerFragment"
-        android:layout_width="@dimen/navigation_drawer_width"
+    <!--<fragment-->
+    <!--android:id="@+id/navigation_drawer"-->
+    <!--android:name="com.born2go.lazzybee.fragment.NavigationDrawerFragment"-->
+    <!--android:layout_width="@dimen/navigation_drawer_width"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="start"-->
+    <!--tools:layout="@layout/fragment_navigation_drawer" />-->
+    <!--</LinearLayout>-->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        tools:layout="@layout/fragment_navigation_drawer" />
-    <!--</LinearLayout>-->
+        android:background="@color/grey_900"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <include layout="@layout/nav_bottom_main" />
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

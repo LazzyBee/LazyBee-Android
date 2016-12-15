@@ -39,10 +39,11 @@ public class RecyclerViewCustomStudyAdapter extends
     List<String> customStudys;
     LearnApiImplements learnApiImplements;
     //    Dialog main;
-    int TYPE_TITLE = 0;
-    int TYPE_SETTING_NAME = 1;
-    int TYPE_SETTING_MEANING = 2;
-    int TYPE_LINE = -1;
+    private static final int TYPE_TITLE_0 = 0;
+    private static final int TYPE_SETTING_NAME_1 = 1;
+    private static final int TYPE_SETTING_MEANING_2 = 2;
+    private static final int TYPE_SETTING_AUTO_PLAY_SOUND_3 = 3;
+    private static final int TYPE_LINE = -1;
     RecyclerView recyclerView;
     FragmentManager supportFragmentManager;
     RecyclerViewCustomStudyAdapter adapter;
@@ -65,13 +66,11 @@ public class RecyclerViewCustomStudyAdapter extends
     @Override
     public RecyclerViewCustomStudyAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        if (viewType == TYPE_TITLE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
-        } else if (viewType == TYPE_SETTING_NAME) {
+        if (viewType == TYPE_TITLE_0 || viewType == TYPE_SETTING_NAME_1 || viewType == TYPE_SETTING_AUTO_PLAY_SOUND_3) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
         } else if (viewType == TYPE_LINE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_line_child, parent, false); //Inflating the layout
-        } else if (viewType == TYPE_SETTING_MEANING) {
+        } else if (viewType == TYPE_SETTING_MEANING_2) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_custom_study_display_meaning, parent, false); //Inflating the layout
         }
         RecyclerViewCustomStudyAdapterViewHolder recyclerViewCustomStudyAdapterViewHolder = new RecyclerViewCustomStudyAdapterViewHolder(view, viewType);
@@ -88,14 +87,14 @@ public class RecyclerViewCustomStudyAdapter extends
         final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
         TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
         try {
-            if (holder.viewType == TYPE_TITLE) {
+            if (holder.viewType == TYPE_TITLE_0) {
                 lbSettingName.setText(customStudys.get(position));
                 mSwitch.setVisibility(View.GONE);
                 // mCardView.setRadius(0f);
                 lbLimit.setVisibility(View.GONE);
                 lbSettingName.setTextSize(15f);
                 lbSettingName.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-            } else if (holder.viewType == TYPE_SETTING_NAME) {
+            } else if (holder.viewType == TYPE_SETTING_NAME_1) {
                 lbSettingName.setText(customStudys.get(position));
                 // mCardView.setRadius(0f);
                 mSwitch.setVisibility(View.GONE);
@@ -131,10 +130,42 @@ public class RecyclerViewCustomStudyAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_position_meaning))) {
                     // _showDialogSetPositionMeaning(mCardView, lbLimit);
                 }
-            } else if (holder.viewType == TYPE_SETTING_MEANING) {
+            } else if (holder.viewType == TYPE_SETTING_MEANING_2) {
                 RelativeLayout mSetPositionMeaning = (RelativeLayout) view.findViewById(R.id.mSetPositionMeaning);
                 _getSettingDisplayMeaningAndUpdateWithSwitch(mCardView, mSetPositionMeaning);
 
+            } else if (holder.viewType == TYPE_SETTING_AUTO_PLAY_SOUND_3) {
+                lbSettingName.setText(customStudys.get(position));
+                mSwitch.setVisibility(View.VISIBLE);
+                // mCardView.setRadius(0f);
+                lbLimit.setVisibility(View.GONE);
+                lbSettingName.setTextSize(15f);
+
+                String mAutoPlaySound = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_AUTO_PLAY_SOUND);
+                if (mAutoPlaySound == null) {
+                    mSwitch.setChecked(true);
+                } else if(mAutoPlaySound.equals(LazzyBeeShare.ON)) {
+                    mSwitch.setChecked(true);
+                }else if(mAutoPlaySound.equals(LazzyBeeShare.OFF)) {
+                    mSwitch.setChecked(false);
+                }else {
+                    mSwitch.setChecked(false);
+                }
+
+
+
+                mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        String value;
+                        if (isChecked) {
+                            value = LazzyBeeShare.ON;
+                        } else {
+                            value = LazzyBeeShare.OFF;
+                        }
+                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_AUTO_PLAY_SOUND, value);
+                    }
+                });
             }
             //_reloadRecylerView();
         } catch (Exception e) {
@@ -314,7 +345,7 @@ public class RecyclerViewCustomStudyAdapter extends
     public int getItemViewType(int position) {
         String setting = customStudys.get(position);
         if (setting.equals(context.getString(R.string.custom_study)))
-            return TYPE_TITLE;
+            return TYPE_TITLE_0;
         else if (setting.equals(context.getString(R.string.setting_today_new_card_limit))
                 || setting.equals(context.getString(R.string.setting_total_learn_per_day))
                 || setting.equals(context.getString(R.string.setting_reset_to_default))
@@ -322,9 +353,12 @@ public class RecyclerViewCustomStudyAdapter extends
                 || setting.equals(context.getString(R.string.setting_position_meaning))
                 || setting.equals(context.getString(R.string.setting_time_deday_show_answer))
                 || setting.equals(context.getString(R.string.setting_max_learn_more_per_day)))
-            return TYPE_SETTING_NAME;
+            return TYPE_SETTING_NAME_1;
         else if (setting.equals(context.getString(R.string.setting_display_meaning)))
-            return TYPE_SETTING_MEANING;
+            return TYPE_SETTING_MEANING_2;
+        else if (setting.equals(context.getString(R.string.setting_auto_play_sound)))
+            return TYPE_SETTING_AUTO_PLAY_SOUND_3;
+
         else
             return -1;
     }
@@ -422,7 +456,7 @@ public class RecyclerViewCustomStudyAdapter extends
                     @Override
                     public void onClick(View view) {
                         try {
-                            FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(context);
+                            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
                             String limit = LazzyBeeShare.EMPTY;
                             if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
@@ -443,10 +477,10 @@ public class RecyclerViewCustomStudyAdapter extends
                                         Log.e(TAG, erorr_message);
                                         lbEror.setText(erorr_message);
                                     } else {
-                                        firebaseAnalytics.setUserProperty("Daily_new_word",String.valueOf(limit));
-                                        Bundle bundle=new Bundle();
-                                        bundle.putString("count",limit);
-                                        firebaseAnalytics.logEvent("Daily_total_word",bundle);
+                                        firebaseAnalytics.setUserProperty("Daily_new_word", String.valueOf(limit));
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("count", limit);
+                                        firebaseAnalytics.logEvent("Daily_total_word", bundle);
 
 
                                         learnApiImplements._insertOrUpdateToSystemTable(key, limit);
@@ -493,10 +527,10 @@ public class RecyclerViewCustomStudyAdapter extends
                                         Log.e(TAG, erorr_message);
                                         lbEror.setText(erorr_message);
                                     } else {
-                                        firebaseAnalytics.setUserProperty("Daily_total_word",String.valueOf(limit));
-                                        Bundle bundle=new Bundle();
-                                        bundle.putString("count",limit);
-                                        firebaseAnalytics.logEvent("Daily_total_word",bundle);
+                                        firebaseAnalytics.setUserProperty("Daily_total_word", String.valueOf(limit));
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("count", limit);
+                                        firebaseAnalytics.logEvent("Daily_total_word", bundle);
                                         learnApiImplements._insertOrUpdateToSystemTable(key, limit);
                                         // main.hide();
                                         dialog.dismiss();
