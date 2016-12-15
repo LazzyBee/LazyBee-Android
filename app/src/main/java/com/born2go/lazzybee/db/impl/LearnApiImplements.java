@@ -1064,7 +1064,7 @@ public class LearnApiImplements implements LearnApi {
     public int _initIncomingCardIdList() {
         String subject = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
         int myLevel = getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-        if (subject == null) {
+        if (subject == null || subject.trim().isEmpty() || subject.trim().length() < 0) {
             return _initIncomingCardIdListbyLevel(myLevel);
         } else {
             return _initIncomingCardIdListbyLevelandSubject(myLevel, subject);
@@ -1073,23 +1073,28 @@ public class LearnApiImplements implements LearnApi {
     }
 
     public int _initIncomingCardIdListbyLevelandSubject(int myLevel, String subject) {
+        Log.i(TAG, "my_level:" + myLevel + ",subject:" + subject);
         List<String> cardIds = new ArrayList<String>();
         int final_limit = 100;
         int limit = 100;
         String subCommon = "common";
 
         String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level >= " +
-                myLevel + " AND package like '%," + subject + ",%' LIMIT " + limit;
+                " where queue = " + Card.QUEUE_NEW_CRAM0
+                + " AND level >= " + myLevel
+                + " AND package like '%," + subject
+                + ",%' LIMIT " + limit;
         cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
         int count = cardIds.size();
+
         if (count < limit) {
             limit = limit - cardIds.size();
             //set default
             select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
-                    myLevel + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
+                    " where queue = " + Card.QUEUE_NEW_CRAM0
+                    + " AND level = " + myLevel
+                    + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
                     + ",%' LIMIT " + limit;
             cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
         }
@@ -1098,8 +1103,10 @@ public class LearnApiImplements implements LearnApi {
             limit = limit - cardIds.size();
             myLevel++;
             select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
-                    myLevel + " AND package like '%," + subject + ",%'  LIMIT " + limit;
+                    " where queue = " + Card.QUEUE_NEW_CRAM0
+                    + " AND level = " + myLevel
+                    + " AND package like '%," + subject
+                    + ",%'  LIMIT " + limit;
 
             Log.i(TAG, "initIncomingListwithSubject: Level " + myLevel +
                     ", target = " + limit);
@@ -1108,12 +1115,14 @@ public class LearnApiImplements implements LearnApi {
                 limit = final_limit - cardIds.size();
                 //set default
                 select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " +
-                        myLevel + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
+                        " where queue = " + Card.QUEUE_NEW_CRAM0
+                        + " AND level = " + myLevel
+                        + " AND package like '%," + subCommon + ",%' NOT LIKE '%," + subject
                         + ",%' LIMIT " + limit;
                 cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
             }
         }
+
         if (cardIds.size() < 0) {
             return -1;
         } else {
@@ -1154,7 +1163,7 @@ public class LearnApiImplements implements LearnApi {
 
     public int _initIncomingCardIdListbyLevel(int myLevel) {
         String subject = _getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
-        if (subject == null) {
+        if (subject == null || subject.trim().isEmpty() || subject.trim().length() < 0) {
             List<String> cardIds = new ArrayList<String>();
             Log.i(TAG, "my_level:" + myLevel);
             if (myLevel == 0)
@@ -1163,18 +1172,26 @@ public class LearnApiImplements implements LearnApi {
                 myLevel = 6;
             }
             int limit = 100;
-            String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                    " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + "" + " LIMIT " + limit;
+            String select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY
+                    + " where queue = " + Card.QUEUE_NEW_CRAM0
+                    + " AND level = " + myLevel
+                    + " LIMIT " + limit;
             cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
 
             while (cardIds.size() < limit) {
+                if (myLevel == 6)
+                    break;
+
                 limit = limit - cardIds.size();
                 myLevel++;
-                select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY +
-                        " where queue = " + Card.QUEUE_NEW_CRAM0 + " AND level = " + myLevel + " " + " LIMIT " + limit;
+                select_list_card_by_queue = "SELECT id FROM " + TABLE_VOCABULARY
+                        + " where queue = " + Card.QUEUE_NEW_CRAM0
+                        + " AND level = " + myLevel
+                        + " LIMIT " + limit;
                 Log.i(TAG, "_initIncomingCardIdListbyLevel: Level " + myLevel +
                         ", target = " + limit);
                 cardIds.addAll(_getCardIDListQueryString(select_list_card_by_queue));
+
             }
             int count = cardIds.size();
             Log.i(TAG, "_initIncomingCardIdListbyLevel: Card size=" + count);
@@ -1810,6 +1827,7 @@ public class LearnApiImplements implements LearnApi {
         }
         return datas;
     }
+
     public Cursor _recentSuggestionCardCursor() {
         int countSug = _queryCount("select Count(suggestion.suggestion) from suggestion");
         Log.d(TAG, "count Suggestion:" + countSug);
