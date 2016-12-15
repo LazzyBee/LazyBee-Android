@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,16 +8,13 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +26,6 @@ import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -198,7 +193,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         //set Dictionary card
         setDisplayCard(currentCard);
         //Show answer question
-        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue(), 1);
+        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue());
 
     }
 
@@ -284,11 +279,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 //Update Success reload data
                 if (answerDisplay) {
                     //Load answer
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card, mySubject, sDEBUG, sPOSITION_MEANING), 10, 1);
+                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, card, mySubject, sDEBUG, sPOSITION_MEANING), 10);
 
                 } else {
                     //Load question
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card, mySubject), card.getQueue(), 0);
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, card, mySubject), card.getQueue());
                 }
                 if (answerDisplay) {
 //                    mViewPager.setPagingEnabled(true);
@@ -310,7 +305,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     public void setResetUserNote(String resetUserNote) {
         currentCard.setUser_note(resetUserNote);
-        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), 10, 1);
+        _loadWebView(LazzyBeeShare.getAnswerHTML(context, currentCard, mySubject, sDEBUG, sPOSITION_MEANING), 10);
     }
 
 
@@ -610,6 +605,13 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private void _showFirstCard() {
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            mWebViewLeadDetails.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            mWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         _addJavascriptInterface(mWebViewLeadDetails, currentCard);
         boolean show = false;
         //Load first card
@@ -642,7 +644,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             Log.i(TAG, "---------_nextReverseCard--------");
             if (reverseList.size() > 0) {
                 currentCard = reverseList.get(0);//get next new card
-                _loadWebView(LazzyBeeShare._getReverseQuestionDisplay(context, currentCard), QUEUE_NEW_CRAM0, 0);//Display question
+                _loadWebView(LazzyBeeShare._getReverseQuestionDisplay(context, currentCard), QUEUE_NEW_CRAM0);//Display question
             } else {
                 Log.i(TAG, "_nextReverseCard() finish reverse study.");
                 _completeLean(true);
@@ -658,7 +660,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             Log.i(TAG, "---------_nextNewCard--------");
             if (todayList.size() > 0) {
                 currentCard = todayList.get(0);//get next new card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), QUEUE_NEW_CRAM0, 0);//Display question
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), QUEUE_NEW_CRAM0);//Display question
             } else if (againList.size() > 0) {
                 Log.i(TAG, "_nextNewCard:Next card is Again card");
                 _nextAgainCard();
@@ -682,7 +684,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             if (dueList.size() > 0) {//Check dueList.size()>0
                 currentCard = dueList.get(0);//get current card in DueList
                 //Display next card
-                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_REV2, 0);
+                _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_REV2);
             } else if (againList.size() > 0) {//Check againList.size()>0
                 Log.i(TAG, "_nextDueCard:Next card is again card");
                 _nextAgainCard();
@@ -718,7 +720,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
                     Log.d(TAG, "_nextAgainCard:Next card is again card 2");
 
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_LNR1, 0);//Display next card
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), Card.QUEUE_LNR1);//Display next card
                 } else if (todayList.size() > 0) {
                     Log.i(TAG, "_nextAgainCard:Next card is new card 1");
                     _nextNewCard();
@@ -742,7 +744,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     }
 
-    private void _loadWebView(String questionDisplay, int queue, int type) {
+    private void _loadWebView(String questionDisplay, int queue) {
         if (queue == QUEUE_NEW_CRAM0) {
             //set BackBackground color
             lbCountDue.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
@@ -790,46 +792,39 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 //            //Define get card
             final Card card = currentCard;
 
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    Card cardFromDB = dataBaseHelper._getCardByID(String.valueOf(card.getId()));
+            Card cardFromDB = dataBaseHelper._getCardByID(String.valueOf(card.getId()));
 
-                    //currentCard = cardFromDB;//set current card
-
-                    Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
-                    setDisplayCard(cardFromDB);
-                    //Show answer question
-                    _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue(), 1);
+            Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
+            setDisplayCard(cardFromDB);
+            //Show answer question
+            _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue());
 
 //            get  next Ivl String List
-                    String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
-                    String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN],
-                            getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
-                    String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD],
-                            getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
+            String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
+            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN],
+                    getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
+            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD],
+                    getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
 
-                    String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD],
-                            getString(R.string.EASE_GOOD), (cardFromDB.getQueue() == Card.QUEUE_LNR1) ?
-                                    R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD],
+                    getString(R.string.EASE_GOOD), (cardFromDB.getQueue() == Card.QUEUE_LNR1) ?
+                            R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
 
-                    String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY],
-                            getString(R.string.EASE_EASY), (cardFromDB.getQueue() == Card.QUEUE_LNR1) ?
-                                    R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
-                    //set text btn
-                    btnAgain0.setText(Html.fromHtml(text_btnAgain));
-                    btnHard1.setText(Html.fromHtml(text_btnHard1));
-                    btnGood2.setText(Html.fromHtml(text_btnGood2));
-                    btnEasy3.setText(Html.fromHtml(text_btnEasy3));
+            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY],
+                    getString(R.string.EASE_EASY), (cardFromDB.getQueue() == Card.QUEUE_LNR1) ?
+                            R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
+            //set text btn
+            btnAgain0.setText(LazzyBeeShare.fromHtml(text_btnAgain));
+            btnHard1.setText(LazzyBeeShare.fromHtml(text_btnHard1));
+            btnGood2.setText(LazzyBeeShare.fromHtml(text_btnGood2));
+            btnEasy3.setText(LazzyBeeShare.fromHtml(text_btnEasy3));
 
 
-                    btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
-                    btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
-                    btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
-                    btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
+            btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
+            btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
+            btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
+            btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
 
-                }
-            });
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_showBtnAnswer", e);
         }
@@ -838,116 +833,111 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private void _answerCard(final int easy) {
         Log.i(TAG, "----------------_answerCard:" + easy + "----------------");
         try {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    final int curren_time = (int) (new Date().getTime() / 1000);//define current time by second
+            final int curren_time = (int) (new Date().getTime() / 1000);//define current time by second
 
-                    int currentQueue = currentCard.getQueue();//Get current Queue
-                    Log.i(TAG, "_answerCard:Currrent Card Queue:" + currentQueue);
+            int currentQueue = currentCard.getQueue();//Get current Queue
+            Log.i(TAG, "_answerCard:Currrent Card Queue:" + currentQueue);
 
-                    Card card = dataBaseHelper._getCardByID(String.valueOf(currentCard.getId())); //Define card form db
+            Card card = dataBaseHelper._getCardByID(String.valueOf(currentCard.getId())); //Define card form db
 
-                    setBeforeCard(card);//setBeforeCard=current card;
+            setBeforeCard(card);//setBeforeCard=current card;
 
-                    btnBackBeforeCard.setVisible(true);//Show item BackBeroreCard when answer
+            btnBackBeforeCard.setVisible(true);//Show item BackBeroreCard when answer
 
-                    if (currentQueue < QUEUE_NEW_CRAM0) {//Something's wrong???
-                        Log.i(TAG, "_answerCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
-                        return;
-                    }
-                    if (currentQueue == QUEUE_NEW_CRAM0) {//queue=New
-                        boolean containNew = false;
-                        for (Card newCard : todayList) {
-                            if (newCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
-                                todayList.remove(newCard);
-                                containNew = true;
-                                break;
-                            }
-                        }
-                        if (containNew) {
-                            _setCountNew();
-                        } else {
-                            Log.i(TAG, "No contain in todayList");
-                        }
-                    } else if (currentQueue == Card.QUEUE_LNR1) {//queue=Again
-                        boolean containAgain = false;
-                        for (Card againCard : againList) {
-                            if (againCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
-                                againList.remove(againCard);
-                                containAgain = true;
-                                break;
-                            }
-                        }
-                        if (containAgain) {
-                            _setCountAgain();
-                        } else {
-                            Log.i(TAG, "No contain in againList");
-                        }
-                    } else if (currentQueue == Card.QUEUE_REV2) {//queue=Reiview
-                        boolean containDue = false;
-                        for (Card dueCard : dueList) {
-                            if (dueCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
-                                dueList.remove(dueCard);
-                                containDue = true;
-                                break;
-                            }
-                        }
-                        if (containDue) {
-                            _setCountDue();
-                        } else {
-                            Log.i(TAG, "No contain in dueList");
-                        }
-                    }
-
-                    Log.i(TAG, "_answerCard Before Update Card " + currentCard.getQuestion() +
-                            " to queue " + currentCard.getQueue() + " currentQueue:" + currentQueue);
-                    Log.i(TAG, "_answerCard Berore answer beforeCard " + beforeCard.getQuestion() +
-                            " to queue " + beforeCard.getQueue() + " currentQueue:" + currentQueue);
-
-
-                    cardSched.answerCard(currentCard, easy);//Set queue,due using cardShed
-
-                    // beforeCard.setQueue(currentQueue);
-                    Log.i(TAG, "_answerCard answer beforeCard " + beforeCard.getQuestion() +
-                            " to queue " + beforeCard.getQueue() + " currentQueue:" + currentQueue);
-
-                    if (easy == Card.EASE_AGAIN) {
-                        _checkContainsAndRemove(againList);//Check Contains and Remove
-
-                        currentCard.setDue(curren_time + 600); //set Due for again card = 600 second(10 minute)
-
-                        //Add card to againList
-                        againList.add(currentCard);
-
-                        //reset count Againt
-//                int countAgain = againList.size();
-//                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
-                        _setCountAgain();
-                    } else if (easy > Card.EASE_AGAIN) {
-                        //Check Contains and Remove
-                        _checkContainsAndRemove(cardListAddDueToDay);
-                        //Add currentCard to DueList
-                        cardListAddDueToDay.add(currentCard);
-                    }
-
-
-                    int update = dataBaseHelper._updateCard(currentCard);//update card form DB
-                    if (update >= 1) {
-                        Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() +
-                                " to queue " + currentCard.getQueue() + " OK");
-                        Log.i(TAG, "_answerCard Update beforeCard " + beforeCard.getQuestion() +
-                                " to queue " + beforeCard.getQueue());
-
-                        _nextCard(currentQueue);//next Card by Queue
-                        mFloatActionButtonUserNote.setVisibility(View.GONE);
-                        imgGotoDictionary.setVisibility(View.GONE);
-
-                    } else {
-                        Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");
+            if (currentQueue < QUEUE_NEW_CRAM0) {//Something's wrong???
+                Log.i(TAG, "_answerCard:\tQueue<Card.QUEUE_NEW_CRAM0 currentQueue:" + currentQueue);
+                return;
+            }
+            if (currentQueue == QUEUE_NEW_CRAM0) {//queue=New
+                boolean containNew = false;
+                for (Card newCard : todayList) {
+                    if (newCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
+                        todayList.remove(newCard);
+                        containNew = true;
+                        break;
                     }
                 }
-            });
+                if (containNew) {
+                    _setCountNew();
+                } else {
+                    Log.i(TAG, "No contain in todayList");
+                }
+            } else if (currentQueue == Card.QUEUE_LNR1) {//queue=Again
+                boolean containAgain = false;
+                for (Card againCard : againList) {
+                    if (againCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
+                        againList.remove(againCard);
+                        containAgain = true;
+                        break;
+                    }
+                }
+                if (containAgain) {
+                    _setCountAgain();
+                } else {
+                    Log.i(TAG, "No contain in againList");
+                }
+            } else if (currentQueue == Card.QUEUE_REV2) {//queue=Reiview
+                boolean containDue = false;
+                for (Card dueCard : dueList) {
+                    if (dueCard.getQuestion().equals(currentCard.getQuestion())) {//check currrentCard contain
+                        dueList.remove(dueCard);
+                        containDue = true;
+                        break;
+                    }
+                }
+                if (containDue) {
+                    _setCountDue();
+                } else {
+                    Log.i(TAG, "No contain in dueList");
+                }
+            }
+
+            Log.i(TAG, "_answerCard Before Update Card " + currentCard.getQuestion() +
+                    " to queue " + currentCard.getQueue() + " currentQueue:" + currentQueue);
+            Log.i(TAG, "_answerCard Berore answer beforeCard " + beforeCard.getQuestion() +
+                    " to queue " + beforeCard.getQueue() + " currentQueue:" + currentQueue);
+
+
+            cardSched.answerCard(currentCard, easy);//Set queue,due using cardShed
+
+            // beforeCard.setQueue(currentQueue);
+            Log.i(TAG, "_answerCard answer beforeCard " + beforeCard.getQuestion() +
+                    " to queue " + beforeCard.getQueue() + " currentQueue:" + currentQueue);
+
+            if (easy == Card.EASE_AGAIN) {
+                _checkContainsAndRemove(againList);//Check Contains and Remove
+
+                currentCard.setDue(curren_time + 600); //set Due for again card = 600 second(10 minute)
+
+                //Add card to againList
+                againList.add(currentCard);
+
+                //reset count Againt
+//                int countAgain = againList.size();
+//                lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+                _setCountAgain();
+            } else if (easy > Card.EASE_AGAIN) {
+                //Check Contains and Remove
+                _checkContainsAndRemove(cardListAddDueToDay);
+                //Add currentCard to DueList
+                cardListAddDueToDay.add(currentCard);
+            }
+
+
+            int update = dataBaseHelper._updateCard(currentCard);//update card form DB
+            if (update >= 1) {
+                Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() +
+                        " to queue " + currentCard.getQueue() + " OK");
+                Log.i(TAG, "_answerCard Update beforeCard " + beforeCard.getQuestion() +
+                        " to queue " + beforeCard.getQueue());
+
+                _nextCard(currentQueue);//next Card by Queue
+                mFloatActionButtonUserNote.setVisibility(View.GONE);
+                imgGotoDictionary.setVisibility(View.GONE);
+
+            } else {
+                Log.i(TAG, "_answerCard Update Card " + currentCard.getQuestion() + " to queue " + currentCard.getQueue() + " Fails");
+            }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_answerCard", e);
         }
@@ -1001,8 +991,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             @JavascriptInterface
             public void speechExplain() {
                 //get answer json
-                String answer = currentCard.getAnswers();
-                String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
+                //String answer = currentCard.getAnswers();
+                String toSpeech = currentCard.getExplain(mySubject, LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "explain");
 
                 //Speak text
                 LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -1012,8 +1002,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             @JavascriptInterface
             public void speechExample() {
                 //get answer json
-                String answer = currentCard.getAnswers();
-                String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
+                //String answer = currentCard.getAnswers();
+                String toSpeech =currentCard.getExample(mySubject, LazzyBeeShare.TO_SPEECH_1); //LazzyBeeShare._getValueFromKey(answer, "example");
 
                 //Speak text
                 LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -1029,7 +1019,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _initSettingUser() {
-        mySubject = LazzyBeeShare.getSubjectSetting();
+        mySubject = LazzyBeeShare.getMySubject();
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
         sTimeShowAnswer = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER);
@@ -1322,7 +1312,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                             "\t queue:" + currentCard.getQueue() + " due:" + currentCard.getDue());
 
                     _showBtnAnswer();
-                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), currentCard.getQueue(), 0);
+                    _loadWebView(LazzyBeeShare._getQuestionDisplay(context, currentCard, mySubject), currentCard.getQueue());
                 }
                 Log.i(TAG, "_backToBeforeCard()\t" + getString(R.string.number_row_updated, results_num));
             } else {

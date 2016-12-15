@@ -229,7 +229,18 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                if (query.trim() != null) {
+                    if (query.trim().length() > 2) {
+                        Intent intent = new Intent(context, SearchActivity.class);
+                        intent.setAction(Intent.ACTION_SEARCH);
+                        intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                        intent.putExtra(SearchManager.QUERY,query);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                    }
+                    return true;
+                } else
+                    return false;
             }
 
             @Override
@@ -485,7 +496,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     }
 
     private void _initSettingUser() {
-        mySubject = LazzyBeeShare.getSubjectSetting();
+        mySubject = LazzyBeeShare.getMySubject();
         sDEBUG = LazzyBeeShare.getDebugSetting();
         sPOSITION_MEANING = LazzyBeeShare.getPositionMeaning();
     }
@@ -613,8 +624,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 @JavascriptInterface
                 public void speechExplain() {
                     //get answer json
-                    String answer = card.getAnswers();
-                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "explain");
+                    //String answer = card.getAnswers();
+                    String toSpeech = card.getExplain(mySubject,LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "explain");
 
                     //Speak text
                     LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -624,8 +635,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 @JavascriptInterface
                 public void speechExample() {
                     //get answer json
-                    String answer = card.getAnswers();
-                    String toSpeech = LazzyBeeShare._getValueFromKey(answer, "example");
+                   // String answer = card.getAnswers();
+                    String toSpeech = card.getExample(mySubject,LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "example");
 
                     //Speak text
                     LazzyBeeShare._speakText(toSpeech, finalSpeechRate);

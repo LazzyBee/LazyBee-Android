@@ -1108,13 +1108,14 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.ACTION_CODE_GOTO_STUDY) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_1000) {
-                Log.d(TAG, "Congratilation study LazzyBee");
+               // Log.d(TAG, "Congratilation study LazzyBee");
 
                 //Reset notification
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
 
                 int count = dataBaseHelper._getCountStreak();
+                Log.d(TAG, "Congratilation study LazzyBee,Streak count:"+count);
                 if (count % 10 == 0) {
                     //Show dialog backup db
                     _showDialogBackupDataBase();
@@ -1386,17 +1387,38 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        if (query.trim() != null) {
+            if (query.trim().length() > 2) {
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.setAction(Intent.ACTION_SEARCH);
+                intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                intent.putExtra(SearchManager.QUERY,query);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                return true;
+            } else {
+                Log.d(TAG, "query is short");
+                return false;
+            }
+
+        } else {
+            Log.d(TAG, "query is empty");
+            return false;
+        }
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.trim() != null) {
-            if (newText.trim().length() > 2) {
+    public boolean onQueryTextChange(String query) {
+        return searchCard(query);
+    }
+
+    private boolean searchCard(String query) {
+        if (query.trim() != null) {
+            if (query.trim().length() > 2) {
 
                 String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                        + KEY_QUESTION + " like '" + newText + "%' OR "
-                        + KEY_QUESTION + " like '% " + newText + "%'"
+                        + KEY_QUESTION + " like '" + query + "%' OR "
+                        + KEY_QUESTION + " like '% " + query + "%'"
                         + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
                 SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();

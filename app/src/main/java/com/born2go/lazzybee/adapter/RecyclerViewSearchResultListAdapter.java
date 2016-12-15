@@ -26,10 +26,12 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
     private static final String TAG = "SearchAdapter";
     private List<Card> vocabularies;
     private Context context;
+    private String mySubject;
 
     public RecyclerViewSearchResultListAdapter(Context context, List<Card> vocabularies) {
         this.context = context;
         this.vocabularies = vocabularies;
+        this.mySubject=LazzyBeeShare.getMySubject();
     }
 
     @Override
@@ -65,8 +67,8 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
             //get Card by position
             final Card card = vocabularies.get(position);
 
-            String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-            String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+            String pronoun = card.getPronoun();//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+            String meaning = card.getMeaning(mySubject);//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
 
             lbQuestion.setText(card.getQuestion());
             lbQuestion.setTag(card);

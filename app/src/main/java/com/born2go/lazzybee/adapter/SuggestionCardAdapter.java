@@ -26,9 +26,11 @@ import com.daimajia.swipe.SwipeLayout;
 
 public class SuggestionCardAdapter extends CursorAdapter {
     private static final String TAG = SuggestionCardAdapter.class.getSimpleName();
+    private String mySubject;
 
     public SuggestionCardAdapter(Context context, Cursor c) {
         super(context, c, 0);
+        this.mySubject=LazzyBeeShare.getMySubject();
     }
 
     @Override
@@ -61,8 +63,8 @@ public class SuggestionCardAdapter extends CursorAdapter {
             //get Card by position
             final Card card = _defineCardbyCursor(cursor);
 
-            String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-            String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+            String pronoun = card.getPronoun();//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
+            String meaning = card.getMeaning(mySubject);//LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
 
             lbQuestion.setText(card.getQuestion());
             lbQuestion.setTag(card);

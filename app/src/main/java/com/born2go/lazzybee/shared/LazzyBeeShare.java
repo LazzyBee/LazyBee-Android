@@ -14,6 +14,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -137,7 +138,9 @@ public class LazzyBeeShare {
     public static final String REVERSE = "reverse";
     public static final String FIRST_TIME_SHOW_ANSWER = "first_time_show_answer";
     public static final String KEY_CUSTOM_LIST = "custom_list";
-
+    public static final String KEY_SETTING_AUTO_PLAY_SOUND = "auto_play_sound";
+    public static final int TO_HTML_0 = 0;
+    public static final int TO_SPEECH_1 = 1;
 
 
     public static String mime = "text/html";
@@ -198,31 +201,27 @@ public class LazzyBeeShare {
 
     public static final String FA_OPEN_A_NOTE = "Open_aNote";
     public static final String FA_OPEN_CHOOSE_MAJOR = "Open_aChooseMajor";
-    public static final String FA_OPEN_DICTIONARY= "Open_aDictionaryScreen";
-    public static final String FA_OPEN_DICTIONARY_VIEW_WORD= "Open_aDictionaryViewWordScreen";
+    public static final String FA_OPEN_DICTIONARY = "Open_aDictionaryScreen";
+    public static final String FA_OPEN_DICTIONARY_VIEW_WORD = "Open_aDictionaryViewWordScreen";
 
-    public static final String FA_OPEN_IMPORT_WORD_REPORT= "Open_aImport_wordScreen";
-    public static final String FA_OPEN_INCOMING= "Open_aIncomingScreen";
+    public static final String FA_OPEN_IMPORT_WORD_REPORT = "Open_aImport_wordScreen";
+    public static final String FA_OPEN_INCOMING = "Open_aIncomingScreen";
 
-    public static final String FA_OPEN_REVERSE= "Open_aReverseScreen";
-    public static final String FA_OPEN_SEARCH_HINT_HOME= "Open_aSearchHintHomeScreen";
+    public static final String FA_OPEN_REVERSE = "Open_aReverseScreen";
+    public static final String FA_OPEN_SEARCH_HINT_HOME = "Open_aSearchHintHomeScreen";
 
-    public static final String FA_OPEN_SEARCH_HINT= "Open_aSearchHintScreen";
+    public static final String FA_OPEN_SEARCH_HINT = "Open_aSearchHintScreen";
 
-    public static final String FA_OPEN_SEARCH_RESULTS= "Open_aSearchResultsScreen";
+    public static final String FA_OPEN_SEARCH_RESULTS = "Open_aSearchResultsScreen";
 
-    public static final String FA_OPEN_SETTING= "Open_aSettingScreen";
+    public static final String FA_OPEN_SETTING = "Open_aSettingScreen";
 
-    public static final String FA_OPEN_STREAK_CONGRATULATION= "Open_aStreakCongratulation";
+    public static final String FA_OPEN_STREAK_CONGRATULATION = "Open_aStreakCongratulation";
 
-    public static final String FA_OPEN_STUDY= "Open_aStudyScreen";
+    public static final String FA_OPEN_STUDY = "Open_aStudyScreen";
 
     public static final String FA_OPEN_TEST_YOUR_VOCA = "Open_aTestYouVoca";
     public static final String FA_OPEN_LEARNING_PROGRESS = "Open_aLearingProgress";
-
-
-
-
 
 
     /**
@@ -240,23 +239,6 @@ public class LazzyBeeShare {
         return courses;
     }
 
-    /**
-     * init HTML answer
-     */
-    public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
-        boolean sDisplayPosition;
-        String value = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
-        if (value == null) {
-            sDisplayPosition = true;
-        } else if (value.equals(LazzyBeeShare.ON)) {
-            sDisplayPosition = true;
-        } else if (value.equals(LazzyBeeShare.OFF)) {
-            sDisplayPosition = false;
-        } else {
-            sDisplayPosition = false;
-        }
-        return getAnswerHTMLwithPackage(context, card, mySubject, sDisplayPosition, sPOSITION_MEANING, sDEBUG, false);
-    }
 
     /**
      * init HTML question
@@ -285,6 +267,12 @@ public class LazzyBeeShare {
         if (card.getPackage().contains(mySubject)) {
             containPakage = true;
         }
+        String mAutoPlaySound = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(KEY_SETTING_AUTO_PLAY_SOUND);
+        if (mAutoPlaySound == null) {
+            mAutoPlaySound = ON;
+        }
+
+        String autoPlay = ((mAutoPlaySound.equals(ON)) ? "onload='question.playQuestion()'" : "");
         String html =
                 "<!DOCTYPE html>\n" +
                         "<html>\n" +
@@ -292,7 +280,7 @@ public class LazzyBeeShare {
                         "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
                         "name=\"viewport\">\n" +
                         "</head>\n" +
-                        "<body onload='question.playQuestion()'>\n" +
+                        "<body  " + autoPlay + " >\n" +
                         "<div style='width:100%'>\n" +
 
                         "<div style='float:left;width: 90%;text-align: center;'>" +
@@ -386,13 +374,31 @@ public class LazzyBeeShare {
         return packages;
     }
 
-    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean POSITION_MEANING, boolean DEBUG, boolean onload) {
-        String html = null;
-        String meaning = EMPTY;
-        String explain = EMPTY;
-        String example = EMPTY;
+    /**
+     * init HTML answer
+     */
+    public static String getAnswerHTML(Context context, Card card, String mySubject, boolean sDEBUG, boolean sPOSITION_MEANING) {
+        boolean sDisplayPosition;
+        String value = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING);
+        if (value == null) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.ON)) {
+            sDisplayPosition = true;
+        } else if (value.equals(LazzyBeeShare.OFF)) {
+            sDisplayPosition = false;
+        } else {
+            sDisplayPosition = false;
+        }
+        return getAnswerHTMLwithPackage(context, card, mySubject, sDisplayPosition, sDEBUG, sPOSITION_MEANING, false);
+    }
 
-        String pronoun = EMPTY;
+    public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean DEBUG, boolean POSITION_MEANING, boolean onload) {
+        String html = null;
+        String pronoun = card.getPronoun();
+        String meaning = card.getMeaning(packages);
+        String explain = card.getExplain(packages,LazzyBeeShare.TO_HTML_0);
+        String example = card.getExample(packages,LazzyBeeShare.TO_HTML_0);
+
         String explainTagA = EMPTY;
         String exampleTagA = EMPTY;
         String imageURL = EMPTY;
@@ -403,30 +409,30 @@ public class LazzyBeeShare {
 
         //Log.i(TAG, "getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers());
         // System.out.print("getAnswerHTMLwithPackage: Card Answer:" + card.getAnswers() + "\n");
-        try {
-            JSONObject answerObj = new JSONObject(card.getAnswers());
-            pronoun = answerObj.getString("pronoun");
-            JSONObject packagesObj = answerObj.getJSONObject("packages");
-            // System.out.print("\npackagesObj.length():" + packagesObj.length());
-            if (packagesObj.length() > 0) {
-                if (packagesObj.isNull(packages)) {
-                    packages = "common";
-                }
-                JSONObject commonObj = packagesObj.getJSONObject(packages);
-                meaning = commonObj.getString("meaning");
-                explain = commonObj.getString("explain");
-                example = commonObj.getString("example");
-
-
-            } else {
-                _example = EMPTY;
-                _explain = EMPTY;
-                Log.e(TAG, "getAnswerHTMLwithPackage E:Passing JSON ERROR");
-            }
-
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
+//        try {
+//            JSONObject answerObj = new JSONObject(card.getAnswers());
+//            //pronoun = answerObj.getString("pronoun");
+//            JSONObject packagesObj = answerObj.getJSONObject("packages");
+//            // System.out.print("\npackagesObj.length():" + packagesObj.length());
+//            if (packagesObj.length() > 0) {
+//                if (packagesObj.isNull(packages)) {
+//                    packages = "common";
+//                }
+//                JSONObject commonObj = packagesObj.getJSONObject(packages);
+//                meaning = commonObj.getString("meaning");
+//                explain = commonObj.getString("explain");
+//                example = commonObj.getString("example");
+//
+//
+//            } else {
+//                _example = EMPTY;
+//                _explain = EMPTY;
+//                Log.e(TAG, "getAnswerHTMLwithPackage E:Passing JSON ERROR");
+//            }
+//
+//        } catch (Exception e) {
+//            // e.printStackTrace();
+//        }
 
         if (!explain.isEmpty()) {
             explainTagA = "<p style=''><a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a></p>";
@@ -505,7 +511,7 @@ public class LazzyBeeShare {
             user_note = "           <div id='debug' style='float:left;width:100%;'>\n " +
                     "              <hr>\n" +
                     "              <center>User note</center></br>\n" +
-                    card.getUser_note() +
+                    card.getUser_note().replaceAll("(\r\n|\n)", "<br />") +
                     "           </div>\n" +
                     "   </body>\n" +
                     "</html>\n";
@@ -571,7 +577,7 @@ public class LazzyBeeShare {
         return DEBUG;
     }
 
-    public static String getSubjectSetting() {
+    public static String getMySubject() {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
         String mySubject = "common";
@@ -739,7 +745,6 @@ public class LazzyBeeShare {
 
 
     }
-
     /*
  *Java Scrip Object Question
  * */
@@ -961,5 +966,15 @@ public class LazzyBeeShare {
         }
     }
 
-
+    public static Spanned fromHtml(String html) {
+        Spanned value;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            value = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            value = Html.fromHtml(html);
+        }
+        return value;
+    }
 }
+
+
