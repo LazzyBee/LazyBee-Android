@@ -395,7 +395,9 @@ public class LazzyBeeShare {
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean DEBUG, boolean POSITION_MEANING, boolean onload) {
         String html = null;
         String pronoun = card.getPronoun();
-        String meaning = card.getMeaning(packages);
+        String meaning = card.getMeaningWithHtml(packages);
+
+        Log.d(TAG,"----meaning"+meaning);
         String explain = card.getExplain(packages,LazzyBeeShare.TO_HTML_0);
         String example = card.getExample(packages,LazzyBeeShare.TO_HTML_0);
 
@@ -449,14 +451,14 @@ public class LazzyBeeShare {
                         "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
                         "</div>";
                 meaningDOWN = EMPTY;
-                // Log.d(TAG, "meaningUP:" + meaningUP);
+                 Log.d(TAG, "meaningUP:" + meaningUP);
             } else {
                 meaningUP = EMPTY;
                 meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
                         "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
                         "</div>";
-                // Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+                 Log.d(TAG, "meaningDOWN:" + meaningDOWN);
             }
         }
 

@@ -267,6 +267,24 @@ public class Card {
         }
         return meaning;
     }
+    public String getMeaningWithHtml(String subject) {
+        try {
+            JSONObject answerObj = new JSONObject(answers);
+            JSONObject packagesObj = answerObj.getJSONObject("packages");
+            // System.out.print("\npackagesObj.length():" + packagesObj.length());
+            if (packagesObj.length() > 0) {
+                if (packagesObj.isNull(subject)) {
+                    subject = "common";
+                }
+                JSONObject commonObj = packagesObj.getJSONObject(subject);
+               return commonObj.getString("meaning");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return LazzyBeeShare.EMPTY;
+        }
+        return LazzyBeeShare.EMPTY;
+    }
 
     public String getExplain(String subject, int type) {
         try {
