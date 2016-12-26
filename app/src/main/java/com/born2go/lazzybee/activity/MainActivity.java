@@ -29,7 +29,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
@@ -132,9 +131,6 @@ public class MainActivity extends AppCompatActivity
         _trackerApplication();
 
         _goHome();
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        Log.d(TAG, "telephonyManager.getDeviceId():" + telephonyManager.getDeviceId());
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
