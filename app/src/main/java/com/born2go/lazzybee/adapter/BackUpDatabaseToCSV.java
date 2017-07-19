@@ -74,6 +74,9 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     File exportDir;
     private String dotZip = ".zip";
 
+    private SQLiteDatabase db;
+    private Cursor curCSV;
+
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
         this.activity = activity;
         this.context = context;
@@ -87,6 +90,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         if (!exportDir.exists()) {
             exportDir.mkdirs();
         }
+
+        db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+        curCSV = db.rawQuery((type == 0) ? queryExportWordTableToCsvFull : queryExportWordTableToCsv, null);
+        dotZip = "_" + curCSV.getCount() + ".zip";
 
     }
 
@@ -148,8 +155,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         try {
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
-            SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-            Cursor curCSV = db.rawQuery((type == 0) ? queryExportWordTableToCsvFull : queryExportWordTableToCsv, null);
             if (curCSV.getCount() > 0) {
                 if (curCSV.moveToFirst()) {
                     if (curCSV.getCount() > 0)
