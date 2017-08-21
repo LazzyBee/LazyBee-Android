@@ -393,7 +393,7 @@
     <string name="english_word">Vocabulary learning</string>
 
 
-    <string name="message_no_results_found_for">No results found for %s</string>
+    <string name="message_no_results_found_for">No results found for %s \n or \n go http://www.lazzybee.com/editor/#vocabulary to add</string>
     <string name="action_report">Report</string>
     <string name="page_facebook_id" translatable="false">1012100435467230</string>
     <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>

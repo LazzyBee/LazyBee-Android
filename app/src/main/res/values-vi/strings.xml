@@ -276,7 +276,7 @@
     <string name="setting_set_time_notification">Thời gian nhắc nhở: %s</string>
     <string name="setting_custom_study">Thiết lập</string>
 
-    <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s</string>
+    <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s \n hoặc \n vào http://www.lazzybee.com/editor/#vocabulary để thêm</string>
     <string name="action_report">Góp ý</string>
     <string name="drawer_dictionary">Từ điển</string>
     <string name="position_meaning_down">Dưới</string>
