@@ -141,6 +141,11 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_AUTO_PLAY_SOUND = "auto_play_sound";
     public static final int TO_HTML_0 = 0;
     public static final int TO_SPEECH_1 = 1;
+    public static final long CACHE_EXPIRATION = 3600l;
+    public static final String ADV_STREAK_SAVER ="adv_streak_saver" ;
+    public static final String DEFAULT_STREAK_SAVER = "7";
+    public static final String STREAK_SAVER = "streak_saver";
+    public static final String ADV_BANNER_ID = "adv_banner_id";
 
 
     public static String mime = "text/html";
@@ -170,7 +175,7 @@ public class LazzyBeeShare {
     public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28";
 
     static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-    public static String BASE_URL_DB = "base_url_db";
+    public static String BASE_URL_DB = "base_url";
     public static String ADV_ENABLE = "adv_enable";
 
 
@@ -181,13 +186,15 @@ public class LazzyBeeShare {
     static TextToSpeech textToSpeech;
     public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
-    public static String ADMOB_PUB_ID = "admob_pub_id";
+    public static String ADMOB_PUB_ID = "adv_pub_id";
 
     public static String ADV_DEFAULT_ID = "adv_default_id";
 
     public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
     public static String ADV_LEARN_DETAIL_ID = "adv_learndetail_id";
+    public static String ADV_SPONSOR_UNIT_ID = "sponsor_unit";
+
 
     public static final String ADV_INCOMING_LIST_ID = ADV_DEFAULT_ID;
     public static final String ADV_SEARCH_RESULTS_LIST_ID = ADV_DEFAULT_ID;
@@ -222,6 +229,7 @@ public class LazzyBeeShare {
 
     public static final String FA_OPEN_TEST_YOUR_VOCA = "Open_aTestYouVoca";
     public static final String FA_OPEN_LEARNING_PROGRESS = "Open_aLearingProgress";
+    public static String SERVER_BASE_URL_SHARING="server_base_url_sharing";
 
 
     /**
