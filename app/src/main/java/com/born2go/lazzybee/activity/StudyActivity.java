@@ -45,7 +45,6 @@ import com.born2go.lazzybee.view.StudyView.OnStudyViewListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
-import com.google.android.gms.tagmanager.DataLayer;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -59,7 +58,6 @@ public class StudyActivity extends AppCompatActivity
 
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
-    private DataLayer mDataLayer;
     private Context context;
 
     LearnApiImplements dataBaseHelper;
@@ -130,9 +128,9 @@ public class StudyActivity extends AppCompatActivity
 
     private void _trackerApplication() {
         try {
-            Log.i(TAG, "Trying to use TagManager");
-            mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+            Bundle bundle = new Bundle();
+            bundle.putString("screenName", (String) GA_SCREEN);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }

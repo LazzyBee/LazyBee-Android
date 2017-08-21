@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.google.android.gms.tagmanager.DataLayer;
+
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -44,8 +44,9 @@ public class AboutActivity extends AppCompatActivity {
 
     private void _trackerApplication() {
         try {
-            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+            Bundle bundle = new Bundle();
+            bundle.putString("screenName", (String) GA_SCREEN);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }

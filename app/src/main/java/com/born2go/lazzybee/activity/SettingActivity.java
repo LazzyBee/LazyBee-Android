@@ -17,7 +17,6 @@ import com.born2go.lazzybee.adapter.DownloadAndRestoreDatabaseFormCSV;
 import com.born2go.lazzybee.adapter.RecyclerViewSettingListAdapter;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.google.android.gms.tagmanager.DataLayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -103,8 +102,9 @@ public class SettingActivity extends AppCompatActivity {
 
     private void _trackerApplication() {
         try {
-            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+            Bundle bundle = new Bundle();
+            bundle.putString("screenName", (String) GA_SCREEN);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
