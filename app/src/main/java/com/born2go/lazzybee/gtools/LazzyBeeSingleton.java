@@ -3,13 +3,14 @@ package com.born2go.lazzybee.gtools;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
-import com.google.android.gms.tagmanager.ContainerHolder;
-import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.Locale;
 
@@ -24,8 +25,9 @@ public class LazzyBeeSingleton {
     public static DatabaseUpgrade databaseUpgrade;
     public static TextToSpeech textToSpeech;
     public static ConnectGdatabase connectGdatabase;
-    public static DataLayer mDataLayer;
-    private static ContainerHolder containerHolder;
+    private static FirebaseAnalytics mFirebaseAnalytics;
+    private static FirebaseRemoteConfig mRemoteConfig;
+    private static String amobPubId;
 
     public LazzyBeeSingleton(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
@@ -40,7 +42,10 @@ public class LazzyBeeSingleton {
             }
         });
         connectGdatabase = new ConnectGdatabase();
-        mDataLayer = TagManager.getInstance(context).getDataLayer();
+        //mDataLayer = TagManager.getInstance(context).getDataLayer();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        mRemoteConfig=FirebaseRemoteConfig.getInstance();
+        mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
     }
 
     public static void initInstance(Context context) {
@@ -55,11 +60,26 @@ public class LazzyBeeSingleton {
         return instance;
     }
 
-    public static ContainerHolder getContainerHolder() {
-        return containerHolder;
+//    public static ContainerHolder getContainerHolder() {
+//        return containerHolder;
+//    }
+
+//    public static void setContainerHolder(ContainerHolder c) {
+//        containerHolder = c;
+//    }
+
+    public static FirebaseAnalytics getFirebaseAnalytics() {
+        return mFirebaseAnalytics;
+    }
+    public static FirebaseRemoteConfig getFirebaseRemoteConfig() {
+        return mRemoteConfig;
     }
 
-    public static void setContainerHolder(ContainerHolder c) {
-        containerHolder = c;
+    public static void setAmobPubId(String id) {
+        amobPubId = id;
+    }
+
+    public static String getAmobPubId() {
+        return amobPubId;
     }
 }
