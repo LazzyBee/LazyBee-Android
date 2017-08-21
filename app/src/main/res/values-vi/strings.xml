@@ -276,7 +276,7 @@
     <string name="setting_set_time_notification">Thời gian nhắc nhở: %s</string>
     <string name="setting_custom_study">Thiết lập</string>
 
-    <string name="message_no_results_found_for">Không tìm thấy kết quả theo %s \n hoặc \n vào http://www.lazzybee.com/editor/#vocabulary để thêm</string>
+    <string name="message_no_results_found_for">Không tìm thấy kết quả theo <b>%s</b></string>
     <string name="action_report">Góp ý</string>
     <string name="drawer_dictionary">Từ điển</string>
     <string name="position_meaning_down">Dưới</string>
@@ -386,4 +386,7 @@
     <string name="import_custom_list_sucessfully">Danh sách từ của bạn đã được nhập vào thành công.</string>
     <string name="title_create_word_list">Tạo danh sách từ</string>
     <string name="setting_auto_play_sound">Tự động đọc từ</string>
+    <string name="go">truy cập</string>
+    <string name="or">hoặc</string>
+    <string name="to_add">để thêm</string>
 </resources>

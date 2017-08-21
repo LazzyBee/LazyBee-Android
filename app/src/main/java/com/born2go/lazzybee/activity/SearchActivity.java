@@ -2,6 +2,7 @@ package com.born2go.lazzybee.activity;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
@@ -205,11 +207,11 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void _defineSearchView(Menu menu) {
-       // final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        // final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         search =
                 (SearchView) menu.findItem(R.id.search).getActionView();
-       // search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        // search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
         mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
@@ -625,13 +627,36 @@ public class SearchActivity extends AppCompatActivity implements
                 lbResultCount.setVisibility(View.GONE);
                 mRecyclerViewSearchResults.setVisibility(View.GONE);
                 lbMessageNotFound.setVisibility(View.VISIBLE);
-                lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
+                String msg_not_found = getString(R.string.message_no_results_found_for, query_text)
+                        + " <br/> " + getString(R.string.or)
+                        + " <br/> " + getString(R.string.go)
+                        + " <u><font color='blue'>http://www.lazzybee.com/editor/#vocabulary</font></u>"
+                        + " <br/> " + getString(R.string.to_add);
+                lbMessageNotFound.setText(LazzyBeeShare.fromHtml(msg_not_found));
+
+                lbMessageNotFound.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       gotoAddWord();
+                    }
+                });
                 _trackerWorkNotFound();
             }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "processFinish", e);
         }
         hideKeyboard();
+    }
+
+    private void gotoAddWord() {
+        try {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.edit_url)));
+            startActivity(myIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No application can handle this request."
+                    + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 
     private void _trackerWorkNotFound() {
@@ -657,7 +682,7 @@ public class SearchActivity extends AppCompatActivity implements
         try {
             Bundle bundle = new Bundle();
             bundle.putString("screenName", (String) GA_SCREEN);
-            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -691,7 +716,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _initAdView() {
         try {
-            mViewAdv =  findViewById(R.id.mViewAdv);
+            mViewAdv = findViewById(R.id.mViewAdv);
             //get value form remote config
             final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
             LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -738,7 +763,7 @@ public class SearchActivity extends AppCompatActivity implements
                                 @Override
                                 public void onAdFailedToLoad(int errorCode) {
                                     // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad "+errorCode);
+                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
                                     mViewAdv.setVisibility(View.GONE);
                                 }
                             });
@@ -748,7 +773,8 @@ public class SearchActivity extends AppCompatActivity implements
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
-                }});
+                }
+            });
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
