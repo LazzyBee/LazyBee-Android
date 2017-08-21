@@ -1660,6 +1660,11 @@ public class LearnApiImplements implements LearnApi {
         return dayCompleteStudys;
     }
 
+    public int getTotalDayStudy() {
+        String countStreak = "SELECT Count(day) FROM " + TABLE_STREAK + " order by day desc";
+        return _queryCount(countStreak);
+    }
+
     public int _getCountStreak() {
         int startOfday = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
         String countStreak = "SELECT Count(day) FROM " + TABLE_STREAK + " where day = " + startOfday + " order by day desc";
@@ -1701,6 +1706,24 @@ public class LearnApiImplements implements LearnApi {
 
     public int _insetStreak() {
         int day = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        if (_queryCount("select count(day) from streak where day = " + day) == 0) {
+            ContentValues values = new ContentValues();
+            values.put("day", day);
+            SQLiteDatabase db_insert = this.dataBaseHelper.getWritableDatabase();
+            try {
+                long long_insert_results = db_insert.insert(TABLE_STREAK, null, values);
+                Log.i(TAG, "_insetStreak\tInsert:day=" + day);
+                db_insert.close();
+                return (int) long_insert_results;
+            } catch (SQLiteException e) {
+                return (int) -1;
+            }
+        } else {
+            return (int) -1;
+        }
+    }
+
+    public int _insetStreak(int day) {
         if (_queryCount("select count(day) from streak where day = " + day) == 0) {
             ContentValues values = new ContentValues();
             values.put("day", day);
@@ -2005,5 +2028,15 @@ public class LearnApiImplements implements LearnApi {
 
         db.close();
         return insert;
+    }
+
+    public void fillStreak(int limit) {
+        int startOfday = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
+        for (int i = 0; i < limit; i++) {
+            startOfday = startOfday - LazzyBeeShare.SECONDS_PERDAY;
+            Log.d(TAG, "Test fill streak:" + startOfday);
+            _insetStreak(startOfday);
+        }
+
     }
 }
