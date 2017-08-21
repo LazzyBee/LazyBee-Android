@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -40,11 +41,12 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.SlidingTabLayout;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
@@ -97,8 +99,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
         _trackerApplication();
 
-        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(this);
-        firebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY_VIEW_WORD,new Bundle());
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        firebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY_VIEW_WORD, new Bundle());
 
     }
 
@@ -128,51 +130,67 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     private void _initAdView() {
         try {
-            mViewAdv =  findViewById(R.id.mViewAdv);
-            //get value form task manager
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            String admob_pub_id = null;
-            String adv_id = null;
-            if (container == null) {
-            } else {
-                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_id = container.getString(LazzyBeeShare.ADV_DETAILS_ID);
-                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_id:" + adv_id);
-            }
-            if (admob_pub_id != null) {
-                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                    mViewAdv.setVisibility(View.GONE);
-                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                    String advId = admob_pub_id + "/" + adv_id;
-                    Log.i(TAG, "admob -AdUnitId:" + advId);
-                    AdView mAdView = new AdView(this);
+            mViewAdv = findViewById(R.id.mViewAdv);
+            //get value form remote config
+            final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String adv_id = null;
+                    if (task.isComplete()) {
+                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                    }
+                    if (admob_pub_id != null) {
+                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                            mViewAdv.setVisibility(View.GONE);
+                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                            String advId = admob_pub_id + "/" + adv_id;
+                            Log.i(TAG, "admob -AdUnitId:" + advId);
+                            AdView mAdView = new AdView(context);
 
-                    mAdView.setAdSize(AdSize.BANNER);
-                    mAdView.setAdUnitId(advId);
+                            mAdView.setAdSize(AdSize.BANNER);
+                            mAdView.setAdUnitId(advId);
 
-                    AdRequest adRequest = new AdRequest.Builder()
-                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                            .build();
+                            AdRequest adRequest = new AdRequest.Builder()
+                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                    .build();
 
-                    mAdView.loadAd(adRequest);
+                            mAdView.loadAd(adRequest);
 
-                    RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                    relativeLayout.addView(mAdView, adViewCenter);
+                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                            relativeLayout.addView(mAdView, adViewCenter);
+                            mAdView.setAdListener(new AdListener() {
+                                @Override
+                                public void onAdLoaded() {
+                                    // Code to be executed when an ad finishes loading.
+                                    Log.d(TAG, "onAdLoaded");
+                                    mViewAdv.setVisibility(View.VISIBLE);
+                                }
 
-                    mViewAdv.setVisibility(View.VISIBLE);
-                } else {
-                    mViewAdv.setVisibility(View.GONE);
+                                @Override
+                                public void onAdFailedToLoad(int errorCode) {
+                                    // Code to be executed when an ad request fails.
+                                    Log.d(TAG, "onAdFailedToLoad "+errorCode);
+                                    mViewAdv.setVisibility(View.GONE);
+                                }
+                            });
+
+
+                        } else {
+                            mViewAdv.setVisibility(View.GONE);
+                        }
+                    } else {
+                        mViewAdv.setVisibility(View.GONE);
+                    }
                 }
-            } else {
-                mViewAdv.setVisibility(View.GONE);
-            }
+            });
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
@@ -189,7 +207,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     }
 
     private void _defineSearchView(Menu menu) {
-      //  final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        //  final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
@@ -234,7 +252,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                         Intent intent = new Intent(context, SearchActivity.class);
                         intent.setAction(Intent.ACTION_SEARCH);
                         intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY,query);
+                        intent.putExtra(SearchManager.QUERY, query);
                         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
                     }
@@ -347,7 +365,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             //get base url in Task Manager
             String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
+            String server_base_url_sharing = "http://www.lazzybee.com/vdict";
+            //LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
             if (server_base_url_sharing != null) {
                 if (server_base_url_sharing.length() > 0)
                     base_url_sharing = server_base_url_sharing;
@@ -625,7 +644,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 public void speechExplain() {
                     //get answer json
                     //String answer = card.getAnswers();
-                    String toSpeech = card.getExplain(mySubject,LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "explain");
+                    String toSpeech = card.getExplain(mySubject, LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "explain");
 
                     //Speak text
                     LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -635,8 +654,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 @JavascriptInterface
                 public void speechExample() {
                     //get answer json
-                   // String answer = card.getAnswers();
-                    String toSpeech = card.getExample(mySubject,LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "example");
+                    // String answer = card.getAnswers();
+                    String toSpeech = card.getExample(mySubject, LazzyBeeShare.TO_SPEECH_1);//LazzyBeeShare._getValueFromKey(answer, "example");
 
                     //Speak text
                     LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -659,8 +678,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
     private void _trackerApplication() {
         try {
-            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+            Bundle bundle = new Bundle();
+            bundle.putString("screenName", (String) GA_SCREEN);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
