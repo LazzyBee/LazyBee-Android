@@ -548,6 +548,7 @@
     <string name="go">go</string>
     <string name="or">or</string>
     <string name="to_add">to add</string>
-    <string name="edit_url">http://www.lazzybee.com/editor/#vocabulary</string>
+    <string name="edit_url" translatable="false">http://www.lazzybee.com/editor/#vocabulary</string>
+    <string name="msg_ads_help">This ad help us keep education free</string>
 
 </resources>

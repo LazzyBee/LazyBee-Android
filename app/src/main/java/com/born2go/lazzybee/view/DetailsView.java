@@ -65,7 +65,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     MenuItem itemLearn;
 
     private Context context;
-    private RewardedVideoAd mAd;
 
     public DetailsView(Context context, String tag) {
         // Required empty public constructor
@@ -88,19 +87,15 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         String myTag = getTag();
         ((StudyActivity) getActivity()).setDetailViewTag(myTag);
         _defineDetailsView(view);
-
-        _showAdvSponsor();
         return view;
     }
 
     private void _defineDetailsView(View view) {
         try {
-//             mDetailsCardViewViewPager = (CardView) view.findViewById(R.id.mCardViewViewPager);
             mViewAdv = view.findViewById(R.id.mCardViewAdv);
             mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
             mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
             _displayCard(card);
-            _initAdView(mViewAdv);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_defineDetailsView", e);
         }
@@ -138,26 +133,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 //Set Adapter
                 PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, this.card);
                 mDetailsViewPager.setAdapter(packageCardPageAdapter);
-                mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                    }
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        if (position==2){
-                            if (mAd.isLoaded()){
-                                mAd.show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-
-                    }
-                });
                 mDetailsSlidingTabLayout.setViewPager(mDetailsViewPager);
 
                 //Update Card form DB
@@ -192,26 +167,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             if (card != null) {
                 PackageCardPageAdapter packageCardPageAdapter = new PackageCardPageAdapter(context, card);
                 mDetailsViewPager.setAdapter(packageCardPageAdapter);
-                mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                    }
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        if (position==2){
-                            if (mAd.isLoaded()){
-                                mAd.show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-
-                    }
-                });
                 mDetailsSlidingTabLayout.setViewPager(mDetailsViewPager);
             } else {
                 Log.d(TAG, "Send card null");
@@ -294,7 +249,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 view = inflater.inflate(R.layout.page_sponsor, container, false);
                 // Add the newly created View to the ViewPager
                 container.addView(view);
-
+                _initAdView(view);
             }
             // Return the View
             return view;
@@ -333,7 +288,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.BANNER);
+                            mAdView.setAdSize(AdSize.LARGE_BANNER);
                             mAdView.setAdUnitId(advId);
 
                             AdRequest adRequest = new AdRequest.Builder()
@@ -506,64 +461,5 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
         }
     }
-    private void _showAdvSponsor() {
-        mAd = MobileAds.getRewardedVideoAdInstance(context);
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                String admob_pub_id = null;//"ca-app-pub-5245864792816840";
-                String adv_sponsor_unit = null;//"4432780595";
-                if (task.isComplete()) {
-                    admob_pub_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
-                    adv_sponsor_unit = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
-                }
 
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                        .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                        .addTestDevice("467009F00ED542DDA1694F88F807A79A")
-                        .build();
-                mAd.loadAd(admob_pub_id + "/" + adv_sponsor_unit, adRequest);
-                mAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-                    @Override
-                    public void onRewardedVideoAdLoaded() {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewardedVideoAdLoaded");
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdOpened() {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewardedVideoAdOpened");
-                    }
-
-                    @Override
-                    public void onRewardedVideoStarted() {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewardedVideoStarted");
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdClosed() {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewardedVideoAdClosed");
-                    }
-
-                    @Override
-                    public void onRewarded(RewardItem rewardItem) {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewarded");
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdLeftApplication() {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewardedVideoAdLeftApplication");
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdFailedToLoad(int i) {
-                        Log.i(TAG, "Ads RewardedVideoAd:onRewardedVideoAdFailedToLoad");
-                    }
-                });
-
-            }
-        });
-    }
 }
