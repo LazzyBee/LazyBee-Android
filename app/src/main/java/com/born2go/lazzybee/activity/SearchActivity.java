@@ -449,7 +449,7 @@ public class SearchActivity extends AppCompatActivity implements
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
-                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context,cardFormDB);
                     getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
                 } else {
@@ -734,7 +734,7 @@ public class SearchActivity extends AppCompatActivity implements
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.LARGE_BANNER);
+                            mAdView.setAdSize(AdSize.BANNER);
                             mAdView.setAdUnitId(advId);
 
                             AdRequest adRequest = new AdRequest.Builder()
