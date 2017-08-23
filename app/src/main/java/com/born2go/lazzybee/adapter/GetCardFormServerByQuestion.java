@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -21,16 +22,21 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
     private LearnApiImplements learnApiImplements;
     private ConnectGdatabase connectGdatabase;
     public GetCardFormServerByQuestionResponse delegate = null;
+    private String msg_Loading;
 
-    public GetCardFormServerByQuestion(Context context) {
-        dialog = new ProgressDialog(context);
+    public GetCardFormServerByQuestion(Context context, Card card) {
+        dialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
+        if (card != null)
+            msg_Loading = context.getString(R.string.msg_find_card_question, card.getQuestion());
+        else
+            msg_Loading = context.getString(R.string.msg_upadte_card);
     }
 
     protected void onPreExecute() {
         //set up dialog
-        this.dialog.setMessage("Loading...");
+        this.dialog.setMessage(msg_Loading);
         this.dialog.show();
     }
 
