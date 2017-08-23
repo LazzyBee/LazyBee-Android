@@ -390,4 +390,6 @@
     <string name="or">hoặc</string>
     <string name="to_add">để thêm</string>
     <string name="msg_ads_help">Quảng cáo này giúp chúng tôi có thể cung cấp ứng dụng miễn phí</string>
+    <string name="msg_find_card_question">Đang tra "%s"</string>
+    <string name="msg_upadte_card">Đang cập nhật</string>
 </resources>

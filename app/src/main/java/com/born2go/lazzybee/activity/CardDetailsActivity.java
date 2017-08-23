@@ -429,7 +429,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             if (card == null)
                 card = learnApiImplements._getCardByID(cardId);
 
-            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context, null);
             getCardFormServerByQuestion.execute(card);
             getCardFormServerByQuestion.delegate = this;
         } else {
