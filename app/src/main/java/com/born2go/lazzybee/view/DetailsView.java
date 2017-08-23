@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,10 +30,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -93,8 +88,28 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     private void _defineDetailsView(View view) {
         try {
             mViewAdv = view.findViewById(R.id.mCardViewAdv);
+            _initAdView(mViewAdv,AdSize.BANNER);
             mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
             mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+            mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (position==2){
+                        mViewAdv.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
             _displayCard(card);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_defineDetailsView", e);
@@ -249,7 +264,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 view = inflater.inflate(R.layout.page_sponsor, container, false);
                 // Add the newly created View to the ViewPager
                 container.addView(view);
-                _initAdView(view);
+                _initAdView(view, AdSize.MEDIUM_RECTANGLE);
             }
             // Return the View
             return view;
@@ -269,7 +284,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     }
 
-    private void _initAdView(final View mViewAdv) {
+    private void _initAdView(final View mViewAdv, final AdSize banner) {
         try {
             LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                 @Override
@@ -288,7 +303,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.LARGE_BANNER);
+                            mAdView.setAdSize(banner);
                             mAdView.setAdUnitId(advId);
 
                             AdRequest adRequest = new AdRequest.Builder()
@@ -304,33 +319,33 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                                 @Override
                                 public void onAdLoaded() {
                                     // Code to be executed when an ad finishes loading.
-                                    Log.i(TAG, "Ads BANNER:onAdLoaded");
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdLoaded");
                                 }
 
                                 @Override
                                 public void onAdFailedToLoad(int errorCode) {
                                     // Code to be executed when an ad request fails.
-                                    Log.i(TAG, "Ads BANNER:onAdFailedToLoad " + errorCode);
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdFailedToLoad " + errorCode);
                                 }
 
                                 @Override
                                 public void onAdOpened() {
                                     // Code to be executed when an ad opens an overlay that
                                     // covers the screen.
-                                    Log.i(TAG, "Ads BANNER:onAdOpened");
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdOpened");
                                 }
 
                                 @Override
                                 public void onAdLeftApplication() {
                                     // Code to be executed when the user has left the app.
-                                    Log.i(TAG, "Ads BANNER:onAdLeftApplication");
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdLeftApplication");
                                 }
 
                                 @Override
                                 public void onAdClosed() {
                                     // Code to be executed when when the user is about to return
                                     // to the app after tapping on an ad.
-                                    Log.i(TAG, "Ads BANNER:onAdClosed");
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdClosed");
                                 }
                             });
 
@@ -454,7 +469,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     private void _updateCardFormServer() {
         if (LazzyBeeShare.checkConn(context)) {
             //Call Api Update Card
-            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context, null);
             getCardFormServerByQuestion.execute(card);
             getCardFormServerByQuestion.delegate = this;
         } else {
