@@ -2035,7 +2035,10 @@ public class LearnApiImplements implements LearnApi {
         for (int i = 0; i < limit; i++) {
             startOfday = startOfday - LazzyBeeShare.SECONDS_PERDAY;
             Log.d(TAG, "Test fill streak:" + startOfday);
-            _insetStreak(startOfday);
+            int results=_insetStreak(startOfday);
+            if (results==1){
+                break;
+            }
         }
 
     }

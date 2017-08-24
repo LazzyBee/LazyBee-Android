@@ -18,7 +18,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -1556,7 +1555,7 @@ public class MainActivity extends AppCompatActivity
     public void onRewardedVideoAdClosed() {
         //FillStreak
         Log.d(TAG, "onRewardedVideoAdClosed");
-        //_fillStreak();
+        _fillStreak();
     }
 
     private void _fillStreak() {
