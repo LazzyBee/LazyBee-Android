@@ -552,5 +552,6 @@
     <string name="msg_ads_help">This ad helps us keep education free</string>
     <string name="msg_find_card_question">Find "%s"</string>
     <string name="msg_upadte_card">Updating</string>
+    <string name="play_video_to_save_streak">Play video to save streak</string>
 
 </resources>

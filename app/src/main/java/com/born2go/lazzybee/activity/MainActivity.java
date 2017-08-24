@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity
     private void _showDialogConfirmFillStreak() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
-        builder.setMessage("Play Video to fill streak?");
+        builder.setMessage(getString(R.string.play_video_to_save_streak));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
