@@ -549,7 +549,7 @@
     <string name="or">or</string>
     <string name="to_add">to add</string>
     <string name="edit_url" translatable="false">http://www.lazzybee.com/editor/#vocabulary</string>
-    <string name="msg_ads_help">This ad help us keep education free</string>
+    <string name="msg_ads_help">This ad helps us keep education free</string>
     <string name="msg_find_card_question">Find "%s"</string>
     <string name="msg_upadte_card">Updating</string>
 
