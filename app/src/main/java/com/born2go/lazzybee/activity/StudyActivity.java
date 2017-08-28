@@ -97,12 +97,12 @@ public class StudyActivity extends AppCompatActivity
         context = this;
         _initActonBar();
         _initDatabase();
+        mFirebaseAnalytics=LazzyBeeSingleton.getFirebaseAnalytics();
         _trackerApplication();
 
         _initView();
         _definePagerStudy();
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     }
 
@@ -130,7 +130,7 @@ public class StudyActivity extends AppCompatActivity
         try {
             Bundle bundle = new Bundle();
             bundle.putString("screenName", (String) GA_SCREEN);
-            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
+            mFirebaseAnalytics.logEvent("screenName",bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
