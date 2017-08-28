@@ -258,26 +258,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void _checkFillStreak() {
-        if (mAd.isLoaded())//Ads is load to check
-            //get number in remote config firebase
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
-                    if (task.isSuccessful()) {
-                        numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
-                    }
-                    //Check streack
-                    if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
-                        //Show dialog view video to fill streak
-                        _showDialogConfirmFillStreak();
 
-                    } else {
-                        Log.d(TAG, "Not record to fill streak");
-                    }
+
+        //get number in remote config firebase
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
+                if (task.isSuccessful()) {
+                    numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
                 }
-            });
-          else Log.d(TAG,"Ads save streak not loader");
+                //Check streack
+                if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
+                    //Show dialog view video to fill streak
+                    _showDialogConfirmFillStreak();
+
+                } else {
+                    Log.d(TAG, "Not record to fill streak");
+                }
+            }
+        });
 
     }
 
@@ -288,7 +288,12 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mAd.show();
+                if (mAd.isLoaded())//Ads is load to check
+                    mAd.show();
+                else {
+                    Log.d(TAG, "Ads save streak not loader");
+                    _fillStreak();
+                }
                 dialog.dismiss();
 
             }
