@@ -1,10 +1,10 @@
 package com.born2go.lazzybee.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -26,10 +26,12 @@ import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tagmanager.Container;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,7 +61,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private Context context;
 
-
     public DetailsView(Context context, String tag) {
         // Required empty public constructor
         this.tag = tag;
@@ -86,28 +87,40 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private void _defineDetailsView(View view) {
         try {
-//             mDetailsCardViewViewPager = (CardView) view.findViewById(R.id.mCardViewViewPager);
             mViewAdv = view.findViewById(R.id.mCardViewAdv);
+            _initAdView(mViewAdv,AdSize.BANNER);
             mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
             mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+            mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (position==2){
+                        mViewAdv.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
             _displayCard(card);
-            _initAdView(mViewAdv);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_defineDetailsView", e);
         }
     }
 
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        if (activity instanceof OnDetailsViewListener) {
-//            mListener = (OnDetailsViewListener) activity;
-//        } else {
-//            throw new RuntimeException(activity.toString()
-//                    + " must implement OnDetailsViewListener");
-//        }
-    }
+//    @Override
+//    public void onAttach(Context activity) {
+//        super.onAttach(activity);
+//    }
 
 
     @Override
@@ -186,9 +199,14 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
             this.context = context;
-            packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en));
+            packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en), "Sponsor");
         }
 
+        @Override
+        public int getItemPosition(Object object) {
+
+            return super.getItemPosition(object);
+        }
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -210,41 +228,49 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             // Inflate a new layout from our resources
             LayoutInflater inflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.page_package_card_item, container, false);
+            View view;
+            if (position < 2) {
+                view = inflater.inflate(R.layout.page_package_card_item, container, false);
+                // Add the newly created View to the ViewPager
+                container.addView(view);
+                //
+                mDetailsWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
+                mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
+                ws.setJavaScriptEnabled(true);
+                try {
+                    String displayHTML = LazzyBeeShare.EMPTY;
+                    switch (position) {
+                        case 0:
+                            //dic VN
+                            if (card.getL_vn() != null) {
+                                displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
+                            }
+                            break;
+                        case 1:
+                            //dic ENG
+                            if (card.getL_en() != null) {
+                                displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
+                            }
+                            break;
+                    }
+                    //Log.i(TAG, "Tab Dic:" + displayHTML.);
 
-            // Add the newly created View to the ViewPager
-            container.addView(view);
-            //
-            mDetailsWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
-            WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
-            ws.setJavaScriptEnabled(true);
-            try {
-                String displayHTML = LazzyBeeShare.EMPTY;
-                switch (position) {
-                    case 0:
-                        //dic VN
-                        if (card.getL_vn() != null) {
-                            displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
-                        }
-                        break;
-                    case 1:
-                        //dic ENG
-                        if (card.getL_en() != null) {
-                            displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
-                        }
-                        break;
+                    mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
                 }
-                //Log.i(TAG, "Tab Dic:" + displayHTML.);
-
-                mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-            } catch (Exception e) {
-                LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
+            } else {
+                view = inflater.inflate(R.layout.page_sponsor, container, false);
+                // Add the newly created View to the ViewPager
+                container.addView(view);
+                _initAdView(view, AdSize.MEDIUM_RECTANGLE);
             }
-
-
             // Return the View
             return view;
         }
+
+
 
 
         /**
@@ -258,62 +284,91 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     }
 
-    private void _initAdView(View mViewAdv) {
+    private void _initAdView(final View mViewAdv, final AdSize banner) {
         try {
-            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
-                Log.d(TAG, "Refesh container holder");
-                LazzyBeeSingleton.getContainerHolder().refresh();
-            }
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String admob_pub_id = null;//"ca-app-pub-5245864792816840";
+                    String adv_banner_id = null;//"7733609014";
+                    if (task.isComplete()) {
+                        admob_pub_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                        adv_banner_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                    }
+                    if (admob_pub_id != null) {
+                        if (adv_banner_id == null || adv_banner_id.equals(LazzyBeeShare.EMPTY)) {
+                            mViewAdv.setVisibility(View.GONE);
+                        } else if (adv_banner_id != null || adv_banner_id.length() > 1 || !adv_banner_id.equals(LazzyBeeShare.EMPTY) || !adv_banner_id.isEmpty()) {
+                            String advId = admob_pub_id + "/" + adv_banner_id;
+                            Log.i(TAG, "admob -AdUnitId:" + advId);
+                            AdView mAdView = new AdView(context);
 
-            //get value form task manager
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            String admob_pub_id = null;
-            String adv_id = null;
-            if (container == null) {
-                Log.d(TAG, "Container Holder Null");
-            } else {
-                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_id = container.getString(LazzyBeeShare.ADV_LEARN_DETAIL_ID);
-                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_id:" + adv_id);
-            }
-            if (admob_pub_id != null) {
-                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                    mViewAdv.setVisibility(View.GONE);
-                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                    String advId = admob_pub_id + "/" + adv_id;
-                    Log.i(TAG, "admob -AdUnitId:" + advId);
-                    AdView mAdView = new AdView(context);
+                            mAdView.setAdSize(banner);
+                            mAdView.setAdUnitId(advId);
 
-                    mAdView.setAdSize(AdSize.BANNER);
-                    mAdView.setAdUnitId(advId);
+                            AdRequest adRequest = new AdRequest.Builder()
+                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                    .addTestDevice("467009F00ED542DDA1694F88F807A79A")
+                                    .build();
 
-                    AdRequest adRequest = new AdRequest.Builder()
-                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                            //.addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                            .build();
+                            mAdView.loadAd(adRequest);
+                            mAdView.setAdListener(new AdListener() {
+                                @Override
+                                public void onAdLoaded() {
+                                    // Code to be executed when an ad finishes loading.
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdLoaded");
+                                }
 
-                    mAdView.loadAd(adRequest);
+                                @Override
+                                public void onAdFailedToLoad(int errorCode) {
+                                    // Code to be executed when an ad request fails.
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdFailedToLoad " + errorCode);
+                                }
 
-                    RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
-                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                    relativeLayout.addView(mAdView, adViewCenter);
+                                @Override
+                                public void onAdOpened() {
+                                    // Code to be executed when an ad opens an overlay that
+                                    // covers the screen.
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdOpened");
+                                }
 
-                    mViewAdv.setVisibility(View.VISIBLE);
-                } else {
-                    mViewAdv.setVisibility(View.GONE);
+                                @Override
+                                public void onAdLeftApplication() {
+                                    // Code to be executed when the user has left the app.
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdLeftApplication");
+                                }
+
+                                @Override
+                                public void onAdClosed() {
+                                    // Code to be executed when when the user is about to return
+                                    // to the app after tapping on an ad.
+                                    Log.i(TAG, "Ads "+banner.toString()+":onAdClosed");
+                                }
+                            });
+
+                            RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
+                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                            relativeLayout.addView(mAdView, adViewCenter);
+
+                            mViewAdv.setVisibility(View.VISIBLE);
+                        } else {
+                            mViewAdv.setVisibility(View.GONE);
+                        }
+                    } else {
+                        mViewAdv.setVisibility(View.GONE);
+                    }
                 }
-            } else {
-                mViewAdv.setVisibility(View.GONE);
-            }
+            });
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -370,23 +425,33 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     private void _shareCard() {
         try {
             //get base url in Task Manager
-            String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
-            if (server_base_url_sharing != null) {
-                if (server_base_url_sharing.length() > 0)
-                    base_url_sharing = server_base_url_sharing;
-            }
+            final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
 
-            //define base url with question
-            base_url_sharing = base_url_sharing + card.getQuestion();
-            Log.i(TAG, "Sharing URL:" + base_url_sharing);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
+                    if (task.isSuccessful()){
+                        server_base_url_sharing=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
+                    }
+                    if (server_base_url_sharing != null) {
+                        if (server_base_url_sharing.length() > 0)
+                            base_url_sharing[0] = server_base_url_sharing;
+                    }
 
-            //Share card
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing);
-            sendIntent.setType("text/plain");
-            startActivity(sendIntent);
+                    //define base url with question
+                    base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
+                    Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
+
+                    //Share card
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+            });
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }
@@ -404,11 +469,12 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     private void _updateCardFormServer() {
         if (LazzyBeeShare.checkConn(context)) {
             //Call Api Update Card
-            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context, null);
             getCardFormServerByQuestion.execute(card);
             getCardFormServerByQuestion.delegate = this;
         } else {
             Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
         }
     }
+
 }

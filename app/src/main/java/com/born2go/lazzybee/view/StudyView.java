@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -43,6 +44,8 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogFirstShowAnswer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -1216,7 +1219,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private void _updateCardFormServer() {
         if (LazzyBeeShare.checkConn(context)) {
             //Call Api Update Card
-            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+            GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context, null);
             getCardFormServerByQuestion.execute(currentCard);
             getCardFormServerByQuestion.delegate = this;
         } else {
@@ -1345,23 +1348,33 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private void _shareCard() {
         try {
             //get base url in Task Manager
-            String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
-            String server_base_url_sharing = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
-            if (server_base_url_sharing != null) {
-                if (server_base_url_sharing.length() > 0)
-                    base_url_sharing = server_base_url_sharing;
-            }
+            final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
 
-            //define base url with question
-            base_url_sharing = base_url_sharing + currentCard.getQuestion();
-            Log.i(TAG, "Sharing URL:" + base_url_sharing);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
+                    if (task.isSuccessful()){
+                        server_base_url_sharing=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
+                    }
+                    if (server_base_url_sharing != null) {
+                        if (server_base_url_sharing.length() > 0)
+                            base_url_sharing[0] = server_base_url_sharing;
+                    }
 
-            //Share card
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing);
-            sendIntent.setType("text/plain");
-            startActivity(sendIntent);
+                    //define base url with question
+                    base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
+                    Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
+
+                    //Share card
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+            });
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);
         }

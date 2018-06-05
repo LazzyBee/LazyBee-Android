@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,9 +34,8 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.CustomTimePickerDialog;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
@@ -61,12 +61,12 @@ public class RecyclerViewSettingListAdapter extends
     private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
     private static final int TYPE_SETTING_ABOUT = 5;
     private static final int TYPE_SETTING_NOTIFICATION = 6;
-    DataLayer lazzybeeTag;
     SettingActivity activity;
     private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
     String device_id;
     private RecyclerView mRecyclerViewSettings;
+    private RecyclerViewSettingListAdapter thiz;
 
     public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
         this.activity = activity;
@@ -75,9 +75,9 @@ public class RecyclerViewSettingListAdapter extends
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         this.mRecyclerViewSettings = mRecyclerViewSettings;
-        this.lazzybeeTag = TagManager.getInstance(context).getDataLayer();
         device_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+        this.thiz=this;
 
     }
 
@@ -1109,33 +1109,35 @@ public class RecyclerViewSettingListAdapter extends
 
     private void _downloadFile() {
         try {
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            String base_url;
-            if (container == null) {
-                base_url = context.getString(R.string.url_lazzybee_website);
-            } else {
-                base_url = container.getString(LazzyBeeShare.BASE_URL_DB);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String base_url="http://222.255.29.25/lazzybee/";
+                    if (task.isSuccessful()){
+                        base_url=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.BASE_URL_DB);
+                    }
+                    String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+                    int version = LazzyBeeShare.DEFAULT_VERSION_DB;
+                    if (db_v != null) {
+                        version = Integer.valueOf(db_v);
+                    }
+                    String dbUpdateName = (version + 1) + ".db";
+                    String download_url = base_url + dbUpdateName;
+                    Log.i(TAG, "download_url=" + download_url);
 
-            }
-            String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-            int version = LazzyBeeShare.DEFAULT_VERSION_DB;
-            if (db_v != null) {
-                version = Integer.valueOf(db_v);
-            }
-            String dbUpdateName = (version + 1) + ".db";
-            String download_url = base_url + dbUpdateName;
-            Log.i(TAG, "download_url=" + download_url);
+                    if (!base_url.isEmpty() || base_url != null) {
 
-            if (!base_url.isEmpty() || base_url != null) {
+                        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
 
-                DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+                        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+                        downloadFileandUpdateDatabase.execute(download_url);
+                        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = thiz;
+                    } else {
+                        Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
-                //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-                downloadFileandUpdateDatabase.execute(download_url);
-                downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
-            } else {
-                Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
-            }
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_downloadFile", e);
         }

@@ -14,7 +14,6 @@ import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.SplashScreen;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.google.android.gms.tagmanager.Container;
 
 /**
  * Created by Hue on 9/4/2015.
@@ -45,17 +44,17 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        String message;
+        String message=context.getString(R.string.notification_message);
         try {
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            if (container == null) {
+            //Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
+//            if (container == null) {
                 message = context.getString(R.string.notification_message);
-            } else {
-                message = container.getString(LazzyBeeShare.NOTIFY_TEXT);
-                if (message == null) {
-                    message = context.getString(R.string.notification_message);
-                }
-            }
+//            } else {
+//                message = container.getString(LazzyBeeShare.NOTIFY_TEXT);
+//                if (message == null) {
+//                    message = context.getString(R.string.notification_message);
+//                }
+//            }
         } catch (Exception e) {
             message = context.getString(R.string.notification_message);
         }

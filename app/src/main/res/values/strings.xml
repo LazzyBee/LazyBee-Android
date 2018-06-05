@@ -140,8 +140,8 @@
     <string name="drawer_title_course" translatable="false">title_course</string>
     <string name="drawer_add_course" translatable="false">add_course</string>
     <string name="drawer_line" translatable="false">lines</string>
-    <string name="drawer_setting" >Settings</string>
-    <string name="setting_about_message" translatable="false">Born2Go © 2016</string>
+    <string name="drawer_setting">Settings</string>
+    <string name="setting_about_message" translatable="false">Born2Go © 2017</string>
     <string name="under_construction" translatable="false">Under construction</string>
 
     <string name="notification_title">%1$s %2$s</string>
@@ -393,7 +393,7 @@
     <string name="english_word">Vocabulary learning</string>
 
 
-    <string name="message_no_results_found_for">No results found for %s</string>
+    <string name="message_no_results_found_for">No results found for <b>%s</b></string>
     <string name="action_report">Report</string>
     <string name="page_facebook_id" translatable="false">1012100435467230</string>
     <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
@@ -545,4 +545,13 @@
     <string name="title_create_word_list">Input word list</string>
 
     <string name="setting_auto_play_sound">Auto play sound</string>
+    <string name="go">go</string>
+    <string name="or">or</string>
+    <string name="to_add">to add</string>
+    <string name="edit_url" translatable="false">http://www.lazzybee.com/editor/#vocabulary</string>
+    <string name="msg_ads_help">This ad helps us keep education free</string>
+    <string name="msg_find_card_question">Find "%s"</string>
+    <string name="msg_upadte_card">Updating</string>
+    <string name="play_video_to_save_streak">Play video to save streak</string>
+
 </resources>

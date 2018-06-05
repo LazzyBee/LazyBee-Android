@@ -2,6 +2,7 @@ package com.born2go.lazzybee.activity;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,8 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,11 +46,12 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.event.RecyclerViewTouchListener;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -203,11 +207,11 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void _defineSearchView(Menu menu) {
-       // final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        // final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         search =
                 (SearchView) menu.findItem(R.id.search).getActionView();
-       // search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        // search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
         mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
@@ -445,7 +449,7 @@ public class SearchActivity extends AppCompatActivity implements
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
-                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context);
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context,cardFormDB);
                     getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
                 } else {
@@ -623,7 +627,19 @@ public class SearchActivity extends AppCompatActivity implements
                 lbResultCount.setVisibility(View.GONE);
                 mRecyclerViewSearchResults.setVisibility(View.GONE);
                 lbMessageNotFound.setVisibility(View.VISIBLE);
-                lbMessageNotFound.setText(getString(R.string.message_no_results_found_for, query_text));
+                String msg_not_found = getString(R.string.message_no_results_found_for, query_text)
+                        + " <br/> " + getString(R.string.or)
+                        + " <br/> " + getString(R.string.go)
+                        + " <u><font color='blue'>http://www.lazzybee.com/editor/#vocabulary</font></u>"
+                        + " <br/> " + getString(R.string.to_add);
+                lbMessageNotFound.setText(LazzyBeeShare.fromHtml(msg_not_found));
+
+                lbMessageNotFound.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       gotoAddWord();
+                    }
+                });
                 _trackerWorkNotFound();
             }
         } catch (Exception e) {
@@ -632,14 +648,20 @@ public class SearchActivity extends AppCompatActivity implements
         hideKeyboard();
     }
 
+    private void gotoAddWord() {
+        try {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.edit_url)));
+            startActivity(myIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No application can handle this request."
+                    + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+
     private void _trackerWorkNotFound() {
         try {
-            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("searchNoResult", DataLayer.mapOf("wordError", query_text));
-            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-
-            firebaseAnalytics.logEvent("Search_not_found", new Bundle());
-
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("Search_not_found", new Bundle());
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerWorkNotFound", e);
         }
@@ -658,8 +680,9 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _trackerApplication(Object screenName) {
         try {
-            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", screenName));
+            Bundle bundle = new Bundle();
+            bundle.putString("screenName", (String) GA_SCREEN);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -694,58 +717,65 @@ public class SearchActivity extends AppCompatActivity implements
     private void _initAdView() {
         try {
             mViewAdv = findViewById(R.id.mViewAdv);
-            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
-                Log.d(TAG, "Refesh container holder");
-                LazzyBeeSingleton.getContainerHolder().refresh();
-            }
-            //get value form task manager
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            String admob_pub_id = null;
-            String adv_id = null;
-            if (container == null) {
-            } else {
-                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-//                if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
-//                    adv_id = container.getString(LazzyBeeShare.ADV_DICTIONARY_LIST_ID);
-//                } else {
-                adv_id = container.getString(LazzyBeeShare.ADV_SEARCH_RESULTS_LIST_ID);
-//                }
-                Log.i(TAG, "admob -admob_pub_id:" + admob_pub_id);
-                Log.i(TAG, "admob -adv_id:" + adv_id);
-            }
-            if (admob_pub_id != null) {
-                if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                    mViewAdv.setVisibility(View.GONE);
-                } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                    String advId = admob_pub_id + "/" + adv_id;
-                    Log.i(TAG, "admob -AdUnitId:" + advId);
-                    AdView mAdView = new AdView(this);
+            //get value form remote config
+            final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String adv_id = null;
+                    if (task.isComplete()) {
+                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                    }
+                    if (admob_pub_id != null) {
+                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                            mViewAdv.setVisibility(View.GONE);
+                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                            String advId = admob_pub_id + "/" + adv_id;
+                            Log.i(TAG, "admob -AdUnitId:" + advId);
+                            AdView mAdView = new AdView(context);
 
-                    mAdView.setAdSize(AdSize.BANNER);
-                    mAdView.setAdUnitId(advId);
+                            mAdView.setAdSize(AdSize.BANNER);
+                            mAdView.setAdUnitId(advId);
 
-                    AdRequest adRequest = new AdRequest.Builder()
-                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                            .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                            .build();
+                            AdRequest adRequest = new AdRequest.Builder()
+                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                    .build();
 
-                    mAdView.loadAd(adRequest);
+                            mAdView.loadAd(adRequest);
 
-                    RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
-                    RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                    relativeLayout.addView(mAdView, adViewCenter);
+                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                            relativeLayout.addView(mAdView, adViewCenter);
 
-                    mViewAdv.setVisibility(View.VISIBLE);
-                } else {
-                    mViewAdv.setVisibility(View.GONE);
+                            mAdView.setAdListener(new AdListener() {
+                                @Override
+                                public void onAdLoaded() {
+                                    // Code to be executed when an ad finishes loading.
+                                    Log.d(TAG, "onAdLoaded");
+                                    mViewAdv.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAdFailedToLoad(int errorCode) {
+                                    // Code to be executed when an ad request fails.
+                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                                    mViewAdv.setVisibility(View.GONE);
+                                }
+                            });
+                        } else {
+                            mViewAdv.setVisibility(View.GONE);
+                        }
+                    } else {
+                        mViewAdv.setVisibility(View.GONE);
+                    }
                 }
-            } else {
-                mViewAdv.setVisibility(View.GONE);
-            }
+            });
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
         }

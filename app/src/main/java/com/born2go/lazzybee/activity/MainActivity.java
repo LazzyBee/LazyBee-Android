@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -29,7 +30,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
@@ -61,9 +61,11 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.DataLayer;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -79,7 +81,8 @@ public class MainActivity extends AppCompatActivity
         DownloadFileDatabaseResponse,
         NavigationView.OnNavigationItemSelectedListener,
         SearchView.OnQueryTextListener,
-        SearchView.OnSuggestionListener {
+        SearchView.OnSuggestionListener,
+        RewardedVideoAdListener {
 
     private Context context = this;
     private static final String TAG = "MainActivity";
@@ -111,7 +114,10 @@ public class MainActivity extends AppCompatActivity
     SearchView mSearchCardBox;
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton floatingActionButton;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private String adv_pub_id;
+
+
+    private RewardedVideoAd mAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +139,38 @@ public class MainActivity extends AppCompatActivity
 
         _goHome();
 
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        Log.d(TAG, "telephonyManager.getDeviceId():" + telephonyManager.getDeviceId());
+        _initAdvFillStreak();
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        _checkFillStreak();
+
+    }
+
+    private void _initAdvFillStreak() {
+        mAd = MobileAds.getRewardedVideoAdInstance(context);
+        final AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                .addTestDevice("467009F00ED542DDA1694F88F807A79A")
+                .build();
+        //load video
+        mAd.setRewardedVideoAdListener(this);
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                String adv_streak_saver = null;
+                if (task.isSuccessful()) {
+                    adv_streak_saver = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_STREAK_SAVER);
+                }
+                if (adv_pub_id != null && adv_streak_saver != null) {
+                    mAd.loadAd(adv_pub_id + "/" + adv_streak_saver, adRequest);
+                }
+
+            }
+        });
+
     }
 
 
@@ -220,45 +254,95 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
+
+    }
+
+    public void _checkFillStreak() {
+
+
+        //get number in remote config firebase
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
+                if (task.isSuccessful()) {
+                    numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
+                }
+                //Check streack
+                if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
+                    //Show dialog view video to fill streak
+                    _showDialogConfirmFillStreak();
+
+                } else {
+                    Log.d(TAG, "Not record to fill streak");
+                }
+            }
+        });
+
+    }
+
+    private void _showDialogConfirmFillStreak() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+        builder.setTitle("Ops!");
+        builder.setMessage(getString(R.string.play_video_to_save_streak));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mAd.isLoaded())//Ads is load to check
+                    mAd.show();
+                else {
+                    Log.d(TAG, "Ads save streak not loader");
+                    _fillStreak();
+                }
+                dialog.dismiss();
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+        // Get the AlertDialog from create()
+        final AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
 
     private void _initInterstitialAd() {
         try {
-            if (LazzyBeeSingleton.getContainerHolder().getContainer() == null) {
-                Log.d(TAG, "Refesh container holder");
-                LazzyBeeSingleton.getContainerHolder().refresh();
-            }
-
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            String admob_pub_id = null;
-            String adv_fullscreen_id = null;
-            if (container != null) {
-                admob_pub_id = container.getString(LazzyBeeShare.ADMOB_PUB_ID);
-                adv_fullscreen_id = container.getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
-                Log.d(TAG, "admob_pub_id:" + admob_pub_id);
-                Log.d(TAG, "adv_fullscreen_id:" + adv_fullscreen_id);
-            }
-            if (admob_pub_id != null || adv_fullscreen_id != null) {
-                MobileAds.initialize(this, admob_pub_id);
-                String advId = admob_pub_id + "/" + adv_fullscreen_id;
-                Log.d(TAG, "InterstitialAdId:" + advId);
-                mInterstitialAd = new InterstitialAd(this);
-                mInterstitialAd.setAdUnitId(advId);
-
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                        _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+            final String admob_pub_id = adv_pub_id;//"ca-app-pub-5245864792816840";
+            final String[] adv_fullscreen_id = {LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID)};//"9210342219";
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        adv_fullscreen_id[0] = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
                     }
-                });
+                    if (admob_pub_id != null && adv_fullscreen_id[0] != null) {
+                        String advId = admob_pub_id + "/" + adv_fullscreen_id[0];
+                        Log.d(TAG, "adv_fullscreen_id:" + advId);
+                        mInterstitialAd = new InterstitialAd(context);
+                        mInterstitialAd.setAdUnitId(advId);
 
-                requestNewInterstitial();
-            } else {
-                Log.d(TAG, "InterstitialAdId null");
-                mInterstitialAd = null;
-            }
+                        mInterstitialAd.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdClosed() {
+                                requestNewInterstitial();
+                                _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+                            }
+                        });
+
+                        requestNewInterstitial();
+                    } else {
+                        Log.d(TAG, "InterstitialAdId null");
+                        mInterstitialAd = null;
+                    }
+                }
+            });
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initInterstitialAd", e);
         }
@@ -272,6 +356,7 @@ public class MainActivity extends AppCompatActivity
                     .addTestDevice(getResources().getStringArray(R.array.devices)[1])
                     .addTestDevice(getResources().getStringArray(R.array.devices)[2])
                     .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                    .addTestDevice("467009F00ED542DDA1694F88F807A79A")
                     .build();
 
             mInterstitialAd.loadAd(adRequest);
@@ -316,6 +401,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void _initSettingApplication() {
+        adv_pub_id = getIntent().getStringExtra(LazzyBeeShare.ADMOB_PUB_ID);
         sharedpreferences = getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
         if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
             _checkUpdate();
@@ -542,7 +628,7 @@ public class MainActivity extends AppCompatActivity
 //    }
 //
     private void _goTestYourVoca() {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_TEST_YOUR_VOCA, new Bundle());
+        LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_TEST_YOUR_VOCA, new Bundle());
         if (LazzyBeeShare.checkConn(context)) {
             Intent intent = new Intent(context, TestYourVoca.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -557,7 +643,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showStatistical() {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
+        LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
         try {
             DialogStatistics dialogStatistics = new DialogStatistics(context);
             dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
@@ -568,7 +654,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSelectMajor() {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_CHOOSE_MAJOR, new Bundle());
+        LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_CHOOSE_MAJOR, new Bundle());
         View mSelectMajor = View.inflate(context, R.layout.view_select_major, null);
         final CheckBox cbIt = (CheckBox) mSelectMajor.findViewById(R.id.cbIt);
         final CheckBox cbEconomy = (CheckBox) mSelectMajor.findViewById(R.id.cbEconomy);
@@ -723,14 +809,14 @@ public class MainActivity extends AppCompatActivity
 
                     //reset incomming list
                     dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
-                    mFirebaseAnalytics.setUserProperty("Selected_major", String.valueOf(subjectSelected));
+                    LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(subjectSelected));
                 } else if (checker[0] == -2) {
                     //save my subjects
                     dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
 
                     //reset incomming list
                     dataBaseHelper._initIncomingCardIdList();
-                    mFirebaseAnalytics.setUserProperty("Selected_major", String.valueOf(""));
+                    LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(""));
                 }
 
                 dialog.cancel();
@@ -748,7 +834,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _gotoDictionary() {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY, new Bundle());
+        LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_DICTIONARY, new Bundle());
         //_gotoSeachOrDictionary(LazzyBeeShare.GOTO_DICTIONARY, LazzyBeeShare.GOTO_DICTIONARY_CODE);
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(SearchActivity.QUERY_TEXT, LazzyBeeShare.GOTO_DICTIONARY);
@@ -914,14 +1000,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _downloadFile() {
-        Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-        String base_url;
-        if (container == null) {
-            base_url = getString(R.string.url_lazzybee_website);
-        } else {
-            base_url = container.getString(LazzyBeeShare.BASE_URL_DB);
-
-        }
+        // Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
+        String base_url = "http://222.255.29.25/lazzybee/";
+//        if (container == null) {
+//            base_url = getString(R.string.url_lazzybee_website);
+//        } else {
+//            base_url = container.getString(LazzyBeeShare.BASE_URL_DB);
+//
+//        }
         String db_v = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
         int version = LazzyBeeShare.DEFAULT_VERSION_DB;
         if (db_v != null) {
@@ -948,7 +1034,7 @@ public class MainActivity extends AppCompatActivity
      * Goto setting
      */
     private void _gotoSetting() {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_SETTING, new Bundle());
+        LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_SETTING, new Bundle());
         //_initInterstitialAd inten Setting
         Intent intent = new Intent(this, SettingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1096,7 +1182,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void _onbtnReviewOnClick(View view) {
-        mFirebaseAnalytics.logEvent(LazzyBeeShare.FA_OPEN_INCOMING, new Bundle());
+        LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_INCOMING, new Bundle());
         Intent intent = new Intent(this, IncomingListActivity.class);
         startActivity(intent);
     }
@@ -1108,14 +1194,14 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onActivityResult \t requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (requestCode == LazzyBeeShare.ACTION_CODE_GOTO_STUDY) {
             if (resultCode == LazzyBeeShare.CODE_COMPLETE_STUDY_1000) {
-               // Log.d(TAG, "Congratilation study LazzyBee");
+                // Log.d(TAG, "Congratilation study LazzyBee");
 
                 //Reset notification
                 LazzyBeeShare._cancelNotification(context);
                 _setUpNotification(true);
 
                 int count = dataBaseHelper._getCountStreak();
-                Log.d(TAG, "Congratilation study LazzyBee,Streak count:"+count);
+                Log.d(TAG, "Congratilation study LazzyBee,Streak count:" + count);
                 if (count % 10 == 0) {
                     //Show dialog backup db
                     _showDialogBackupDataBase();
@@ -1123,6 +1209,7 @@ public class MainActivity extends AppCompatActivity
                     //Show message congratilation
                     String messgage_congratilation = getString(R.string.congratulations);
                     _showDialogCongraturation(messgage_congratilation);
+                    _checkFillStreak();
                 }
 
 
@@ -1180,30 +1267,30 @@ public class MainActivity extends AppCompatActivity
 
     private void _showDialogTip() {
         try {
-            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
-            String pop_up_maxnum;
-            String popup_text;
-            String popup_url = LazzyBeeShare.EMPTY;
-            if (container == null) {
-                popup_text = null;
-                Log.d(TAG, "ContainerHolder Null");
-            } else {
-                pop_up_maxnum = container.getString(LazzyBeeShare.POPUP_MAXNUM);
-                if (pop_up_maxnum == null || pop_up_maxnum.equals(LazzyBeeShare.EMPTY)) {
-                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
-                    popup_url = container.getString(LazzyBeeShare.POPUP_URL);
-                    Log.d(TAG, "pop_up_maxnum Null");
-                } else {
-
-                    Log.d(TAG, "pop_up_maxnum:" + pop_up_maxnum);
-                    int number = LazzyBeeShare.showRandomInteger(1, Integer.valueOf(pop_up_maxnum), new Random());
-                    Log.d(TAG, "Random pop:" + number);
-                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT + number);
-                    popup_url = container.getString(LazzyBeeShare.POPUP_URL + number);
-                    Log.d(TAG, "popup_text:" + popup_text + ",popup_url:" + popup_url);
-                }
-
-            }
+//            Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
+            //String pop_up_maxnum="1";
+            String popup_text = "Cải tiến chất lượng âm thanh trên Android";
+            String popup_url = "http://www.lazzybee.com/blog/android_improve_voice_quality";
+//            if (container == null) {
+//                popup_text = null;
+//                Log.d(TAG, "ContainerHolder Null");
+//            } else {
+//                pop_up_maxnum = container.getString(LazzyBeeShare.POPUP_MAXNUM);
+//                if (pop_up_maxnum == null || pop_up_maxnum.equals(LazzyBeeShare.EMPTY)) {
+//                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT);
+//                    popup_url = container.getString(LazzyBeeShare.POPUP_URL);
+//                    Log.d(TAG, "pop_up_maxnum Null");
+//                } else {
+//
+//                    Log.d(TAG, "pop_up_maxnum:" + pop_up_maxnum);
+//                    int number = LazzyBeeShare.showRandomInteger(1, Integer.valueOf(pop_up_maxnum), new Random());
+//                    Log.d(TAG, "Random pop:" + number);
+//                    popup_text = container.getString(LazzyBeeShare.POPUP_TEXT + number);
+//                    popup_url = container.getString(LazzyBeeShare.POPUP_URL + number);
+//                    Log.d(TAG, "popup_text:" + popup_text + ",popup_url:" + popup_url);
+//                }
+//
+//            }
             if (popup_text != null) {
                 snackbarTip =
                         Snackbar
@@ -1275,8 +1362,9 @@ public class MainActivity extends AppCompatActivity
 
     private void _trackerApplication() {
         try {
-            DataLayer mDataLayer = LazzyBeeSingleton.mDataLayer;
-            mDataLayer.pushEvent("openScreen", DataLayer.mapOf("screenName", GA_SCREEN));
+            Bundle bundle = new Bundle();
+            bundle.putString("screenName", (String) GA_SCREEN);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -1392,7 +1480,7 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(this, SearchActivity.class);
                 intent.setAction(Intent.ACTION_SEARCH);
                 intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                intent.putExtra(SearchManager.QUERY,query);
+                intent.putExtra(SearchManager.QUERY, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
                 return true;
@@ -1453,5 +1541,46 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        Log.d(TAG, "onRewardedVideoAdLoaded");
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+        Log.d(TAG, "onRewardedVideoAdOpened");
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+        Log.d(TAG, "onRewardedVideoStarted");
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        //FillStreak
+        Log.d(TAG, "onRewardedVideoAdClosed");
+        _fillStreak();
+    }
+
+    private void _fillStreak() {
+        dataBaseHelper.fillStreak(7);
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        Log.d(TAG, "onRewarded");
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+        Log.d(TAG, "onRewardedVideoAdLeftApplication");
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        Log.d(TAG, "onRewardedVideoAdFailedToLoad");
+        //_fillStreak();
+    }
 }
 

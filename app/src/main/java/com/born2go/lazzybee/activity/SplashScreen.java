@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -17,18 +18,14 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.ContainerHolder;
-import com.google.android.gms.tagmanager.TagManager;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
 
 public class SplashScreen extends Activity {
     private static final String TAG = "SplashScreen";
@@ -46,58 +43,76 @@ public class SplashScreen extends Activity {
 
         setContentView(R.layout.activity_splash_screen);
         thiz = this;
-        new Handler().postDelayed(new Runnable() {
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-            @Override
-            public void run() {
-                TagManager tagManager = TagManager.getInstance(SplashScreen.this);
-
-                // Modify the log level of the logger to print out not only
-                // warning and error messages, but also verbose, debug, info messages.
-                tagManager.setVerboseLoggingEnabled(true);
-
-                PendingResult<ContainerHolder> pending =
-                        tagManager.loadContainerPreferNonDefault(getString(R.string.google_tag_ID),
-                                R.raw.gtm_default_container);
+//        new Handler().postDelayed(new Runnable() {
+//            /*
+//             * Showing splash screen with a timer. This will be useful when you
+//             * want to show case your app logo / company
+//             */
+//            @Override
+//            public void run() {
+//                TagManager tagManager = TagManager.getInstance(SplashScreen.this);
+//
+//                // Modify the log level of the logger to print out not only
+//                // warning and error messages, but also verbose, debug, info messages.
+//                tagManager.setVerboseLoggingEnabled(true);
+//
+//                PendingResult<ContainerHolder> pending =
+//                        tagManager.loadContainerPreferNonDefault(getString(R.string.google_tag_ID),
+//                                R.raw.gtm_default_container);
 
                 // The onResult method will be called as soon as one of the following happens:
                 //     1. a saved container is loaded
                 //     2. if there is no saved container, a network container is loaded
                 //     3. the request times out. The example below uses a constant to manage the timeout period.
-                pending.setResultCallback(new ResultCallback<ContainerHolder>() {
-                    @Override
-                    public void onResult(ContainerHolder containerHolder) {
-                        _initSQlIte();
-                        _changeLanguage();
-                        //init Container
-                        LazzyBeeSingleton.setContainerHolder(containerHolder);
-                        Container container = containerHolder.getContainer();
-                        if (!containerHolder.getStatus().isSuccess()) {
-                            Log.e("LazzyBee", "failure loading container for GTag");
-                            displayErrorToUser(R.string.gtag_container_load_error);
-                            return;
-                        } else {
-                            LazzyBeeSingleton.setContainerHolder(containerHolder);
-                            ContainerLoadedCallback.registerCallbacksForContainer(container);
-                            containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
-                        }
-                        _updateVersionDB();
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // After config data is successfully fetched, it must be activated before newly fetched
+                                    // values are returned.
+                                    LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
+                                }
+                                _initSQlIte();
+                                _changeLanguage();
+                                _updateVersionDB();
+                                String ADMOB_PUB_ID=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                                Log.d(TAG,"ADMOB_PUB_ID:"+ADMOB_PUB_ID);
+                                LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
+                                MobileAds.initialize(thiz,ADMOB_PUB_ID);
+                                learnApiImplements._get100Card();
 
-                        learnApiImplements._get100Card();
+                                startMainActivity(ADMOB_PUB_ID);
+                            }
+                        });
 
-                        startMainActivity();
-                    }
-                }, GTM_TIME_OUT, TimeUnit.MILLISECONDS);
-            }
-        }, SPLASH_TIME_OUT);
+//                pending.setResultCallback(new ResultCallback<ContainerHolder>() {
+//                    @Override
+//                    public void onResult(ContainerHolder containerHolder) {
+//
+//                        //init Container
+////                        LazzyBeeSingleton.setContainerHolder(containerHolder);
+//                      //  Container container = containerHolder.getContainer();
+////                        if (!containerHolder.getStatus().isSuccess()) {
+////                            Log.e("LazzyBee", "failure loading container for GTag");
+////                            displayErrorToUser(R.string.gtag_container_load_error);
+////                            return;
+////                        } else {
+////                            LazzyBeeSingleton.setContainerHolder(containerHolder);
+////                            ContainerLoadedCallback.registerCallbacksForContainer(container);
+////                            containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
+////                        }
+//
+//                    }
+//                }, GTM_TIME_OUT, TimeUnit.MILLISECONDS);
+       //     }
+       // }, SPLASH_TIME_OUT);
     }
 
-    private void startMainActivity() {
+    private void startMainActivity(String ADMOB_PUB_ID) {
         // Start your app main activity
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
+        i.putExtra(LazzyBeeShare.ADMOB_PUB_ID,ADMOB_PUB_ID);
         startActivity(i);
         this.finish();
     }
@@ -120,45 +135,45 @@ public class SplashScreen extends Activity {
         alertDialog.show();
     }
 
-    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
-        @Override
-        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
-            // We load each container when it becomes available.
-            Container container = containerHolder.getContainer();
-            registerCallbacksForContainer(container);
-        }
+//    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
+//        @Override
+//        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
+//            // We load each container when it becomes available.
+//            Container container = containerHolder.getContainer();
+//            registerCallbacksForContainer(container);
+//        }
+//
+//        public static void registerCallbacksForContainer(Container container) {
+//            // Register two custom function call macros to the container.
+//            container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
+//            container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
+//            // Register a custom function call tag to the container.
+//            container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
+//        }
+//    }
 
-        public static void registerCallbacksForContainer(Container container) {
-            // Register two custom function call macros to the container.
-            container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
-            container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
-            // Register a custom function call tag to the container.
-            container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
-        }
-    }
+//    private static class CustomMacroCallback implements Container.FunctionCallMacroCallback {
+//        private int numCalls;
+//
+//        @Override
+//        public Object getValue(String name, Map<String, Object> parameters) {
+//            if ("increment".equals(name)) {
+//                return ++numCalls;
+//            } else if ("mod".equals(name)) {
+//                return (Long) parameters.get("key1") % Integer.valueOf((String) parameters.get("key2"));
+//            } else {
+//                throw new IllegalArgumentException("Custom macro name: " + name + " is not supported.");
+//            }
+//        }
+//    }
 
-    private static class CustomMacroCallback implements Container.FunctionCallMacroCallback {
-        private int numCalls;
-
-        @Override
-        public Object getValue(String name, Map<String, Object> parameters) {
-            if ("increment".equals(name)) {
-                return ++numCalls;
-            } else if ("mod".equals(name)) {
-                return (Long) parameters.get("key1") % Integer.valueOf((String) parameters.get("key2"));
-            } else {
-                throw new IllegalArgumentException("Custom macro name: " + name + " is not supported.");
-            }
-        }
-    }
-
-    private static class CustomTagCallback implements Container.FunctionCallTagCallback {
-        @Override
-        public void execute(String tagName, Map<String, Object> parameters) {
-            // The code for firing this custom tag.
-            Log.i("LazzyBee", "Custom function call tag :" + tagName + " is fired.");
-        }
-    }
+//    private static class CustomTagCallback implements Container.FunctionCallTagCallback {
+//        @Override
+//        public void execute(String tagName, Map<String, Object> parameters) {
+//            // The code for firing this custom tag.
+//            Log.i("LazzyBee", "Custom function call tag :" + tagName + " is fired.");
+//        }
+//    }
 
     private void _initSQlIte() {
         Log.i(TAG, "Init SQlIte");
@@ -187,7 +202,7 @@ public class SplashScreen extends Activity {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         //learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(0));
 //        //get GAE_DB_VERSION in Server
-        String gae_db_version = LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
+        String gae_db_version = "6";//LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
         Log.i(TAG, "Get gae_db_version on TaskManager =" + gae_db_version);
 //        //put GAE_DB_VERSION to Client
         learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, (gae_db_version == null || gae_db_version.isEmpty()) ? String.valueOf(0) : gae_db_version);
