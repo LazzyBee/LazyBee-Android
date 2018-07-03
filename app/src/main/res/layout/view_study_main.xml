@@ -54,9 +54,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:clickable="true"
-            android:src="@android:drawable/ic_menu_help"
+            android:scaleType="center"
+            android:src="@drawable/round_help_outline_white_36"
             ads:backgroundTint="@color/background_btn_user_note"
-            ads:elevation="0dp" />
+            ads:elevation="0dp"
+            ads:fabSize="normal" />
 
 
     </FrameLayout>
