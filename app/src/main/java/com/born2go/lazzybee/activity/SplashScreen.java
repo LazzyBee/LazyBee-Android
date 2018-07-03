@@ -43,76 +43,33 @@ public class SplashScreen extends Activity {
 
         setContentView(R.layout.activity_splash_screen);
         thiz = this;
-//        new Handler().postDelayed(new Runnable() {
-//            /*
-//             * Showing splash screen with a timer. This will be useful when you
-//             * want to show case your app logo / company
-//             */
-//            @Override
-//            public void run() {
-//                TagManager tagManager = TagManager.getInstance(SplashScreen.this);
-//
-//                // Modify the log level of the logger to print out not only
-//                // warning and error messages, but also verbose, debug, info messages.
-//                tagManager.setVerboseLoggingEnabled(true);
-//
-//                PendingResult<ContainerHolder> pending =
-//                        tagManager.loadContainerPreferNonDefault(getString(R.string.google_tag_ID),
-//                                R.raw.gtm_default_container);
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // After config data is successfully fetched, it must be activated before newly fetched
+                            // values are returned.
+                            LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
+                        }
+                        _initSQlIte();
+                        _changeLanguage();
+                        _updateVersionDB();
+                        String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                        Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
+                        LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
+                        MobileAds.initialize(thiz, ADMOB_PUB_ID);
+                        learnApiImplements._get100Card();
 
-                // The onResult method will be called as soon as one of the following happens:
-                //     1. a saved container is loaded
-                //     2. if there is no saved container, a network container is loaded
-                //     3. the request times out. The example below uses a constant to manage the timeout period.
-                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
-                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    // After config data is successfully fetched, it must be activated before newly fetched
-                                    // values are returned.
-                                    LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
-                                }
-                                _initSQlIte();
-                                _changeLanguage();
-                                _updateVersionDB();
-                                String ADMOB_PUB_ID=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
-                                Log.d(TAG,"ADMOB_PUB_ID:"+ADMOB_PUB_ID);
-                                LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
-                                MobileAds.initialize(thiz,ADMOB_PUB_ID);
-                                learnApiImplements._get100Card();
-
-                                startMainActivity(ADMOB_PUB_ID);
-                            }
-                        });
-
-//                pending.setResultCallback(new ResultCallback<ContainerHolder>() {
-//                    @Override
-//                    public void onResult(ContainerHolder containerHolder) {
-//
-//                        //init Container
-////                        LazzyBeeSingleton.setContainerHolder(containerHolder);
-//                      //  Container container = containerHolder.getContainer();
-////                        if (!containerHolder.getStatus().isSuccess()) {
-////                            Log.e("LazzyBee", "failure loading container for GTag");
-////                            displayErrorToUser(R.string.gtag_container_load_error);
-////                            return;
-////                        } else {
-////                            LazzyBeeSingleton.setContainerHolder(containerHolder);
-////                            ContainerLoadedCallback.registerCallbacksForContainer(container);
-////                            containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
-////                        }
-//
-//                    }
-//                }, GTM_TIME_OUT, TimeUnit.MILLISECONDS);
-       //     }
-       // }, SPLASH_TIME_OUT);
+                        startMainActivity(ADMOB_PUB_ID);
+                    }
+                });
     }
 
     private void startMainActivity(String ADMOB_PUB_ID) {
         // Start your app main activity
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
-        i.putExtra(LazzyBeeShare.ADMOB_PUB_ID,ADMOB_PUB_ID);
+        i.putExtra(LazzyBeeShare.ADMOB_PUB_ID, ADMOB_PUB_ID);
         startActivity(i);
         this.finish();
     }

@@ -1,14 +1,4 @@
 apply plugin: 'com.android.application'
-repositories {
-    mavenCentral()
-    flatDir {
-        dirs 'libs'
-    }
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots"
-    }
-}
-
 android {
     compileSdkVersion 27
     buildToolsVersion "28.0.0-rc1"
@@ -18,8 +8,8 @@ android {
         applicationId "com.born2go.lazzybee"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 53
-        versionName "1.7.5"
+        versionCode 54
+        versionName "1.7.6"
         multiDexEnabled true
     }
     buildTypes {
@@ -41,33 +31,40 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
     }
-
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.json:json:20140107'
-    implementation('com.google.api-client:google-api-client-android:1.17.0-rc') {
-        exclude module: 'httpclient'
-    }
-    implementation('com.google.http-client:google-http-client-gson:1.17.0-rc') {
-        exclude module: 'httpclient'
-    }
+
     implementation 'com.android.support:support-v4:27.1.0'
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:cardview-v7:27.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support:multidex:1.0.0'
+    implementation 'com.android.support:customtabs:27.1.0'
+    implementation 'com.android.support:animated-vector-drawable:27.1.0'
+
 
     implementation 'com.google.gms:google-services:3.1.0'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
     implementation 'com.github.lecho:hellocharts-android:v1.5.8'
     implementation 'org.apache.httpcomponents:httpcore:4.3.2'
     implementation 'org.apache.httpcomponents:httpmime:4.3.2'
-    implementation 'com.google.firebase:firebase-core:11.0.4'
-    implementation 'com.google.firebase:firebase-ads:11.0.4'
-    implementation 'com.google.firebase:firebase-config:11.0.4'
+    implementation 'com.google.firebase:firebase-core:15.0.2'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    implementation 'com.google.firebase:firebase-config:16.0.0'
+
+    implementation 'com.google.api-client:google-api-client:1.23.0'
+    implementation 'com.google.http-client:google-http-client-android:1.23.0'
+    implementation('com.google.api-client:google-api-client-android:1.17.0-rc') { exclude module: 'httpclient' }
+    implementation('com.google.http-client:google-http-client-gson:1.17.0-rc') { exclude module: 'httpclient' }
+
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

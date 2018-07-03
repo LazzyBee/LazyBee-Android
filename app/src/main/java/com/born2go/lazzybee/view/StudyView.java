@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,10 +32,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.CardDetailsActivity;
 import com.born2go.lazzybee.activity.StudyActivity;
@@ -107,6 +111,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     boolean answerDisplay = false;
     boolean learn_more;
     FloatingActionButton mFloatActionButtonUserNote;
+    FloatingActionButton mHelp;
 
 
     private Intent intent;
@@ -244,6 +249,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _processingAnswerCard(final int ea) {
+        _handlerShowHelpShowAnswer();
         _showBtnAnswer();
         //mViewPager.setPagingEnabled(false);
         setEnableShowDictionary(false);
@@ -348,7 +354,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         imgGotoDictionary = (ImageView) view.findViewById(R.id.imgGotoDictionary);
         imgGotoDictionary.setColorFilter(context.getResources().getColor(R.color.card_due_color));
 
-        final RelativeLayout mDisplay = (RelativeLayout) view.findViewById(R.id.mDisplay);
+        final View mDisplay = view.findViewById(R.id.mDisplay);
 
 
         mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
@@ -376,9 +382,128 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
 
+        mHelp = (FloatingActionButton) view.findViewById(R.id.mHelp);
+
         _handlerNote();
 
         _handlerImgGotoDictionary();
+
+        _handlerShowHelpShowAnswer();
+
+        mHelp.setOnTouchListener(new View.OnTouchListener() {
+            public boolean shouldClick;
+            int move = 0;
+            float dX, dY;
+            boolean isMove = false;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                // your code for move and drag
+                setEnableShowDictionary(true);
+
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG, "ACTION_DOWN");
+                        shouldClick = true;
+                        isMove = false;
+                        dX = (mHelp.getX() - event.getRawX());
+                        dY = (mHelp.getY() - event.getRawY());
+                        move = 1;
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        Log.d(TAG, "ACTION_UP -move:" + move);
+                        if (shouldClick || move < 10) {
+                            Log.d(TAG, "performClick:" + mHelp.performClick());//call on move
+                        }
+                        move = 0;
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        isMove = true;
+                        Log.d(TAG, "ACTION_MOVE");
+                        move++;
+                        shouldClick = false;
+                        float eX = (event.getRawX() + dX);//define position X
+                        float eY = (event.getRawY() + dY);//define position Y
+
+                        if (widthStudyDisplay > -1 && heightStudyDisplay > -1) {
+                            if (eX < 0) {
+                                eX = 0f;
+                            } else if (eX >= widthStudyDisplay - (widthStudyDisplay * 0.15)) {
+                                eX = (float) (widthStudyDisplay - (widthStudyDisplay * 0.2));
+                            }
+                            if (eY < 0) {
+                                eY = 0f;
+                            } else if (eY >= heightStudyDisplay - (heightStudyDisplay * 0.1)) {
+                                eY = (float) (heightStudyDisplay - (heightStudyDisplay * 0.15));
+                            }
+                        } else {
+                            Log.d(TAG, "WidthHeight =-1");
+                        }
+                        mHelp.animate()//move button
+                                .x(eX)
+                                .y(eY)
+                                .setDuration(0)
+                                .start();
+                        setEnableShowDictionary(false);
+
+                        break;
+                    case MotionEvent.ACTION_HOVER_MOVE:
+                        Log.d(TAG, "ACTION_MOVE");
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+            }
+
+        });
+    }
+
+    private void _handlerShowHelpShowAnswer() {
+        mHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogHelp();
+            }
+        });
+    }
+
+
+    private void _handlerShowHelpAnswer(final String hard, final String medium, final String easy) {
+        mHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogAnswerHelp(hard, medium, easy);
+            }
+        });
+    }
+
+    private void showDialogAnswerHelp(String hard, String medium, String easy) {
+        String html=getString(R.string.base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels,hard,medium,easy);
+        WebView webView=new WebView(getContext());
+        webView.loadData(html , "text/html; charset=UTF-8", null);
+
+        new MaterialDialog.Builder(getActivity())
+                .customView(webView,true)
+                .positiveText(R.string.ok)
+                .positiveColor(getResources().getColor(R.color.button_green_color))
+                .theme(Theme.LIGHT)
+                .build().show();
+
+    }
+
+
+    private void showDialogHelp() {
+        new MaterialDialog.Builder(getActivity())
+                .content(Html.fromHtml(getString(R.string.try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare)))
+                .positiveText(getString(R.string.ok))
+                .positiveColor(getResources().getColor(R.color.button_green_color))
+                .theme(Theme.LIGHT)
+                .build().show();
     }
 
     private void _handlerNote() {
@@ -802,18 +927,25 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             //Show answer question
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue());
 
+
 //            get  next Ivl String List
             String[] ivlStrList = cardSched.nextIvlStrLst(cardFromDB, context);
-            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_AGAIN],
+
+            String EASE_AGAIN = ivlStrList[Card.EASE_AGAIN];
+            String EASE_HARD = ivlStrList[Card.EASE_HARD];
+            String EASE_GOOD = ivlStrList[Card.EASE_GOOD];
+            String EASE_EASY = ivlStrList[Card.EASE_EASY];
+
+            String text_btnAgain = LazzyBeeShare.getHTMLButtonAnswer(context, EASE_AGAIN,
                     getString(R.string.EASE_AGAIN), R.color.color_level_btn_answer);
-            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_HARD],
+            String text_btnHard1 = LazzyBeeShare.getHTMLButtonAnswer(context, EASE_HARD,
                     getString(R.string.EASE_HARD), R.color.color_level_btn_answer);
 
-            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_GOOD],
+            String text_btnGood2 = LazzyBeeShare.getHTMLButtonAnswer(context, EASE_GOOD,
                     getString(R.string.EASE_GOOD), (cardFromDB.getQueue() == Card.QUEUE_LNR1) ?
                             R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
 
-            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, ivlStrList[Card.EASE_EASY],
+            String text_btnEasy3 = LazzyBeeShare.getHTMLButtonAnswer(context, EASE_EASY,
                     getString(R.string.EASE_EASY), (cardFromDB.getQueue() == Card.QUEUE_LNR1) ?
                             R.color.color_level_btn_answer_disable : R.color.color_level_btn_answer);
             //set text btn
@@ -823,10 +955,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             btnEasy3.setText(LazzyBeeShare.fromHtml(text_btnEasy3));
 
 
-            btnAgain0.setTag(ivlStrList[Card.EASE_AGAIN]);
-            btnHard1.setTag(ivlStrList[Card.EASE_HARD]);
-            btnGood2.setTag(ivlStrList[Card.EASE_GOOD]);
-            btnEasy3.setTag(ivlStrList[Card.EASE_EASY]);
+            btnAgain0.setTag(EASE_AGAIN);
+            btnHard1.setTag(EASE_HARD);
+            btnGood2.setTag(EASE_GOOD);
+            btnEasy3.setTag(EASE_EASY);
+
+            _handlerShowHelpAnswer(EASE_HARD, EASE_GOOD, EASE_EASY);
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_showBtnAnswer", e);
@@ -1006,7 +1140,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             public void speechExample() {
                 //get answer json
                 //String answer = currentCard.getAnswers();
-                String toSpeech =currentCard.getExample(mySubject, LazzyBeeShare.TO_SPEECH_1); //LazzyBeeShare._getValueFromKey(answer, "example");
+                String toSpeech = currentCard.getExample(mySubject, LazzyBeeShare.TO_SPEECH_1); //LazzyBeeShare._getValueFromKey(answer, "example");
 
                 //Speak text
                 LazzyBeeShare._speakText(toSpeech, finalSpeechRate);
@@ -1354,8 +1488,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
-                    if (task.isSuccessful()){
-                        server_base_url_sharing=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
+                    if (task.isSuccessful()) {
+                        server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
                     }
                     if (server_base_url_sharing != null) {
                         if (server_base_url_sharing.length() > 0)

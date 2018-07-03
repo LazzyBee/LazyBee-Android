@@ -393,4 +393,22 @@
     <string name="msg_find_card_question">Đang tra "%s"</string>
     <string name="msg_upadte_card">Đang cập nhật</string>
     <string name="play_video_to_save_streak">Phát video để cứu streak?</string>
+
+    <string name="try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare">Bạn hãy nhớ lại nghĩa của (cụm) từ, sau đó bấm nút \"Trả lời\" để so sánh</string>
+    <string name="base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels">
+        <![CDATA[
+            <html>
+                <body>
+                    <h4>Dựa trên quá trình học tập của (cụm) từ này, LazzyBee tính toán các quãng thời gian ôn tập tiếp theo phụ thuộc vào việc bạn đánh giá độ khó của từ này, như sau:</h4>
+                    <ul>
+                    <li><b>Học lại</b>:Nếu bạn chưa học hoặc đã quên, ứng dụng sẽ nhắc lại từ này ngay hôm nay</li>
+                    <li><b>Khó</b>:Ứng dụng sẽ nhắc lại sau %1$s</li>
+                    <li><b>Trung bình</b>:Ứng dụng sẽ nhắc lại sau %2$s</li>
+                    <li><b>Dễ</b>:Ứng dụng sẽ nhắc lại sau %3$s</li>
+                    </ul>
+                    Sau mỗi lần học, bạn sẽ nhớ từ lâu hơn và thời gian ôn tập sẽ kéo dài ra. Hãy kiên nhẫn.
+                </body>
+            </html>
+        ]]>
+    </string>
 </resources>

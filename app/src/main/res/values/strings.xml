@@ -554,4 +554,23 @@
     <string name="msg_upadte_card">Updating</string>
     <string name="play_video_to_save_streak">Play video to save streak</string>
 
+    <string name="try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare">Try to remember meaning of the words(s), after that press \"Show answer\" to compare</string>
+    <string name="base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels">
+        <![CDATA[
+            <html>
+                <body>
+                    <h4>Base on the learning history of this word(s), LazzyBee suggest the next interval up to your evaluation as following levels:</h4>
+                    <ul>
+                    <li><b>Again</b> : If you\'ve never learned or already forgot, app will repeat it today</li>
+                    <li><b>Hard</b> : App will repeat after %1$s</li>
+                    <li><b>Medium</b> : App will repeat after %2$s</li>
+                    <li><b>Easy</b> : App will repeat after %3$s</li>
+                    </ul>
+                    Each time you learn, your memory will be better and the interval is longer. Be patient.
+                </body>
+            </html>
+        ]]>
+    </string>
+
+
 </resources>
