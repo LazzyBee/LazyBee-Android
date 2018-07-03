@@ -1851,18 +1851,6 @@ public class LearnApiImplements implements LearnApi {
         return datas;
     }
 
-    public Cursor _recentSuggestionCardCursor() {
-        int countSug = _queryCount("select Count(suggestion.suggestion) from suggestion");
-        Log.d(TAG, "count Suggestion:" + countSug);
-        if (countSug > 50) {
-            String delete40Row = "delete from suggestion where suggestion.id in (select suggestion.id from suggestion order by suggestion.id LIMIT 40);";
-            Log.d(TAG, "DELETE 40 ROW" + (executeQuery(delete40Row) == 1 ? " OK" : " Fails"));
-        }
-        String getSug = "select suggestion.suggestion,rowid _id from suggestion ORDER  BY id DESC LIMIT 5";
-        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(getSug, null);
-        return cursor;
-    }
 
     public int _updateCardFormCSV(long gId, int queue, int due, int rev_count, int last_ivl, int factor, String user_note) {
         int update_result = -2;

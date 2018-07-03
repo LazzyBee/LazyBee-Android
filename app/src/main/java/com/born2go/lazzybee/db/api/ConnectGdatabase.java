@@ -105,16 +105,4 @@ public class ConnectGdatabase {
 
     }
 
-    public VocaCollection _saveVoca(String wordList) {
-        DataServiceApi.ListVoca apiInst;
-        VocaCollection vocaCollection = null;
-        try {
-            api = getDataServiceApi();
-            apiInst = api.listVoca(wordList);
-            vocaCollection = apiInst.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return vocaCollection;
-    }
 }
