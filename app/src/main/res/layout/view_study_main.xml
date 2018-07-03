@@ -21,38 +21,50 @@
         <!--android:layout_weight="1"-->
         <!--card_view:cardCornerRadius="0dp">-->
 
-        <RelativeLayout
-            android:id="@+id/mDisplay"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
+    <FrameLayout
+        android:id="@+id/mDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-            <WebView
-                android:id="@+id/mWebViewLeadDetaisl"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff" />
+        <WebView
+            android:id="@+id/mWebViewLeadDetaisl"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#fff" />
 
-            <android.support.design.widget.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
 
-                android:id="@+id/mFloatActionButtonUserNote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_note_white_24dp"
-                ads:elevation="0dp"
-                ads:backgroundTint="@color/background_btn_user_note"
-                android:visibility="gone" />
+            android:id="@+id/mFloatActionButtonUserNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_note_white_24dp"
+            android:visibility="gone"
+            ads:backgroundTint="@color/background_btn_user_note"
+            ads:elevation="0dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/mHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:src="@android:drawable/ic_menu_help"
+            ads:backgroundTint="@color/background_btn_user_note"
+            ads:elevation="0dp" />
 
 
-        </RelativeLayout>
+    </FrameLayout>
     <!--</android.support.v7.widget.CardView>-->
 
-    <include layout="@layout/view_study_button" />
+    <include
+        layout="@layout/view_study_button"
+        android:layout_gravity="bottom" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/mCardViewHelpandAdMod"
