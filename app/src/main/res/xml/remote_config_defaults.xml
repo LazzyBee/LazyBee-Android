@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>adv_pub_id</key>
+        <value>ca-app-pub-5245864792816840</value>
+    </entry>
+    <entry>
+        <key>adv_fullscreen_id</key>
+        <value>9210342219</value>
+    </entry>
+    <entry>
+        <key>adv_sponsor_unit</key>
+        <value>4432780595</value>
+    </entry>
+
+    <entry>
+        <key>adv_streak_saver</key>
+        <value>2801146480</value>
+    </entry>
+    <entry>
+        <key>adv_banner_id</key>
+        <value>7733609014</value>
+    </entry>
+    <entry>
+        <key>base_url</key>
+        <value>http://222.255.29.25/lazzybee/</value>
+    </entry>
+    <entry>
+        <key>pop_up_maxnum</key>
+        <value>1</value>
+    </entry>
+    <entry>
+        <key>server_base_url_sharing</key>
+        <value>http://www.lazzybee.com/vdict</value>
+    </entry>
+    <entry>
+        <key>streak_saver</key>
+        <value>7</value>
+    </entry>
+</defaultsMap><!-- END xml_defaults -->
