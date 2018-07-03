@@ -1582,5 +1582,10 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onRewardedVideoAdFailedToLoad");
         //_fillStreak();
     }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+
+    }
 }
 
