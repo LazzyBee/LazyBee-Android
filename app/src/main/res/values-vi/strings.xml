@@ -246,7 +246,7 @@
         <item>@string/speech_rate_fast</item>
         <item>@string/speech_rate_very_fast</item>
     </string-array>
-    <string name="dialog_message_reset_custom_study">Bạn có muốn thiết lập về mặc đinh?</string>
+    <string name="dialog_message_reset_custom_study">Bạn có muốn sử dụng thiết lập mặc định?</string>
     <string name="setting_reset_cache">Reset Cache</string>
     <string name="setting_reset_to_default">Thiết lập mặc định</string>
     <string name="action_update_card">Cập nhật thẻ</string>
@@ -307,7 +307,7 @@
     <string name="day_sat">T7</string>
     <string name="day_sun">CN</string>
     <string name="streak_day">ngày</string>
-    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm %s để học nếu bạn muốn.</string>
+    <string name="congratulations_learnmore">Hôm nay bạn đã học hết từ. Bấm \'%s\' để học nếu bạn muốn.</string>
     <string name="title_dialog_user_note">Ghi chú</string>
     <string name="hint_user_note">Thêm ghi chú tại đây!</string>
     <string name="save">Lưu</string>
@@ -354,7 +354,7 @@
     <string name="reverse_next">Tiếp theo</string>
     <string name="complele_text_display"><u>2000 từ/năm với 5 phút mỗi ngày.</u></string>
     <string name="msg_finishing_your_daily_target">Vui lòng quay lại sau khi bạn đã hoàn thành mục tiêu hàng ngày.</string>
-    <string name="msg_restore_data">Quá trình khôi phục dữ liệu đang được thực hiện.Vui lòng chờ trong ít phút.</string>
+    <string name="msg_restore_data">Quá trình khôi phục dữ liệu đang được thực hiện. Vui lòng chờ trong ít phút.</string>
 
     <string-array name="subjects">
         <item>@string/subject_it</item>
@@ -390,9 +390,9 @@
     <string name="or">hoặc</string>
     <string name="to_add">để thêm</string>
     <string name="msg_ads_help">Quảng cáo này giúp chúng tôi có thể cung cấp ứng dụng miễn phí</string>
-    <string name="msg_find_card_question">Đang tra "%s"</string>
+    <string name="msg_find_card_question">Đang tìm kiếm \"%s\"</string>
     <string name="msg_upadte_card">Đang cập nhật</string>
-    <string name="play_video_to_save_streak">Phát video để cứu streak?</string>
+    <string name="play_video_to_save_streak">Bạn có muốn xem video quảng cáo để cứu streak?</string>
 
     <string name="try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare">Bạn hãy nhớ lại nghĩa của (cụm) từ, sau đó bấm nút \"Trả lời\" để so sánh</string>
     <string name="base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels">
