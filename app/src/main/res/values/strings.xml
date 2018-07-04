@@ -125,7 +125,7 @@
     <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
     <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
 
-    <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn pre day by</string>
+    <string name="dialog_message_setting_total_card_learn_pre_day_by">Total card learn per day by</string>
     <string name="dialog_message_setting_max_learn_more_per_day_by">Max learn more per day by</string>
 
     <string name="message_you_not_complete">You haven\'t completed yet! Touch to learn</string>
@@ -141,7 +141,7 @@
     <string name="drawer_add_course" translatable="false">add_course</string>
     <string name="drawer_line" translatable="false">lines</string>
     <string name="drawer_setting">Settings</string>
-    <string name="setting_about_message" translatable="false">Born2Go © 2017</string>
+    <string name="setting_about_message" translatable="false">Born2Go © 2018</string>
     <string name="under_construction" translatable="false">Under construction</string>
 
     <string name="notification_title">%1$s %2$s</string>
@@ -176,7 +176,7 @@
     <string name="google_tag_ID" translatable="false">GTM-KJQJGX</string>
     <string name="gtag_container_load_error" translatable="false">Failed to load container</string>
 
-    <string name="notification_message" translatable="false">It\'s time to learn few English words!</string>
+    <string name="notification_message" translatable="false">It\'s time to learn a few English words!</string>
     <string name="local_service_started" translatable="false">no</string>
 
     <string name="setting_reset_to_default">Reset to default</string>
@@ -393,7 +393,7 @@
     <string name="english_word">Vocabulary learning</string>
 
 
-    <string name="message_no_results_found_for">No results found for <b>%s</b></string>
+    <string name="message_no_results_found_for">No results found for <b>\'%s\'</b></string>
     <string name="action_report">Report</string>
     <string name="page_facebook_id" translatable="false">1012100435467230</string>
     <string name="facebook_group_url" translatable="false">https://www.facebook.com/lazzybees</string>
@@ -550,9 +550,9 @@
     <string name="to_add">to add</string>
     <string name="edit_url" translatable="false">http://www.lazzybee.com/editor/#vocabulary</string>
     <string name="msg_ads_help">This ad helps us keep education free</string>
-    <string name="msg_find_card_question">Find "%s"</string>
+    <string name="msg_find_card_question">Searching \"%s\"</string>
     <string name="msg_upadte_card">Updating</string>
-    <string name="play_video_to_save_streak">Play video to save streak</string>
+    <string name="play_video_to_save_streak">Play video to save your streak?</string>
 
     <string name="try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare">Try to remember meaning of the words(s), after that press \"Show answer\" to compare</string>
     <string name="base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels">
