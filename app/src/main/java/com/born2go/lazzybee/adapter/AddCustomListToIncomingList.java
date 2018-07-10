@@ -159,6 +159,7 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
             e.printStackTrace();
+            LazzyBeeSingleton.getCrashlytics().logException(e);
             return null;
         }
     }

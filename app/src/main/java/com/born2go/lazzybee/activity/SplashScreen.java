@@ -142,6 +142,7 @@ public class SplashScreen extends Activity {
             //throw new Error("Unable to create database");
             //ioe.printStackTrace();
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
+            LazzyBeeSingleton.getCrashlytics().logException(ioe);
 
         }
 

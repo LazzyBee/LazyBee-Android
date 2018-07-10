@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+
 /**
  * Created by Hue on 12/3/2015.
  */
@@ -26,6 +28,7 @@ public class DisableScrollingViewPager extends ViewPager {
             return this.isPagingEnabled && super.onInterceptTouchEvent(event);
         } catch (Exception e) {
             e.printStackTrace();
+            LazzyBeeSingleton.getCrashlytics().logException(e);
             return false;
         }
     }
@@ -36,6 +39,7 @@ public class DisableScrollingViewPager extends ViewPager {
             return this.isPagingEnabled && super.onInterceptTouchEvent(event);
         } catch (Exception e) {
             e.printStackTrace();
+            LazzyBeeSingleton.getCrashlytics().logException(e);
             return false;
         }
 

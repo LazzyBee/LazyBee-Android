@@ -309,6 +309,7 @@ public class StudyActivity extends AppCompatActivity
                             searchView.setSuggestionsAdapter(suggestionCardAdapter);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            LazzyBeeSingleton.getCrashlytics().logException(e);
                         } finally {
                             Log.d(TAG, "query suggetion");
                         }
