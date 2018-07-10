@@ -24,28 +24,30 @@ public class DisableScrollingViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        try {
-            return this.isPagingEnabled && super.onInterceptTouchEvent(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LazzyBeeSingleton.getCrashlytics().logException(e);
-            return false;
+        if (this.isPagingEnabled) {
+            return super.onTouchEvent(event);
         }
+
+        return false;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        try {
-            return this.isPagingEnabled && super.onInterceptTouchEvent(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LazzyBeeSingleton.getCrashlytics().logException(e);
-            return false;
+        if (this.isPagingEnabled) {
+            return super.onInterceptTouchEvent(event);
         }
 
+        return false;
     }
 
-    public void setPagingEnabled(boolean b) {
-        this.isPagingEnabled = b;
+    public void setPagingEnabled(boolean enabled) {
+        this.isPagingEnabled = enabled;
+    }
+
+    @Override
+    public void scrollTo(int x, int y) {
+        if(isPagingEnabled) {
+            super.scrollTo(x, y);
+        }
     }
 }
