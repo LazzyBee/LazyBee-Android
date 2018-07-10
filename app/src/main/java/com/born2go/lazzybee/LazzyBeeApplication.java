@@ -5,6 +5,9 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Hue on 9/4/2015.
@@ -21,6 +24,7 @@ public class LazzyBeeApplication extends Application {
         super.onCreate();
         //Initialize the initLazzyBeeSingleton
         initLazzyBeeSingleton();
+        Fabric.with(getApplicationContext(), new Crashlytics());
     }
     
     protected void initLazzyBeeSingleton() {
