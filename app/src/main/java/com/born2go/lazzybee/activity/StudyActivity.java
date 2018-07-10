@@ -101,7 +101,7 @@ public class StudyActivity extends AppCompatActivity
         try {
             //get lean_more form intern
             learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
-            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), mViewPager);
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy()", e);
@@ -435,23 +435,18 @@ public class StudyActivity extends AppCompatActivity
 
 
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
+        private final CustomViewPager mViewPager;
         private int pageCount = 2;
-
-
-        public void setPageCount(int pageCount1) {
-            pageCount = pageCount1;
-        }
-
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        
+        public ScreenSlidePagerAdapter(FragmentManager fm, CustomViewPager mViewPager) {
             super(fm);
-
+            this.mViewPager = mViewPager;
         }
-
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0)
-                return StudyView.newInstance(context, getIntent(), mViewPager, this, currentCard);
+                return StudyView.newInstance(context, getIntent(), mViewPager, ScreenSlidePagerAdapter.this, currentCard);
             else {
                 return DetailsView.newInstance(context, "details");
 
