@@ -34,7 +34,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.CustomViewPager;
+import com.born2go.lazzybee.adapter.DisableScrollingViewPager;
 import com.born2go.lazzybee.adapter.SuggestionCardAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -46,9 +46,6 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
 import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
@@ -73,7 +70,7 @@ public class StudyActivity extends AppCompatActivity
     int completeStudy = 0;
 
     LinearLayout container;
-    CustomViewPager mViewPager;
+    DisableScrollingViewPager mViewPager;
     ScreenSlidePagerAdapter pagerAdapter;
 
     private String detailViewTag;
@@ -196,7 +193,7 @@ public class StudyActivity extends AppCompatActivity
 
     private void _initView() {
         container = (LinearLayout) findViewById(R.id.container);
-        mViewPager = (CustomViewPager) findViewById(R.id.viewpager);
+        mViewPager = (DisableScrollingViewPager) findViewById(R.id.viewpager);
         mViewPager.setPagingEnabled(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -435,10 +432,10 @@ public class StudyActivity extends AppCompatActivity
 
 
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
-        private final CustomViewPager mViewPager;
+        private final DisableScrollingViewPager mViewPager;
         private int pageCount = 2;
-        
-        public ScreenSlidePagerAdapter(FragmentManager fm, CustomViewPager mViewPager) {
+
+        public ScreenSlidePagerAdapter(FragmentManager fm, DisableScrollingViewPager mViewPager) {
             super(fm);
             this.mViewPager = mViewPager;
         }
