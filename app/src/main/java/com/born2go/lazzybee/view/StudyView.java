@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Html;
-import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +38,7 @@ import com.afollestad.materialdialogs.Theme;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.CardDetailsActivity;
 import com.born2go.lazzybee.activity.StudyActivity;
-import com.born2go.lazzybee.adapter.CustomViewPager;
+import com.born2go.lazzybee.adapter.DisableScrollingViewPager;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
@@ -118,7 +116,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
 
     DetailsView detailsView;
-    CustomViewPager mViewPager;
+    DisableScrollingViewPager mViewPager;
 
     int widthStudyDisplay = -1, heightStudyDisplay = -1;
     String mySubject = "common";
@@ -135,7 +133,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     @SuppressLint("ValidFragment")
-    public StudyView(Context context, Intent intent, CustomViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
+    public StudyView(Context context, Intent intent, DisableScrollingViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
         this.card = card;
         this.context = context;
         this.intent = intent;
@@ -146,7 +144,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         _initTextToSpeech();
     }
 
-    public static StudyView newInstance(Context context, Intent intent, CustomViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
+    public static StudyView newInstance(Context context, Intent intent, DisableScrollingViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
         Bundle args = new Bundle();
         StudyView fragment = new StudyView(context, intent, mViewPager, screenSlidePagerAdapter, card);
         fragment.setArguments(args);
