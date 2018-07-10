@@ -8,26 +8,37 @@ import android.view.MotionEvent;
 /**
  * Created by Hue on 12/3/2015.
  */
-public class CustomViewPager extends ViewPager {
+public class DisableScrollingViewPager extends ViewPager {
 
     private boolean isPagingEnabled = true;
 
-    public CustomViewPager(Context context) {
+    public DisableScrollingViewPager(Context context) {
         super(context);
     }
 
-    public CustomViewPager(Context context, AttributeSet attrs) {
+    public DisableScrollingViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return this.isPagingEnabled && super.onTouchEvent(event);
+        try {
+            return this.isPagingEnabled && super.onInterceptTouchEvent(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return this.isPagingEnabled && super.onInterceptTouchEvent(event);
+        try {
+            return this.isPagingEnabled && super.onInterceptTouchEvent(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     public void setPagingEnabled(boolean b) {
