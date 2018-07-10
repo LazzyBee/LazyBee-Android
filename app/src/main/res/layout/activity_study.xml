@@ -14,7 +14,7 @@
         layout="@layout/tool_bar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-    <com.born2go.lazzybee.adapter.CustomViewPager
+    <com.born2go.lazzybee.adapter.DisableScrollingViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

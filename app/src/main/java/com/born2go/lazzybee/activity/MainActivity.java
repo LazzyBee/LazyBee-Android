@@ -543,6 +543,7 @@ public class MainActivity extends AppCompatActivity
             TextView lbAppVersion = (TextView) findViewById(R.id.mVesionApp);
             lbAppVersion.setText("Version:" + versionName);
         } catch (PackageManager.NameNotFoundException e) {
+            LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
         }
     }
@@ -994,6 +995,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
+            LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 
 
@@ -1308,6 +1310,7 @@ public class MainActivity extends AppCompatActivity
                         } catch (ActivityNotFoundException e) {
                             Log.e(TAG, "No application can handle this request."
                                     + " Please install a webbrowser");
+                            LazzyBeeSingleton.getCrashlytics().logException(e);
                         }
                     }
                 });
@@ -1515,6 +1518,7 @@ public class MainActivity extends AppCompatActivity
                     SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
                     mSearchCardBox.setSuggestionsAdapter(suggestionCardAdapter);
                 } catch (Exception e) {
+                    LazzyBeeSingleton.getCrashlytics().logException(e);
                     e.printStackTrace();
                 } finally {
                     Log.d(TAG, "query suggetion");

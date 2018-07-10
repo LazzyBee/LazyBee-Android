@@ -228,6 +228,7 @@ public class RecyclerViewSettingListAdapter extends
                     e.printStackTrace();
                     lbAppVersion.setText("AppVersion:" + versionName);
                     lbDbVersion.setText("DBVersion:" + _dbVesion);
+                    LazzyBeeSingleton.getCrashlytics().logException(e);
                 }
 
 
@@ -322,6 +323,7 @@ public class RecyclerViewSettingListAdapter extends
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(context, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+            LazzyBeeSingleton.getCrashlytics().logException(ex);
         }
     }
 
@@ -1155,6 +1157,7 @@ public class RecyclerViewSettingListAdapter extends
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
+            LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 
 

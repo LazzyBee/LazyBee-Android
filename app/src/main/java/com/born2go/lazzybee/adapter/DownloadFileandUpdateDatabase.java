@@ -84,10 +84,13 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
+            LazzyBeeSingleton.getCrashlytics().logException(mue);
         } catch (IOException ioe) {
             Log.e("SYNC getUpdate", "io error", ioe);
+            LazzyBeeSingleton.getCrashlytics().logException(ioe);
         } catch (SecurityException se) {
             Log.e("SYNC getUpdate", "security error", se);
+            LazzyBeeSingleton.getCrashlytics().logException(se);
         }
         return results;
     }
@@ -111,6 +114,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
         } catch (Exception e) {
             // LazzyBeeShare.showErrorOccurred(context, e);
+            LazzyBeeSingleton.getCrashlytics().logException(e);
         }
     }
 
@@ -132,6 +136,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
                     + "\t" + context.getClass().getName() + ":" + e.getMessage();
             Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
             Log.e(TAG, messageError);
+            LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 
     }

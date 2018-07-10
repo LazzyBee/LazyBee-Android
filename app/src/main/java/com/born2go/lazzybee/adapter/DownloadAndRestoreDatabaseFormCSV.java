@@ -113,12 +113,16 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             }
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
+            LazzyBeeSingleton.getCrashlytics().logException(mue);
         } catch (IOException ioe) {
             Log.e("SYNC getUpdate", "io error", ioe);
+            LazzyBeeSingleton.getCrashlytics().logException(ioe);
         } catch (SecurityException se) {
             Log.e("SYNC getUpdate", "security error", se);
+            LazzyBeeSingleton.getCrashlytics().logException(se);
         } catch (Exception e) {
             Log.e(TAG, "exception error", e);
+            LazzyBeeSingleton.getCrashlytics().logException(e);
         }
         return pathFileRestore;
     }
@@ -324,6 +328,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                     restore = 1;
                 } catch (Exception e) {
                     Log.d(TAG, "Error:" + e.getMessage());
+                    LazzyBeeSingleton.getCrashlytics().logException(e);
                     e.printStackTrace();
                 }
                 Log.d(TAG, "Delete streak file Csv:" + (fileCsv.delete() ? " Ok" : " Fails"));
@@ -333,6 +338,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LazzyBeeSingleton.getCrashlytics().logException(e);
         }
         return restore;
     }
@@ -393,6 +399,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             return card;
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
+            LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
             return null;
         }

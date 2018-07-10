@@ -201,6 +201,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             results = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
+            LazzyBeeSingleton.getCrashlytics().logException(sqlEx);
         }
         return results;
     }
@@ -240,6 +241,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             results = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
+            LazzyBeeSingleton.getCrashlytics().logException(sqlEx);
         }
         return results;
     }
@@ -307,6 +309,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             }
         } catch (Exception e) {
             Log.d(TAG, "Post file backup to Server Fails");
+            LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
         }
         return results;

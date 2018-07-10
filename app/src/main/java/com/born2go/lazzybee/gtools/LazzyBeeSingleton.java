@@ -8,6 +8,7 @@ import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -28,6 +29,7 @@ public class LazzyBeeSingleton {
     private static FirebaseAnalytics mFirebaseAnalytics;
     private static FirebaseRemoteConfig mRemoteConfig;
     private static String amobPubId;
+    private static Crashlytics mCrashlytics;
 
     public LazzyBeeSingleton(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
@@ -44,7 +46,7 @@ public class LazzyBeeSingleton {
         connectGdatabase = new ConnectGdatabase();
         //mDataLayer = TagManager.getInstance(context).getDataLayer();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
-        mRemoteConfig=FirebaseRemoteConfig.getInstance();
+        mRemoteConfig = FirebaseRemoteConfig.getInstance();
         mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
     }
 
@@ -60,17 +62,10 @@ public class LazzyBeeSingleton {
         return instance;
     }
 
-//    public static ContainerHolder getContainerHolder() {
-//        return containerHolder;
-//    }
-
-//    public static void setContainerHolder(ContainerHolder c) {
-//        containerHolder = c;
-//    }
-
     public static FirebaseAnalytics getFirebaseAnalytics() {
         return mFirebaseAnalytics;
     }
+
     public static FirebaseRemoteConfig getFirebaseRemoteConfig() {
         return mRemoteConfig;
     }
@@ -81,5 +76,11 @@ public class LazzyBeeSingleton {
 
     public static String getAmobPubId() {
         return amobPubId;
+    }
+
+    public static Crashlytics getCrashlytics() {
+        if (mCrashlytics == null)
+            mCrashlytics = Crashlytics.getInstance();
+        return mCrashlytics;
     }
 }

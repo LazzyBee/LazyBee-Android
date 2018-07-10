@@ -34,7 +34,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.adapter.CustomViewPager;
+import com.born2go.lazzybee.adapter.DisableScrollingViewPager;
 import com.born2go.lazzybee.adapter.SuggestionCardAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
@@ -47,9 +47,6 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogCompleteStudy;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
 import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
 
@@ -59,15 +56,11 @@ public class StudyActivity extends AppCompatActivity
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
     private Context context;
+    private FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
     LearnApiImplements dataBaseHelper;
 
-    LinearLayout container;
-    MenuItem btnBackBeforeCard;
 
-    List<Card> todayList = new ArrayList<Card>();
-    List<Card> againList = new ArrayList<Card>();
-    List<Card> dueList = new ArrayList<Card>();
     //Current Card
     Card currentCard = new Card();
     //Define before card
@@ -76,14 +69,11 @@ public class StudyActivity extends AppCompatActivity
     boolean learn_more;
     int completeStudy = 0;
 
-    CustomViewPager mViewPager;
-
-    MenuItem itemIgnore;
-    MenuItem itemLearn;
-    private int currentPage = 0;
-    private String detailViewTag;
+    LinearLayout container;
+    DisableScrollingViewPager mViewPager;
     ScreenSlidePagerAdapter pagerAdapter;
-    private FirebaseAnalytics mFirebaseAnalytics;
+
+    private String detailViewTag;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -97,13 +87,10 @@ public class StudyActivity extends AppCompatActivity
         context = this;
         _initActonBar();
         _initDatabase();
-        mFirebaseAnalytics=LazzyBeeSingleton.getFirebaseAnalytics();
-        _trackerApplication();
-
         _initView();
         _definePagerStudy();
 
-
+        _trackerApplication();
     }
 
 
@@ -111,7 +98,7 @@ public class StudyActivity extends AppCompatActivity
         try {
             //get lean_more form intern
             learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
-            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), mViewPager);
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy()", e);
@@ -130,7 +117,7 @@ public class StudyActivity extends AppCompatActivity
         try {
             Bundle bundle = new Bundle();
             bundle.putString("screenName", (String) GA_SCREEN);
-            mFirebaseAnalytics.logEvent("screenName",bundle);
+            mFirebaseAnalytics.logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -206,19 +193,16 @@ public class StudyActivity extends AppCompatActivity
 
     private void _initView() {
         container = (LinearLayout) findViewById(R.id.container);
-        mViewPager = (CustomViewPager) findViewById(R.id.viewpager);
+        mViewPager = (DisableScrollingViewPager) findViewById(R.id.viewpager);
         mViewPager.setPagingEnabled(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //Log.d(TAG, "State:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 _setDisplayPageByPosition(position);
-                currentPage = position;
 
             }
 
@@ -299,7 +283,7 @@ public class StudyActivity extends AppCompatActivity
                         Intent intent = new Intent(context, SearchActivity.class);
                         intent.setAction(Intent.ACTION_SEARCH);
                         intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY,query);
+                        intent.putExtra(SearchManager.QUERY, query);
                         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
                     }
@@ -325,6 +309,7 @@ public class StudyActivity extends AppCompatActivity
                             searchView.setSuggestionsAdapter(suggestionCardAdapter);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            LazzyBeeSingleton.getCrashlytics().logException(e);
                         } finally {
                             Log.d(TAG, "query suggetion");
                         }
@@ -448,23 +433,18 @@ public class StudyActivity extends AppCompatActivity
 
 
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
+        private final DisableScrollingViewPager mViewPager;
         private int pageCount = 2;
 
-
-        public void setPageCount(int pageCount1) {
-            pageCount = pageCount1;
-        }
-
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        public ScreenSlidePagerAdapter(FragmentManager fm, DisableScrollingViewPager mViewPager) {
             super(fm);
-
+            this.mViewPager = mViewPager;
         }
-
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0)
-                return StudyView.newInstance(context, getIntent(), mViewPager, this, currentCard);
+                return StudyView.newInstance(context, getIntent(), mViewPager, ScreenSlidePagerAdapter.this, currentCard);
             else {
                 return DetailsView.newInstance(context, "details");
 
