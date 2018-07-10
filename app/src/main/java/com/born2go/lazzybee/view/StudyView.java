@@ -125,7 +125,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -160,7 +160,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         _initView(view);
         _setUpStudy();
         _handlerButtonAnswer();
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         return view;
     }
 
