@@ -125,7 +125,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-    private FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+    private FirebaseAnalytics mFirebaseAnalytics=LazzyBeeSingleton.getFirebaseAnalytics();
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -480,12 +480,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void showDialogAnswerHelp(String hard, String medium, String easy) {
-        String html=getString(R.string.base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels,hard,medium,easy);
-        WebView webView=new WebView(getContext());
-        webView.loadData(html , "text/html; charset=UTF-8", null);
+        String html = getString(R.string.base_on_the_learning_history_of_this_words_LazzyBee_suggest_the_next_interval_up_to_your_evaluation_as_following_levels, hard, medium, easy);
+        WebView webView = new WebView(getContext());
+        webView.loadData(html, "text/html; charset=UTF-8", null);
 
         new MaterialDialog.Builder(getActivity())
-                .customView(webView,true)
+                .customView(webView, true)
                 .positiveText(R.string.ok)
                 .positiveColor(getResources().getColor(R.color.button_green_color))
                 .theme(Theme.LIGHT)
