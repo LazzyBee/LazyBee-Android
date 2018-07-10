@@ -59,15 +59,11 @@ public class StudyActivity extends AppCompatActivity
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
     private Context context;
+    private FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
     LearnApiImplements dataBaseHelper;
 
-    LinearLayout container;
-    MenuItem btnBackBeforeCard;
 
-    List<Card> todayList = new ArrayList<Card>();
-    List<Card> againList = new ArrayList<Card>();
-    List<Card> dueList = new ArrayList<Card>();
     //Current Card
     Card currentCard = new Card();
     //Define before card
@@ -76,14 +72,11 @@ public class StudyActivity extends AppCompatActivity
     boolean learn_more;
     int completeStudy = 0;
 
+    LinearLayout container;
     CustomViewPager mViewPager;
-
-    MenuItem itemIgnore;
-    MenuItem itemLearn;
-    private int currentPage = 0;
-    private String detailViewTag;
     ScreenSlidePagerAdapter pagerAdapter;
-    private FirebaseAnalytics mFirebaseAnalytics;
+
+    private String detailViewTag;
 
     public void setBeforeCard(Card beforeCard) {
         this.beforeCard = beforeCard;
@@ -97,13 +90,10 @@ public class StudyActivity extends AppCompatActivity
         context = this;
         _initActonBar();
         _initDatabase();
-        mFirebaseAnalytics=LazzyBeeSingleton.getFirebaseAnalytics();
-        _trackerApplication();
-
         _initView();
         _definePagerStudy();
 
-
+        _trackerApplication();
     }
 
 
@@ -130,7 +120,7 @@ public class StudyActivity extends AppCompatActivity
         try {
             Bundle bundle = new Bundle();
             bundle.putString("screenName", (String) GA_SCREEN);
-            mFirebaseAnalytics.logEvent("screenName",bundle);
+            mFirebaseAnalytics.logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -211,14 +201,11 @@ public class StudyActivity extends AppCompatActivity
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //Log.d(TAG, "State:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 _setDisplayPageByPosition(position);
-                currentPage = position;
 
             }
 
@@ -299,7 +286,7 @@ public class StudyActivity extends AppCompatActivity
                         Intent intent = new Intent(context, SearchActivity.class);
                         intent.setAction(Intent.ACTION_SEARCH);
                         intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY,query);
+                        intent.putExtra(SearchManager.QUERY, query);
                         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
                     }
