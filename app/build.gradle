@@ -9,7 +9,7 @@ android {
         applicationId "com.born2go.lazzybee"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 56
+        versionCode 58
         versionName "1.7.6"
         multiDexEnabled true
     }
