@@ -33,11 +33,17 @@ public class DisableScrollingViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (this.isPagingEnabled) {
-            return super.onInterceptTouchEvent(event);
-        }
+        try {
+            if (this.isPagingEnabled) {
+                return super.onInterceptTouchEvent(event);
+            }
 
-        return false;
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+
+        }
     }
 
     public void setPagingEnabled(boolean enabled) {
@@ -46,7 +52,7 @@ public class DisableScrollingViewPager extends ViewPager {
 
     @Override
     public void scrollTo(int x, int y) {
-        if(isPagingEnabled) {
+        if (isPagingEnabled) {
             super.scrollTo(x, y);
         }
     }
