@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity
         SearchView.OnSuggestionListener,
         RewardedVideoAdListener {
 
-    private Context context = this;
+    private Context context;
+    ;
     private static final String TAG = "MainActivity";
     private static final Object GA_SCREEN = "aHomeScreen";
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.context = MainActivity.this;
         setContentView(R.layout.activity_main);
         this.activity = this;
         _initSQlIte();
