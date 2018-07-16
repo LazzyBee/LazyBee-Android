@@ -646,7 +646,7 @@ public class MainActivity extends AppCompatActivity
     private void _showStatistical() {
         LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
         try {
-            DialogStatistics dialogStatistics = new DialogStatistics(context);
+            DialogStatistics dialogStatistics = new DialogStatistics(MainActivity.this);
             dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_showStatistical", e);
