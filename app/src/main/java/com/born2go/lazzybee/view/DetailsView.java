@@ -88,7 +88,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     private void _defineDetailsView(View view) {
         try {
             mViewAdv = view.findViewById(R.id.mCardViewAdv);
-            _initAdView(mViewAdv,AdSize.BANNER);
+            _initAdView(mViewAdv, AdSize.BANNER);
             mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
             mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
             mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -99,8 +99,10 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
                 @Override
                 public void onPageSelected(int position) {
-                    if (position==2){
+                    if (position == 2) {
                         mViewAdv.setVisibility(View.GONE);
+                    } else {
+                        mViewAdv.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -271,8 +273,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         }
 
 
-
-
         /**
          * Destroy the item from the {@link ViewPager}. In our case this is simply removing the
          * {@link View}.
@@ -319,33 +319,33 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                                 @Override
                                 public void onAdLoaded() {
                                     // Code to be executed when an ad finishes loading.
-                                    Log.i(TAG, "Ads "+banner.toString()+":onAdLoaded");
+                                    Log.i(TAG, "Ads " + banner.toString() + ":onAdLoaded");
                                 }
 
                                 @Override
                                 public void onAdFailedToLoad(int errorCode) {
                                     // Code to be executed when an ad request fails.
-                                    Log.i(TAG, "Ads "+banner.toString()+":onAdFailedToLoad " + errorCode);
+                                    Log.i(TAG, "Ads " + banner.toString() + ":onAdFailedToLoad " + errorCode);
                                 }
 
                                 @Override
                                 public void onAdOpened() {
                                     // Code to be executed when an ad opens an overlay that
                                     // covers the screen.
-                                    Log.i(TAG, "Ads "+banner.toString()+":onAdOpened");
+                                    Log.i(TAG, "Ads " + banner.toString() + ":onAdOpened");
                                 }
 
                                 @Override
                                 public void onAdLeftApplication() {
                                     // Code to be executed when the user has left the app.
-                                    Log.i(TAG, "Ads "+banner.toString()+":onAdLeftApplication");
+                                    Log.i(TAG, "Ads " + banner.toString() + ":onAdLeftApplication");
                                 }
 
                                 @Override
                                 public void onAdClosed() {
                                     // Code to be executed when when the user is about to return
                                     // to the app after tapping on an ad.
-                                    Log.i(TAG, "Ads "+banner.toString()+":onAdClosed");
+                                    Log.i(TAG, "Ads " + banner.toString() + ":onAdClosed");
                                 }
                             });
 
@@ -431,8 +431,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
-                    if (task.isSuccessful()){
-                        server_base_url_sharing=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
+                    if (task.isSuccessful()) {
+                        server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
                     }
                     if (server_base_url_sharing != null) {
                         if (server_base_url_sharing.length() > 0)
