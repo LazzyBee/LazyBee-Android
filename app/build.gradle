@@ -9,7 +9,7 @@ android {
         applicationId "com.born2go.lazzybee"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 60
+        versionCode 61
         versionName "1.7.6"
         multiDexEnabled true
     }
@@ -52,7 +52,7 @@ dependencies {
 
 
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
-    implementation 'com.github.lecho:hellocharts-android:v1.5.8'
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'org.apache.httpcomponents:httpcore:4.3.2'
     implementation 'org.apache.httpcomponents:httpmime:4.3.2'
     implementation 'com.google.firebase:firebase-core:16.0.0'
