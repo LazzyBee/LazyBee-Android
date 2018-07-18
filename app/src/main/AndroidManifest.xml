@@ -146,7 +146,7 @@
             android:name=".utils.MyAlarmService"
             android:enabled="true" />
 
-        <receiver android:name=".utils.NotificationReceiver" />
+        <receiver android:name=".utils.NotificationReceiver"  android:exported="true"/>
         <!--<receiver-->
             <!--android:name="com.google.android.gms.analytics.AnalyticsReceiver"-->
             <!--android:enabled="true">-->

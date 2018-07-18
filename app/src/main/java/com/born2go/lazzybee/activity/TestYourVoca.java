@@ -29,22 +29,20 @@ public class TestYourVoca extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+        mWebViewTestYourVoca.loadUrl(getString(R.string.url_test_your_voca));
         mWebViewTestYourVoca.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url){
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // do your handling codes here, which url is the requested url
                 // probably you need to open that url rather than redirect:
                 view.loadUrl(url);
                 return false; // then it is not handled by default action
             }
-        });
-        new Handler().postDelayed(new Runnable() {
+
             @Override
-            public void run() {
-                mWebViewTestYourVoca.loadUrl(getString(R.string.url_test_your_voca));
+            public void onPageFinished(WebView view, String url) {
                 progressDialog.dismiss();
             }
-        }, 2000);
-
+        });
     }
 
     private void _initToolBar() {

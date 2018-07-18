@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity
         SearchView.OnSuggestionListener,
         RewardedVideoAdListener {
 
-    private Context context = this;
+    private Context context;
+    ;
     private static final String TAG = "MainActivity";
     private static final Object GA_SCREEN = "aHomeScreen";
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.context = MainActivity.this;
         setContentView(R.layout.activity_main);
         this.activity = this;
         _initSQlIte();
@@ -646,7 +647,7 @@ public class MainActivity extends AppCompatActivity
     private void _showStatistical() {
         LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
         try {
-            DialogStatistics dialogStatistics = new DialogStatistics(context);
+            DialogStatistics dialogStatistics = new DialogStatistics(MainActivity.this);
             dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_showStatistical", e);
