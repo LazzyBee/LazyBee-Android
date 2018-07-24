@@ -1234,8 +1234,8 @@ public class LearnApiImplements implements LearnApi {
 
 
     /*
-    * @param key
-    * */
+     * @param key
+     * */
     public int _getCustomStudySetting(String key) {
         String value = _getValueFromSystemByKey(key);
         if (value == null) {
@@ -1556,19 +1556,24 @@ public class LearnApiImplements implements LearnApi {
 
     public int _getCardIDByQuestion(String question) {
         int id = 0;
-        String selectbyQuestionQuery = "Select id from " + TABLE_VOCABULARY + " where vocabulary.question ='" + question + "'";
-        SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
+        try {
+            String selectbyQuestionQuery = "Select id from " + TABLE_VOCABULARY + " where vocabulary.question ='" + question + "'";
+            SQLiteDatabase db = this.dataBaseHelper.getReadableDatabase();
 
-        //query for cursor
-        Cursor cursor = db.rawQuery(selectbyQuestionQuery, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0) {
-                do {
-                    id = cursor.getInt(0);
-                } while (cursor.moveToNext());
+            //query for cursor
+            Cursor cursor = db.rawQuery(selectbyQuestionQuery, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0) {
+                    do {
+                        id = cursor.getInt(0);
+                    } while (cursor.moveToNext());
+                }
             }
+            Log.i(TAG, "-query=" + selectbyQuestionQuery + ",id=" + id);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Log.i(TAG, "-query=" + selectbyQuestionQuery + ",id=" + id);
+
         return id;
     }
 
@@ -2023,8 +2028,8 @@ public class LearnApiImplements implements LearnApi {
         for (int i = 0; i < limit; i++) {
             startOfday = startOfday - LazzyBeeShare.SECONDS_PERDAY;
             Log.d(TAG, "Test fill streak:" + startOfday);
-            int results=_insetStreak(startOfday);
-            if (results==1){
+            int results = _insetStreak(startOfday);
+            if (results == 1) {
                 break;
             }
         }
