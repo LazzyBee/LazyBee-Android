@@ -77,7 +77,7 @@ public class RecyclerViewSettingListAdapter extends
         this.mRecyclerViewSettings = mRecyclerViewSettings;
         device_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        this.thiz=this;
+        this.thiz = this;
 
     }
 
@@ -261,8 +261,8 @@ public class RecyclerViewSettingListAdapter extends
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _restoreDatabase();
-                //showFileChooser();
+                if (SettingActivity.verifyStoragePermissions(activity))
+                    _restoreDatabase();
             }
         });
     }
@@ -273,9 +273,6 @@ public class RecyclerViewSettingListAdapter extends
         builder.setTitle(R.string.setting_restore_database);
         View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
         final EditText lbMybackupkey = (EditText) viewDialog.findViewById(R.id.lbMybackupkey);
-        //String hint_input_my_backup_key = context.getString(R.string.hint_input_my_backup_key);
-        //lbMybackupkey.setHint(hint_input_my_backup_key);
-        //
 
         lbMybackupkey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -829,8 +826,8 @@ public class RecyclerViewSettingListAdapter extends
 
                 builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(context);
-                        firebaseAnalytics.setUserProperty("Selected_language",String.valueOf(items[item]));
+                        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                        firebaseAnalytics.setUserProperty("Selected_language", String.valueOf(items[item]));
                         // Do something with the selection
                         if (items[item] == context.getString(R.string.lang_english)) {
                             //Log.i(TAG, getString(R.string.lang_english) + " click");
@@ -1002,6 +999,10 @@ public class RecyclerViewSettingListAdapter extends
 
     }
 
+    public void updateRequestPermissions() {
+        _restoreDatabase();
+    }
+
 
     public class RecyclerViewSettingListAdapterViewHolder extends RecyclerView.ViewHolder {
         private View view;
@@ -1023,39 +1024,6 @@ public class RecyclerViewSettingListAdapter extends
                 } else {
                     Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
                 }
-
-//                //Check vesion form server
-//                String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-//                int update_local_version = databaseUpgrade._getVersionDB();
-//                int _clientVesion;
-//                if (db_v == null) {
-//                    _clientVesion = 0;
-//                } else {
-//                    _clientVesion = Integer.valueOf(db_v);
-//                }
-//                Log.i(TAG, _clientVesion + ":" + update_local_version);
-//
-//                if (_clientVesion == 0) {
-//                    if (update_local_version == -1) {
-//                        Log.i(TAG, "_onClickCheckUpdate():update_local_version == -1");
-//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-//                    } else {
-//                        Log.i(TAG, "_onClickCheckUpdate():update_local_version != -1");
-//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-//                    }
-//                } else {
-//                    if (update_local_version > _clientVesion) {
-//                        Log.i(TAG, "_onClickCheckUpdate():update_local_version > _clientVesion");
-//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-//                    } else if (LazzyBeeShare.VERSION_SERVER > _clientVesion) {
-//                        Log.i(TAG, "_onClickCheckUpdate():LazzyBeeShare.VERSION_SERVER > _clientVesion");
-//                        _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-//                    } else {
-//                        Log.i(TAG, "_onClickCheckUpdate():" + R.string.updated);
-//                        Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                }
             }
         });
     }
@@ -1114,9 +1082,9 @@ public class RecyclerViewSettingListAdapter extends
             LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(activity, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    String base_url="http://222.255.29.25/lazzybee/";
-                    if (task.isSuccessful()){
-                        base_url=LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.BASE_URL_DB);
+                    String base_url = "http://222.255.29.25/lazzybee/";
+                    if (task.isSuccessful()) {
+                        base_url = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.BASE_URL_DB);
                     }
                     String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
                     int version = LazzyBeeShare.DEFAULT_VERSION_DB;

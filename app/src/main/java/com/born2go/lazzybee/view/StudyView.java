@@ -1494,7 +1494,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     }
 
                     //define base url with question
-                    base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
+                    base_url_sharing[0] = base_url_sharing[0] +"/"+ currentCard.getQuestion();
                     Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
 
                     //Share card
