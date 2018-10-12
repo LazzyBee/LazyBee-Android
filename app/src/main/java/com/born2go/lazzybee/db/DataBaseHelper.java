@@ -59,12 +59,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         super(context, DB_NAME, null, 1);
         this.myContext = context;
+        if (android.os.Build.VERSION.SDK_INT >= 17) {
+            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+        } else {
+            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+        }
     }
 
     public static DataBaseHelper getGlobalDB() {
         if (globalDB == null) {//Init DB here
             //TODO: Work out
         }
+
         return globalDB;
     }
 
@@ -105,21 +111,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public boolean checkDataBase(String myPath) {
 
-        SQLiteDatabase checkDB = null;
-
-        try {
-            // String myPath = DB_PATH + DB_NAME;
-            checkDB = openDataBase(myPath);
-        } catch (SQLiteException e) {
-            //database does't exist yet.
-            Log.e(TAG, "database does't exist yet:" + e.getMessage());
-        }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-
-
-        return checkDB != null ? true : false;
+//        SQLiteDatabase checkDB = null;
+//
+//        try {
+//            // String myPath = DB_PATH + DB_NAME;
+//            checkDB = openDataBase(myPath);
+//        } catch (SQLiteException e) {
+//            //database does't exist yet.
+//            Log.e(TAG, "database does't exist yet:" + e.getMessage());
+//        }
+//        if (checkDB != null) {
+//            checkDB.close();
+//        }
+//
+//        File dbFile = new File(DB_PATH + DB_NAME);
+//        return checkDB != null ? true : false;
+        File dbFile = new File(DB_PATH + DB_NAME);
+        //Log.v("dbFile", dbFile + "   "+ dbFile.exists());
+        return dbFile.exists();
     }
 
     /**
@@ -251,7 +260,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public SQLiteDatabase openDataBase(String myPath) throws SQLException {
         //Open the database
         return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
     }
 
     @Override
