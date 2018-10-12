@@ -20,6 +20,9 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.ZipManager;
 import com.opencsv.CSVReader;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -28,8 +31,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by Hue on 12/17/2015.
@@ -74,8 +80,9 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         int results = -2;
         if (LazzyBeeShare.checkConn(context)) {
             String pathFileRestore = debug ? localPath : _downloadFileRestoreDb();
-            if (pathFileRestore != null) {
-                results = _restoreDatabase(pathFileRestore);
+            Log.d(TAG, "path:" + pathFileRestore);
+            if (pathFileRestore == null) {
+                results = _restoreDatabase("/sdcard/" + backupFileName);
             } else {
                 results = -1;
             }
@@ -84,48 +91,112 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
     }
 
     private String _downloadFileRestoreDb() {
-        String pathFileRestore = null;
+//        String pathFileRestore = null;
+//        try {
+//            //get URL Download  by API
+//            DataServiceApi.GetDownloadUrl getDownloadUrl = LazzyBeeSingleton.connectGdatabase.getDataServiceApi().getDownloadUrl(code);
+//            DownloadTarget downloadTarget = getDownloadUrl.execute();
+//            String downloadTargetUrl = downloadTarget.getUrl();
+//            if (downloadTargetUrl != null) {
+//                Log.d(TAG, "download file restore url:" + downloadTargetUrl);
+//                URL u = new URL(downloadTargetUrl);
+//                File file = new File(exportDir.getAbsolutePath() + "/" + backupFileName);
+//                InputStream is = u.openStream();
+//
+//                DataInputStream dis = new DataInputStream(is);
+//
+//                byte[] buffer = new byte[1024];
+//                int length;
+//
+//                FileOutputStream fos = new FileOutputStream(file);
+//                while ((length = dis.read(buffer)) > 0) {
+//                    fos.write(buffer, 0, length);
+//                }
+//                fos.close();
+//                pathFileRestore = file.getPath();
+//                Log.d(TAG, "Download file restore complete.Path:" + pathFileRestore);
+//            } else {
+//                Log.d(TAG, "Download file restore fails");
+//            }
+//        } catch (MalformedURLException mue) {
+//            Log.e("SYNC getUpdate", "malformed url error", mue);
+//            LazzyBeeSingleton.getCrashlytics().logException(mue);
+//        } catch (IOException ioe) {
+//            Log.e("SYNC getUpdate", "io error", ioe);
+//            LazzyBeeSingleton.getCrashlytics().logException(ioe);
+//        } catch (SecurityException se) {
+//            Log.e("SYNC getUpdate", "security error", se);
+//            LazzyBeeSingleton.getCrashlytics().logException(se);
+//        } catch (Exception e) {
+//            Log.e(TAG, "exception error", e);
+//            LazzyBeeSingleton.getCrashlytics().logException(e);
+//        }
+//        return pathFileRestore;
+
+
+        InputStream input = null;
+        OutputStream output = null;
+        HttpURLConnection connection = null;
         try {
-            //get URL Download  by API
             DataServiceApi.GetDownloadUrl getDownloadUrl = LazzyBeeSingleton.connectGdatabase.getDataServiceApi().getDownloadUrl(code);
             DownloadTarget downloadTarget = getDownloadUrl.execute();
             String downloadTargetUrl = downloadTarget.getUrl();
-            if (downloadTargetUrl != null) {
-                Log.d(TAG, "download file restore url:" + downloadTargetUrl);
-                URL u = new URL(downloadTargetUrl);
-                File file = new File(exportDir.getAbsolutePath() + "/" + backupFileName);
-                InputStream is = u.openStream();
+            Log.d(TAG, "url:" + downloadTargetUrl);
+            URL url = new URL(downloadTargetUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
 
-                DataInputStream dis = new DataInputStream(is);
+//            connection.setInstanceFollowRedirects(true);  //you still need to handle redirect manully.
+//            HttpURLConnection.setFollowRedirects(true);
 
-                byte[] buffer = new byte[1024];
-                int length;
-
-                FileOutputStream fos = new FileOutputStream(file);
-                while ((length = dis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
-                fos.close();
-                pathFileRestore = file.getPath();
-                Log.d(TAG, "Download file restore complete.Path:" + pathFileRestore);
-            } else {
-                Log.d(TAG, "Download file restore fails");
+            // expect HTTP 200 OK, so we don't mistakenly save error report
+            // instead of the file
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//                return "Server returned HTTP " + connection.getResponseCode()
+//                        + " " + connection.getResponseMessage();
             }
-        } catch (MalformedURLException mue) {
-            Log.e("SYNC getUpdate", "malformed url error", mue);
-            LazzyBeeSingleton.getCrashlytics().logException(mue);
-        } catch (IOException ioe) {
-            Log.e("SYNC getUpdate", "io error", ioe);
-            LazzyBeeSingleton.getCrashlytics().logException(ioe);
-        } catch (SecurityException se) {
-            Log.e("SYNC getUpdate", "security error", se);
-            LazzyBeeSingleton.getCrashlytics().logException(se);
+
+            // this will be useful to display download percentage
+            // might be -1: server did not report the length
+            int fileLength = connection.getContentLength();
+
+            // download the file
+            input = connection.getInputStream();
+            output = new FileOutputStream("/sdcard/" + backupFileName);
+
+            byte data[] = new byte[4096];
+            long total = 0;
+            int count;
+            while ((count = input.read(data)) != -1) {
+                // allow canceling with back button
+                if (isCancelled()) {
+                    input.close();
+                    return null;
+                }
+                total += count;
+                // publishing the progress....
+                // if (fileLength > 0) // only if total length is known
+                // publishProgress((int) (total * 100 / fileLength));
+                output.write(data, 0, count);
+            }
         } catch (Exception e) {
-            Log.e(TAG, "exception error", e);
-            LazzyBeeSingleton.getCrashlytics().logException(e);
+            return e.toString();
+        } finally {
+            try {
+                if (output != null)
+                    output.close();
+                if (input != null)
+                    input.close();
+            } catch (IOException ignored) {
+            }
+
+            if (connection != null)
+                connection.disconnect();
         }
-        return pathFileRestore;
+        return null;
+
     }
+
 
     private int _restoreDatabase(String path) {
         int restore = 0;
