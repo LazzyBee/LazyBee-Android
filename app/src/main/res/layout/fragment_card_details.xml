@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.born2go.lazzybee.fragment.FragmentCardDetails">
+    >
 
     <com.born2go.lazzybee.view.SlidingTabLayout
         android:id="@+id/sliding_tabs"
