@@ -453,10 +453,11 @@ public class LazzyBeeShare {
         String meaningUP = EMPTY;
         String meaningDOWN = EMPTY;
         if (sDisplayPosition) {
+            String regex="</?(p){1}.*?/?>";
             if (!POSITION_MEANING) {
                 meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll(regex, "") + "</em></font>\n" +
                         "</div>";
                 meaningDOWN = EMPTY;
                  Log.d(TAG, "meaningUP:" + meaningUP);
@@ -464,7 +465,7 @@ public class LazzyBeeShare {
                 meaningUP = EMPTY;
                 meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll(regex, "") + "</em></font>\n" +
                         "</div>";
                  Log.d(TAG, "meaningDOWN:" + meaningDOWN);
             }
