@@ -43,12 +43,14 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
     }
 
     public int _getVersionDB() {
+        Cursor cursor = null;
         try {
             int version = 0;
-            String selectValueByKey = "SELECT value FROM " + TABLE_SYSTEM + " where key = '" + LazzyBeeShare.DB_VERSION + "'";
+            String query = "SELECT value FROM system where key = ";
+            String selectValueByKey = query + LazzyBeeShare.DB_VERSION;
             SQLiteDatabase db = this.getReadableDatabase();
             //Todo query for cursor
-            Cursor cursor = db.rawQuery(selectValueByKey, null);
+            cursor = db.rawQuery(selectValueByKey, null);
             if (cursor.moveToFirst()) {
                 if (cursor.getCount() > 0)
                     do {
@@ -61,36 +63,45 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
 
 
     }
 
     private List<Card> _getListCardQueryString(String query) {
-        List<Card> datas = new ArrayList<Card>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            List<Card> datas = new ArrayList<Card>();
+            SQLiteDatabase db = this.getReadableDatabase();
 
-        //query for cursor
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    Card card = new Card();
-                    card.setId(cursor.getInt(0));
+            //query for cursor
+            cursor = db.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0)
+                    do {
+                        Card card = new Card();
+                        card.setId(cursor.getInt(0));
 
-                    card.setQuestion(cursor.getString(1));
-                    card.setAnswers(cursor.getString(2));
+                        card.setQuestion(cursor.getString(1));
+                        card.setAnswers(cursor.getString(2));
 
-                    card.setPackage(cursor.getString(3));
-                    card.setLevel(cursor.getInt(4));
-                    card.setL_en(cursor.getString(5));
-                    card.setL_vn(cursor.getString(6));
-                    datas.add(card);
+                        card.setPackage(cursor.getString(3));
+                        card.setLevel(cursor.getInt(4));
+                        card.setL_en(cursor.getString(5));
+                        card.setL_vn(cursor.getString(6));
+                        datas.add(card);
 
-                } while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
+            }
+            Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
+            return datas;
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
-        Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
-        return datas;
     }
 
     @Override
