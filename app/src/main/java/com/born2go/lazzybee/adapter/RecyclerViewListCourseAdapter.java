@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,7 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
         lbNameCourse.setText(course.getName());
         //setBackgroundColor
         if (position % 2 == 0) {
-            view.setBackgroundColor(R.color.material_deep_teal_500);
+            view.setBackgroundColor(Color.parseColor("#ff009688"));
         } else {
 
         }
