@@ -411,4 +411,22 @@
             </html>
         ]]>
     </string>
+
+    <!--intro_activity-->
+    <string-array name="intro">
+        <item>@string/intro_activity_slide_1</item>
+        <item>@string/intro_activity_slide_2</item>
+        <item>@string/intro_activity_slide_3</item>
+        <item>@string/intro_activity_slide_4</item>
+        <item>@string/intro_activity_slide_5</item>
+        <item>@string/intro_activity_slide_6</item>
+    </string-array>
+    <string name="intro_activity_slide_1">LazzyBee sẽ giúp bạn học và nhớ được 2000 từ mới một năm ...</string>
+    <string name="intro_activity_slide_2">... chỉ cần bạn học 5 phút mỗi ngày</string>
+    <string name="intro_activity_slide_3">Những từ bạn đã học sẽ không bị quên do được ôn lại đúng thời điểm</string>
+    <string name="intro_activity_slide_4">Trong khi học, hãy vuốt sang trái để xem từ điển</string>
+    <string name="intro_activity_slide_5">Đọc kỹ hướng dẫn sử dụng để hiểu về cách học đặc biệt của chúng tôi.</string>
+    <string name="intro_activity_slide_6">GOOD LUCK!!!</string>
+    <string name="intro_activity_next">Tiếp theo</string>
+    <string name="intro_activity_get_started">Bắt đầu</string>
 </resources>

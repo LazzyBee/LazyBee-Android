@@ -53,4 +53,7 @@
     <color name="color_sub_header">@color/main_color</color>
     <color name="color_eee">#eee</color>
 
+    <color name="colorGray">#ccc8c8</color>
+    <color name="colorBlue">#34bc07</color>
+
 </resources>
