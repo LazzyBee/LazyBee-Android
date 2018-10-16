@@ -18,6 +18,7 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.shared.SharedPrefs;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,8 +68,14 @@ public class SplashScreen extends Activity {
     }
 
     private void startMainActivity(String ADMOB_PUB_ID) {
-        // Start your app main activity
-        Intent i = new Intent(SplashScreen.this, MainActivity.class);
+        boolean show_intro = SharedPrefs.getInstance().get("SHOW_INTRO", Boolean.class, false);
+        Intent i;
+        if (show_intro) {
+            i = new Intent(SplashScreen.this, MainActivity.class);
+        } else {
+            SharedPrefs.getInstance().put("SHOW_INTRO", true);
+            i = new Intent(SplashScreen.this, LanguageActivity.class);
+        }
         i.putExtra(LazzyBeeShare.ADMOB_PUB_ID, ADMOB_PUB_ID);
         startActivity(i);
         this.finish();
