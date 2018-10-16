@@ -123,6 +123,13 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
+        <activity
+            android:name=".activity.LanguageActivity"
+            android:theme="@style/ThemeNoActionBar" />
+        <activity
+            android:name=".activity.IntroActivity"
+            android:theme="@style/ThemeNoActionBar" />
+
         <!-- <meta-data -->
         <!-- android:name="identitytoolkit.show_providers" -->
         <!-- android:value="Google,Facebook" /> -->
