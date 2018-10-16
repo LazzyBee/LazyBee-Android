@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.born2go.lazzybee.BuildConfig;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.CustomStudySettingActivity;
 import com.born2go.lazzybee.activity.SettingActivity;
@@ -216,15 +217,14 @@ public class RecyclerViewSettingListAdapter extends
                 int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
 
                 try {
-                    versionName = context.getPackageManager()
-                            .getPackageInfo(context.getPackageName(), 0).versionName;
+                    versionName = BuildConfig.VERSION_NAME;//context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
                     String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
                     if (db_v != null) {
                         _dbVesion = Integer.valueOf(db_v);
                     }
-                    lbAppVersion.setText("AppVersion:" + versionName);
+                    lbAppVersion.setText("AppVersion:" + BuildConfig.VERSION_NAME);
                     lbDbVersion.setText("DBVersion:" + _dbVesion);
-                } catch (PackageManager.NameNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     lbAppVersion.setText("AppVersion:" + versionName);
                     lbDbVersion.setText("DBVersion:" + _dbVesion);
