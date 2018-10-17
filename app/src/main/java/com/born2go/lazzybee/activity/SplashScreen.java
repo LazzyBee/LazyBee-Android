@@ -41,9 +41,9 @@ public class SplashScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_splash_screen);
         thiz = this;
+
         LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
@@ -68,12 +68,18 @@ public class SplashScreen extends Activity {
     }
 
     private void startMainActivity(String ADMOB_PUB_ID) {
-        boolean show_intro = SharedPrefs.getInstance().get("SHOW_INTRO", Boolean.class, false);
+        boolean select_display_language = SharedPrefs.getInstance().get("SELECT_DISPLAY_LANGUAGE", Boolean.class, false);
         Intent i;
-        if (show_intro) {
-            i = new Intent(SplashScreen.this, MainActivity.class);
+        if (select_display_language) {
+            boolean display_intro = SharedPrefs.getInstance().get("DISPLAY_INTRO", Boolean.class, false);
+            if (display_intro) {
+                i = new Intent(SplashScreen.this, MainActivity.class);
+            } else {
+                SharedPrefs.getInstance().put("DISPLAY_INTRO", true);
+                i = new Intent(SplashScreen.this, IntroActivity.class);
+            }
         } else {
-            SharedPrefs.getInstance().put("SHOW_INTRO", true);
+            SharedPrefs.getInstance().put("SELECT_DISPLAY_LANGUAGE", true);
             i = new Intent(SplashScreen.this, LanguageActivity.class);
         }
         i.putExtra(LazzyBeeShare.ADMOB_PUB_ID, ADMOB_PUB_ID);
