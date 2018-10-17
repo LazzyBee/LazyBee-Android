@@ -19,6 +19,7 @@ public class SliderAdapter extends PagerAdapter {
 
     public SliderAdapter(Context context) {
         this.context = context;
+        slider_desc=context.getResources().getStringArray(R.array.intro);
     }
 
     public int[] slider_images ={
