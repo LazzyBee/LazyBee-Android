@@ -30,21 +30,19 @@ public class LazzyBeeSingleton {
     private static FirebaseRemoteConfig mRemoteConfig;
     private static String amobPubId;
     private static Crashlytics mCrashlytics;
+    private static Context context;
 
     public LazzyBeeSingleton(Context context) {
+        this.context = context;
         dataBaseHelper = new DataBaseHelper(context);
         databaseUpgrade = new DatabaseUpgrade(context);
         learnApiImplements = new LearnApiImplements(context);
-        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
-                }
+        textToSpeech = new TextToSpeech(context, status -> {
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(Locale.US);
             }
         });
         connectGdatabase = new ConnectGdatabase();
-        //mDataLayer = TagManager.getInstance(context).getDataLayer();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         mRemoteConfig = FirebaseRemoteConfig.getInstance();
         mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
@@ -82,5 +80,11 @@ public class LazzyBeeSingleton {
         if (mCrashlytics == null)
             mCrashlytics = Crashlytics.getInstance();
         return mCrashlytics;
+    }
+
+    public static LearnApiImplements getLearnApiImplements() {
+        if (learnApiImplements == null)
+            learnApiImplements = new LearnApiImplements(context);
+        return learnApiImplements;
     }
 }
