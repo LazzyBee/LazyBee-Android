@@ -51,12 +51,16 @@ public class IntroActivity extends AppCompatActivity {
                 if (getIntent() != null) {
                     ADMOB_PUB_ID = getIntent().getStringExtra(LazzyBeeShare.ADMOB_PUB_ID);
                 }
-                finish();
-                Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-                intent.putExtra(LazzyBeeShare.ADMOB_PUB_ID, ADMOB_PUB_ID);
-                startActivity(intent);
+                startMainActivity(ADMOB_PUB_ID);
             }
         });
+    }
+
+    private void startMainActivity(String admob_pub_id) {
+        Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+        intent.putExtra(LazzyBeeShare.ADMOB_PUB_ID, admob_pub_id);
+        startActivity(intent);
+        finish();
     }
 
 
