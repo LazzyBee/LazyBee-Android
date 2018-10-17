@@ -1,16 +1,14 @@
 package com.born2go.lazzybee.activity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
-import com.born2go.lazzybee.shared.SharedPrefs;
-
-import java.util.Locale;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,34 +34,27 @@ public class LanguageActivity extends AppCompatActivity {
 
     private void onSeletedVietNameLanguage() {
         changeLanguage(LazzyBeeShare.LANG_VI);
-        startIntro();
+        restartApplication();
     }
 
     private void onSeletedEngLishLanguage() {
         changeLanguage(LazzyBeeShare.LANG_EN);
-        startIntro();
+        restartApplication();
     }
 
-    private void startIntro() {
-        String ADMOB_PUB_ID = LazzyBeeShare.EMPTY;
-        if (getIntent() != null) {
-            ADMOB_PUB_ID = getIntent().getStringExtra(LazzyBeeShare.ADMOB_PUB_ID);
-        }
+    private void restartApplication() {
         finish();
-        Intent intent = new Intent(this, IntroActivity.class);
-        intent.putExtra(LazzyBeeShare.ADMOB_PUB_ID, ADMOB_PUB_ID);
+        Intent intent = LanguageActivity.this.getPackageManager()
+                .getLaunchIntentForPackage(LanguageActivity.this.getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
 
     public void changeLanguage(String languageToLoad) {
-        SharedPrefs.getInstance().put(LazzyBeeShare.KEY_LANGUAGE, languageToLoad);
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(LanguageActivity.this);
+        firebaseAnalytics.setUserProperty("Selected_language", languageToLoad);
+        // Do something with the selection
+        LazzyBeeSingleton.getLearnApiImplements()._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_LANGUAGE, languageToLoad);
     }
 
 }
