@@ -373,11 +373,7 @@ public class LazzyBeeShare {
         //split package
         String[] splitPackage = aPackage.split(",");
 
-        for (int i = 1; i < splitPackage.length; i++) {
-            String pack = splitPackage[i];
-            //System.out.println("-Package:" + pack);
-            packages.add(pack);
-        }
+        packages.addAll(Arrays.asList(splitPackage).subList(1, splitPackage.length));
 
         return packages;
     }
@@ -453,7 +449,7 @@ public class LazzyBeeShare {
         String meaningUP = EMPTY;
         String meaningDOWN = EMPTY;
         if (sDisplayPosition) {
-            String regex="</?(p){1}.*?/?>";
+            String regex=String.valueOf("</?(p){1}.*?/?>");
             if (!POSITION_MEANING) {
                 meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
