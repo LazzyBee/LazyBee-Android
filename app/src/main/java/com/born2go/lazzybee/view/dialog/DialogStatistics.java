@@ -55,9 +55,9 @@ public class DialogStatistics extends DialogFragment {
     private ColumnChartData data;
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
-    private boolean hasLabels = false;
-    private boolean hasLabelForSelected = false;
-    private Context context;
+    private final boolean hasLabels = false;
+    private final boolean hasLabelForSelected = false;
+    private final Context context;
     Button btnShare;
 
     public DialogStatistics(Context context) {

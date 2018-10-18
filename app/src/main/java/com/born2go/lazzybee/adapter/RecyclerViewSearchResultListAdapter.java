@@ -24,9 +24,9 @@ import java.util.List;
  */
 public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<RecyclerViewSearchResultListAdapter.RecyclerViewSearchResultListAdapterViewHolder> {
     private static final String TAG = "SearchAdapter";
-    private List<Card> vocabularies;
-    private Context context;
-    private String mySubject;
+    private final List<Card> vocabularies;
+    private final Context context;
+    private final String mySubject;
 
     public RecyclerViewSearchResultListAdapter(Context context, List<Card> vocabularies) {
         this.context = context;
@@ -114,7 +114,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
     }
 
     public class RecyclerViewSearchResultListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
+        private final View view;
 
         public RecyclerViewSearchResultListAdapterViewHolder(View itemView) {
             super(itemView);

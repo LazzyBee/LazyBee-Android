@@ -146,11 +146,11 @@ public class LazzyBeeShare {
     public static final String ADV_BANNER_ID = "adv_banner_id";
 
 
-    public static String mime = "text/html";
-    public static String encoding = "utf-8";
+    public static final String mime = "text/html";
+    public static final String encoding = "utf-8";
 
 
-    public static String ASSETS = "file:///android_asset/";
+    public static final String ASSETS = "file:///android_asset/";
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 5;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
 
@@ -172,7 +172,7 @@ public class LazzyBeeShare {
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28
     public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28";
 
-    public static String BASE_URL_DB = "base_url";
+    public static final String BASE_URL_DB = "base_url";
     public static String ADV_ENABLE = "adv_enable";
 
 
@@ -181,13 +181,13 @@ public class LazzyBeeShare {
     public static String POPUP_URL = "popup_url";
 
     static TextToSpeech textToSpeech;
-    public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
+    public static final String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
-    public static String ADMOB_PUB_ID = "adv_pub_id";
+    public static final String ADMOB_PUB_ID = "adv_pub_id";
 
-    public static String ADV_DEFAULT_ID = "adv_default_id";
+    public static final String ADV_DEFAULT_ID = "adv_default_id";
 
-    public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
+    public static final String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
     public static String ADV_LEARN_DETAIL_ID = "adv_learndetail_id";
     public static String ADV_SPONSOR_UNIT_ID = "sponsor_unit";
@@ -198,10 +198,10 @@ public class LazzyBeeShare {
     public static final String ADV_DICTIONARY_LIST_ID = ADV_DEFAULT_ID;
     public static final String ADV_DETAILS_ID = ADV_DEFAULT_ID;
 
-    public static String MyPREFERENCES = "LazzyBee";
-    public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
+    public static final String MyPREFERENCES = "LazzyBee";
+    public static final String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
-    public static String QUEUE_LIST = "queue_List";
+    public static final String QUEUE_LIST = "queue_List";
 
     public static final String FA_OPEN_A_NOTE = "Open_aNote";
     public static final String FA_OPEN_CHOOSE_MAJOR = "Open_aChooseMajor";
@@ -226,7 +226,7 @@ public class LazzyBeeShare {
 
     public static final String FA_OPEN_TEST_YOUR_VOCA = "Open_aTestYouVoca";
     public static final String FA_OPEN_LEARNING_PROGRESS = "Open_aLearingProgress";
-    public static String SERVER_BASE_URL_SHARING = "server_base_url_sharing";
+    public static final String SERVER_BASE_URL_SHARING = "server_base_url_sharing";
 
 
     /**

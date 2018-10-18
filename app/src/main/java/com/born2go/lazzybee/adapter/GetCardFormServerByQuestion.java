@@ -18,11 +18,11 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
 
     private static final String TAG = "GetCardFormServer";
-    private ProgressDialog dialog;
-    private LearnApiImplements learnApiImplements;
-    private ConnectGdatabase connectGdatabase;
+    private final ProgressDialog dialog;
+    private final LearnApiImplements learnApiImplements;
+    private final ConnectGdatabase connectGdatabase;
     public GetCardFormServerByQuestionResponse delegate = null;
-    private String msg_Loading;
+    private final String msg_Loading;
 
     public GetCardFormServerByQuestion(Context context, Card card) {
         dialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<RecyclerViewListCourseAdapter.RecyclerViewListCourseAdapterViewHoler> {
     private static final String TAG = "ListCourseAdapter";
-    List<Course> objectList;
+    final List<Course> objectList;
 
     public RecyclerViewListCourseAdapter(List<Course> objectList) {
         this.objectList = objectList;
@@ -56,7 +56,7 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public class RecyclerViewListCourseAdapterViewHoler extends RecyclerView.ViewHolder {
-        private View view;
+        private final View view;
 
         public RecyclerViewListCourseAdapterViewHoler(View itemView) {
             super(itemView);

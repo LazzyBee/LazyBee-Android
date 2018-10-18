@@ -28,13 +28,13 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
     private static final String TAG = "ReviewAdapter";
     private static final int VIEW_CARD_1 = 1;
     private static final int VIEW_SUB_HEARDER_0 = 0;
-    List<Object> objects = new ArrayList<>();
-    List<Card> vocabularies;
-    private Context context;
-    private LearnApiImplements learnApiImplements;
-    private RecyclerView mRecyclerViewReviewTodayList;
-    private TextView lbCountReviewCard;
-    private String mySubject;
+    final List<Object> objects = new ArrayList<>();
+    final List<Card> vocabularies;
+    private final Context context;
+    private final LearnApiImplements learnApiImplements;
+    private final RecyclerView mRecyclerViewReviewTodayList;
+    private final TextView lbCountReviewCard;
+    private final String mySubject;
 
     public RecyclerViewIncomingListAdapter(Context context, RecyclerView mRecyclerViewReviewTodayList, List<Card> vocabularies, TextView lbCountReviewCard) {
         this.context = context;
@@ -200,8 +200,8 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
     }
 
     public class RecyclerViewReviewTodayListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-        private int viewType;
+        private final View view;
+        private final int viewType;
 
         public RecyclerViewReviewTodayListAdapterViewHolder(View itemView, int viewType) {
             super(itemView);

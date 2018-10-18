@@ -8,7 +8,7 @@ import com.born2go.lazzybee.LazzyBeeApplication;
 public class SharedPrefs {
     private static final String PREFS_NAME = "share_prefs";
     private static SharedPrefs mInstance;
-    private SharedPreferences mSharedPreferences;
+    private final SharedPreferences mSharedPreferences;
 
     private SharedPrefs() {
         mSharedPreferences = LazzyBeeApplication.self().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

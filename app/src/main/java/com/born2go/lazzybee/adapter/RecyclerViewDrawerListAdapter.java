@@ -32,9 +32,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_LINES = 6;
     private static final int TYPE_HELP = 7;
 
-    List<String> objectList;
-    Context context;
-    LearnApiImplements learnApiImplements;
+    final List<String> objectList;
+    final Context context;
+    final LearnApiImplements learnApiImplements;
 
     public RecyclerViewDrawerListAdapter(Context context, List<String> objectList) {
         this.objectList = objectList;
@@ -192,8 +192,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public class RecyclerViewDrawerListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-        private int viewType;
+        private final View view;
+        private final int viewType;
 
         public RecyclerViewDrawerListAdapterViewHolder(View itemView, int viewType) {
             super(itemView);

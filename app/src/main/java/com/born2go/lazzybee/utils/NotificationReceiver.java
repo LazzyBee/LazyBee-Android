@@ -22,9 +22,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
     private static final String TAG = "NotificationReceiver";
-    public static String NOTIFICATION_ID = "notification-id";
+    public static final String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";
-    public static String NOTIFICATION_WHEN = "when";
+    public static final String NOTIFICATION_WHEN = "when";
 
     @Override
     public void onReceive(Context context, Intent intent) {

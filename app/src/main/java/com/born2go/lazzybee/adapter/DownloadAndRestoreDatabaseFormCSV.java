@@ -33,18 +33,18 @@ import java.net.URL;
 @SuppressLint("StaticFieldLeak")
 public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Integer> {
     private static final String TAG = DownloadAndRestoreDatabaseFormCSV.class.getSimpleName();
-    Context context;
-    private String code;
-    private String localPath;
-    private ProgressDialog dialog;
-    ZipManager zipManager;
-    private boolean debug;
-    private String backupFileName = "backup.zip";
+    final Context context;
+    private final String code;
+    private final String localPath;
+    private final ProgressDialog dialog;
+    final ZipManager zipManager;
+    private final boolean debug;
+    private final String backupFileName = "backup.zip";
     private String dotZip = ".zip";
-    private String wordFileName = "word.csv";
-    private String streakFileName = "streak.csv";
-    String backupCVSFileName = "backup.csv";
-    File exportDir;
+    private final String wordFileName = "word.csv";
+    private final String streakFileName = "streak.csv";
+    final String backupCVSFileName = "backup.csv";
+    final File exportDir;
 
     public DownloadAndRestoreDatabaseFormCSV(Context context, boolean debug, String localPath, String code) {
         this.context = context;

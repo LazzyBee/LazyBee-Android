@@ -15,7 +15,7 @@ import com.born2go.lazzybee.R;
 
 public class SliderAdapter extends PagerAdapter {
 
-    Context context;
+    final Context context;
     LayoutInflater layoutInflater;
 
     public SliderAdapter(Context context) {
@@ -23,7 +23,7 @@ public class SliderAdapter extends PagerAdapter {
         slider_desc=context.getResources().getStringArray(R.array.intro);
     }
 
-    public int[] slider_images ={
+    public final int[] slider_images ={
             R.drawable.ico_2000,
             R.drawable.ico_five_min,
             R.drawable.ico_time_for_review,
@@ -32,7 +32,7 @@ public class SliderAdapter extends PagerAdapter {
             R.drawable.ico_rearbanner
     };
 
-    public String[] slider_desc;
+    public final String[] slider_desc;
 
     @Override
     public int getCount() {

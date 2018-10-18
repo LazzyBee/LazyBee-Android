@@ -23,7 +23,7 @@ public class DialogMyCodeRestoreDB extends DialogFragment {
 
 
     public static final String TAG = "DialogMyCodeRestoreDB";
-    private String code;
+    private final String code;
 
     public DialogMyCodeRestoreDB(String code) {
         this.code = code;

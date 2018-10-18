@@ -30,8 +30,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE = "databases";
     public static String DB_PATH;//= "/data/data/com.born2go.lazzybee/databases/";
 
-    public static String DB_NAME = "english.db";
-    public static String DB_UPDATE_NAME = "update.db";
+    public static final String DB_NAME = "english.db";
+    public static final String DB_UPDATE_NAME = "update.db";
 
     private SQLiteDatabase myDataBase;
 

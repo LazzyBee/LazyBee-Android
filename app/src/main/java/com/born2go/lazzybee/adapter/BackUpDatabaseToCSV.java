@@ -41,17 +41,17 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "BackUpDatabaseToCSV";
     private final String backup_key;
     Activity activity;
-    private String device_id;
-    private ProgressDialog dialog;
-    ZipManager zipManager;
+    private final String device_id;
+    private final ProgressDialog dialog;
+    final ZipManager zipManager;
 
-    private String wordFileName = "word.csv";
-    private String streakFileName = "streak.csv";
+    private final String wordFileName = "word.csv";
+    private final String streakFileName = "streak.csv";
     private String backupFileName = "backup.zip";
-    File exportDir;
-    private String dotZip;
+    final File exportDir;
+    private final String dotZip;
 
-    private Cursor curCSV;
+    private final Cursor curCSV;
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
         this.device_id = device_id;

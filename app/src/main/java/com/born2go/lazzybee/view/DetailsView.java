@@ -45,7 +45,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private static final String TAG = "DetailsView";
     private OnDetailsViewListener mListener;
-    String tag;
+    final String tag;
     private Card card;
 
     View mViewAdv;
@@ -57,7 +57,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     MenuItem itemIgnore;
     MenuItem itemLearn;
 
-    private Context context;
+    private final Context context;
 
     public DetailsView(Context context, String tag) {
         // Required empty public constructor
@@ -193,9 +193,9 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     class PackageCardPageAdapter extends PagerAdapter {
-        Card card;
-        List<String> packages;
-        private Context context;
+        final Card card;
+        final List<String> packages;
+        private final Context context;
 
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;

@@ -520,9 +520,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     }
 
     class PackageCardPageAdapter extends PagerAdapter {
-        Card card;
-        List<String> packages;
-        private Context context;
+        final Card card;
+        final List<String> packages;
+        private final Context context;
 
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;

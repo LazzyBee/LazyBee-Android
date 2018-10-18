@@ -24,11 +24,11 @@ import java.util.List;
  */
 public class DatabaseUpgrade extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseUpgrade";
-    public static String DB_NAME = "update.db";
+    public static final String DB_NAME = "update.db";
     private static final String TABLE_SYSTEM = "system";
-    public static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
+    public static final String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
 
-    Context context;
+    final Context context;
 
     public DatabaseUpgrade(Context context) {
         super(context, DB_NAME, null, 1);

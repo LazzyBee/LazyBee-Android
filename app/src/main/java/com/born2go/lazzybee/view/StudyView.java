@@ -68,7 +68,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private final Context context;
     private final String studyAction;
     private OnStudyViewListener mListener;
-    private Card card;
+    private final Card card;
     private LearnApiImplements dataBaseHelper;
 
     TextToSpeech textToSpeech;
@@ -97,8 +97,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     List<Card> todayList = new ArrayList<>();
     List<Card> againList = new ArrayList<>();
     List<Card> dueList = new ArrayList<>();
-    List<Card> cardListAddDueToDay = new ArrayList<>();
-    List<Card> reverseList = new ArrayList<>();
+    final List<Card> cardListAddDueToDay = new ArrayList<>();
+    final List<Card> reverseList = new ArrayList<>();
     //Current Card
     Card currentCard = new Card();
     //Define before card
@@ -110,11 +110,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     FloatingActionButton mHelp;
 
 
-    private Intent intent;
-    StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
+    private final Intent intent;
+    final StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
 
     DetailsView detailsView;
-    DisableScrollingViewPager mViewPager;
+    final DisableScrollingViewPager mViewPager;
 
     int widthStudyDisplay = -1, heightStudyDisplay = -1;
     String mySubject = "common";
@@ -123,7 +123,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-    private FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
+    private final FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -162,7 +162,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private boolean firstTime = false;
-    private View.OnClickListener showAnswer = new View.OnClickListener() {
+    private final View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());

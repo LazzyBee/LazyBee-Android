@@ -25,7 +25,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 public class SuggestionCardAdapter extends CursorAdapter {
     private static final String TAG = SuggestionCardAdapter.class.getSimpleName();
-    private String mySubject;
+    private final String mySubject;
 
     public SuggestionCardAdapter(Context context, Cursor c) {
         super(context, c, 0);

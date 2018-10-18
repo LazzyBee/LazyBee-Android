@@ -34,18 +34,18 @@ import java.util.List;
 public class RecyclerViewCustomStudyAdapter extends
         RecyclerView.Adapter<RecyclerViewCustomStudyAdapter.RecyclerViewCustomStudyAdapterViewHolder> {
     private static final String TAG = "CustomStudyAdapter";
-    Context context;
-    List<String> customStudys;
-    LearnApiImplements learnApiImplements;
+    final Context context;
+    final List<String> customStudys;
+    final LearnApiImplements learnApiImplements;
     //    Dialog main;
     private static final int TYPE_TITLE_0 = 0;
     private static final int TYPE_SETTING_NAME_1 = 1;
     private static final int TYPE_SETTING_MEANING_2 = 2;
     private static final int TYPE_SETTING_AUTO_PLAY_SOUND_3 = 3;
     private static final int TYPE_LINE = -1;
-    RecyclerView recyclerView;
-    FragmentManager supportFragmentManager;
-    RecyclerViewCustomStudyAdapter adapter;
+    final RecyclerView recyclerView;
+    final FragmentManager supportFragmentManager;
+    final RecyclerViewCustomStudyAdapter adapter;
 
     public RecyclerViewCustomStudyAdapter(FragmentManager supportFragmentManager, Context context, List<String> customStudys, RecyclerView recyclerView) {
         this.supportFragmentManager = supportFragmentManager;
@@ -330,8 +330,8 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
     public class RecyclerViewCustomStudyAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-        private int viewType;
+        private final View view;
+        private final int viewType;
 
         public RecyclerViewCustomStudyAdapterViewHolder(View itemView, int viewType) {
             super(itemView);

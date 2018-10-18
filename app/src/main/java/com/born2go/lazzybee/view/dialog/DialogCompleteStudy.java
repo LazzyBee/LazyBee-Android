@@ -35,7 +35,7 @@ import java.util.Calendar;
 public class DialogCompleteStudy extends DialogFragment {
 
     private static final String TAG = "DialogCompleteStudy";
-    private Context context;
+    private final Context context;
 
     public DialogCompleteStudy(Context context) {
         this.context = context;

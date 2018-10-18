@@ -33,8 +33,8 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
 
 
     public static final String TAG = "SetTimeShowAnswer";
-    private Context context;
-    private RecyclerViewCustomStudyAdapter adapter;
+    private final Context context;
+    private final RecyclerViewCustomStudyAdapter adapter;
 
     public DialogSetTimeShowAnswer(RecyclerViewCustomStudyAdapter adapter, Context context, int timeSet) {
         this.adapter = adapter;
@@ -43,7 +43,7 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         Log.d(TAG, "timeSet:" + timeSet);
     }
 
-    private int timeSet;
+    private final int timeSet;
     private int time = -1;
     private Dialog dialog;
 

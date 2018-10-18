@@ -35,12 +35,13 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
         void processFinish(int code);
     }
     @SuppressLint("StaticFieldLeak")
+    final
     Context context;
-    ProgressDialog progressDialog;
+    final ProgressDialog progressDialog;
     public DownloadFileDatabaseResponse downloadFileDatabaseResponse;
-    LearnApiImplements learnApiImplements;
-    DatabaseUpgrade databaseUpgrade;
-    int version;
+    final LearnApiImplements learnApiImplements;
+    final DatabaseUpgrade databaseUpgrade;
+    final int version;
 
     public DownloadFileandUpdateDatabase(Context context, int version) {
         this.context = context;

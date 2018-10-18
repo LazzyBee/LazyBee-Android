@@ -55,7 +55,7 @@ public class StudyActivity extends AppCompatActivity
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
     private Context context;
-    private FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
+    private final FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
     LearnApiImplements dataBaseHelper;
 
@@ -429,7 +429,7 @@ public class StudyActivity extends AppCompatActivity
 
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private final DisableScrollingViewPager mViewPager;
-        private int pageCount = 2;
+        private final int pageCount = 2;
 
         public ScreenSlidePagerAdapter(FragmentManager fm, DisableScrollingViewPager mViewPager) {
             super(fm);

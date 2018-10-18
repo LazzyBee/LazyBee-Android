@@ -361,13 +361,13 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-        private OnItemClickListener mListener;
+        private final OnItemClickListener mListener;
 
         interface OnItemClickListener {
             public void onItemClick(View view, int position);
         }
 
-        GestureDetector mGestureDetector;
+        final GestureDetector mGestureDetector;
 
         public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
             mListener = listener;
