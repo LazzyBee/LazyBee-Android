@@ -328,6 +328,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void _initView(final View view) {
         container = (LinearLayout) view.findViewById(R.id.container);
         //init button
@@ -499,7 +500,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 .theme(Theme.LIGHT)
                 .build().show();
     }
-
+    @SuppressLint("ClickableViewAccessibility")
     private void _handlerNote() {
         //Handler onclick
         mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {

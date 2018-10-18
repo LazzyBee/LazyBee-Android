@@ -1,11 +1,11 @@
 package com.born2go.lazzybee.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 /**
  * Created by Hue on 12/3/2015.
@@ -22,6 +22,7 @@ public class DisableScrollingViewPager extends ViewPager {
         super(context, attrs);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (this.isPagingEnabled) {
