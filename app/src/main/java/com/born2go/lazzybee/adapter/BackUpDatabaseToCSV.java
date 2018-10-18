@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -35,6 +36,7 @@ import java.io.FileWriter;
 /**
  * Created by Hue on 12/16/2015.
  */
+@SuppressLint("StaticFieldLeak")
 public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "BackUpDatabaseToCSV";

@@ -362,10 +362,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             @Override
             public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT < 16)
-                    mDisplay.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                else
-                    mDisplay.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mDisplay.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 int width = mDisplay.getMeasuredWidth();
                 int height = mDisplay.getMeasuredHeight();
