@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
@@ -162,7 +163,7 @@ public class DialogStatistics extends DialogFragment {
 
             List<AxisValue> axisXValues = new ArrayList<AxisValue>();
             List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
-            List<AxisValue> axisYValues = new ArrayList<AxisValue>();
+
             //Gestion of the two axes for the graphic
 
             int total = 0;
@@ -187,7 +188,7 @@ public class DialogStatistics extends DialogFragment {
                 columns.add(column);
 
             }
-            axisYValues.add(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total)));
+            List<AxisValue> axisYValues = new ArrayList<AxisValue>(Arrays.asList(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total))));
 
             data = new ColumnChartData(columns);
             Axis axeX = new Axis(axisXValues);
