@@ -145,14 +145,13 @@ public class RecyclerViewCustomStudyAdapter extends
                 String mAutoPlaySound = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_AUTO_PLAY_SOUND);
                 if (mAutoPlaySound == null) {
                     mSwitch.setChecked(true);
-                } else if(mAutoPlaySound.equals(LazzyBeeShare.ON)) {
+                } else if (mAutoPlaySound.equals(LazzyBeeShare.ON)) {
                     mSwitch.setChecked(true);
-                }else if(mAutoPlaySound.equals(LazzyBeeShare.OFF)) {
+                } else if (mAutoPlaySound.equals(LazzyBeeShare.OFF)) {
                     mSwitch.setChecked(false);
-                }else {
+                } else {
                     mSwitch.setChecked(false);
                 }
-
 
 
                 mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -412,13 +411,13 @@ public class RecyclerViewCustomStudyAdapter extends
         final TextView lbEror = (TextView) viewDialog.findViewById(R.id.lbEror);
         final EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
 
-        if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
+        if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
+        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
+        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT) {
+        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_max_learn_more_per_day_by);
         }
 
@@ -460,7 +459,7 @@ public class RecyclerViewCustomStudyAdapter extends
                             FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
                             String limit = LazzyBeeShare.EMPTY;
-                            if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
+                            if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
                                 String erorr_message = LazzyBeeShare.EMPTY;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);
@@ -494,7 +493,7 @@ public class RecyclerViewCustomStudyAdapter extends
 //                            else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
 //
 //                            }
-                            else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
+                            else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
                                 String erorr_message = LazzyBeeShare.EMPTY;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);
@@ -516,7 +515,7 @@ public class RecyclerViewCustomStudyAdapter extends
                                         _reloadRecylerView();
                                     }
                                 }
-                            } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT) {
+                            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
                                 String erorr_message = LazzyBeeShare.EMPTY;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);

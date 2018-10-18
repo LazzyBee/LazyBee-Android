@@ -765,11 +765,11 @@ public class RecyclerViewSettingListAdapter extends
         TextView lbSettingLimitName = (TextView) viewDialog.findViewById(R.id.lbSettingLimitName);
         final EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
 
-        if (key == LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT) {
+        if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
+        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
+        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
             message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
         }
 
