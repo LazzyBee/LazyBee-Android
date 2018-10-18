@@ -11,10 +11,6 @@
         android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/imageView4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -26,9 +22,6 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/linearLayout2"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginBottom="20dp">
 
@@ -70,8 +63,6 @@
                 android:id="@+id/btnDone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
@@ -93,9 +84,6 @@
                 android:id="@+id/mDays"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
