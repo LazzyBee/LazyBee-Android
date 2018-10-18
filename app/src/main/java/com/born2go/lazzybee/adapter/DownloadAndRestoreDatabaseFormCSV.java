@@ -3,7 +3,6 @@ package com.born2go.lazzybee.adapter;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -231,15 +230,15 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                 BufferedReader reader = new BufferedReader(fReader);
                 String cvsSplitBy = ",\n";
                 try {
-                    String all = LazzyBeeShare.EMPTY;
+                    StringBuilder all = new StringBuilder(LazzyBeeShare.EMPTY);
                     char[] buffer = new char[1024];
                     while (reader.read(buffer) > 0) {
                         String sBuffer = new String(buffer);
-                        all += sBuffer;
+                        all.append(sBuffer);
                     }
 
                     //Split line
-                    String[] allLine = all.split(cvsSplitBy);
+                    String[] allLine = all.toString().split(cvsSplitBy);
                     int length = allLine.length;
                     Log.d(TAG, "length:" + length);
                     int totalResults = 0;
@@ -247,7 +246,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                         String[] sLine = allLine[i].split(",");
                         int slength = sLine.length;
                         // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
-                        long gId = 0l;
+                        long gId = 0L;
                         int factor = 0;
                         int last_ivl = 0;
                         int queue = 0;

@@ -3,7 +3,6 @@ package com.born2go.lazzybee.activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -276,7 +275,6 @@ public class StudyActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                query.trim();
                 if (query.trim().length() > 2) {
                     Intent intent = new Intent(context, SearchActivity.class);
                     intent.setAction(Intent.ACTION_SEARCH);

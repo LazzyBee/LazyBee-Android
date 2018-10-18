@@ -30,8 +30,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
 import java.util.List;
@@ -297,7 +295,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                     if (admob_pub_id != null) {
                         if (adv_banner_id == null || adv_banner_id.equals(LazzyBeeShare.EMPTY)) {
                             mViewAdv.setVisibility(View.GONE);
-                        } else if (!adv_banner_id.equals(LazzyBeeShare.EMPTY) || !adv_banner_id.isEmpty()) {
+                        } else if (!adv_banner_id.equals(LazzyBeeShare.EMPTY)) {
                             String advId = admob_pub_id + "/" + adv_banner_id;
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
