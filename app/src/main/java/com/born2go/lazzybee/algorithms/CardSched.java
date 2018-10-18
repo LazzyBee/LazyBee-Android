@@ -100,7 +100,8 @@ public class CardSched {
             interval = ivl_hard;
         } else if (ease == EASE_GOOD) {
             interval = ivl_good;
-        } else if (ease == EASE_EASY) {
+        } else //noinspection ConstantConditions
+            if (ease == EASE_EASY) {
             interval = ivl_easy;
         }
         // Should we maximize the interval?

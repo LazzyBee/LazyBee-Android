@@ -197,30 +197,32 @@ public class SlidingTabLayout extends HorizontalScrollView {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final OnClickListener tabClickListener = new TabClickListener();
 
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View tabView = null;
-            TextView tabTitleView = null;
+       if (adapter!=null){
+           for (int i = 0; i < adapter.getCount(); i++) {
+               View tabView = null;
+               TextView tabTitleView = null;
 
-            if (mTabViewLayoutId != 0) {
-                // If there is a custom tab view layout id set, try and inflate it
-                tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                        false);
-                tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
-            }
+               if (mTabViewLayoutId != 0) {
+                   // If there is a custom tab view layout id set, try and inflate it
+                   tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
+                           false);
+                   tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
+               }
 
-            if (tabView == null) {
-                tabView = createDefaultTabView(getContext());
-            }
+               if (tabView == null) {
+                   tabView = createDefaultTabView(getContext());
+               }
 
-            if (tabTitleView == null && TextView.class.isInstance(tabView)) {
-                tabTitleView = (TextView) tabView;
-            }
+               if (tabTitleView == null && TextView.class.isInstance(tabView)) {
+                   tabTitleView = (TextView) tabView;
+               }
 
-            tabTitleView.setText(adapter.getPageTitle(i));
-            tabView.setOnClickListener(tabClickListener);
+               tabTitleView.setText(adapter.getPageTitle(i));
+               tabView.setOnClickListener(tabClickListener);
 
-            mTabStrip.addView(tabView);
-        }
+               mTabStrip.addView(tabView);
+           }
+       }
     }
 
     @Override

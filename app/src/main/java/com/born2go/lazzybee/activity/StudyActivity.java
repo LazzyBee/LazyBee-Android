@@ -107,9 +107,10 @@ public class StudyActivity extends AppCompatActivity
 
 
     private void _initActonBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -278,18 +279,16 @@ public class StudyActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.trim() != null) {
-                    if (query.trim().length() > 2) {
-                        Intent intent = new Intent(context, SearchActivity.class);
-                        intent.setAction(Intent.ACTION_SEARCH);
-                        intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY, query);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
-                    }
-                    return true;
-                } else
-                    return false;
+                query.trim();
+                if (query.trim().length() > 2) {
+                    Intent intent = new Intent(context, SearchActivity.class);
+                    intent.setAction(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                    intent.putExtra(SearchManager.QUERY, query);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                }
+                return true;
             }
 
             @Override
@@ -457,7 +456,6 @@ public class StudyActivity extends AppCompatActivity
         public int getCount() {
             return pageCount;
         }
-
 
 
         private Fragment mCurrentFragment;

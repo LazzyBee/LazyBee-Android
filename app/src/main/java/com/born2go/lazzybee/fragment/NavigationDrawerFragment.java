@@ -110,7 +110,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             this.context = getActivity();
             //init List Object
-            final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
+            @SuppressWarnings("ConstantConditions") final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
 
 //        objects.add(LazzyBeeShare.DRAWER_USER);
 //        objects.add(LazzyBeeShare.DRAWER_TITLE_COURSE);
@@ -152,7 +152,8 @@ public class NavigationDrawerFragment extends Fragment {
                                 selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
                             } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
                                 selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                            } else if (o instanceof Course) {
+                            } else //noinspection ConstantConditions
+                                if (o instanceof Course) {
                                 selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
                             } else if (o.equals(getString(R.string.drawer_subject))) {
                                 selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
@@ -187,6 +188,7 @@ public class NavigationDrawerFragment extends Fragment {
      * @param toolbar
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
+    @SuppressWarnings("ConstantConditions")
     public void setUp(int fragmentId, Toolbar toolbar, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
@@ -350,6 +352,7 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(true);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }

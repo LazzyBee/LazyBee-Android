@@ -132,10 +132,13 @@ public class SettingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 159) {
             if (resultCode == RESULT_OK) {
-                String fileSelectPath = data.getData().getPath();
-                if (fileSelectPath != null) {
-                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, true, fileSelectPath, fileSelectPath);
-                    importDatabaseFormCSV.execute();
+                if (data.getData() != null)
+                {
+                    String fileSelectPath = data.getData().getPath();
+                    if (fileSelectPath != null) {
+                        DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, true, fileSelectPath, fileSelectPath);
+                        importDatabaseFormCSV.execute();
+                    }
                 }
             }
         }

@@ -109,7 +109,8 @@ public class SearchActivity extends AppCompatActivity implements
     private void _initActonBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -165,7 +166,7 @@ public class SearchActivity extends AppCompatActivity implements
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
                 super.onScrolled(recyclerView, dx, dy);
-                Log.i(TAG,"onScrolled");
+                Log.i(TAG, "onScrolled");
             }
 
             @Override
@@ -228,10 +229,12 @@ public class SearchActivity extends AppCompatActivity implements
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Log.d(TAG, "close search view -Action:" + getIntent().getAction());
-                if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
-                    _displayDictionary();
-                } else {
-                    onBackPressed();
+                if (getIntent().getAction()!=null){
+                    if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
+                        _displayDictionary();
+                    } else {
+                        onBackPressed();
+                    }
                 }
                 return true;
             }
@@ -253,31 +256,29 @@ public class SearchActivity extends AppCompatActivity implements
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.trim() != null) {
-                    if (newText.trim().length() > 2) {
+                newText.trim();
+                if (newText.trim().length() > 2) {
 
-                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                                + KEY_QUESTION + " like '" + newText + "%' OR "
-                                + KEY_QUESTION + " like '% " + newText + "%'"
-                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+                    String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                            + KEY_QUESTION + " like '" + newText + "%' OR "
+                            + KEY_QUESTION + " like '% " + newText + "%'"
+                            + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                        try {
-                            Cursor cursor = db.rawQuery(likeQuery, null);
-                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                            search.setSuggestionsAdapter(suggestionCardAdapter);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //noinspection AccessStaticViaInstance
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                        } finally {
-                            Log.d(TAG, "query suggetion");
-                        }
-
+                    SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery(likeQuery, null);
+                        SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                        search.setSuggestionsAdapter(suggestionCardAdapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
+                    } finally {
+                        Log.d(TAG, "query suggetion");
                     }
-                    return true;
-                } else
-                    return false;
+
+                }
+                return true;
             }
         });
 
@@ -446,7 +447,7 @@ public class SearchActivity extends AppCompatActivity implements
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
-                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context,cardFormDB);
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context, cardFormDB);
                     getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
                 } else {
@@ -634,7 +635,7 @@ public class SearchActivity extends AppCompatActivity implements
                 lbMessageNotFound.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                       gotoAddWord();
+                        gotoAddWord();
                     }
                 });
                 _trackerWorkNotFound();
@@ -651,7 +652,7 @@ public class SearchActivity extends AppCompatActivity implements
             startActivity(myIntent);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, "No application can handle this request."
-                    + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                    + " Please install a webbrowser", Toast.LENGTH_LONG).show();
             e.printStackTrace();
             //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);

@@ -92,7 +92,8 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         _displayCard(getCarID());
 
@@ -144,7 +145,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                     if (admob_pub_id != null) {
                         if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
                             mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                        } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
                             String advId = admob_pub_id + "/" + adv_id;
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
@@ -177,7 +178,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                                 @Override
                                 public void onAdFailedToLoad(int errorCode) {
                                     // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad "+errorCode);
+                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
                                     mViewAdv.setVisibility(View.GONE);
                                 }
                             });
@@ -248,18 +249,16 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.trim() != null) {
-                    if (query.trim().length() > 2) {
-                        Intent intent = new Intent(context, SearchActivity.class);
-                        intent.setAction(Intent.ACTION_SEARCH);
-                        intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY, query);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
-                    }
-                    return true;
-                } else
-                    return false;
+                query.trim();
+                if (query.trim().length() > 2) {
+                    Intent intent = new Intent(context, SearchActivity.class);
+                    intent.setAction(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                    intent.putExtra(SearchManager.QUERY, query);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                }
+                return true;
             }
 
             @Override
@@ -508,6 +507,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
 
                 //set Result code for updated List card
+                //noinspection ConstantConditions
                 setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
             } else {
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();

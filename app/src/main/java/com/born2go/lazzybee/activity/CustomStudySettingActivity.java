@@ -53,7 +53,8 @@ public class CustomStudySettingActivity extends AppCompatActivity {
         setCustomStudyAdapter();
 
         //Show Home as Up
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
     }

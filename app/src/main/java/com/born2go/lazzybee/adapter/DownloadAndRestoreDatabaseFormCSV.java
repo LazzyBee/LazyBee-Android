@@ -230,6 +230,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private int _restoreWordTableFormCSV(String wordFilePath) {
         int restore = 0;
         try {
@@ -433,7 +434,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         String message;
         if (results >= 1) {
             message = context.getString(R.string.restore_database_sucessful);
-        } else if (results == 0 || results == 1) {
+        } else if (results == 0) {
             message = context.getString(R.string.restore_database_fails);
         } else if (results == -1) {
             message = context.getString(R.string.restore_database_wrong_code);

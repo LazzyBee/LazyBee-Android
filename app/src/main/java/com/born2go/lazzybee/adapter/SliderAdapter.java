@@ -44,6 +44,7 @@ public class SliderAdapter extends PagerAdapter {
         return  view == (RelativeLayout) o;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position){

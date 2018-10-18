@@ -80,7 +80,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.view_study_details, container, false);
         String myTag = getTag();
-        ((StudyActivity) getActivity()).setDetailViewTag(myTag);
+        if (getActivity() != null)
+            ((StudyActivity) getActivity()).setDetailViewTag(myTag);
         _defineDetailsView(view);
         return view;
     }
@@ -227,43 +228,45 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             // Inflate a new layout from our resources
             LayoutInflater inflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view;
-            if (position < 2) {
-                view = inflater.inflate(R.layout.page_package_card_item, container, false);
-                // Add the newly created View to the ViewPager
-                container.addView(view);
-                //
-                mDetailsWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
-                mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
-                ws.setJavaScriptEnabled(true);
-                try {
-                    String displayHTML = LazzyBeeShare.EMPTY;
-                    switch (position) {
-                        case 0:
-                            //dic VN
-                            if (card.getL_vn() != null) {
-                                displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
-                            }
-                            break;
-                        case 1:
-                            //dic ENG
-                            if (card.getL_en() != null) {
-                                displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
-                            }
-                            break;
-                    }
-                    //Log.i(TAG, "Tab Dic:" + displayHTML.);
+            View view = null;
+            if (inflater != null) {
+                if (position < 2) {
+                    view = inflater.inflate(R.layout.page_package_card_item, container, false);
+                    // Add the newly created View to the ViewPager
+                    container.addView(view);
+                    //
+                    mDetailsWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
+                    mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
+                    ws.setJavaScriptEnabled(true);
+                    try {
+                        String displayHTML = LazzyBeeShare.EMPTY;
+                        switch (position) {
+                            case 0:
+                                //dic VN
+                                if (card.getL_vn() != null) {
+                                    displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
+                                }
+                                break;
+                            case 1:
+                                //dic ENG
+                                if (card.getL_en() != null) {
+                                    displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
+                                }
+                                break;
+                        }
+                        //Log.i(TAG, "Tab Dic:" + displayHTML.);
 
-                    mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-                } catch (Exception e) {
-                    LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
+                        mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+                    } catch (Exception e) {
+                        LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
+                    }
+                } else {
+                    view = inflater.inflate(R.layout.page_sponsor, container, false);
+                    // Add the newly created View to the ViewPager
+                    container.addView(view);
+                    _initAdView(view, AdSize.MEDIUM_RECTANGLE);
                 }
-            } else {
-                view = inflater.inflate(R.layout.page_sponsor, container, false);
-                // Add the newly created View to the ViewPager
-                container.addView(view);
-                _initAdView(view, AdSize.MEDIUM_RECTANGLE);
             }
             // Return the View
             return view;
@@ -283,9 +286,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private void _initAdView(final View mViewAdv, final AdSize banner) {
         try {
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+            if (getActivity()!=null){
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String admob_pub_id = null;//"ca-app-pub-5245864792816840";
                     String adv_banner_id = null;//"7733609014";
                     if (task.isComplete()) {
@@ -295,7 +297,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                     if (admob_pub_id != null) {
                         if (adv_banner_id == null || adv_banner_id.equals(LazzyBeeShare.EMPTY)) {
                             mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_banner_id != null || adv_banner_id.length() > 1 || !adv_banner_id.equals(LazzyBeeShare.EMPTY) || !adv_banner_id.isEmpty()) {
+                        } else if (!adv_banner_id.equals(LazzyBeeShare.EMPTY) || !adv_banner_id.isEmpty()) {
                             String advId = admob_pub_id + "/" + adv_banner_id;
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
@@ -358,8 +360,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
-                }
-            });
+                });
+            }
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
@@ -423,31 +425,32 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         try {
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
+            if (getActivity()!=null){
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
+                        if (task.isSuccessful()) {
+                            server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
+                        }
+                        if (server_base_url_sharing != null) {
+                            if (server_base_url_sharing.length() > 0)
+                                base_url_sharing[0] = server_base_url_sharing;
+                        }
 
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
-                    if (task.isSuccessful()) {
-                        server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
+                        //define base url with question
+                        base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
+                        Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
+
+                        //Share card
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
+                        sendIntent.setType("text/plain");
+                        startActivity(sendIntent);
                     }
-                    if (server_base_url_sharing != null) {
-                        if (server_base_url_sharing.length() > 0)
-                            base_url_sharing[0] = server_base_url_sharing;
-                    }
-
-                    //define base url with question
-                    base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
-                    Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
-
-                    //Share card
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
-                    sendIntent.setType("text/plain");
-                    startActivity(sendIntent);
-                }
-            });
+                });
+            }
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);

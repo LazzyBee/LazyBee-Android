@@ -50,8 +50,11 @@ public class TestYourVoca extends AppCompatActivity {
     private void _initToolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.drawer_test_your_voca));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.drawer_test_your_voca));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
 
     }
 

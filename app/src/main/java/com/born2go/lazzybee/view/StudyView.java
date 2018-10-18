@@ -125,7 +125,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-    private FirebaseAnalytics mFirebaseAnalytics=LazzyBeeSingleton.getFirebaseAnalytics();
+    private FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -214,7 +214,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     private void _showDialogTipAnswerCard() {
         DialogFirstShowAnswer firstShowAnswer = new DialogFirstShowAnswer(context);
-        firstShowAnswer.show(getFragmentManager(), "");
+        if (getFragmentManager() != null)
+            firstShowAnswer.show(getFragmentManager(), "");
 
     }
 
@@ -256,11 +257,13 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void setDisplayCard(Card cardFromDB) {
-        String detailsTag = ((StudyActivity) getActivity()).getDetailViewTag();
-        Log.d(TAG, "Detais Tag:" + detailsTag);
-        detailsView =
-                (DetailsView) getActivity().getSupportFragmentManager().findFragmentByTag(detailsTag);
-        detailsView.setCard(cardFromDB);
+        if (getActivity() != null) {
+            String detailsTag = ((StudyActivity) getActivity()).getDetailViewTag();
+            Log.d(TAG, "Detais Tag:" + detailsTag);
+            detailsView =
+                    (DetailsView) getActivity().getSupportFragmentManager().findFragmentByTag(detailsTag);
+            detailsView.setCard(cardFromDB);
+        }
     }
 
     @Override
@@ -482,24 +485,28 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         WebView webView = new WebView(getContext());
         webView.loadData(html, "text/html; charset=UTF-8", null);
 
-        new MaterialDialog.Builder(getActivity())
-                .customView(webView, true)
-                .positiveText(R.string.ok)
-                .positiveColor(getResources().getColor(R.color.button_green_color))
-                .theme(Theme.LIGHT)
-                .build().show();
+        if (getActivity() != null) {
+            new MaterialDialog.Builder(getActivity())
+                    .customView(webView, true)
+                    .positiveText(R.string.ok)
+                    .positiveColor(getResources().getColor(R.color.button_green_color))
+                    .theme(Theme.LIGHT)
+                    .build().show();
+        }
 
     }
 
 
     private void showDialogHelp() {
-        new MaterialDialog.Builder(getActivity())
-                .content(Html.fromHtml(getString(R.string.try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare)))
-                .positiveText(getString(R.string.ok))
-                .positiveColor(getResources().getColor(R.color.button_green_color))
-                .theme(Theme.LIGHT)
-                .build().show();
+        if (getActivity() != null)
+            new MaterialDialog.Builder(getActivity())
+                    .content(Html.fromHtml(getString(R.string.try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare)))
+                    .positiveText(getString(R.string.ok))
+                    .positiveColor(getResources().getColor(R.color.button_green_color))
+                    .theme(Theme.LIGHT)
+                    .build().show();
     }
+
     @SuppressLint("ClickableViewAccessibility")
     private void _handlerNote() {
         //Handler onclick
@@ -827,6 +834,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     private void _nextAgainCard() {
         try {
             Log.i(TAG, "---------_nextAgainCard--------");
@@ -1479,9 +1487,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
 
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+            if (getActivity()!=null){
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
                     if (task.isSuccessful()) {
                         server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
@@ -1492,7 +1499,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     }
 
                     //define base url with question
-                    base_url_sharing[0] = base_url_sharing[0] +"/"+ currentCard.getQuestion();
+                    base_url_sharing[0] = base_url_sharing[0] + "/" + currentCard.getQuestion();
                     Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
 
                     //Share card
@@ -1501,8 +1508,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
-                }
-            });
+                });
+            }
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);

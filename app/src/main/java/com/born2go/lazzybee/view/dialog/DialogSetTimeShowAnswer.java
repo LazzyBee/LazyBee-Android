@@ -71,16 +71,15 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
                 dialog.dismiss();
             }
         });
-        lbSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        lbSave.setOnClickListener(v -> {
+            if (getActivity()!=null){
                 FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
                 firebaseAnalytics.setUserProperty("Selected_waiting_time", String.valueOf(time));
-                Log.d(TAG, "time:" + time);
-                LazzyBeeSingleton.learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(time));
-                dialog.dismiss();
-                adapter._reloadRecylerView();
             }
+            Log.d(TAG, "time:" + time);
+            LazzyBeeSingleton.learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(time));
+            dialog.dismiss();
+            adapter._reloadRecylerView();
         });
     }
 
@@ -184,8 +183,10 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 }

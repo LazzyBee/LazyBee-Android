@@ -198,29 +198,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    /**
-     * Dplace le fichier source dans le fichier rsultat
-     */
-    public static boolean moveFile(File source, File destination) {
-        if (!destination.exists()) {
-            // On essaye avec renameTo
-            boolean result = source.renameTo(destination);
-            if (!result) {
-                // On essaye de copier
-                try {
-                    result = true;
-                    result &= copyFile(source, destination);
-                    if (result) result &= source.delete();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return (result);
-        } else {
-            // Si le fichier destination existe, on annule ...
-            return (false);
-        }
-    }
 
     public static boolean copyFile(File source, File dest) {
         try {
@@ -241,7 +218,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         destinationFile.write(buffer, 0, nbLecture);
                     }
                 } finally {
-                    destinationFile.close();
+                    if (destinationFile != null)
+                        destinationFile.close();
                 }
             } finally {
                 sourceFile.close();

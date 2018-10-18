@@ -30,6 +30,7 @@ public class ConnectGdatabase {
     final String applicationName = "Lazzybee";
 
 
+    @SuppressWarnings("ConstantConditions")
     public DataServiceApi getDataServiceApi() {
         HttpTransport transport;
         JsonFactory gsonFactory;

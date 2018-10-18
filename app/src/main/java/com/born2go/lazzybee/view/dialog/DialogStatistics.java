@@ -88,8 +88,11 @@ public class DialogStatistics extends DialogFragment {
                     screenViewChart();
                     _shareCard();
 
-                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
+                    if(getActivity()!=null){
+                        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
+                    }
+
 
                 }
             });
@@ -149,8 +152,10 @@ public class DialogStatistics extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 

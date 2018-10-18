@@ -46,7 +46,8 @@ public class LanguageActivity extends AppCompatActivity {
         finish();
         Intent intent = LanguageActivity.this.getPackageManager()
                 .getLaunchIntentForPackage(LanguageActivity.this.getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (intent != null)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

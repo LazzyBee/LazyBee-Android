@@ -165,7 +165,8 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -173,7 +174,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         try {
             Bundle bundle = new Bundle();
             bundle.putString("screenName", (String) GA_SCREEN);
-            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -208,7 +209,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
                     if (admob_pub_id != null) {
                         if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
                             mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                        } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
                             String advId = admob_pub_id + "/" + adv_id;
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
@@ -243,7 +244,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
                                 @Override
                                 public void onAdFailedToLoad(int errorCode) {
                                     // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad "+errorCode);
+                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
                                     mViewAdv.setVisibility(View.GONE);
                                 }
                             });
@@ -253,7 +254,8 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
-                }});
+                }
+            });
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);

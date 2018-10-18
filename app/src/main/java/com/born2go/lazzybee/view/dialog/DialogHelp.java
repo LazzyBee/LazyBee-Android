@@ -71,8 +71,10 @@ public class DialogHelp extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 

@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
 
         //mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete autoCompleteTextView = mSearchCardBox.findViewById(R.id.search_src_text);
 
         autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
         //Custom search
@@ -199,17 +199,15 @@ public class MainActivity extends AppCompatActivity
             magImage.setVisibility(View.GONE);
         }
         //set color..
-        if (autoCompleteTextView != null) {
-            //set Enable Spelling Suggestions
-            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-            int color = Color.parseColor("#FFFFFF");
-            Drawable drawable = autoCompleteTextView.getDropDownBackground();
-            drawable.setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.MULTIPLY);
+        //set Enable Spelling Suggestions
+        autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+        int color = Color.parseColor("#FFFFFF");
+        Drawable drawable = autoCompleteTextView.getDropDownBackground();
+        drawable.setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.MULTIPLY);
 
-            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
-            autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
-        }
+        autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+        autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
+        autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
 
         //query
         mSearchCardBox.setOnQueryTextListener(this);
