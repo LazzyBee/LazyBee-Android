@@ -42,7 +42,7 @@ import java.net.URLConnection;
  */
 public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Integer> {
     private static final String TAG = DownloadAndRestoreDatabaseFormCSV.class.getSimpleName();
-    private Context context;
+    Context context;
     private String code;
     private String localPath;
     private ProgressDialog dialog;
@@ -454,7 +454,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             card.setQuestion(voca.getQ());
             card.setAnswers(voca.getA());
             card.setPackage(voca.getPackages());
-            card.setLevel(Integer.valueOf(voca.getLevel()));
+            card.setLevel(voca.getLevel());
 
 
             card.setLast_ivl(_card.getLast_ivl());

@@ -40,7 +40,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "BackUpDatabaseToCSV";
     private final String backup_key;
     private Activity activity;
-    private Context context;
     private String device_id;
     private ProgressDialog dialog;
     ZipManager zipManager;
@@ -78,8 +77,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private Cursor curCSV;
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
-        this.activity = activity;
-        this.context = context;
         this.device_id = device_id;
         backup_key = device_id.substring(device_id.length() - 6, device_id.length());
         dialog = new ProgressDialog(context);
@@ -106,15 +103,15 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        if (LazzyBeeShare.checkConn(context)) {
+        if (LazzyBeeShare.checkConn(activity)) {
             if (_exportToCSV()) {
-                Log.d(TAG, "Export db to csv:" + context.getString(R.string.successfully));
+                Log.d(TAG, "Export db to csv:" + activity.getString(R.string.successfully));
                 if (_zipFileBackUp()) {
-                    Log.d(TAG, "Zip backup file:" + context.getString(R.string.successfully));
+                    Log.d(TAG, "Zip backup file:" + activity.getString(R.string.successfully));
                     boolean resultsBackupFile = postFile(exportDir.getPath() + "/" + backup_key + dotZip);
                     _deleteFile();
                     if (resultsBackupFile) {
-                        Log.d(TAG, "Post backup file:" + context.getString(R.string.successfully));
+                        Log.d(TAG, "Post backup file:" + activity.getString(R.string.successfully));
                         return true;
                     } else {
                         Log.d(TAG, "Post backup file:Fails");
@@ -265,7 +262,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void _showDialogFailsBackupDatabase() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.DialogLearnMore);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity, R.style.DialogLearnMore);
         builder.setTitle(R.string.try_again);
         builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

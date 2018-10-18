@@ -32,7 +32,6 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
     List<String> defaultIncomingLists = new ArrayList<>();
 
     LearnApiImplements learnApiImplements;
-    private Context context;
 
     public interface IAddCustomListToIncomingList {
         void processFinish();
@@ -42,7 +41,6 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
 
 
     public AddCustomListToIncomingList(Context context) {
-        this.context = context;
         dialog = new ProgressDialog(context);
         dialog.setCancelable(false);
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
@@ -150,7 +148,7 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
             card.setQuestion(voca.getQ());
             card.setAnswers(voca.getA());
             card.setPackage(voca.getPackages());
-            card.setLevel(Integer.valueOf(voca.getLevel()));
+            card.setLevel(voca.getLevel());
             card.setL_en(voca.getLEn());
             card.setL_vn(voca.getLVn());
 
