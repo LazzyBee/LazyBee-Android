@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:weightSum="3">
+            android:weightSum="3"
+            tools:ignore="UselessParent">
 
             <include
                 layout="@layout/view_search_home"
