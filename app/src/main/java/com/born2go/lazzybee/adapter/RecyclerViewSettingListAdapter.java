@@ -1,9 +1,7 @@
 package com.born2go.lazzybee.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.born2go.lazzybee.BuildConfig;
@@ -35,8 +31,6 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.CustomTimePickerDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
@@ -106,20 +100,19 @@ public class RecyclerViewSettingListAdapter extends
         } else if (viewType == TYPE_SETTING_NOTIFICATION) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_setting_set_notification, parent, false); //Inflating the layout
         }
-        RecyclerViewSettingListAdapterViewHolder recyclerViewSettingListAdapterViewHolder = new RecyclerViewSettingListAdapterViewHolder(view, viewType);
-        return recyclerViewSettingListAdapterViewHolder;
+        return new RecyclerViewSettingListAdapterViewHolder(view, viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewSettingListAdapterViewHolder holder, int position) {
 
         View view = holder.view;
-        RelativeLayout mCardView = (RelativeLayout) view.findViewById(R.id.mCardView);
-        TextView lbSettingName = (TextView) view.findViewById(R.id.lbSettingName);
+        RelativeLayout mCardView = view.findViewById(R.id.mCardView);
+        TextView lbSettingName = view.findViewById(R.id.lbSettingName);
         String setting = settings.get(position);
-        final Switch mSwitch = (Switch) view.findViewById(R.id.mSwitch);
-        TextView lbLimit = (TextView) view.findViewById(R.id.lbLimit);
-        ImageView imageView = (ImageView) view.findViewById(R.id.imgGoto);
+        final Switch mSwitch = view.findViewById(R.id.mSwitch);
+        TextView lbLimit = view.findViewById(R.id.lbLimit);
+        ImageView imageView = view.findViewById(R.id.imgGoto);
 
         // Log.i(TAG, "Setting Name:" + setting);
 
@@ -211,12 +204,12 @@ public class RecyclerViewSettingListAdapter extends
             } else if (holder.viewType == TYPE_SETTING_NAME_WITH_DESCRIPTION) {
                 String limit = learnApiImplements._getValueFromSystemByKey(setting);
                 lbSettingName.setText(setting);
-                TextView lbDescription = (TextView) view.findViewById(R.id.lbDescription);
+                TextView lbDescription = view.findViewById(R.id.lbDescription);
                 getSettingLimitOrUpdate(mCardView, lbLimit, LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT, limit);
                 lbDescription.setText("");
             } else if (holder.viewType == TYPE_SETTING_ABOUT) {
-                TextView lbAppVersion = (TextView) view.findViewById(R.id.lbAppVersion);
-                TextView lbDbVersion = (TextView) view.findViewById(R.id.lbDbVersion);
+                TextView lbAppVersion = view.findViewById(R.id.lbAppVersion);
+                TextView lbDbVersion = view.findViewById(R.id.lbDbVersion);
                 String versionName = "1";
                 int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
 
@@ -238,11 +231,11 @@ public class RecyclerViewSettingListAdapter extends
 
 
             } else if (holder.viewType == TYPE_SETTING_NOTIFICATION) {
-                LinearLayout mSetUpNotification = (LinearLayout) view.findViewById(R.id.mSetUpNotification);
+                LinearLayout mSetUpNotification = view.findViewById(R.id.mSetUpNotification);
                 //getSettingAndUpdateWithSwitch(mCardView, LazzyBeeShare.KEY_SETTING_NOTIFICTION);
                 getSettingNotificationAndUpdateWithSwitch(mCardView, mSetUpNotification);
             } else if (holder.viewType == TYPE_SETTING_SPEECH_RATE_SLIDE) {
-                SeekBar mSlideSpeechRate = (SeekBar) view.findViewById(R.id.mSlideSpeechRate);
+                SeekBar mSlideSpeechRate = view.findViewById(R.id.mSlideSpeechRate);
                 _handlerChangeSpeechRate(mSlideSpeechRate);
             }
         } catch (Exception e) {
@@ -271,7 +264,7 @@ public class RecyclerViewSettingListAdapter extends
 
         builder.setTitle(R.string.setting_restore_database);
         View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
-        final EditText lbMybackupkey = (EditText) viewDialog.findViewById(R.id.lbMybackupkey);
+        final EditText lbMybackupkey = viewDialog.findViewById(R.id.lbMybackupkey);
 
         lbMybackupkey.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
@@ -294,7 +287,8 @@ public class RecyclerViewSettingListAdapter extends
 
     private void hideKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        if (imm != null)
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void showFileChooser() {
@@ -385,16 +379,14 @@ public class RecyclerViewSettingListAdapter extends
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Log.i(TAG, "onStopTrackingTouch process=" + progress);
-                float speechRate = 1.0f;
+                float speechRate = 0.0f;
                 if (progress <= 4) {
                     speechRate = 0.7f;
-                } else if (progress > 0 && progress <= 4) {
-                    speechRate = 0.9f;
-                } else if (progress > 4 && progress <= 8) {
+                } else if (progress <= 8) {
                     speechRate = 1.0f;
-                } else if (progress > 8 && progress <= 12) {
+                } else if (progress <= 12) {
                     speechRate = 1.1f;
-                } else if (progress > 12 && progress <= 16) {
+                } else if (progress <= 16) {
                     speechRate = 1.3f;
                 }
                 LazzyBeeShare._speakText(context.getString(R.string.test_speech_rate), speechRate);
@@ -414,8 +406,8 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void getSettingNotificationAndUpdateWithSwitch(RelativeLayout mCardView, final LinearLayout mSetUpNotification) {
-        final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
-        final TextView txtTimeNotification = (TextView) mSetUpNotification.findViewById(R.id.txtTimeNotification);
+        final Switch mSwitch = mCardView.findViewById(R.id.mSwitch);
+        final TextView txtTimeNotification = mSetUpNotification.findViewById(R.id.txtTimeNotification);
         String value = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
 
         String hour_str = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
@@ -517,14 +509,15 @@ public class RecyclerViewSettingListAdapter extends
 
             //Define dialogExecuteEuery
             LayoutInflater li = LayoutInflater.from(context);
-            View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
+            ViewGroup nullView = null;
+            @SuppressLint("InflateParams") View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
             builder.setView(dialogExecuteEuery);
 
             //Define txtQuery
-            final EditText txtQuery = (EditText) dialogExecuteEuery.findViewById(R.id.txtQuery);
+            final EditText txtQuery = dialogExecuteEuery.findViewById(R.id.txtQuery);
 
             // Add the buttons
             builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
@@ -533,7 +526,6 @@ public class RecyclerViewSettingListAdapter extends
             });
             builder.setPositiveButton(R.string.action_query, (dialog, id) -> {
                 String query = txtQuery.getText().toString();
-                if (query != null || query.length() > 1) {
                     int result = learnApiImplements.executeQuery(query);
                     if (result == 1) {
                         Toast.makeText(context, "Execute Ok", Toast.LENGTH_SHORT).show();
@@ -541,7 +533,6 @@ public class RecyclerViewSettingListAdapter extends
                         Toast.makeText(context, "Execute Error", Toast.LENGTH_SHORT).show();
                     }
 
-                }
             });
             // Get the AlertDialog from create()
             AlertDialog dialog = builder.create();
@@ -593,7 +584,8 @@ public class RecyclerViewSettingListAdapter extends
                 //restart app
                 Intent i = context.getPackageManager()
                         .getLaunchIntentForPackage(context.getPackageName());
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                if (i != null)
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(i);
             });
             // Get the AlertDialog from create()
@@ -632,7 +624,7 @@ public class RecyclerViewSettingListAdapter extends
 
 
             builder.setSingleChoiceItems(items, finalIndex, (dialog, item) -> {
-                float speechRate = 1.0f;
+                float speechRate = 0.0f;
                 if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
                     speechRate = 0.7f;
                 } else if (items[item].equals(context.getString(R.string.speech_rate_slow))) {
@@ -691,15 +683,19 @@ public class RecyclerViewSettingListAdapter extends
         String title = LazzyBeeShare.EMPTY;
         String message = LazzyBeeShare.EMPTY;
         View viewDialog = View.inflate(context, R.layout.dialog_limit_card, null);
-        TextView lbSettingLimitName = (TextView) viewDialog.findViewById(R.id.lbSettingLimitName);
-        final EditText txtLimit = (EditText) viewDialog.findViewById(R.id.txtLimit);
+        TextView lbSettingLimitName = viewDialog.findViewById(R.id.lbSettingLimitName);
+        final EditText txtLimit = viewDialog.findViewById(R.id.txtLimit);
 
-        if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-            message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
-        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
-            message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
-        } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-            message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
+        switch (key) {
+            case LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT:
+                message = context.getString(R.string.dialog_message_setting_today_new_card_limit_by);
+                break;
+            case LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT:
+                message = context.getString(R.string.dialog_message_setting_today_review_card_limit_by);
+                break;
+            case LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT:
+                message = context.getString(R.string.dialog_message_setting_total_card_learn_pre_day_by);
+                break;
         }
 
         lbSettingLimitName.setText(message);
@@ -787,6 +783,7 @@ public class RecyclerViewSettingListAdapter extends
             //restart app
             Intent i = context.getPackageManager()
                     .getLaunchIntentForPackage(context.getPackageName());
+            if (i!=null)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(i);
         });
@@ -798,7 +795,7 @@ public class RecyclerViewSettingListAdapter extends
 
 
     private void getSettingAndUpdateWithSwitch(View mCardView, final String key) {
-        final Switch mSwitch = (Switch) mCardView.findViewById(R.id.mSwitch);
+        final Switch mSwitch = mCardView.findViewById(R.id.mSwitch);
         String value = learnApiImplements._getValueFromSystemByKey(key);
         if (value == null)
             mSwitch.setChecked(false);
@@ -960,7 +957,7 @@ public class RecyclerViewSettingListAdapter extends
             //2.Open database
             //3.Upgade to my database
             //4.Remove file update
-            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+            _updateDB();
 
 
         });
@@ -991,16 +988,13 @@ public class RecyclerViewSettingListAdapter extends
                 String download_url = base_url + dbUpdateName;
                 Log.i(TAG, "download_url=" + download_url);
 
-                if (!base_url.isEmpty() || base_url != null) {
 
                     DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
 
                     //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
                     downloadFileandUpdateDatabase.execute(download_url);
                     downloadFileandUpdateDatabase.downloadFileDatabaseResponse = thiz;
-                } else {
-                    Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
-                }
+
             });
 
         } catch (Exception e) {
@@ -1008,9 +1002,9 @@ public class RecyclerViewSettingListAdapter extends
         }
     }
 
-    private void _updateDB(int type) {
+    private void _updateDB() {
         try {
-            databaseUpgrade.copyDataBase(type);
+            databaseUpgrade.copyDataBase(LazzyBeeShare.DOWNLOAD_UPDATE);
             List<Card> cards = databaseUpgrade._getAllCard();
             for (Card card : cards) {
                 learnApiImplements._insertOrUpdateCard(card);

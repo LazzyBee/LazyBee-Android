@@ -123,7 +123,7 @@ public class DialogCompleteStudy extends DialogFragment {
         Log.d(TAG, "Start of the day:" + startofDay);
         ArrayList<Boolean> showDays = new ArrayList<>();
 
-        String showDay = LazzyBeeShare.EMPTY;
+        StringBuilder showDay = new StringBuilder(LazzyBeeShare.EMPTY);
         if (countStreak > 7) {
             //full day learn
             showDays.add(true);
@@ -140,14 +140,14 @@ public class DialogCompleteStudy extends DialogFragment {
                 String streakDayCount = "SELECT Count(day) FROM streak where day = " + day;
                 if (LazzyBeeSingleton.learnApiImplements._queryCount(streakDayCount) == 1) {
                     showDays.add(true);
-                    showDay += true + "\t";
+                    showDay.append(true + "\t");
                 } else {
                     showDays.add(false);
-                    showDay += false + "\t";
+                    showDay.append(false + "\t");
                 }
             }
             showDays.add(true);
-            showDay += true + "\t";
+            showDay.append(true + "\t");
         }
         Log.d(TAG, "Show day no soft =" + showDay);
         for (int i = 0; i < weeks.size(); i++) {

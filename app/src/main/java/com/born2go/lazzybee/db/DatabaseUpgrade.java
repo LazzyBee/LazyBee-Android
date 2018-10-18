@@ -43,29 +43,23 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
     }
 
     public int _getVersionDB() {
-        Cursor cursor = null;
-        try {
-            int version = 0;
-            String query = "SELECT value FROM system where key = ";
-            String selectValueByKey = query + LazzyBeeShare.DB_VERSION;
-            SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT value FROM system where key = ";
+        String selectValueByKey = query + LazzyBeeShare.DB_VERSION;
+        int version = 0;
+        try (Cursor cursor = db.rawQuery(selectValueByKey, null)) {
             //Todo query for cursor
-            cursor = db.rawQuery(selectValueByKey, null);
             if (cursor.moveToFirst()) {
                 if (cursor.getCount() > 0)
                     do {
                         //TODO:get data from sqlite
-                        int value = cursor.getInt(0);
-                        version = value;
+                        version = cursor.getInt(0);
                     } while (cursor.moveToNext());
             }
             return version;
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
 
 

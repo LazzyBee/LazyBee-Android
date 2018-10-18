@@ -29,8 +29,7 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
     public RecyclerViewListCourseAdapterViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coures, parent, false); //Inflating the layout
         //init viewholder
-        RecyclerViewListCourseAdapterViewHoler recyclerViewListCourseAdapterViewHoler = new RecyclerViewListCourseAdapterViewHoler(view);
-        return recyclerViewListCourseAdapterViewHoler;
+        return new RecyclerViewListCourseAdapterViewHoler(view);
     }
 
     @Override

@@ -244,17 +244,8 @@ public class Utils {
         } else {
             type = TIME_YEARS;
         }
-        double ftime = convertSecondsTo(time, type);
 
-
-        String timeString = convertSecondsToStr(time, type);
-
-/*
-        if (boldNumber && time == 1) {
-            timeString = timeString.replace("1", "<b>1</b>");
-        }
-*/
-        return timeString;
+        return convertSecondsToStr(time, type);
     }
 
     /**
@@ -444,14 +435,14 @@ public class Utils {
     public static String base62(int num, String extra) {
         String table = ALL_CHARACTERS + extra;
         int len = table.length();
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         int mod;
         while (num != 0) {
             mod = num % len;
-            buf = buf + table.substring(mod, mod + 1);
+            buf.append(table.substring(mod, mod + 1));
             num = num / len;
         }
-        return buf;
+        return buf.toString();
     }
 
     // all printable characters minus quotes, backslash and separators
@@ -804,7 +795,7 @@ public class Utils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-        cal.setTimeInMillis(System.currentTimeMillis() - (long) utcOffset * 1000l);
+        cal.setTimeInMillis(System.currentTimeMillis() - (long) utcOffset * 1000L);
         return Date.valueOf(df.format(cal.getTime()));
     }
 

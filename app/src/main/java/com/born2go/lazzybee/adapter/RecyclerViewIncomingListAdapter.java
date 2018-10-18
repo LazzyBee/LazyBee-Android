@@ -73,8 +73,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
         } else if (viewType == VIEW_SUB_HEARDER_0) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_incoming_list_sub_header, parent, false); //Inflating the layout
         }
-        RecyclerViewReviewTodayListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewReviewTodayListAdapterViewHolder(view, viewType);
-        return recyclerViewReviewTodayListAdapterViewHolder;
+        return new RecyclerViewReviewTodayListAdapterViewHolder(view, viewType);
     }
 
     @Override

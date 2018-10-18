@@ -46,8 +46,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
@@ -246,7 +244,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                query.trim();
                 if (query.trim().length() > 2) {
                     Intent intent = new Intent(context, SearchActivity.class);
                     intent.setAction(Intent.ACTION_SEARCH);
@@ -260,31 +257,29 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.trim() != null) {
-                    if (newText.trim().length() > 2) {
+                newText.trim();
+                if (newText.trim().length() > 2) {
 
-                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                                + KEY_QUESTION + " like '" + newText + "%' OR "
-                                + KEY_QUESTION + " like '% " + newText + "%'"
-                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+                    String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                            + KEY_QUESTION + " like '" + newText + "%' OR "
+                            + KEY_QUESTION + " like '% " + newText + "%'"
+                            + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                        try {
-                            Cursor cursor = db.rawQuery(likeQuery, null);
-                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                            searchView.setSuggestionsAdapter(suggestionCardAdapter);
-                        } catch (Exception e) {
-                            //noinspection AccessStaticViaInstance
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                            e.printStackTrace();
-                        } finally {
-                            Log.d(TAG, "query suggetion");
-                        }
-
+                    SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery(likeQuery, null);
+                        SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                        searchView.setSuggestionsAdapter(suggestionCardAdapter);
+                    } catch (Exception e) {
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
+                        e.printStackTrace();
+                    } finally {
+                        Log.d(TAG, "query suggetion");
                     }
-                    return true;
-                } else
-                    return false;
+
+                }
+                return true;
             }
         });
 
@@ -363,16 +358,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 card = learnApiImplements._getCardByID(cardId);
 
             //get base url in Task Manager
-            String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
             String server_base_url_sharing = "http://www.lazzybee.com/vdict";
-            //LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
-            if (server_base_url_sharing != null) {
-                if (server_base_url_sharing.length() > 0)
-                    base_url_sharing = server_base_url_sharing;
-            }
 
             //define base url with question
-            base_url_sharing = base_url_sharing + card.getQuestion();
+            String base_url_sharing = server_base_url_sharing + card.getQuestion();
             Log.i(TAG, "Sharing URL:" + base_url_sharing);
 
             //Share card
@@ -565,7 +554,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * @return true if <code>view</code> is associated with the key object <code>object</code>
          */
         @Override
-        public boolean isViewFromObject(@NonNull View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return object == view;
         }
 
@@ -581,9 +570,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * @return Returns an Object representing the new page.  This does not
          * need to be a View, but can be some other container of the page.
          */
+        @NonNull
         @SuppressLint("SetJavaScriptEnabled")
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             // Inflate a new layout from our resources
             View view = getLayoutInflater().inflate(R.layout.page_package_card_item, container, false);
 
@@ -670,7 +660,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * {@link View}.
          */
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
             // Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
         }

@@ -503,8 +503,7 @@ public class LazzyBeeShare {
     private static String getDate(long time) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        String date = DateFormat.format("dd/MM/yyyy", cal).toString();
-        return date;
+        return DateFormat.format("dd/MM/yyyy", cal).toString();
     }
 
     public static boolean getPositionMeaning() {
@@ -688,14 +687,12 @@ public class LazzyBeeShare {
     }
 
     public static String getHTMLButtonAnswer(Context context, String ivlStr, String strLevel, int color) {
-        String btnanswer_string =
+        return
                 "<font color='" + ((color == R.color.color_level_btn_answer) ? context.getResources().getColor(R.color.white) :
                         context.getResources().getColor(R.color.color_level_btn_answer_disable)) + "'>"
                         + ivlStr + "</font>" +
                         "<br/>" +
                         "<font color='" + context.getResources().getColor(color) + "'>" + strLevel.toUpperCase() + "</font>";
-        //Log.i(TAG, "Button Answer string:" + btnanswer_string);
-        return btnanswer_string;
 
 
     }
@@ -796,9 +793,8 @@ public class LazzyBeeShare {
     private static void _textToSpeechGreater21(String text, float v) {
         if (textToSpeech == null)
             textToSpeech = LazzyBeeSingleton.textToSpeech;
-        String utteranceId = EMPTY;
         textToSpeech.setSpeechRate(v);
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, EMPTY);
     }
 
     public static Intent getOpenFacebookIntent(Context context) {
@@ -897,8 +893,7 @@ public class LazzyBeeShare {
         long range = (long) aEnd - (long) aStart + 1;
         // compute a fraction of the range, 0 <= frac < range
         long fraction = (long) (range * aRandom.nextDouble());
-        int randomNumber = (int) (fraction + aStart);
-        return randomNumber;
+        return (int) (fraction + aStart);
     }
 
     public static boolean checkConn(Context ctx) {

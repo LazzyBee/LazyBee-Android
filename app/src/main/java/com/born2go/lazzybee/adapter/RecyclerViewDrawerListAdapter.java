@@ -63,8 +63,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         } else if (viewType == TYPE_HELP) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         }
-        RecyclerViewDrawerListAdapterViewHolder recyclerViewDrawerListAdapterViewHolder = new RecyclerViewDrawerListAdapterViewHolder(v, viewType);
-        return recyclerViewDrawerListAdapterViewHolder;
+        return new RecyclerViewDrawerListAdapterViewHolder(v, viewType);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         try {
             //Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
 //            if (container == null) {
-                message = context.getString(R.string.notification_message);
+            message = context.getString(R.string.notification_message);
 //            } else {
 //                message = container.getString(LazzyBeeShare.NOTIFY_TEXT);
 //                if (message == null) {
@@ -71,24 +71,24 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         mBuilder.setContentIntent(pendingIntent);
         try {
-           if (notificationManager!=null){
-               //Noti Notification
-               String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-               switch (onoffNotification) {
-                   case LazzyBeeShare.ON:
-                       notificationManager.notify(id, mBuilder.build());
-                       break;
-                   case LazzyBeeShare.OFF:
-                       Log.d(TAG, "Off notification");
-                       break;
-                   default:
-                       Log.d(TAG, "Notification null-->ON");
-                       notificationManager.notify(id, mBuilder.build());
-                       break;
-               }
-           }
+            if (notificationManager != null) {
+                //Noti Notification
+                String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+                switch (onoffNotification) {
+                    case LazzyBeeShare.ON:
+                        notificationManager.notify(id, mBuilder.build());
+                        break;
+                    case LazzyBeeShare.OFF:
+                        Log.d(TAG, "Off notification");
+                        break;
+                    default:
+                        Log.d(TAG, "Notification null-->ON");
+                        notificationManager.notify(id, mBuilder.build());
+                        break;
+                }
+            }
         } catch (Exception e) {
-
+            System.out.print(e.getMessage());
         }
 
 

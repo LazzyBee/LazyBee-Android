@@ -202,9 +202,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static boolean copyFile(File source, File dest) {
         try {
             // Declaration et ouverture des flux
-            FileInputStream sourceFile = new FileInputStream(source);
 
-            try {
+            try (FileInputStream sourceFile = new FileInputStream(source)) {
                 FileOutputStream destinationFile = null;
 
                 try {
@@ -221,8 +220,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     if (destinationFile != null)
                         destinationFile.close();
                 }
-            } finally {
-                sourceFile.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -38,8 +38,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
     @Override
     public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
-        RecyclerViewSearchResultListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewSearchResultListAdapterViewHolder(view);
-        return recyclerViewReviewTodayListAdapterViewHolder;
+        return new RecyclerViewSearchResultListAdapterViewHolder(view);
     }
 
     @Override

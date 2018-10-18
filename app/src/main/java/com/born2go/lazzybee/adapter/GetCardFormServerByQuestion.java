@@ -77,7 +77,7 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
             card.setQuestion(voca.getQ());
             card.setAnswers(voca.getA());
             card.setPackage(voca.getPackages());
-            card.setLevel(Integer.valueOf(voca.getLevel()));
+            card.setLevel(voca.getLevel());
 
 
             card.setId(_card.getId());
