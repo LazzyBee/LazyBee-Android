@@ -66,6 +66,7 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
     private void inputNewWordList() {
         //hide keyborad
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
         imm.hideSoftInputFromWindow(txtwordList.getWindowToken(), 0);
 
         //
