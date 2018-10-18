@@ -204,11 +204,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en), "Sponsor");
         }
 
-        @Override
-        public int getItemPosition(Object object) {
-
-            return super.getItemPosition(object);
-        }
 
         @Override
         public CharSequence getPageTitle(int position) {

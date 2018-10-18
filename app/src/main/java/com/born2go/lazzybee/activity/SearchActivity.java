@@ -165,6 +165,7 @@ public class SearchActivity extends AppCompatActivity implements
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
                 super.onScrolled(recyclerView, dx, dy);
+                Log.i(TAG,"onScrolled");
             }
 
             @Override
@@ -267,6 +268,7 @@ public class SearchActivity extends AppCompatActivity implements
                             search.setSuggestionsAdapter(suggestionCardAdapter);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            //noinspection AccessStaticViaInstance
                             LazzyBeeSingleton.getCrashlytics().logException(e);
                         } finally {
                             Log.d(TAG, "query suggetion");
@@ -651,6 +653,7 @@ public class SearchActivity extends AppCompatActivity implements
             Toast.makeText(context, "No application can handle this request."
                     + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
     }
@@ -692,6 +695,7 @@ public class SearchActivity extends AppCompatActivity implements
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (Exception e) {
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
     }

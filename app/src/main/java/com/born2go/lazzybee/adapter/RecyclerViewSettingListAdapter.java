@@ -232,6 +232,7 @@ public class RecyclerViewSettingListAdapter extends
                     e.printStackTrace();
                     lbAppVersion.setText("AppVersion:" + versionName);
                     lbDbVersion.setText("DBVersion:" + _dbVesion);
+                    //noinspection AccessStaticViaInstance
                     LazzyBeeSingleton.getCrashlytics().logException(e);
                 }
 
@@ -324,6 +325,7 @@ public class RecyclerViewSettingListAdapter extends
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(context, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(ex);
         }
     }
@@ -1030,20 +1032,18 @@ public class RecyclerViewSettingListAdapter extends
         });
     }
 
-    private boolean _checkUpdate() {
+    private void _checkUpdate() {
         if (learnApiImplements._checkUpdateDataBase()) {
             Log.i(TAG, "Co Update");
             //Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
-            _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
-            return true;
+            _showComfirmUpdateDatabase();
         } else {
             Toast.makeText(context, R.string.message_updated, Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Khong co Update");
-            return false;
         }
     }
 
-    private void _showComfirmUpdateDatabase(final int type) {
+    private void _showComfirmUpdateDatabase() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         // Chain together various setter methods to set the dialog characteristics
@@ -1058,11 +1058,8 @@ public class RecyclerViewSettingListAdapter extends
                 //2.Open database
                 //3.Upgade to my database
                 //4.Remove file update
-                if (type == LazzyBeeShare.DOWNLOAD_UPDATE) {
-                    _downloadFile();
-                } else {
-                    _updateDB(type);
-                }
+                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+
 
             }
         });
@@ -1127,6 +1124,7 @@ public class RecyclerViewSettingListAdapter extends
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 

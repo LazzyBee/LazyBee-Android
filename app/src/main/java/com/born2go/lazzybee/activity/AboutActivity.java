@@ -28,20 +28,6 @@ public class AboutActivity extends AppCompatActivity {
         _trackerApplication();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
     private void _trackerApplication() {
         try {
             Bundle bundle = new Bundle();

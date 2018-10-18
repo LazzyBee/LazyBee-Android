@@ -110,6 +110,7 @@ public class WordEstimate {
         return ar;
     }
 
+    @SuppressWarnings("RedundantThrows")
     public static JSONArray intArrayToJSONArray(int[] ar) throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (int i : ar) {

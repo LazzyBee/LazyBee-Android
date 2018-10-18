@@ -95,6 +95,7 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             return null;
         }

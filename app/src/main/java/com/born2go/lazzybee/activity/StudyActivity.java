@@ -309,6 +309,7 @@ public class StudyActivity extends AppCompatActivity
                             searchView.setSuggestionsAdapter(suggestionCardAdapter);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            //noinspection AccessStaticViaInstance
                             LazzyBeeSingleton.getCrashlytics().logException(e);
                         } finally {
                             Log.d(TAG, "query suggetion");
@@ -457,10 +458,7 @@ public class StudyActivity extends AppCompatActivity
             return pageCount;
         }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-        }
+
 
         private Fragment mCurrentFragment;
 

@@ -733,10 +733,12 @@ public class LazzyBeeShare {
                 Log.e(TAG, messageError);
                 e.printStackTrace();
             }
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
             ex.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(ex);
         }
     }

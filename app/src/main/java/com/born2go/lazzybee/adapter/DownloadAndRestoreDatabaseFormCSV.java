@@ -404,6 +404,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
                     restore = 1;
                 } catch (Exception e) {
                     Log.d(TAG, "Error:" + e.getMessage());
+                    //noinspection AccessStaticViaInstance
                     LazzyBeeSingleton.getCrashlytics().logException(e);
                     e.printStackTrace();
                 }
@@ -414,6 +415,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             }
         } catch (Exception e) {
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
         return restore;
@@ -475,6 +477,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             return card;
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
             return null;

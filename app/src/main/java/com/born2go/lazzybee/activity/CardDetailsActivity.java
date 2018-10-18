@@ -278,6 +278,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                             SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
                             searchView.setSuggestionsAdapter(suggestionCardAdapter);
                         } catch (Exception e) {
+                            //noinspection AccessStaticViaInstance
                             LazzyBeeSingleton.getCrashlytics().logException(e);
                             e.printStackTrace();
                         } finally {
