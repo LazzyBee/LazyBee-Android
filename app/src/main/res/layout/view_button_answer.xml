@@ -20,7 +20,6 @@
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnAgainClick"
         android:paddingRight="5dp"
         android:text="@string/EASE_AGAIN"
         android:textColor="@color/white" />
@@ -34,7 +33,6 @@
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnHardClick"
         android:paddingRight="5dp"
         android:text="@string/EASE_HARD"
         android:textColor="@color/white" />
@@ -47,7 +45,6 @@
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnGoodClick"
         android:text="@string/EASE_GOOD"
         android:textColor="@color/white"
         android:layout_weight="1.23" />
@@ -60,7 +57,6 @@
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnEasyClick"
         android:text="@string/EASE_EASY"
         android:textColor="@color/white" />
 
