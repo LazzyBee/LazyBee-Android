@@ -544,6 +544,7 @@ public class RecyclerViewCustomStudyAdapter extends
                             }
                         } catch (Exception e) {
                             LazzyBeeShare.showErrorOccurred(context, "on Click set Limit", e);
+                            //noinspection AccessStaticViaInstance
                             LazzyBeeSingleton.getCrashlytics().logException(e);
                         }
                     }

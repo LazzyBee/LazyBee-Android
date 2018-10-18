@@ -71,7 +71,6 @@ import com.google.android.gms.tasks.Task;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
 import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
@@ -366,7 +365,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void _setUpNotification(boolean nextday) {
+    private void _setUpNotification() {
         Log.i(TAG, "---------setUpNotification-------");
         try {
             int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
@@ -377,7 +376,7 @@ public class MainActivity extends AppCompatActivity
 
 
             Calendar calendar = Calendar.getInstance();
-            if (hour <= currentHour || nextday) {
+            if (hour <= currentHour) {
                 calendar.add(Calendar.DATE, 1);
             }
             // Define a time
@@ -543,6 +542,7 @@ public class MainActivity extends AppCompatActivity
             TextView lbAppVersion = (TextView) findViewById(R.id.mVesionApp);
             lbAppVersion.setText("Version:" + versionName);
         } catch (PackageManager.NameNotFoundException e) {
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
         }
@@ -993,6 +993,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 
@@ -1056,11 +1057,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     @Override
     protected void onStop() {
@@ -1198,7 +1194,7 @@ public class MainActivity extends AppCompatActivity
 
                 //Reset notification
                 LazzyBeeShare._cancelNotification(context);
-                _setUpNotification(true);
+                _setUpNotification();
 
                 int count = dataBaseHelper._getCountStreak();
                 Log.d(TAG, "Congratilation study LazzyBee,Streak count:" + count);
@@ -1308,6 +1304,7 @@ public class MainActivity extends AppCompatActivity
                         } catch (ActivityNotFoundException e) {
                             Log.e(TAG, "No application can handle this request."
                                     + " Please install a webbrowser");
+                            //noinspection AccessStaticViaInstance
                             LazzyBeeSingleton.getCrashlytics().logException(e);
                         }
                     }
@@ -1516,6 +1513,7 @@ public class MainActivity extends AppCompatActivity
                     SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
                     mSearchCardBox.setSuggestionsAdapter(suggestionCardAdapter);
                 } catch (Exception e) {
+                    //noinspection AccessStaticViaInstance
                     LazzyBeeSingleton.getCrashlytics().logException(e);
                     e.printStackTrace();
                 } finally {

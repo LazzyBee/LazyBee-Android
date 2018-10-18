@@ -81,25 +81,28 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
             fos.close();
             Log.e("Download file update:", "Complete");
             results = 1;
-            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+            _updateDB();
 
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(mue);
         } catch (IOException ioe) {
             Log.e("SYNC getUpdate", "io error", ioe);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(ioe);
         } catch (SecurityException se) {
             Log.e("SYNC getUpdate", "security error", se);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(se);
         }
         return results;
     }
 
-    private void _updateDB(int downloadUpdate) {
+    private void _updateDB() {
         try {
             //Copy db to my app
-            databaseUpgrade.copyDataBase(downloadUpdate);
+            databaseUpgrade.copyDataBase(LazzyBeeShare.DOWNLOAD_UPDATE);
 
             List<Card> cards = databaseUpgrade._getAllCard();
             for (Card card : cards) {
@@ -115,6 +118,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
 
         } catch (Exception e) {
             // LazzyBeeShare.showErrorOccurred(context, e);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
     }
@@ -137,6 +141,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
                     + "\t" + context.getClass().getName() + ":" + e.getMessage();
             Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
             Log.e(TAG, messageError);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 

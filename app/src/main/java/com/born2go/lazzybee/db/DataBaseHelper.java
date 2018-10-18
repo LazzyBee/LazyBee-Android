@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.db;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +28,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATA = "data";
     private static final String PACKAGE = "com.born2go.lazzybee";
     private static final String DATABASE = "databases";
-    public static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
+    public static String DB_PATH;//= "/data/data/com.born2go.lazzybee/databases/";
 
     public static String DB_NAME = "english.db";
     public static String DB_UPDATE_NAME = "update.db";
@@ -66,11 +67,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      */
-    public void _createDataBase() throws IOException {
+    public void _createDataBase() {
         String myPath = DB_PATH + DB_NAME;
         boolean dbExist = checkDataBase(myPath);
 
@@ -378,6 +378,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        }
 //        return card;
 //    }
+    @SuppressLint("SdCardPath")
     void _upgrageDatabase() {
         SQLiteDatabase checkInDowload = null;
         try {
@@ -397,7 +398,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         File data = Environment.getDataDirectory();
         FileChannel source;
         FileChannel destination;
-        String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;;
+        String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;
+        ;
 
         String backupDBPath = DB_NAME;
         File currentDB = new File(data, currentDBPath);
