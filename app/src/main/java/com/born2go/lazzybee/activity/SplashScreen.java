@@ -166,7 +166,7 @@ public class SplashScreen extends Activity {
         String gae_db_version = "6";//LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
         Log.i(TAG, "Get gae_db_version on TaskManager =" + gae_db_version);
 //        //put GAE_DB_VERSION to Client
-        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, (gae_db_version == null || gae_db_version.isEmpty()) ? String.valueOf(0) : gae_db_version);
+        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version.isEmpty() ? String.valueOf(0) : gae_db_version);
 
         //get version in DB
         int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;

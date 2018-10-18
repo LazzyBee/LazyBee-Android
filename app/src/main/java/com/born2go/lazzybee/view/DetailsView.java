@@ -88,8 +88,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         try {
             mViewAdv = view.findViewById(R.id.mCardViewAdv);
             _initAdView(mViewAdv, AdSize.BANNER);
-            mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-            mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+            mDetailsViewPager = view.findViewById(R.id.viewpager);
+            mDetailsSlidingTabLayout = view.findViewById(R.id.sliding_tabs);
             mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -346,7 +346,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                                 }
                             });
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
+                            RelativeLayout relativeLayout = mViewAdv.findViewById(R.id.adView);
                             RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                             relativeLayout.addView(mAdView, adViewCenter);

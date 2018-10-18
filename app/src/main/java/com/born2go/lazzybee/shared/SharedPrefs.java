@@ -34,7 +34,7 @@ public class SharedPrefs {
         } else if (anonymousClass == Long.class) {
             return (T) Long.valueOf(mSharedPreferences.getLong(key, 0));
         } else {
-            return (T) LazzyBeeApplication.self()
+            return LazzyBeeApplication.self()
                     .getGSon()
                     .fromJson(mSharedPreferences.getString(key, ""), anonymousClass);
         }
@@ -53,7 +53,7 @@ public class SharedPrefs {
         } else if (anonymousClass == Long.class) {
             return (T) Long.valueOf(mSharedPreferences.getLong(key, (Long) defaultValue));
         } else {
-            return (T) LazzyBeeApplication.self()
+            return LazzyBeeApplication.self()
                     .getGSon()
                     .fromJson(mSharedPreferences.getString(key, ""), anonymousClass);
         }

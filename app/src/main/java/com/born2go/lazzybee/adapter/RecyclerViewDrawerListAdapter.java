@@ -71,10 +71,10 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         try {
             View view = holder.view;
             if (holder.viewType == TYPE_COURSE) {
-                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                ImageView mImg = view.findViewById(R.id.mImg);
 
-                TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
-                TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
+                TextView lbNameCourse = view.findViewById(R.id.lbNameCourse);
+                TextView lbCount = view.findViewById(R.id.lbCountMyWord);
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
                 lbCount.setVisibility(View.GONE);
                 if (objectList.get(position).equals("English Word")) {
@@ -128,26 +128,26 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
 //
 //            }
             else if (holder.viewType == TYPE_TITLE_COURSE) {
-                TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
+                TextView lbDrawerName = view.findViewById(R.id.lbDrawerName);
                 lbDrawerName.setText(context.getString(R.string.my_course));
                 lbDrawerName.setTextSize(15f);
                 lbDrawerName.setTextColor(context.getResources().getColor(R.color.grey_300));
             } else if (holder.viewType == TYPE_SETTING) {
-                ImageView mNoti = (ImageView) view.findViewById(R.id.mNoti);
+                ImageView mNoti = view.findViewById(R.id.mNoti);
                 if (learnApiImplements._checkUpdateDataBase()) {
                     mNoti.setVisibility(View.VISIBLE);
                 } else {
                     mNoti.setVisibility(View.GONE);
                 }
             } else if (holder.viewType == TYPE_ABOUT) {
-                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                ImageView mImg = view.findViewById(R.id.mImg);
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
-                TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
+                TextView lbDrawerName = view.findViewById(R.id.mTextView);
                 lbDrawerName.setText(context.getString(R.string.setting_about));
             } else if (holder.viewType == TYPE_HELP) {
-                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                ImageView mImg = view.findViewById(R.id.mImg);
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_help));
-                TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
+                TextView lbDrawerName = view.findViewById(R.id.mTextView);
                 lbDrawerName.setText(context.getString(R.string.drawer_help));
             }
 

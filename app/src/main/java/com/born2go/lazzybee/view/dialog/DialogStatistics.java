@@ -79,7 +79,7 @@ public class DialogStatistics extends DialogFragment {
             MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.magic);
             mediaPlayer.start();
 
-            btnShare = (Button) view.findViewById(R.id.btnShared);
+            btnShare = view.findViewById(R.id.btnShared);
             btnShare.setOnClickListener(v -> {
 
                 screenViewChart();
@@ -128,11 +128,11 @@ public class DialogStatistics extends DialogFragment {
     }
 
     private void _initChart(View view) {
-        mStatistic = (RelativeLayout) view.findViewById(R.id.mStatistic);
-        mChart = (RelativeLayout) view.findViewById(R.id.mChart);
-        chart = (ColumnChartView) view.findViewById(R.id.chart);
+        mStatistic = view.findViewById(R.id.mStatistic);
+        mChart = view.findViewById(R.id.mChart);
+        chart = view.findViewById(R.id.chart);
         chart.setZoomEnabled(false);
-        mlazzybee = (TextView) view.findViewById(R.id.mlazzybee);
+        mlazzybee = view.findViewById(R.id.mlazzybee);
         generateDefaultData();
     }
 
@@ -220,8 +220,8 @@ public class DialogStatistics extends DialogFragment {
             int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
             //Define view
             View mCount = view.findViewById(R.id.mCount);
-            TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
-            ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
+            TextView lbCountStreak = mCount.findViewById(R.id.lbCountStreak);
+            ImageView streak_ring = mCount.findViewById(R.id.streak_ring);
             //
             lbCountStreak.setText(String.valueOf(count + " " + getString(R.string.streak_day)));
 

@@ -20,7 +20,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        WebView mWebViewHelp = (WebView) findViewById(R.id.mWebViewHelp);
+        WebView mWebViewHelp = findViewById(R.id.mWebViewHelp);
         mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
         this.context = this;
         _trackerApplication();

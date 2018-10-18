@@ -45,18 +45,18 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
     public void onBindViewHolder(@NonNull RecyclerViewSearchResultListAdapterViewHolder holder, final int position) {
         //
         final View view = holder.view;
-        TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-        TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
-        TextView level = (TextView) view.findViewById(R.id.level);
-        TextView learned = (TextView) view.findViewById(R.id.learned);
-        TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
-        LinearLayout mDetailsCard = (LinearLayout) view.findViewById(R.id.mDetailsCard);
+        TextView lbQuestion = view.findViewById(R.id.lbQuestion);
+        TextView lbMeaning = view.findViewById(R.id.lbAnswer);
+        TextView level = view.findViewById(R.id.level);
+        TextView learned = view.findViewById(R.id.learned);
+        TextView lbPronoun = view.findViewById(R.id.lbPronoun);
+        LinearLayout mDetailsCard = view.findViewById(R.id.mDetailsCard);
 
-        final SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipeLayout);
+        final SwipeLayout swipeLayout = view.findViewById(R.id.swipeLayout);
         //Define action card
-        TextView lbIgnore = (TextView) view.findViewById(R.id.lbIgnore);
-        TextView lbLearned = (TextView) view.findViewById(R.id.lbLearned);
-        TextView lbAdd = (TextView) view.findViewById(R.id.lbAdd);
+        TextView lbIgnore = view.findViewById(R.id.lbIgnore);
+        TextView lbLearned = view.findViewById(R.id.lbLearned);
+        TextView lbAdd = view.findViewById(R.id.lbAdd);
         lbIgnore.setVisibility(View.GONE);
         lbLearned.setVisibility(View.GONE);
         try {

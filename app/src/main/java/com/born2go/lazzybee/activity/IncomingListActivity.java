@@ -60,11 +60,11 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
 
         //Init RecyclerView and Layout Manager
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mRecyclerViewReviewTodayList = (RecyclerView) findViewById(R.id.mRecyclerViewReviewTodayList);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        mRecyclerViewReviewTodayList = findViewById(R.id.mRecyclerViewReviewTodayList);
         mRecyclerViewReviewTodayList.setLayoutManager(new LinearLayoutManager(context));
 
-        lbCountReviewCard = (TextView) findViewById(R.id.lbCountReviewCard);
+        lbCountReviewCard = findViewById(R.id.lbCountReviewCard);
         try {
             //get review List Card today
             getIncomingList();
@@ -130,7 +130,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         builder.setTitle(R.string.msg_restore_word_list);
         builder.setMessage(R.string.msg_please_input_restore_word_list_code);
         View view = LayoutInflater.from(context).inflate(R.layout.code_restore_list_word, null);
-        final EditText codeRestore = (EditText) view.findViewById(R.id.codeRestore);
+        final EditText codeRestore = view.findViewById(R.id.codeRestore);
         builder.setView(view);
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
             hideKeyBoard();
@@ -216,7 +216,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
 
                         mAdView.loadAd(adRequest);
 
-                        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                        RelativeLayout relativeLayout = findViewById(R.id.adView);
                         RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                         relativeLayout.addView(mAdView, adViewCenter);

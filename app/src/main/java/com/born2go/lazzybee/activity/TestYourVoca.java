@@ -21,7 +21,7 @@ public class TestYourVoca extends AppCompatActivity {
 
         _initToolBar();
 
-        final WebView mWebViewTestYourVoca = (WebView) findViewById(R.id.mWebViewTestYourVoca);
+        final WebView mWebViewTestYourVoca = findViewById(R.id.mWebViewTestYourVoca);
         mWebViewTestYourVoca.getSettings().setJavaScriptEnabled(true);
         mWebViewTestYourVoca.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -44,7 +44,7 @@ public class TestYourVoca extends AppCompatActivity {
     }
 
     private void _initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getString(R.string.drawer_test_your_voca));

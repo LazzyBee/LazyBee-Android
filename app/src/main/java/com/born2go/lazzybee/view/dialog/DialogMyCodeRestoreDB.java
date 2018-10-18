@@ -41,8 +41,8 @@ public class DialogMyCodeRestoreDB extends DialogFragment {
         //set style
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
-        ImageView mClose = (ImageView) view.findViewById(R.id.mClose);
-        TextView lbMyRestoreCode = (TextView) view.findViewById(R.id.lbMyRestoreCode);
+        ImageView mClose = view.findViewById(R.id.mClose);
+        TextView lbMyRestoreCode = view.findViewById(R.id.lbMyRestoreCode);
         lbMyRestoreCode.setText(code);
         View.OnClickListener closeDialog = v -> getDialog().dismiss();
         mClose.setOnClickListener(closeDialog);

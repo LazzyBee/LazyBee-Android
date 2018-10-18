@@ -69,7 +69,7 @@ public class DialogCompleteStudy extends DialogFragment {
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
-        Button btnDone = (Button) view.findViewById(R.id.btnDone);
+        Button btnDone = view.findViewById(R.id.btnDone);
         btnDone.setOnClickListener(v -> {
             getDialog().cancel();
             if (iCompleteSutdy != null) {
@@ -99,8 +99,8 @@ public class DialogCompleteStudy extends DialogFragment {
     private void _initStreakCount(View view, int count) {
         //Define view
         View mCount = view.findViewById(R.id.mCount);
-        TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
-        ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
+        TextView lbCountStreak = mCount.findViewById(R.id.lbCountStreak);
+        ImageView streak_ring = mCount.findViewById(R.id.streak_ring);
         //
         lbCountStreak.setText(String.valueOf(count + " " + getString(R.string.streak_day)));
 
@@ -113,7 +113,7 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private void _initStreakDays(View view, LayoutInflater inflater, int countStreak) {
-        LinearLayout mDays = (LinearLayout) view.findViewById(R.id.mDays);
+        LinearLayout mDays = view.findViewById(R.id.mDays);
 
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
@@ -155,8 +155,8 @@ public class DialogCompleteStudy extends DialogFragment {
             String _day = weeks.get(i);//define dayOfWeek
 
             FrameLayout _mDayRing = (FrameLayout) inflater.inflate(R.layout.day_ring, null);
-            ImageView _dayRing = (ImageView) _mDayRing.findViewById(R.id.dayRing);
-            TextView _lbDay = (TextView) _mDayRing.findViewById(R.id.lbDay);
+            ImageView _dayRing = _mDayRing.findViewById(R.id.dayRing);
+            TextView _lbDay = _mDayRing.findViewById(R.id.lbDay);
             _lbDay.setText(_day);
 
             boolean showRing = showDays.get(i);//define show ring

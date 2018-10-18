@@ -46,7 +46,7 @@ public class CustomStudySettingActivity extends AppCompatActivity {
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
 
-        mRecyclerViewCustomStudy = (RecyclerView) findViewById(R.id.mRecyclerViewCustomStudy);
+        mRecyclerViewCustomStudy = findViewById(R.id.mRecyclerViewCustomStudy);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewCustomStudy.getContext(), 1);
 
         mRecyclerViewCustomStudy.setLayoutManager(gridLayoutManager);

@@ -37,7 +37,7 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
         //get view form holder
         View view = holder.view;
         //init lbNameCourse
-        TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
+        TextView lbNameCourse = view.findViewById(R.id.lbNameCourse);
         //get course form list by position
         Course course = objectList.get(position);
         //set data

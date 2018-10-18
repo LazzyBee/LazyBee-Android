@@ -116,7 +116,7 @@ public class StudyActivity extends AppCompatActivity
     private void _trackerApplication() {
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("screenName", (String) GA_SCREEN);
+            bundle.putString("screenName", GA_SCREEN);
             mFirebaseAnalytics.logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
@@ -189,8 +189,8 @@ public class StudyActivity extends AppCompatActivity
 
 
     private void _initView() {
-        container = (LinearLayout) findViewById(R.id.container);
-        mViewPager = (DisableScrollingViewPager) findViewById(R.id.viewpager);
+        container = findViewById(R.id.container);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPagingEnabled(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -241,7 +241,7 @@ public class StudyActivity extends AppCompatActivity
 //        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
             autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
@@ -288,31 +288,29 @@ public class StudyActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.trim() != null) {
-                    if (newText.trim().length() > 2) {
+                newText.trim();
+                if (newText.trim().length() > 2) {
 
-                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                                + KEY_QUESTION + " like '" + newText + "%' OR "
-                                + KEY_QUESTION + " like '% " + newText + "%'"
-                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+                    String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                            + KEY_QUESTION + " like '" + newText + "%' OR "
+                            + KEY_QUESTION + " like '% " + newText + "%'"
+                            + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                        try {
-                            Cursor cursor = db.rawQuery(likeQuery, null);
-                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                            searchView.setSuggestionsAdapter(suggestionCardAdapter);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //noinspection AccessStaticViaInstance
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                        } finally {
-                            Log.d(TAG, "query suggetion");
-                        }
-
+                    SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery(likeQuery, null);
+                        SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                        searchView.setSuggestionsAdapter(suggestionCardAdapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
+                    } finally {
+                        Log.d(TAG, "query suggetion");
                     }
-                    return true;
-                } else
-                    return false;
+
+                }
+                return true;
             }
         });
 
@@ -479,7 +477,7 @@ public class StudyActivity extends AppCompatActivity
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
-        final EditText txtUserNote = (EditText) viewDialog.findViewById(R.id.txtUserNote);
+        final EditText txtUserNote = viewDialog.findViewById(R.id.txtUserNote);
 
         txtUserNote.setText(currentCard.getUser_note());
 

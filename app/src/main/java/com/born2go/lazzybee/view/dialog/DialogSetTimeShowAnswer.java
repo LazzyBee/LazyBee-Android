@@ -63,8 +63,8 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
     }
 
     private void _defineHeaderDialogSetTime(View view) {
-        ImageView mClose = (ImageView) view.findViewById(R.id.mClose);
-        TextView lbSave = (TextView) view.findViewById(R.id.lbSave);
+        ImageView mClose = view.findViewById(R.id.mClose);
+        TextView lbSave = view.findViewById(R.id.lbSave);
         mClose.setOnClickListener(v -> dialog.dismiss());
         lbSave.setOnClickListener(v -> {
             if (getActivity()!=null){
@@ -85,15 +85,15 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         View mSetTime5s = view.findViewById(R.id.mSetTime5s);
         View mSetTime7s = view.findViewById(R.id.mSetTime7s);
 
-        TextView lbSetTimeNow = (TextView) mSetTimeNow.findViewById(R.id.lbSetTime);
-        TextView lbSetTime3s = (TextView) mSetTime3s.findViewById(R.id.lbSetTime3s);
-        TextView lbSetTime5s = (TextView) mSetTime5s.findViewById(R.id.lbSetTime5s);
-        TextView lbSetTime7s = (TextView) mSetTime7s.findViewById(R.id.lbSetTime7s);
+        TextView lbSetTimeNow = mSetTimeNow.findViewById(R.id.lbSetTime);
+        TextView lbSetTime3s = mSetTime3s.findViewById(R.id.lbSetTime3s);
+        TextView lbSetTime5s = mSetTime5s.findViewById(R.id.lbSetTime5s);
+        TextView lbSetTime7s = mSetTime7s.findViewById(R.id.lbSetTime7s);
 
-        final ImageView imgDoneNow = (ImageView) mSetTimeNow.findViewById(R.id.imgDone);
-        final ImageView imgDone3s = (ImageView) mSetTime3s.findViewById(R.id.imgDone3s);
-        final ImageView imgDone5s = (ImageView) mSetTime5s.findViewById(R.id.imgDone5s);
-        final ImageView imgDone7s = (ImageView) mSetTime7s.findViewById(R.id.imgDone7s);
+        final ImageView imgDoneNow = mSetTimeNow.findViewById(R.id.imgDone);
+        final ImageView imgDone3s = mSetTime3s.findViewById(R.id.imgDone3s);
+        final ImageView imgDone5s = mSetTime5s.findViewById(R.id.imgDone5s);
+        final ImageView imgDone7s = mSetTime7s.findViewById(R.id.imgDone7s);
 
         lbSetTimeNow.setText(context.getString(R.string.show_answer_now));
         lbSetTime3s.setText(String.valueOf(seconds.get(0) + "s"));

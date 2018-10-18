@@ -33,7 +33,7 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
             wordList = getIntent().getExtras().getString(WORD_LIST);
         }
 
-        txtwordList = (EditText) findViewById(R.id.txtWordList);
+        txtwordList = findViewById(R.id.txtWordList);
         if (wordList != null) {
             txtwordList.setText(wordList);
         }

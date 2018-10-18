@@ -311,32 +311,32 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     @SuppressLint("ClickableViewAccessibility")
     private void _initView(final View view) {
-        container = (LinearLayout) view.findViewById(R.id.container);
+        container = view.findViewById(R.id.container);
         //init button
-        mShowAnswer = (CardView) view.findViewById(R.id.mShowAnswer);
-        btnNextReverseCard = (CardView) view.findViewById(R.id.btnNextReverseCard);
+        mShowAnswer = view.findViewById(R.id.mShowAnswer);
+        btnNextReverseCard = view.findViewById(R.id.btnNextReverseCard);
         mCount = view.findViewById(R.id.mCount);
 
-        btnShowAnswer = (TextView) view.findViewById(R.id.lbShowAnswer);
-        mLayoutButton = (LinearLayout) view.findViewById(R.id.mLayoutButton);
+        btnShowAnswer = view.findViewById(R.id.lbShowAnswer);
+        mLayoutButton = view.findViewById(R.id.mLayoutButton);
 
-        btnAgain0 = (TextView) view.findViewById(R.id.btnAgain0);
-        btnHard1 = (TextView) view.findViewById(R.id.btnHard1);
-        btnGood2 = (TextView) view.findViewById(R.id.btnGood2);
-        btnEasy3 = (TextView) view.findViewById(R.id.btnEasy3);
+        btnAgain0 = view.findViewById(R.id.btnAgain0);
+        btnHard1 = view.findViewById(R.id.btnHard1);
+        btnGood2 = view.findViewById(R.id.btnGood2);
+        btnEasy3 = view.findViewById(R.id.btnEasy3);
 
         // init lbCount
-        lbCountNew = (TextView) view.findViewById(R.id.lbCountTotalVocabulary);
-        lbCountAgain = (TextView) view.findViewById(R.id.lbCountAgainInday);
-        lbCountDue = (TextView) view.findViewById(R.id.lbAgainDue);
+        lbCountNew = view.findViewById(R.id.lbCountTotalVocabulary);
+        lbCountAgain = view.findViewById(R.id.lbCountAgainInday);
+        lbCountDue = view.findViewById(R.id.lbAgainDue);
 
-        imgGotoDictionary = (ImageView) view.findViewById(R.id.imgGotoDictionary);
+        imgGotoDictionary = view.findViewById(R.id.imgGotoDictionary);
         imgGotoDictionary.setColorFilter(context.getResources().getColor(R.color.card_due_color));
 
         final View mDisplay = view.findViewById(R.id.mDisplay);
 
 
-        mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
+        mWebViewLeadDetails = view.findViewById(R.id.mWebViewLeadDetaisl);
 
         //get widthStudyDisplay heightStudyDisplay display
         ViewTreeObserver observer = mDisplay.getViewTreeObserver();
@@ -354,11 +354,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
         });
 
-        mCardViewHelpandAdMod = (CardView) view.findViewById(R.id.mCardViewHelpandAdMod);
+        mCardViewHelpandAdMod = view.findViewById(R.id.mCardViewHelpandAdMod);
 
-        mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
+        mFloatActionButtonUserNote = view.findViewById(R.id.mFloatActionButtonUserNote);
 
-        mHelp = (FloatingActionButton) view.findViewById(R.id.mHelp);
+        mHelp = view.findViewById(R.id.mHelp);
 
         _handlerNote();
 

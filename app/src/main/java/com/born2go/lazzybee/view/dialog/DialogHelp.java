@@ -44,9 +44,9 @@ public class DialogHelp extends DialogFragment {
         //set style
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
-        WebView mWebViewHelp = (WebView) view.findViewById(R.id.mWebViewHelp);
-        FloatingActionButton mFloatClose = (FloatingActionButton) view.findViewById(R.id.mFloatClose);
-        ImageView mClose= (ImageView) view.findViewById(R.id.mClose);
+        WebView mWebViewHelp = view.findViewById(R.id.mWebViewHelp);
+        FloatingActionButton mFloatClose = view.findViewById(R.id.mFloatClose);
+        ImageView mClose= view.findViewById(R.id.mClose);
         mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
 
         mClose.setOnClickListener(v -> getDialog().dismiss());

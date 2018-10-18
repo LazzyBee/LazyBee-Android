@@ -77,18 +77,18 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = this;
 
-        container = (LinearLayout) findViewById(R.id.container);
+        container = findViewById(R.id.container);
 
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
         _initSettingUser();
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mViewPager = findViewById(R.id.viewpager);
+        mSlidingTabLayout = findViewById(R.id.sliding_tabs);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -159,7 +159,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
                         mAdView.loadAd(adRequest);
 
-                        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                        RelativeLayout relativeLayout = findViewById(R.id.adView);
                         RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                         relativeLayout.addView(mAdView, adViewCenter);
@@ -211,7 +211,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
             autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
@@ -257,7 +257,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                newText.trim();
                 if (newText.trim().length() > 2) {
 
                     String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
@@ -580,7 +579,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             // Add the newly created View to the ViewPager
             container.addView(view);
             //
-            mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
+            mWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
             _addJavascriptInterface(card);

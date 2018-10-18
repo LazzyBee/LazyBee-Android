@@ -41,7 +41,7 @@ public class SliderAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
-        return  view == (RelativeLayout) o;
+        return  view == o;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -52,8 +52,8 @@ public class SliderAdapter extends PagerAdapter {
         layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.activity_slide, container, false);
 
-        ImageView sliderImageView = (ImageView) view.findViewById(R.id.slider_images);
-        TextView SlideDescription = (TextView) view.findViewById(R.id.slider_desc);
+        ImageView sliderImageView = view.findViewById(R.id.slider_images);
+        TextView SlideDescription = view.findViewById(R.id.slider_desc);
 
         if (position == 4) {
             sliderImageView.setOnClickListener(onClick -> optionDialog());

@@ -52,7 +52,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void initSettingView() {
-        mRecyclerViewSettings = (RecyclerView) findViewById(R.id.mRecyclerViewSettings);
+        mRecyclerViewSettings = findViewById(R.id.mRecyclerViewSettings);
         final List<String> settings;
         final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
         @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(context.getContentResolver(),

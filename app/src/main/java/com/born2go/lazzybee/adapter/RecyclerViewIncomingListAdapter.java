@@ -83,26 +83,26 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
         if (holder.viewType == VIEW_CARD_1) {
             defineCardView(view, position);
         } else if (holder.viewType == VIEW_SUB_HEARDER_0) {
-            TextView textView = (TextView) view.findViewById(R.id.sub_header);
+            TextView textView = view.findViewById(R.id.sub_header);
             textView.setText(String.valueOf(objects.get(position)));
         }
 
     }
 
     private void defineCardView(final View view, int position) {
-        final SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipeLayout);
-        TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-        TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
-        TextView level = (TextView) view.findViewById(R.id.level);
-        final TextView learned = (TextView) view.findViewById(R.id.learned);
-        TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
+        final SwipeLayout swipeLayout = view.findViewById(R.id.swipeLayout);
+        TextView lbQuestion = view.findViewById(R.id.lbQuestion);
+        TextView lbMeaning = view.findViewById(R.id.lbAnswer);
+        TextView level = view.findViewById(R.id.level);
+        final TextView learned = view.findViewById(R.id.learned);
+        TextView lbPronoun = view.findViewById(R.id.lbPronoun);
 
         //Define action card
-        TextView lbIgnore = (TextView) view.findViewById(R.id.lbIgnore);
-        TextView lbLearned = (TextView) view.findViewById(R.id.lbLearned);
-        TextView lbAdd = (TextView) view.findViewById(R.id.lbAdd);
+        TextView lbIgnore = view.findViewById(R.id.lbIgnore);
+        TextView lbLearned = view.findViewById(R.id.lbLearned);
+        TextView lbAdd = view.findViewById(R.id.lbAdd);
         lbAdd.setVisibility(View.GONE);
-        LinearLayout mDetailsCard = (LinearLayout) view.findViewById(R.id.mDetailsCard);
+        LinearLayout mDetailsCard = view.findViewById(R.id.mDetailsCard);
         try {
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
             //add drag edge.(If the BottomView has 'layout_gravity' attribute, this line is unnecessary)
