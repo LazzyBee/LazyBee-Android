@@ -139,8 +139,6 @@ public class MainActivity extends AppCompatActivity
 
         _trackerApplication();
 
-        _goHome();
-
         _initAdvFillStreak();
 
         _checkFillStreak();
@@ -641,9 +639,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void _goHome() {
-        //getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
-    }
+
 
     private void _showStatistical() {
         LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());

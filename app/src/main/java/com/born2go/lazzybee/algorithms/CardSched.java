@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.algorithms;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.born2go.lazzybee.R;
@@ -83,6 +84,7 @@ public class CardSched {
     /**
      * Ideal next interval by days for CARD, given EASE > 0
      */
+    @SuppressLint("Assert")
     public int _nextIntervalByDays(Card card, int ease) {
         assert (ease > EASE_AGAIN && ease <= EASE_EASY);
 
