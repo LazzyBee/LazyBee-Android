@@ -739,12 +739,16 @@ public class RecyclerViewSettingListAdapter extends
         // lbLimit.setVisibility(View.VISIBLE);
         int value = 0;
         if (limit == null) {
-            if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                value = LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY;
-            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT)) {
-                value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
-            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-                value = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+            switch (key) {
+                case LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT:
+                    value = LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY;
+                    break;
+                case LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT:
+                    value = LazzyBeeShare.MAX_REVIEW_LEARN_PER_DAY;
+                    break;
+                case LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT:
+                    value = LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY;
+                    break;
             }
 
         } else {
