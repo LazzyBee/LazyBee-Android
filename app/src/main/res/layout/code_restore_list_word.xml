@@ -14,5 +14,6 @@
         android:background="@drawable/bg_core_restore_list_input"
         android:paddingLeft="10dp"
         android:inputType="number"
-        tools:ignore="LabelFor"/>
+        tools:ignore="LabelFor"
+        android:importantForAutofill="no" />
 </LinearLayout>

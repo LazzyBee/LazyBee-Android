@@ -54,7 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:clickable="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusable="true">
 
             <include layout="@layout/nav_bottom_main" />
         </LinearLayout>

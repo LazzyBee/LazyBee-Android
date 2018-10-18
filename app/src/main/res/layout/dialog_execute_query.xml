@@ -20,5 +20,6 @@
         android:layout_weight="1"
         android:textColor="@color/red_500"
         android:inputType=""
-        tools:ignore="LabelFor"/>
+        tools:ignore="LabelFor"
+        android:importantForAutofill="no" />
 </LinearLayout>

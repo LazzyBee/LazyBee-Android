@@ -41,6 +41,7 @@
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:background="@drawable/bg_note_card"
-        android:gravity="top" />
+        android:gravity="top"
+        android:importantForAutofill="no" />
 
 </LinearLayout>

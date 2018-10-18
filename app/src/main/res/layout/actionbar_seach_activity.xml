@@ -9,5 +9,6 @@
         android:hint="@string/hint_search"
         android:singleLine="true"
         android:imeOptions="actionSearch"
-        android:inputType="" />
+        android:inputType=""
+        android:importantForAutofill="no" />
 </LinearLayout>
