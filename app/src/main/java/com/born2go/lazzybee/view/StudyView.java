@@ -636,7 +636,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             } else {
                 mCount.setVisibility(View.VISIBLE);
-                int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
+                int againCount = 0, dueCount, todayCount;//Define count again
                 //get lean_more form intern
                 learn_more = intent.getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
 

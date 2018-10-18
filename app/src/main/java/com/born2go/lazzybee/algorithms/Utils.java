@@ -231,7 +231,6 @@ public class Utils {
 
     public static String fmtTimeSpan(int time, boolean _short, boolean boldNumber, int unit) {
         int type;
-        int point = 0;
         if (Math.abs(time) < 60 || unit < 1) {
             type = TIME_SECONDS;
         } else if (Math.abs(time) < 3600 || unit < 2) {
@@ -242,10 +241,8 @@ public class Utils {
             type = TIME_DAYS;
         } else if (Math.abs(time) < 60 * 60 * 24 * 30 * 11.95 || unit < 5) {
             type = TIME_MONTHS;
-            point = 1;
         } else {
             type = TIME_YEARS;
-            point = 1;
         }
         double ftime = convertSecondsTo(time, type);
 
@@ -448,7 +445,7 @@ public class Utils {
         String table = ALL_CHARACTERS + extra;
         int len = table.length();
         String buf = "";
-        int mod = 0;
+        int mod;
         while (num != 0) {
             mod = num % len;
             buf = buf + table.substring(mod, mod + 1);
@@ -710,10 +707,6 @@ public class Utils {
         //Timber.d("Finished writeToFile!");
         long durationSeconds = (endTimeMillis - startTimeMillis) / 1000;
         long sizeKb = sizeBytes / 1024;
-        long speedKbSec = 0;
-        if (endTimeMillis != startTimeMillis) {
-            speedKbSec = sizeKb * 1000 / (endTimeMillis - startTimeMillis);
-        }
         //Timber.d("Utils.writeToFile: Size: %d Kb, Duration: %d s, Speed: %d Kb/s", sizeKb, durationSeconds, speedKbSec);
         output.close();
     }

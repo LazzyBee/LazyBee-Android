@@ -44,7 +44,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        String message=context.getString(R.string.notification_message);
+        String message;
         try {
             //Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
 //            if (container == null) {

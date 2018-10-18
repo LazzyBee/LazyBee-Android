@@ -19,7 +19,7 @@ public class ZipManager {
 
     public boolean zip(String[] _files, String zipFileName) {
         try {
-            BufferedInputStream origin = null;
+            BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFileName);
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
                     dest));
@@ -56,7 +56,7 @@ public class ZipManager {
         try {
             FileInputStream fin = new FileInputStream(_zipFile);
             ZipInputStream zin = new ZipInputStream(fin);
-            ZipEntry ze = null;
+            ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
 
                 //create dir if required while unzipping

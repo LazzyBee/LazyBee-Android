@@ -71,7 +71,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private String streakFileName = "streak.csv";
     private String backupFileName = "backup.zip";
     File exportDir;
-    private String dotZip = ".zip";
+    private String dotZip;
 
     private SQLiteDatabase db;
     private Cursor curCSV;

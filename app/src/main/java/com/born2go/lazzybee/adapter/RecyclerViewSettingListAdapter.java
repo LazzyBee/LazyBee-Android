@@ -465,7 +465,7 @@ public class RecyclerViewSettingListAdapter extends
             mSwitch.setChecked(false);
             mSetUpNotification.setVisibility(View.GONE);
         }
-        String time = "";
+        String time;
         if (hour_str == null) {
             txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
         } else {
@@ -809,7 +809,7 @@ public class RecyclerViewSettingListAdapter extends
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
                 builder.setTitle(context.getString(R.string.change_language));
                 final CharSequence[] items = {context.getString(R.string.lang_english), context.getString(R.string.lang_viet)};
-                int index = 0;
+                int index;
                 String lang = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
 
                 if (lang != null) {

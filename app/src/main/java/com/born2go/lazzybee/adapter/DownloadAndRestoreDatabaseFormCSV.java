@@ -47,7 +47,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
     private String localPath;
     private ProgressDialog dialog;
     ZipManager zipManager;
-    private boolean debug = false;
+    private boolean debug;
     private String backupFileName = "backup.zip";
     private String dotZip = ".zip";
     private String wordFileName = "word.csv";

@@ -458,9 +458,9 @@ public class RecyclerViewCustomStudyAdapter extends
                         try {
                             FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
-                            String limit = LazzyBeeShare.EMPTY;
+                            String limit;
                             if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                                String erorr_message = LazzyBeeShare.EMPTY;
+                                String erorr_message;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);
                                     lbEror.setText(erorr_message);
@@ -494,7 +494,7 @@ public class RecyclerViewCustomStudyAdapter extends
 //
 //                            }
                             else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-                                String erorr_message = LazzyBeeShare.EMPTY;
+                                String erorr_message;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);
                                     lbEror.setText(erorr_message);
@@ -516,7 +516,7 @@ public class RecyclerViewCustomStudyAdapter extends
                                     }
                                 }
                             } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
-                                String erorr_message = LazzyBeeShare.EMPTY;
+                                String erorr_message;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);
                                     lbEror.setText(erorr_message);

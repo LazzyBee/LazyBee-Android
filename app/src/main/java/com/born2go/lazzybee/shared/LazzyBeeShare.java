@@ -397,7 +397,7 @@ public class LazzyBeeShare {
     }
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean DEBUG, boolean POSITION_MEANING, boolean onload) {
-        String html = null;
+        String html;
         String pronoun = card.getPronoun();
         String meaning = card.getMeaningWithHtml(packages);
 

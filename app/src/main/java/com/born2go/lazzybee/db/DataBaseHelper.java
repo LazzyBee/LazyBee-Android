@@ -395,8 +395,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void _exportDatabase() {
         File sd = Environment.getExternalStorageDirectory();
         File data = Environment.getDataDirectory();
-        FileChannel source = null;
-        FileChannel destination = null;
+        FileChannel source;
+        FileChannel destination;
         String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;;
 
         String backupDBPath = DB_NAME;

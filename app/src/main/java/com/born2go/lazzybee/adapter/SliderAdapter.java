@@ -31,14 +31,7 @@ public class SliderAdapter extends PagerAdapter {
             R.drawable.ico_rearbanner
     };
 
-    public String[] slider_desc = {
-            "LazzyBee helps you learn and remember 2000 new words per year",
-            "... If you spend 5 minutes each day",
-            "Words you learned will never be forgotten due to in-time-review",
-            "As you learn, swipe left to access embedded dictionary",
-            "You read giudeline carefully to understand our special methoddology",
-            "GOOD LUCK!!!"
-    };
+    public String[] slider_desc;
 
     @Override
     public int getCount() {

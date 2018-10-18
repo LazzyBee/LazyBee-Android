@@ -153,6 +153,7 @@ public class DialogStatistics extends DialogFragment {
         }
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private void generateDefaultData() {
         try {
             List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
