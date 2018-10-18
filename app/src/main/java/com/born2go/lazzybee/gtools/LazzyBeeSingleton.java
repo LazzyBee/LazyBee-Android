@@ -10,7 +10,6 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
@@ -19,21 +18,30 @@ import java.util.Locale;
 /**
  * Created by Hue on 9/15/2015.
  */
-public class LazzyBeeSingleton {
-    private static LazzyBeeSingleton instance;
 
+
+public class LazzyBeeSingleton {
+    @SuppressLint("StaticFieldLeak")
+    private static LazzyBeeSingleton instance;
     public static LearnApiImplements learnApiImplements;
+    @SuppressLint("StaticFieldLeak")
     public static DataBaseHelper dataBaseHelper;
+    @SuppressLint("StaticFieldLeak")
     public static DatabaseUpgrade databaseUpgrade;
     public static TextToSpeech textToSpeech;
     public static ConnectGdatabase connectGdatabase;
+    @SuppressLint("StaticFieldLeak")
     private static FirebaseAnalytics mFirebaseAnalytics;
     @SuppressLint("StaticFieldLeak")
     private static FirebaseRemoteConfig mRemoteConfig;
+    @SuppressLint("StaticFieldLeak")
     private static String amobPubId;
+    @SuppressLint("StaticFieldLeak")
     private static Crashlytics mCrashlytics;
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
 
+    @SuppressWarnings({"AccessStaticViaInstance", "WeakerAccess"})
     public LazzyBeeSingleton(Context context) {
         this.context = context;
         dataBaseHelper = new DataBaseHelper(context);
@@ -57,6 +65,7 @@ public class LazzyBeeSingleton {
         }
     }
 
+    @SuppressWarnings("unused")
     public static LazzyBeeSingleton getInstance() {
         // Return the instance
         return instance;
