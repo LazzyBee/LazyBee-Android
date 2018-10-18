@@ -44,29 +44,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     private String device_id;
     private ProgressDialog dialog;
     ZipManager zipManager;
-    // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
-    private String queryExportWordTableToCsvFull = "Select " +
-            "vocabulary.gid," +
-            "vocabulary.queue," +
-            "vocabulary.due," +
-            "vocabulary.rev_count," +
-            "vocabulary.last_ivl," +
-            "vocabulary.e_factor," +
-            "vocabulary.user_note, " +
-            "vocabulary.level " +
-            "from vocabulary where vocabulary.gid not null";
-    private int type;
-    private String queryExportWordTableToCsv = "Select " +
-            "vocabulary.gid," +
-            "vocabulary.queue," +
-            "vocabulary.due," +
-            "vocabulary.rev_count," +
-            "vocabulary.last_ivl," +
-            "vocabulary.e_factor," +
-            "vocabulary.user_note, " +
-            "vocabulary.level " +
-            "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
-    private String queryExportStreakTableToCsv = "select day from streak";
 
     private String wordFileName = "word.csv";
     private String streakFileName = "streak.csv";
@@ -74,7 +51,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     File exportDir;
     private String dotZip;
 
-    private SQLiteDatabase db;
     private Cursor curCSV;
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
@@ -82,7 +58,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         backup_key = device_id.substring(device_id.length() - 6, device_id.length());
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
-        this.type = type;
+        int type1 = type;
         Log.d(TAG, "Type export:" + ((type == 0) ? " Full" : " Mini"));
         exportDir = new File(Environment.getExternalStorageDirectory(), LazzyBeeShare.EMPTY);
         if (!exportDir.exists()) {
@@ -92,7 +68,28 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             }
         }
 
-        db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+        // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
+        String queryExportWordTableToCsvFull = "Select " +
+                "vocabulary.gid," +
+                "vocabulary.queue," +
+                "vocabulary.due," +
+                "vocabulary.rev_count," +
+                "vocabulary.last_ivl," +
+                "vocabulary.e_factor," +
+                "vocabulary.user_note, " +
+                "vocabulary.level " +
+                "from vocabulary where vocabulary.gid not null";
+        String queryExportWordTableToCsv = "Select " +
+                "vocabulary.gid," +
+                "vocabulary.queue," +
+                "vocabulary.due," +
+                "vocabulary.rev_count," +
+                "vocabulary.last_ivl," +
+                "vocabulary.e_factor," +
+                "vocabulary.user_note, " +
+                "vocabulary.level " +
+                "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
         curCSV = db.rawQuery((type == 0) ? queryExportWordTableToCsvFull : queryExportWordTableToCsv, null);
         dotZip = "_" + curCSV.getCount() + ".zip";
 
@@ -231,6 +228,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             }
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
             SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+            String queryExportStreakTableToCsv = "select day from streak";
             Cursor curCSV = db.rawQuery(queryExportStreakTableToCsv, null);
             if (curCSV.getCount() > 0) {
                 if (curCSV.moveToFirst()) {

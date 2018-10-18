@@ -22,11 +22,10 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
     private static final String TAG = AddCustomListToIncomingList.class.getSimpleName();
     private final ProgressDialog dialog;
 
-    List<String> incomingList = new ArrayList<>();
-    List<String> newIncomingList = new ArrayList<>();
-    List<String> defaultIncomingLists = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final List<String> newIncomingList = new ArrayList<>();
 
-    LearnApiImplements learnApiImplements;
+    private final LearnApiImplements learnApiImplements;
 
     public interface IAddCustomListToIncomingList {
         void processFinish();
