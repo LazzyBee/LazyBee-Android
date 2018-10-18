@@ -476,7 +476,7 @@ public class SearchActivity extends AppCompatActivity implements
 
             } else {
                 lbResultCount.setVisibility(View.GONE);
-                List<Card> cardList = new ArrayList<Card>();
+                List<Card> cardList = new ArrayList<>();
                 setAdapterListCard(cardList);
             }
         } catch (Exception e) {
@@ -573,7 +573,7 @@ public class SearchActivity extends AppCompatActivity implements
     @Override
     public void processFinish(Card card) {
         try {
-            List<Card> cardList = new ArrayList<Card>();
+            List<Card> cardList = new ArrayList<>();
             int result_count;
             boolean cardNull = false;
             if (card != null) {
@@ -591,7 +591,7 @@ public class SearchActivity extends AppCompatActivity implements
             List<Card> cardResultSearchFromDb = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
             if (cardResultSearchFromDb.size() > 0) {
                 //Clone result search card form db
-                List<Card> cloneSearchResults = new ArrayList<Card>(cardResultSearchFromDb);
+                List<Card> cloneSearchResults = new ArrayList<>(cardResultSearchFromDb);
                 if (!cardNull) {
                     for (Card cardDB : cardResultSearchFromDb) {
                         if (cardDB.getId() == (card.getId())) {

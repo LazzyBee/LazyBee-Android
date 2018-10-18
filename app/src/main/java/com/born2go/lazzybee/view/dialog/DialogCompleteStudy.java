@@ -121,7 +121,7 @@ public class DialogCompleteStudy extends DialogFragment {
         int startofDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
         Log.d(TAG, "Count of streak:" + countStreak);
         Log.d(TAG, "Start of the day:" + startofDay);
-        ArrayList<Boolean> showDays = new ArrayList<Boolean>();
+        ArrayList<Boolean> showDays = new ArrayList<>();
 
         String showDay = LazzyBeeShare.EMPTY;
         if (countStreak > 7) {
@@ -167,7 +167,7 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private ArrayList<String> _defineWeekbyDayOfWeek(int dayOfWeek) {
-        ArrayList<String> days = new ArrayList<String>();
+        ArrayList<String> days = new ArrayList<>();
         {
             switch (dayOfWeek) {
                 case Calendar.MONDAY:

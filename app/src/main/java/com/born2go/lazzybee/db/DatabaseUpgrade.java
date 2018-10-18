@@ -74,7 +74,7 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
     private List<Card> _getListCardQueryString(String query) {
         Cursor cursor = null;
         try {
-            List<Card> datas = new ArrayList<Card>();
+            List<Card> datas = new ArrayList<>();
             SQLiteDatabase db = this.getReadableDatabase();
 
             //query for cursor

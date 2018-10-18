@@ -54,7 +54,7 @@ public class CustomTimePickerDialog extends TimePickerDialog {
                     .findViewById(field.getInt(null));
             mMinuteSpinner.setMinValue(0);
             mMinuteSpinner.setMaxValue((60 / TIME_PICKER_INTERVAL) - 1);
-            List<String> displayedValues = new ArrayList<String>();
+            List<String> displayedValues = new ArrayList<>();
             for (int i = 0; i < 60; i += TIME_PICKER_INTERVAL) {
                 displayedValues.add(String.format("%02d", i));
             }

@@ -521,7 +521,7 @@ public class RecyclerViewCustomStudyAdapter extends
             //Get Card list id form system tabele
             List<String> cardListId = learnApiImplements._getListCardIdFromStringArray(queueListstr);
             int limitNew = Integer.valueOf(limit);
-            List<String> cardListLimit = new ArrayList<String>(limitNew);
+            List<String> cardListLimit = new ArrayList<>(limitNew);
             if (cardListId.size() > limitNew) {
                 for (int i = 0; i < limitNew; i++) {
                     cardListLimit.add(cardListId.get(i));

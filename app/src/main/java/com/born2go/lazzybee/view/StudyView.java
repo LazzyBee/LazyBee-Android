@@ -94,11 +94,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     CardView mCardViewHelpandAdMod;
     CardView mShowAnswer;
 
-    List<Card> todayList = new ArrayList<Card>();
-    List<Card> againList = new ArrayList<Card>();
-    List<Card> dueList = new ArrayList<Card>();
-    List<Card> cardListAddDueToDay = new ArrayList<Card>();
-    List<Card> reverseList = new ArrayList<Card>();
+    List<Card> todayList = new ArrayList<>();
+    List<Card> againList = new ArrayList<>();
+    List<Card> dueList = new ArrayList<>();
+    List<Card> cardListAddDueToDay = new ArrayList<>();
+    List<Card> reverseList = new ArrayList<>();
     //Current Card
     Card currentCard = new Card();
     //Define before card
@@ -616,7 +616,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 dueCount = dueList.size(); //Define Count due
                 int numberAgainCard = total_learn_per_day - dueCount;
                 Log.d(TAG, "numberAgainCard:" + numberAgainCard);
-                todayList = new ArrayList<Card>();
+                todayList = new ArrayList<>();
 
                 if (numberAgainCard > 0) {
                     againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, numberAgainCard);
@@ -1335,7 +1335,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     case Card.QUEUE_NEW_CRAM0:
                         Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_NEW_CRAM0");
 
-                        List<Card> cloneTodayList = new ArrayList<Card>(todayList); //Define clone todayList
+                        List<Card> cloneTodayList = new ArrayList<>(todayList); //Define clone todayList
                         int clonetodayCount = cloneTodayList.size();
 
                         todayList.clear(); //Clear Data
@@ -1356,7 +1356,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     case Card.QUEUE_LNR1:
                         Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_LNR1");
 
-                        List<Card> cloneAgainList = new ArrayList<Card>(againList);//Define clone againList
+                        List<Card> cloneAgainList = new ArrayList<>(againList);//Define clone againList
                         int agianCount = cloneAgainList.size();
 
                         againList.clear();//Clear Data
@@ -1377,7 +1377,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     case Card.QUEUE_REV2:
                         Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_REV2");
 
-                        List<Card> cloneDuelist = new ArrayList<Card>(dueList);//Define clone duelist
+                        List<Card> cloneDuelist = new ArrayList<>(dueList);//Define clone duelist
                         int dueCount = cloneDuelist.size();
 
                         dueList.clear();//Clear Data

@@ -591,7 +591,7 @@ public class Utils {
             return false;
         }
         if (zipEntryToFilenameMap == null) {
-            zipEntryToFilenameMap = new HashMap<String, String>();
+            zipEntryToFilenameMap = new HashMap<>();
         }
         BufferedInputStream zis = null;
         BufferedOutputStream bos = null;
@@ -736,7 +736,7 @@ public class Utils {
     private static void printJSONObject(JSONObject jsonObject, String indentation, BufferedWriter buff) {
         try {
             @SuppressWarnings("unchecked") Iterator<String> keys = (Iterator<String>) jsonObject.keys();
-            TreeSet<String> orderedKeysSet = new TreeSet<String>();
+            TreeSet<String> orderedKeysSet = new TreeSet<>();
             while (keys.hasNext()) {
                 orderedKeysSet.add(keys.next());
             }

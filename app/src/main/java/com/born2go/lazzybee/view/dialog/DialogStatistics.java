@@ -155,18 +155,18 @@ public class DialogStatistics extends DialogFragment {
         try {
             List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
             // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
-            List<Column> columns = new ArrayList<Column>();
+            List<Column> columns = new ArrayList<>();
             List<SubcolumnValue> values;
 
 
-            List<AxisValue> axisXValues = new ArrayList<AxisValue>();
-            List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
+            List<AxisValue> axisXValues = new ArrayList<>();
+            List<AxisValue> axisTopValues = new ArrayList<>();
 
             //Gestion of the two axes for the graphic
 
             int total = 0;
             for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
-                values = new ArrayList<SubcolumnValue>();
+                values = new ArrayList<>();
                 int count = listCountCardbyLevel.get(i);
                 total += count;
                 axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
