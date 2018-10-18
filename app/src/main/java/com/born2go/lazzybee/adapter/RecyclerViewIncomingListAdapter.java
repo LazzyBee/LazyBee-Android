@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,8 +65,9 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
 
     }
 
+    @NonNull
     @Override
-    public RecyclerViewReviewTodayListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewReviewTodayListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
         if (viewType == VIEW_CARD_1) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
@@ -77,7 +79,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewReviewTodayListAdapterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewReviewTodayListAdapterViewHolder holder, final int position) {
         //Define view
         final View view = holder.view;
         if (holder.viewType == VIEW_CARD_1) {

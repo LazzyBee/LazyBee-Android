@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,15 +35,16 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         this.mySubject=LazzyBeeShare.getMySubject();
     }
 
+    @NonNull
     @Override
-    public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
         RecyclerViewSearchResultListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewSearchResultListAdapterViewHolder(view);
         return recyclerViewReviewTodayListAdapterViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewSearchResultListAdapterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewSearchResultListAdapterViewHolder holder, final int position) {
         //
         final View view = holder.view;
         TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);

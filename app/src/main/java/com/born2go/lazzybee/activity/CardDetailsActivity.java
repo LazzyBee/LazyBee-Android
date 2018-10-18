@@ -568,7 +568,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * @return true if <code>view</code> is associated with the key object <code>object</code>
          */
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, Object object) {
             return object == view;
         }
 

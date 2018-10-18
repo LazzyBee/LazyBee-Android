@@ -9,6 +9,7 @@ import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.born2go.lazzybee.db.Card;
@@ -48,12 +49,12 @@ public class PlacesSuggestionProvider extends ContentProvider {
     private Map<String, String> CardMap;
 
     @Override
-    public int delete(Uri uri, String arg1, String[] arg2) {
+    public int delete(@NonNull Uri uri, String arg1, String[] arg2) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         switch (uriMatcher.match(uri)) {
             case SUGGEST_CARD:
                 return SearchManager.SUGGEST_MIME_TYPE;
@@ -63,7 +64,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues arg1) {
+    public Uri insert(@NonNull Uri uri, ContentValues arg1) {
         throw new UnsupportedOperationException();
     }
 
@@ -74,7 +75,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         Log.d(LOG_TAG, "uri = " + uri);
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
@@ -125,7 +126,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues arg1, String arg2, String[] arg3) {
+    public int update(@NonNull Uri uri, ContentValues arg1, String arg2, String[] arg3) {
         throw new UnsupportedOperationException();
     }
 }

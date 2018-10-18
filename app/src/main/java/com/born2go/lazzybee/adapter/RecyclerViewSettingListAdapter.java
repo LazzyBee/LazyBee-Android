@@ -84,8 +84,9 @@ public class RecyclerViewSettingListAdapter extends
 
     }
 
+    @NonNull
     @Override
-    public RecyclerViewSettingListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewSettingListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
         if (viewType == TYPE_SUB_HEADER) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings_sub_header, parent, false); //Inflating the layout
@@ -111,7 +112,7 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewSettingListAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewSettingListAdapterViewHolder holder, int position) {
 
         View view = holder.view;
         RelativeLayout mCardView = (RelativeLayout) view.findViewById(R.id.mCardView);

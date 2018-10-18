@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,7 @@ public class DialogStatistics extends DialogFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_statistics, container, false);
         final Dialog dialog = getDialog();
@@ -189,8 +190,6 @@ public class DialogStatistics extends DialogFragment {
                 columns.add(column);
 
             }
-            List<AxisValue> axisYValues = new ArrayList<AxisValue>(Arrays.asList(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total))));
-
             data = new ColumnChartData(columns);
             Axis axeX = new Axis(axisXValues);
             Axis axisTop = new Axis(axisTopValues).setHasLines(true);

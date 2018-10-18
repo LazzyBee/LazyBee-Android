@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.adapter;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +24,9 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
         this.objectList = objectList;
     }
 
+    @NonNull
     @Override
-    public RecyclerViewListCourseAdapterViewHoler onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewListCourseAdapterViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coures, parent, false); //Inflating the layout
         //init viewholder
         RecyclerViewListCourseAdapterViewHoler recyclerViewListCourseAdapterViewHoler = new RecyclerViewListCourseAdapterViewHoler(view);
@@ -32,7 +34,7 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewListCourseAdapterViewHoler holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewListCourseAdapterViewHoler holder, int position) {
         //get view form holder
         View view = holder.view;
         //init lbNameCourse

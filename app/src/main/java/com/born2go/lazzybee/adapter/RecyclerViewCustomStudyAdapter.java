@@ -3,6 +3,7 @@ package com.born2go.lazzybee.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -63,8 +64,9 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
 
+    @NonNull
     @Override
-    public RecyclerViewCustomStudyAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewCustomStudyAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
         if (viewType == TYPE_TITLE_0 || viewType == TYPE_SETTING_NAME_1 || viewType == TYPE_SETTING_AUTO_PLAY_SOUND_3) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_settings, parent, false); //Inflating the layout
@@ -78,7 +80,7 @@ public class RecyclerViewCustomStudyAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewCustomStudyAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewCustomStudyAdapterViewHolder holder, int position) {
         View view = holder.view;
         RelativeLayout mCardView = (RelativeLayout) view.findViewById(R.id.mCardView);
 

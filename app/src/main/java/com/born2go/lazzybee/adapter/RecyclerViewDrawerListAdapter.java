@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
     }
 
+    @NonNull
     @Override
-    public RecyclerViewDrawerListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewDrawerListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = null;
         if (viewType == TYPE_COURSE) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coures, parent, false); //Inflating the layout
@@ -66,7 +68,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewDrawerListAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewDrawerListAdapterViewHolder holder, int position) {
         try {
             View view = holder.view;
             if (holder.viewType == TYPE_COURSE) {
