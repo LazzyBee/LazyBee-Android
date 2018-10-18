@@ -135,61 +135,58 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mViewAdv = findViewById(R.id.mViewAdv);
             //get value form remote config
             final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String adv_id = null;
-                    if (task.isComplete()) {
-                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
-                    }
-                    if (admob_pub_id != null) {
-                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                            mViewAdv.setVisibility(View.GONE);
-                        } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
-                            String advId = admob_pub_id + "/" + adv_id;
-                            Log.i(TAG, "admob -AdUnitId:" + advId);
-                            AdView mAdView = new AdView(context);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                String adv_id = null;
+                if (task.isComplete()) {
+                    adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                }
+                if (admob_pub_id != null) {
+                    if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        mViewAdv.setVisibility(View.GONE);
+                    } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        String advId = admob_pub_id + "/" + adv_id;
+                        Log.i(TAG, "admob -AdUnitId:" + advId);
+                        AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.BANNER);
-                            mAdView.setAdUnitId(advId);
+                        mAdView.setAdSize(AdSize.BANNER);
+                        mAdView.setAdUnitId(advId);
 
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                                    .build();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                .build();
 
-                            mAdView.loadAd(adRequest);
+                        mAdView.loadAd(adRequest);
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                            relativeLayout.addView(mAdView, adViewCenter);
-                            mAdView.setAdListener(new AdListener() {
-                                @Override
-                                public void onAdLoaded() {
-                                    // Code to be executed when an ad finishes loading.
-                                    Log.d(TAG, "onAdLoaded");
-                                    mViewAdv.setVisibility(View.VISIBLE);
-                                }
+                        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                        RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                        relativeLayout.addView(mAdView, adViewCenter);
+                        mAdView.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                // Code to be executed when an ad finishes loading.
+                                Log.d(TAG, "onAdLoaded");
+                                mViewAdv.setVisibility(View.VISIBLE);
+                            }
 
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
-                                    mViewAdv.setVisibility(View.GONE);
-                                }
-                            });
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                // Code to be executed when an ad request fails.
+                                Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                                mViewAdv.setVisibility(View.GONE);
+                            }
+                        });
 
 
-                        } else {
-                            mViewAdv.setVisibility(View.GONE);
-                        }
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
                 }
             });
 

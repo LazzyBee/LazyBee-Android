@@ -499,17 +499,15 @@ public class SearchActivity extends AppCompatActivity implements
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(card.getQuestion());
         final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                //
-                if (items[item] == getString(R.string.action_add_to_learn)) {
-                    _addCardToQueue(card);
-                } else if (items[item] == getString(R.string.action_learnt)) {
-                    _doneCard(card);
-                }
-                _search(query_text, display_type, false);
-                dialog.cancel();
+        builder.setItems(items, (dialog, item) -> {
+            //
+            if (items[item] == getString(R.string.action_add_to_learn)) {
+                _addCardToQueue(card);
+            } else if (items[item] == getString(R.string.action_learnt)) {
+                _doneCard(card);
             }
+            _search(query_text, display_type, false);
+            dialog.cancel();
         });
 
         // Get the AlertDialog from create()
@@ -528,20 +526,16 @@ public class SearchActivity extends AppCompatActivity implements
                 .setTitle(R.string.dialog_title_delete_card);
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Update Queue_list in system table
-                card.setQueue(Card.QUEUE_DONE_2);
-                dataBaseHelper._updateCard(card);
-                String action = getString(R.string.done_card);
-                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            //Update Queue_list in system table
+            card.setQueue(Card.QUEUE_DONE_2);
+            dataBaseHelper._updateCard(card);
+            String action = getString(R.string.done_card);
+            Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -558,20 +552,16 @@ public class SearchActivity extends AppCompatActivity implements
                 .setTitle(getString(R.string.dialog_title_add_to_learn));
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Update Queue_list in system table
-                dataBaseHelper._addCardIdToQueueList(card);
-                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
-                ADD_TO_LEARN = 1;
-                setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            //Update Queue_list in system table
+            dataBaseHelper._addCardIdToQueueList(card);
+            Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+            ADD_TO_LEARN = 1;
+            setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -632,12 +622,7 @@ public class SearchActivity extends AppCompatActivity implements
                         + " <br/> " + getString(R.string.to_add);
                 lbMessageNotFound.setText(LazzyBeeShare.fromHtml(msg_not_found));
 
-                lbMessageNotFound.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        gotoAddWord();
-                    }
-                });
+                lbMessageNotFound.setOnClickListener(view -> gotoAddWord());
                 _trackerWorkNotFound();
             }
         } catch (Exception e) {
@@ -720,60 +705,57 @@ public class SearchActivity extends AppCompatActivity implements
             mViewAdv = findViewById(R.id.mViewAdv);
             //get value form remote config
             final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String adv_id = null;
-                    if (task.isComplete()) {
-                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
-                    }
-                    if (admob_pub_id != null) {
-                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                            mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                            String advId = admob_pub_id + "/" + adv_id;
-                            Log.i(TAG, "admob -AdUnitId:" + advId);
-                            AdView mAdView = new AdView(context);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                String adv_id = null;
+                if (task.isComplete()) {
+                    adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                }
+                if (admob_pub_id != null) {
+                    if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        mViewAdv.setVisibility(View.GONE);
+                    } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                        String advId = admob_pub_id + "/" + adv_id;
+                        Log.i(TAG, "admob -AdUnitId:" + advId);
+                        AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.BANNER);
-                            mAdView.setAdUnitId(advId);
+                        mAdView.setAdSize(AdSize.BANNER);
+                        mAdView.setAdUnitId(advId);
 
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                                    .build();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                .build();
 
-                            mAdView.loadAd(adRequest);
+                        mAdView.loadAd(adRequest);
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                            relativeLayout.addView(mAdView, adViewCenter);
+                        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                        RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                        relativeLayout.addView(mAdView, adViewCenter);
 
-                            mAdView.setAdListener(new AdListener() {
-                                @Override
-                                public void onAdLoaded() {
-                                    // Code to be executed when an ad finishes loading.
-                                    Log.d(TAG, "onAdLoaded");
-                                    mViewAdv.setVisibility(View.VISIBLE);
-                                }
+                        mAdView.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                // Code to be executed when an ad finishes loading.
+                                Log.d(TAG, "onAdLoaded");
+                                mViewAdv.setVisibility(View.VISIBLE);
+                            }
 
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
-                                    mViewAdv.setVisibility(View.GONE);
-                                }
-                            });
-                        } else {
-                            mViewAdv.setVisibility(View.GONE);
-                        }
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                // Code to be executed when an ad request fails.
+                                Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                                mViewAdv.setVisibility(View.GONE);
+                            }
+                        });
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
                 }
             });
 

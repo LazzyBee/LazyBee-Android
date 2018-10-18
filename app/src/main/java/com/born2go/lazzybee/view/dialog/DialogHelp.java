@@ -49,19 +49,9 @@ public class DialogHelp extends DialogFragment {
         ImageView mClose= (ImageView) view.findViewById(R.id.mClose);
         mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
 
-        mClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        mClose.setOnClickListener(v -> getDialog().dismiss());
 
-        mFloatClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        mFloatClose.setOnClickListener(v -> getDialog().dismiss());
         return view;
     }
     @Override

@@ -426,29 +426,26 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
             if (getActivity()!=null){
-                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
-                        if (task.isSuccessful()) {
-                            server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
-                        }
-                        if (server_base_url_sharing != null) {
-                            if (server_base_url_sharing.length() > 0)
-                                base_url_sharing[0] = server_base_url_sharing;
-                        }
-
-                        //define base url with question
-                        base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
-                        Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
-
-                        //Share card
-                        Intent sendIntent = new Intent();
-                        sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
-                        sendIntent.setType("text/plain");
-                        startActivity(sendIntent);
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
+                    String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
+                    if (task.isSuccessful()) {
+                        server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
                     }
+                    if (server_base_url_sharing != null) {
+                        if (server_base_url_sharing.length() > 0)
+                            base_url_sharing[0] = server_base_url_sharing;
+                    }
+
+                    //define base url with question
+                    base_url_sharing[0] = base_url_sharing[0] + card.getQuestion();
+                    Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
+
+                    //Share card
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
                 });
             }
 

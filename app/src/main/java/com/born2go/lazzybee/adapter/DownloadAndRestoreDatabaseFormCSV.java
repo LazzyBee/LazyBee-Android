@@ -434,12 +434,7 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             message = context.getString(R.string.restore_database_fails);
         }
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         android.support.v7.app.AlertDialog dialog = builder.create();
         dialog.show();
     }

@@ -65,12 +65,7 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
     private void _defineHeaderDialogSetTime(View view) {
         ImageView mClose = (ImageView) view.findViewById(R.id.mClose);
         TextView lbSave = (TextView) view.findViewById(R.id.lbSave);
-        mClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        mClose.setOnClickListener(v -> dialog.dismiss());
         lbSave.setOnClickListener(v -> {
             if (getActivity()!=null){
                 FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
@@ -121,48 +116,36 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         }
 
 
-        View.OnClickListener listenerSetTimeNow = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isShow = imgDoneNow.isShown();
-                imgDoneNow.setVisibility(isShow ? View.GONE : View.VISIBLE);
-                imgDone3s.setVisibility(View.GONE);
-                imgDone5s.setVisibility(View.GONE);
-                imgDone7s.setVisibility(View.GONE);
-            }
+        View.OnClickListener listenerSetTimeNow = v -> {
+            boolean isShow = imgDoneNow.isShown();
+            imgDoneNow.setVisibility(isShow ? View.GONE : View.VISIBLE);
+            imgDone3s.setVisibility(View.GONE);
+            imgDone5s.setVisibility(View.GONE);
+            imgDone7s.setVisibility(View.GONE);
         };
-        View.OnClickListener listenerSetTime3s = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isShow = imgDone3s.isShown();
-                imgDone3s.setVisibility(isShow ? View.GONE : View.VISIBLE);
-                imgDoneNow.setVisibility(View.GONE);
-                imgDone5s.setVisibility(View.GONE);
-                imgDone7s.setVisibility(View.GONE);
-                time = 3;
-            }
+        View.OnClickListener listenerSetTime3s = v -> {
+            boolean isShow = imgDone3s.isShown();
+            imgDone3s.setVisibility(isShow ? View.GONE : View.VISIBLE);
+            imgDoneNow.setVisibility(View.GONE);
+            imgDone5s.setVisibility(View.GONE);
+            imgDone7s.setVisibility(View.GONE);
+            time = 3;
         };
-        View.OnClickListener listenerSetTime5s = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isShow = imgDone5s.isShown();
-                imgDone5s.setVisibility(isShow ? View.GONE : View.VISIBLE);
-                imgDone3s.setVisibility(View.GONE);
-                imgDoneNow.setVisibility(View.GONE);
-                imgDone7s.setVisibility(View.GONE);
-                time = 5;
-            }
+        View.OnClickListener listenerSetTime5s = v -> {
+            boolean isShow = imgDone5s.isShown();
+            imgDone5s.setVisibility(isShow ? View.GONE : View.VISIBLE);
+            imgDone3s.setVisibility(View.GONE);
+            imgDoneNow.setVisibility(View.GONE);
+            imgDone7s.setVisibility(View.GONE);
+            time = 5;
         };
-        View.OnClickListener listenerSetTime7s = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isShow = imgDone7s.isShown();
-                imgDone7s.setVisibility(isShow ? View.GONE : View.VISIBLE);
-                imgDone3s.setVisibility(View.GONE);
-                imgDone5s.setVisibility(View.GONE);
-                imgDoneNow.setVisibility(View.GONE);
-                time = 7;
-            }
+        View.OnClickListener listenerSetTime7s = v -> {
+            boolean isShow = imgDone7s.isShown();
+            imgDone7s.setVisibility(isShow ? View.GONE : View.VISIBLE);
+            imgDone3s.setVisibility(View.GONE);
+            imgDone5s.setVisibility(View.GONE);
+            imgDoneNow.setVisibility(View.GONE);
+            time = 7;
         };
 
         lbSetTimeNow.setOnClickListener(listenerSetTimeNow);

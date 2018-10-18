@@ -156,13 +156,10 @@ public class StudyActivity extends AppCompatActivity
         builder.setTitle("Ops!");
         builder.setMessage("Complete study!!!");
         builder.setCancelable(false);
-        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                setResult(RESULT_CANCELED, new Intent());
-                finish();
-            }
+        builder.setNegativeButton(R.string.ok, (dialog, which) -> {
+            dialog.dismiss();
+            setResult(RESULT_CANCELED, new Intent());
+            finish();
         });
         Dialog dialog = builder.create();
         dialog.show();
@@ -489,22 +486,14 @@ public class StudyActivity extends AppCompatActivity
         txtUserNote.setText(currentCard.getUser_note());
 
         builder.setView(viewDialog);
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String user_note = txtUserNote.getText().toString();
-                currentCard.setUser_note(user_note);
-                dataBaseHelper._updateUserNoteCard(currentCard);
-                ((StudyView) pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
-                dialog.dismiss();
-            }
+        builder.setPositiveButton(R.string.save, (dialog, which) -> {
+            String user_note = txtUserNote.getText().toString();
+            currentCard.setUser_note(user_note);
+            dataBaseHelper._updateUserNoteCard(currentCard);
+            ((StudyView) pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
+            dialog.dismiss();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 

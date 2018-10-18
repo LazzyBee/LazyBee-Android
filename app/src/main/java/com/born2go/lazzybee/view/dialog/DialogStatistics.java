@@ -80,27 +80,19 @@ public class DialogStatistics extends DialogFragment {
             mediaPlayer.start();
 
             btnShare = (Button) view.findViewById(R.id.btnShared);
-            btnShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            btnShare.setOnClickListener(v -> {
 
-                    screenViewChart();
-                    _shareCard();
+                screenViewChart();
+                _shareCard();
 
-                    if(getActivity()!=null){
-                        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
-                    }
-
-
+                if(getActivity()!=null){
+                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
                 }
+
+
             });
-            view.findViewById(R.id.mClose).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+            view.findViewById(R.id.mClose).setOnClickListener(v -> dialog.dismiss());
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }

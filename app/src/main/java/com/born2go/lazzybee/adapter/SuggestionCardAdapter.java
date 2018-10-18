@@ -79,30 +79,24 @@ public class SuggestionCardAdapter extends CursorAdapter {
                 learned.setText(context.getResources().getString(R.string.new_card));
             }
             learned.setVisibility(View.GONE);
-            mDetailsCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String cardId = String.valueOf(card.getId());
-                    int insertSuggesstionResults = LazzyBeeSingleton.learnApiImplements._insertSuggesstion(cardId);
-                    Intent intent = new Intent(context, CardDetailsActivity.class);
-                    intent.putExtra(LazzyBeeShare.CARDID, cardId);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    context.startActivity(intent);
-                }
+            mDetailsCard.setOnClickListener(v -> {
+                String cardId = String.valueOf(card.getId());
+                int insertSuggesstionResults = LazzyBeeSingleton.learnApiImplements._insertSuggesstion(cardId);
+                Intent intent = new Intent(context, CardDetailsActivity.class);
+                intent.putExtra(LazzyBeeShare.CARDID, cardId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
             });
 
             //Handel action add card to learn
-            lbAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        LazzyBeeSingleton.learnApiImplements._addCardIdToQueueList(card);
-                        Toast.makeText(context, context.getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
-                    }
-
+            lbAdd.setOnClickListener(v -> {
+                try {
+                    LazzyBeeSingleton.learnApiImplements._addCardIdToQueueList(card);
+                    Toast.makeText(context, context.getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
                 }
+
             });
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);

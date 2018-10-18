@@ -130,37 +130,28 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
                 learned.setText(context.getResources().getString(R.string.new_card));
             }
             learned.setVisibility(View.GONE);
-            lbLearned.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        // Toast.makeText(context, "Learned Card:"+position, Toast.LENGTH_SHORT).show();
-                        ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_DONE_2);
-                    } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
-                    }
+            lbLearned.setOnClickListener(v -> {
+                try {
+                    // Toast.makeText(context, "Learned Card:"+position, Toast.LENGTH_SHORT).show();
+                    ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_DONE_2);
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
                 }
             });
-            lbIgnore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        // Toast.makeText(context, "Ignore Card:"+position, Toast.LENGTH_SHORT).show();
-                        ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_SUSPENDED_1);
-                    } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, "2_onBindViewHolder", e);
-                    }
+            lbIgnore.setOnClickListener(v -> {
+                try {
+                    // Toast.makeText(context, "Ignore Card:"+position, Toast.LENGTH_SHORT).show();
+                    ignoreAndLearnedCard(mRecyclerViewReviewTodayList.getChildAdapterPosition(view), Card.QUEUE_SUSPENDED_1);
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "2_onBindViewHolder", e);
                 }
             });
-            mDetailsCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String cardId = String.valueOf(card.getId());
-                    Intent intent = new Intent(context, CardDetailsActivity.class);
-                    intent.putExtra(LazzyBeeShare.CARDID, cardId);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    context.startActivity(intent);
-                }
+            mDetailsCard.setOnClickListener(v -> {
+                String cardId = String.valueOf(card.getId());
+                Intent intent = new Intent(context, CardDetailsActivity.class);
+                intent.putExtra(LazzyBeeShare.CARDID, cardId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
             });
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);

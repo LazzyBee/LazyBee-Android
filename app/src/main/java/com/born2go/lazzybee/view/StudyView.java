@@ -218,30 +218,10 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerButtonAnswer() {
-        btnHard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_HARD);
-            }
-        });
-        btnEasy3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_EASY);
-            }
-        });
-        btnAgain0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_AGAIN);
-            }
-        });
-        btnGood2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_GOOD);
-            }
-        });
+        btnHard1.setOnClickListener(v -> _processingAnswerCard(Card.EASE_HARD));
+        btnEasy3.setOnClickListener(v -> _processingAnswerCard(Card.EASE_EASY));
+        btnAgain0.setOnClickListener(v -> _processingAnswerCard(Card.EASE_AGAIN));
+        btnGood2.setOnClickListener(v -> _processingAnswerCard(Card.EASE_GOOD));
     }
 
     private void _processingAnswerCard(final int ea) {
@@ -460,22 +440,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerShowHelpShowAnswer() {
-        mHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogHelp();
-            }
-        });
+        mHelp.setOnClickListener(view -> showDialogHelp());
     }
 
 
     private void _handlerShowHelpAnswer(final String hard, final String medium, final String easy) {
-        mHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogAnswerHelp(hard, medium, easy);
-            }
-        });
+        mHelp.setOnClickListener(view -> showDialogAnswerHelp(hard, medium, easy));
     }
 
     private void showDialogAnswerHelp(String hard, String medium, String easy) {
@@ -508,12 +478,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     @SuppressLint("ClickableViewAccessibility")
     private void _handlerNote() {
         //Handler onclick
-        mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener._displayUserNote(currentCard);
-                Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
-            }
+        mFloatActionButtonUserNote.setOnClickListener(v -> {
+            mListener._displayUserNote(currentCard);
+            Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
         });
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -595,12 +562,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerImgGotoDictionary() {
-        imgGotoDictionary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setCurrentItem(1);
-            }
-        });
+        imgGotoDictionary.setOnClickListener(v -> mViewPager.setCurrentItem(1));
 
     }
 
@@ -708,20 +670,17 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerNextCardReverse() {
-        btnNextReverseCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reverseList.remove(0);//Remove revese
-                reverseList.add(dataBaseHelper.getReverseCard());//get new random reverse Card
-                _showBtnAnswer();
-                setEnableShowDictionary(false);
-                _nextReverseCard();
-                _handlerTimeShowAswerButton();
-                //
-                mShowAnswer.setVisibility(View.VISIBLE);
-                mFloatActionButtonUserNote.setVisibility(View.GONE);
-                imgGotoDictionary.setVisibility(View.GONE);
-            }
+        btnNextReverseCard.setOnClickListener(v -> {
+            reverseList.remove(0);//Remove revese
+            reverseList.add(dataBaseHelper.getReverseCard());//get new random reverse Card
+            _showBtnAnswer();
+            setEnableShowDictionary(false);
+            _nextReverseCard();
+            _handlerTimeShowAswerButton();
+            //
+            mShowAnswer.setVisibility(View.VISIBLE);
+            mFloatActionButtonUserNote.setVisibility(View.GONE);
+            imgGotoDictionary.setVisibility(View.GONE);
         });
     }
 

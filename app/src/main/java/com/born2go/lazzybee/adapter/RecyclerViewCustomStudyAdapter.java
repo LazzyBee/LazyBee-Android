@@ -120,12 +120,7 @@ public class RecyclerViewCustomStudyAdapter extends
                     _defineSetTimeShowAnswer(mCardView, timeSet);
                 } else if (setting.equals(context.getString(R.string.setting_reset_to_default))) {
                     lbLimit.setVisibility(View.GONE);
-                    mCardView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            _showConfirmResetToDefauls();
-                        }
-                    });
+                    mCardView.setOnClickListener(v -> _showConfirmResetToDefauls());
 
                 } else if (setting.equals(context.getString(R.string.setting_my_level))) {
                     getLevelandShowDialogChangeLevel(mCardView, lbLimit);
@@ -156,17 +151,14 @@ public class RecyclerViewCustomStudyAdapter extends
                 }
 
 
-                mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        String value;
-                        if (isChecked) {
-                            value = LazzyBeeShare.ON;
-                        } else {
-                            value = LazzyBeeShare.OFF;
-                        }
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_AUTO_PLAY_SOUND, value);
+                mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    String value;
+                    if (isChecked) {
+                        value = LazzyBeeShare.ON;
+                    } else {
+                        value = LazzyBeeShare.OFF;
                     }
+                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_AUTO_PLAY_SOUND, value);
                 });
             }
             //_reloadRecylerView();
@@ -195,20 +187,17 @@ public class RecyclerViewCustomStudyAdapter extends
         }
 
         //Hander switch
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String value;
-                if (isChecked) {
-                    value = LazzyBeeShare.ON;
-                    mSetPositionMeaning.setVisibility(View.VISIBLE);
-                } else {
-                    value = LazzyBeeShare.OFF;
-                    mSetPositionMeaning.setVisibility(View.GONE);
+        mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String value1;
+            if (isChecked) {
+                value1 = LazzyBeeShare.ON;
+                mSetPositionMeaning.setVisibility(View.VISIBLE);
+            } else {
+                value1 = LazzyBeeShare.OFF;
+                mSetPositionMeaning.setVisibility(View.GONE);
 
-                }
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING, value);
             }
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_DISPLAY_MEANING, value1);
         });
 
         int index = 0;
@@ -228,33 +217,22 @@ public class RecyclerViewCustomStudyAdapter extends
         final int finalIndex = index;
 
 
-        View.OnClickListener setPositionMeaning = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _showDialogSetPositionMeaning(finalIndex);
-            }
-        };
+        View.OnClickListener setPositionMeaning = v -> _showDialogSetPositionMeaning(finalIndex);
         mSetPositionMeaning.setOnClickListener(setPositionMeaning);
         lbPositionMeaning.setOnClickListener(setPositionMeaning);
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSwitch.isChecked())
-                    mSwitch.setChecked(false);
-                else
-                    mSwitch.setChecked(true);
-            }
+        mCardView.setOnClickListener(v -> {
+            if (mSwitch.isChecked())
+                mSwitch.setChecked(false);
+            else
+                mSwitch.setChecked(true);
         });
 
     }
 
     private void _defineSetTimeShowAnswer(RelativeLayout mCardView, final int timeSet) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogSetTimeShowAnswer dialogSetTimeShowAnswer = new DialogSetTimeShowAnswer(adapter, context, timeSet);
-                dialogSetTimeShowAnswer.show(supportFragmentManager, DialogSetTimeShowAnswer.TAG);
-            }
+        mCardView.setOnClickListener(v -> {
+            DialogSetTimeShowAnswer dialogSetTimeShowAnswer = new DialogSetTimeShowAnswer(adapter, context, timeSet);
+            dialogSetTimeShowAnswer.show(supportFragmentManager, DialogSetTimeShowAnswer.TAG);
         });
 
     }
@@ -272,12 +250,7 @@ public class RecyclerViewCustomStudyAdapter extends
 
         //handel oncllick
         final int finalLevel = level;
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _showDialogSelectLevel(finalLevel);
-            }
-        });
+        mCardView.setOnClickListener(v -> _showDialogSelectLevel(finalLevel));
     }
 
     private void _showDialogSelectLevel(int finalLevel) {
@@ -286,16 +259,14 @@ public class RecyclerViewCustomStudyAdapter extends
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(context.getString(R.string.dialog_title_change_my_level));
 
-        builder.setSingleChoiceItems(strlevels, (finalLevel == 1) ? 0 : finalLevel - 1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-                firebaseAnalytics.setUserProperty("Selected_level", String.valueOf(strlevels[item]));
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, strlevels[item]);
-                learnApiImplements._initIncomingCardIdListbyLevel(Integer.valueOf(strlevels[item]));
-                dialog.dismiss();
-                _reloadRecylerView();
+        builder.setSingleChoiceItems(strlevels, (finalLevel == 1) ? 0 : finalLevel - 1, (dialog, item) -> {
+            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            firebaseAnalytics.setUserProperty("Selected_level", String.valueOf(strlevels[item]));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, strlevels[item]);
+            learnApiImplements._initIncomingCardIdListbyLevel(Integer.valueOf(strlevels[item]));
+            dialog.dismiss();
+            _reloadRecylerView();
 
-            }
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -311,26 +282,22 @@ public class RecyclerViewCustomStudyAdapter extends
         builder.setTitle(R.string.dialog_title_reset_custom_study).setMessage(R.string.dialog_message_reset_custom_study);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
 
-                //KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT
-                //KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT
-                //KEY_SETTING_TODAY_NEW_CARD_LIMIT
-                // learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(LazzyBeeShare.DEFAULT_MY_LEVEL));
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER));
+            //KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT
+            //KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT
+            //KEY_SETTING_TODAY_NEW_CARD_LIMIT
+            // learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_LEARN_MORE_PER_DAY));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_TOTAL_LEAN_PER_DAY));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT, String.valueOf(LazzyBeeShare.DEFAULT_MAX_NEW_LEARN_PER_DAY));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_LEVEL, String.valueOf(LazzyBeeShare.DEFAULT_MY_LEVEL));
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_TIME_SHOW_ANSWER, String.valueOf(LazzyBeeShare.DEFAULT_TIME_SHOW_ANSWER));
 //                studyInferface._finishCustomStudy();
-                _reloadRecylerView();
-            }
+            _reloadRecylerView();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -400,12 +367,7 @@ public class RecyclerViewCustomStudyAdapter extends
         }
         lbLimit.setText(context.getString(R.string.setting_limit_card_number, value));
         final int finalValue = value;
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _showDialogConfirmSetLimitCard(key, finalValue);
-            }
-        });
+        mCardView.setOnClickListener(v -> _showDialogConfirmSetLimitCard(key, finalValue));
 
     }
 
@@ -441,122 +403,112 @@ public class RecyclerViewCustomStudyAdapter extends
         builder.setView(viewDialog);
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-                //main.hide();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
+            //main.hide();
         });
         builder.setPositiveButton(R.string.ok, null);
 
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        dialog.setOnShowListener(dialog1 -> {
 
-            @Override
-            public void onShow(DialogInterface dialog1) {
+            Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            b.setOnClickListener(view -> {
+                try {
+                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
-                Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        try {
-                            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-
-                            String limit;
-                            if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
-                                String erorr_message;
-                                if (txtLimit.getText().toString() == null) {
-                                    erorr_message = context.getString(R.string.custom_study_error_input_value);
-                                    lbEror.setText(erorr_message);
-                                } else {
-                                    limit = txtLimit.getText().toString();
-                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT + ":" + limit);
-                                    int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
-                                    if (Integer.valueOf(limit) > total) {
-                                        erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_total_learn_per_day) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
-                                        Log.e(TAG, erorr_message);
-                                        lbEror.setText(erorr_message);
-                                    } else if (Integer.valueOf(limit) < total && Integer.valueOf(limit) > LazzyBeeShare.MAX_NEW_PRE_DAY) {
-                                        erorr_message = context.getString(R.string.custom_study_eror_limit) + " < (" + context.getString(R.string.setting_limit_card_number, LazzyBeeShare.MAX_NEW_PRE_DAY) + ")";
-                                        Log.e(TAG, erorr_message);
-                                        lbEror.setText(erorr_message);
-                                    } else {
-                                        firebaseAnalytics.setUserProperty("Daily_new_word", String.valueOf(limit));
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("count", limit);
-                                        firebaseAnalytics.logEvent("Daily_total_word", bundle);
+                    String limit;
+                    if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT)) {
+                        String erorr_message;
+                        if (txtLimit.getText().toString() == null) {
+                            erorr_message = context.getString(R.string.custom_study_error_input_value);
+                            lbEror.setText(erorr_message);
+                        } else {
+                            limit = txtLimit.getText().toString();
+                            Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT + ":" + limit);
+                            int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
+                            if (Integer.valueOf(limit) > total) {
+                                erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_total_learn_per_day) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
+                                Log.e(TAG, erorr_message);
+                                lbEror.setText(erorr_message);
+                            } else if (Integer.valueOf(limit) < total && Integer.valueOf(limit) > LazzyBeeShare.MAX_NEW_PRE_DAY) {
+                                erorr_message = context.getString(R.string.custom_study_eror_limit) + " < (" + context.getString(R.string.setting_limit_card_number, LazzyBeeShare.MAX_NEW_PRE_DAY) + ")";
+                                Log.e(TAG, erorr_message);
+                                lbEror.setText(erorr_message);
+                            } else {
+                                firebaseAnalytics.setUserProperty("Daily_new_word", String.valueOf(limit));
+                                Bundle bundle = new Bundle();
+                                bundle.putString("count", limit);
+                                firebaseAnalytics.logEvent("Daily_total_word", bundle);
 
 
-                                        learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                        _resetQueueList(limit);
-                                        dialog.dismiss();
-                                        _reloadRecylerView();
-                                    }
-                                }
+                                learnApiImplements._insertOrUpdateToSystemTable(key, limit);
+                                _resetQueueList(limit);
+                                dialog.dismiss();
+                                _reloadRecylerView();
                             }
+                        }
+                    }
 //                            else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
 //
 //                            }
-                            else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
-                                String erorr_message;
-                                if (txtLimit.getText().toString() == null) {
-                                    erorr_message = context.getString(R.string.custom_study_error_input_value);
-                                    lbEror.setText(erorr_message);
-                                } else {
-                                    limit = txtLimit.getText().toString();
-                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT + ":" + limit);
-                                    int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-                                    if (Integer.valueOf(limit) < total) {
-                                        erorr_message = context.getString(R.string.custom_study_eror_limit) + " > " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
-                                        Log.e(TAG, erorr_message);
-                                        lbEror.setText(erorr_message);
-                                    } else {
-                                        learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                        //main.hide();
-                                        dialog.dismiss();
-                                        Log.e(TAG, "Update 2");
+                    else if (key.equals(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT)) {
+                        String erorr_message;
+                        if (txtLimit.getText().toString() == null) {
+                            erorr_message = context.getString(R.string.custom_study_error_input_value);
+                            lbEror.setText(erorr_message);
+                        } else {
+                            limit = txtLimit.getText().toString();
+                            Log.e(TAG, LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT + ":" + limit);
+                            int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+                            if (Integer.valueOf(limit) < total) {
+                                erorr_message = context.getString(R.string.custom_study_eror_limit) + " > " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
+                                Log.e(TAG, erorr_message);
+                                lbEror.setText(erorr_message);
+                            } else {
+                                learnApiImplements._insertOrUpdateToSystemTable(key, limit);
+                                //main.hide();
+                                dialog.dismiss();
+                                Log.e(TAG, "Update 2");
 //                                studyInferface._finishCustomStudy();
-                                        _reloadRecylerView();
-                                    }
-                                }
-                            } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
-                                String erorr_message;
-                                if (txtLimit.getText().toString() == null) {
-                                    erorr_message = context.getString(R.string.custom_study_error_input_value);
-                                    lbEror.setText(erorr_message);
-                                } else {
-                                    limit = txtLimit.getText().toString();
-                                    Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT + ":" + limit);
-                                    int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
-                                    if (Integer.valueOf(limit) > total) {
-                                        erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
-                                        Log.e(TAG, erorr_message);
-                                        lbEror.setText(erorr_message);
-                                    } else {
-                                        firebaseAnalytics.setUserProperty("Daily_total_word", String.valueOf(limit));
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("count", limit);
-                                        firebaseAnalytics.logEvent("Daily_total_word", bundle);
-                                        learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-                                        // main.hide();
-                                        dialog.dismiss();
-                                        Log.e(TAG, "Update 3");
-//                                studyInferface._finishCustomStudy();
-                                        _reloadRecylerView();
-                                    }
-                                }
+                                _reloadRecylerView();
                             }
-                        } catch (Exception e) {
-                            LazzyBeeShare.showErrorOccurred(context, "on Click set Limit", e);
-                            //noinspection AccessStaticViaInstance
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
+                        }
+                    } else if (key.equals(LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT)) {
+                        String erorr_message;
+                        if (txtLimit.getText().toString() == null) {
+                            erorr_message = context.getString(R.string.custom_study_error_input_value);
+                            lbEror.setText(erorr_message);
+                        } else {
+                            limit = txtLimit.getText().toString();
+                            Log.e(TAG, LazzyBeeShare.KEY_SETTING_TODAY_LEARN_MORE_PER_DAY_LIMIT + ":" + limit);
+                            int total = learnApiImplements._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
+                            if (Integer.valueOf(limit) > total) {
+                                erorr_message = context.getString(R.string.custom_study_eror_limit) + " < " + context.getString(R.string.setting_today_new_card_limit) + "(" + context.getString(R.string.setting_limit_card_number, total) + ")";
+                                Log.e(TAG, erorr_message);
+                                lbEror.setText(erorr_message);
+                            } else {
+                                firebaseAnalytics.setUserProperty("Daily_total_word", String.valueOf(limit));
+                                Bundle bundle = new Bundle();
+                                bundle.putString("count", limit);
+                                firebaseAnalytics.logEvent("Daily_total_word", bundle);
+                                learnApiImplements._insertOrUpdateToSystemTable(key, limit);
+                                // main.hide();
+                                dialog.dismiss();
+                                Log.e(TAG, "Update 3");
+//                                studyInferface._finishCustomStudy();
+                                _reloadRecylerView();
+                            }
                         }
                     }
-                });
-            }
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "on Click set Limit", e);
+                    //noinspection AccessStaticViaInstance
+                    LazzyBeeSingleton.getCrashlytics().logException(e);
+                }
+            });
         });
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
@@ -586,14 +538,12 @@ public class RecyclerViewCustomStudyAdapter extends
         final CharSequence[] values = {LazzyBeeShare.UP, LazzyBeeShare.DOWN};
 
 
-        builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                //Update position
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, values[item].toString());
-                dialog.cancel();
-                _reloadRecylerView();
+        builder.setSingleChoiceItems(items, index, (dialog, item) -> {
+            //Update position
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_POSITION_MEANIG, values[item].toString());
+            dialog.cancel();
+            _reloadRecylerView();
 
-            }
         });
         //builder.setView(viewDialog);
         // Get the AlertDialog from create()

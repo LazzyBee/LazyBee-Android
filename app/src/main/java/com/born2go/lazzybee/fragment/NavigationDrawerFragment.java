@@ -138,36 +138,33 @@ public class NavigationDrawerFragment extends Fragment {
             mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
             mRecyclerViewDrawerList.addOnItemTouchListener(
-                    new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            Object o = objects.get(position);
-                            if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
-                                selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
-                            } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
-                                selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_about))) {
-                                selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_dictionary))) {
-                                selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
-                            } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
-                                selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                            } else //noinspection ConstantConditions
-                                if (o instanceof Course) {
-                                selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_subject))) {
-                                selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_help))) {
-                                selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_statistical))) {
-                                selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_home))) {
-                                selectItem(LazzyBeeShare.DRAWER_HOME_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_test_your_voca))) {
-                                selectItem(LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX);
-                            }
-
+                    new RecyclerItemClickListener(context, (view1, position) -> {
+                        Object o = objects.get(position);
+                        if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
+                            selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
+                        } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
+                            selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_about))) {
+                            selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_dictionary))) {
+                            selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
+                        } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
+                            selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
+                        } else //noinspection ConstantConditions
+                            if (o instanceof Course) {
+                            selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_subject))) {
+                            selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_help))) {
+                            selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_statistical))) {
+                            selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_home))) {
+                            selectItem(LazzyBeeShare.DRAWER_HOME_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_test_your_voca))) {
+                            selectItem(LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX);
                         }
+
                     })
             );
             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
@@ -256,12 +253,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Defer code dependent on restoration of previous instance state.
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
+        mDrawerLayout.post(() -> mDrawerToggle.syncState());
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }

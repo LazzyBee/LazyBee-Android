@@ -44,25 +44,22 @@ public class SplashScreen extends Activity {
         thiz = this;
 
         LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // After config data is successfully fetched, it must be activated before newly fetched
-                            // values are returned.
-                            LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
-                        }
-                        _initSQlIte();
-                        _changeLanguage();
-                        _updateVersionDB();
-                        String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
-                        Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
-                        LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
-                        MobileAds.initialize(thiz, ADMOB_PUB_ID);
-                        learnApiImplements._get100Card();
-
-                        startMainActivity(ADMOB_PUB_ID);
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // After config data is successfully fetched, it must be activated before newly fetched
+                        // values are returned.
+                        LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
                     }
+                    _initSQlIte();
+                    _changeLanguage();
+                    _updateVersionDB();
+                    String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                    Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
+                    LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
+                    MobileAds.initialize(thiz, ADMOB_PUB_ID);
+                    learnApiImplements._get100Card();
+
+                    startMainActivity(ADMOB_PUB_ID);
                 });
     }
 
@@ -96,10 +93,7 @@ public class SplashScreen extends Activity {
         alertDialog.setTitle("Error");
         alertDialog.setMessage(getResources().getString(stringKey));
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                "OK", (dialog, which) -> {
                 });
         alertDialog.show();
     }

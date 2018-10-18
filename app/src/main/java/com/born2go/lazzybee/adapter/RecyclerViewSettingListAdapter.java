@@ -252,23 +252,17 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _backupDatabase(RelativeLayout mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int mini = 1;
-                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
-                exportDatabaseToCSV.execute();
-            }
+        mCardView.setOnClickListener(v -> {
+            int mini = 1;
+            BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
+            exportDatabaseToCSV.execute();
         });
     }
 
     private void _importDatabasesFormCVS(RelativeLayout mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SettingActivity.verifyStoragePermissions(activity))
-                    _restoreDatabase();
-            }
+        mCardView.setOnClickListener(v -> {
+            if (SettingActivity.verifyStoragePermissions(activity))
+                _restoreDatabase();
         });
     }
 
@@ -279,31 +273,20 @@ public class RecyclerViewSettingListAdapter extends
         View viewDialog = View.inflate(context, R.layout.dialog_set_my_backup_key, null);
         final EditText lbMybackupkey = (EditText) viewDialog.findViewById(R.id.lbMybackupkey);
 
-        lbMybackupkey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
+        lbMybackupkey.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
             }
         });
         builder.setView(viewDialog);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String getBackupKey = lbMybackupkey.getText().toString();
-                lbMybackupkey.clearFocus();
-                DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, false, LazzyBeeShare.EMPTY, getBackupKey);
-                downloadAndRestoreDatabaseFormCSV.execute();
-                dialog.dismiss();
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            String getBackupKey = lbMybackupkey.getText().toString();
+            lbMybackupkey.clearFocus();
+            DownloadAndRestoreDatabaseFormCSV downloadAndRestoreDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, false, LazzyBeeShare.EMPTY, getBackupKey);
+            downloadAndRestoreDatabaseFormCSV.execute();
+            dialog.dismiss();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -337,31 +320,15 @@ public class RecyclerViewSettingListAdapter extends
         types[1] = "Mini-Only Card Learned";
         final int[] type = new int[1];
         builder.setTitle(R.string.setting_back_up_database);
-        builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                type[0] = item;
-            }
+        builder.setSingleChoiceItems(types, 0, (dialog, item) -> type[0] = item);
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, type[0]);
+            exportDatabaseToCSV.execute();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, type[0]);
-                exportDatabaseToCSV.execute();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+        mCardView.setOnClickListener(v -> {
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
     }
 
@@ -439,13 +406,10 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _gotoCustomStudySetting(RelativeLayout mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CustomStudySettingActivity.class);
-                context.startActivity(intent);
+        mCardView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, CustomStudySettingActivity.class);
+            context.startActivity(intent);
 
-            }
         });
     }
 
@@ -489,186 +453,153 @@ public class RecyclerViewSettingListAdapter extends
         }
 
 
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String value;
-                if (isChecked) {
-                    txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
-                    value = LazzyBeeShare.ON;
-                    mSetUpNotification.setVisibility(View.VISIBLE);
-                    LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
-                } else {
-                    value = LazzyBeeShare.OFF;
-                    mSetUpNotification.setVisibility(View.GONE);
-                    LazzyBeeShare._cancelNotification(context);
-                }
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
+        mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String value12;
+            if (isChecked) {
+                txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, LazzyBeeShare.DEFAULT_TIME_NOTIFICATION));
+                value12 = LazzyBeeShare.ON;
+                mSetUpNotification.setVisibility(View.VISIBLE);
+                LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
+            } else {
+                value12 = LazzyBeeShare.OFF;
+                mSetUpNotification.setVisibility(View.GONE);
+                LazzyBeeShare._cancelNotification(context);
             }
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value12);
         });
 
-        View.OnClickListener mSOnclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String value;
-                if (!mSwitch.isChecked()) {
-                    mSwitch.setChecked(true);
-                    value = LazzyBeeShare.ON;
-                    mSetUpNotification.setVisibility(View.VISIBLE);
-                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION));
-                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION));
-                } else {
-                    mSwitch.setChecked(false);
-                    value = LazzyBeeShare.OFF;
-                    mSetUpNotification.setVisibility(View.GONE);
-                }
-                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value);
+        View.OnClickListener mSOnclick = v -> {
+            String value1;
+            if (!mSwitch.isChecked()) {
+                mSwitch.setChecked(true);
+                value1 = LazzyBeeShare.ON;
+                mSetUpNotification.setVisibility(View.VISIBLE);
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION));
+            } else {
+                mSwitch.setChecked(false);
+                value1 = LazzyBeeShare.OFF;
+                mSetUpNotification.setVisibility(View.GONE);
             }
+            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, value1);
         };
         mCardView.setOnClickListener(mSOnclick);
 
-        mSetUpNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int hour = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
-                int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
-                Log.d(TAG, hour + ":" + minute);
-                // Create a new instance of TimePickerDialog and return it
-                CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String hour_str = String.valueOf(hourOfDay);
-                        String minute_str = String.valueOf(minute);
+        mSetUpNotification.setOnClickListener(v -> {
+            int hour = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
+            int minute = learnApiImplements.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION);
+            Log.d(TAG, hour + ":" + minute);
+            // Create a new instance of TimePickerDialog and return it
+            CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(context, (view, hourOfDay, minute1) -> {
+                String hour_str1 = String.valueOf(hourOfDay);
+                String minute_str1 = String.valueOf(minute1);
 
-                        if (hourOfDay < 10) {
-                            hour_str = "0" + hourOfDay;
-                        }
-                        if (minute < 10) {
-                            minute_str = "0" + minute;
-                        }
-                        String time = String.valueOf(hour_str + ":" + minute_str);
-                        txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time));
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(hourOfDay));
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(minute));
-                        LazzyBeeShare._setUpNotification(context, hourOfDay, minute);
-                    }
-                }, hour, minute, true);
-                timePickerDialog.setTitle("Select Date");
-                timePickerDialog.show();
+                if (hourOfDay < 10) {
+                    hour_str1 = "0" + hourOfDay;
+                }
+                if (minute1 < 10) {
+                    minute_str1 = "0" + minute1;
+                }
+                String time1 = String.valueOf(hour_str1 + ":" + minute_str1);
+                txtTimeNotification.setText(context.getString(R.string.setting_set_time_notification, time1));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION, String.valueOf(hourOfDay));
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MINUTE_NOTIFICATION, String.valueOf(minute1));
+                LazzyBeeShare._setUpNotification(context, hourOfDay, minute1);
+            }, hour, minute, true);
+            timePickerDialog.setTitle("Select Date");
+            timePickerDialog.show();
 
-            }
         });
     }
 
     private void _showDialogExecuteQueue(RelativeLayout mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mCardView.setOnClickListener(v -> {
 
-                //Define dialogExecuteEuery
-                LayoutInflater li = LayoutInflater.from(context);
-                View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
+            //Define dialogExecuteEuery
+            LayoutInflater li = LayoutInflater.from(context);
+            View dialogExecuteEuery = li.inflate(R.layout.dialog_execute_query, null);
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
-                builder.setView(dialogExecuteEuery);
+            builder.setView(dialogExecuteEuery);
 
-                //Define txtQuery
-                final EditText txtQuery = (EditText) dialogExecuteEuery.findViewById(R.id.txtQuery);
+            //Define txtQuery
+            final EditText txtQuery = (EditText) dialogExecuteEuery.findViewById(R.id.txtQuery);
 
-                // Add the buttons
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dialog.cancel();
+            // Add the buttons
+            builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+                // User cancelled the dialog
+                dialog.cancel();
+            });
+            builder.setPositiveButton(R.string.action_query, (dialog, id) -> {
+                String query = txtQuery.getText().toString();
+                if (query != null || query.length() > 1) {
+                    int result = learnApiImplements.executeQuery(query);
+                    if (result == 1) {
+                        Toast.makeText(context, "Execute Ok", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Execute Error", Toast.LENGTH_SHORT).show();
                     }
-                });
-                builder.setPositiveButton(R.string.action_query, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String query = txtQuery.getText().toString();
-                        if (query != null || query.length() > 1) {
-                            int result = learnApiImplements.executeQuery(query);
-                            if (result == 1) {
-                                Toast.makeText(context, "Execute Ok", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, "Execute Error", Toast.LENGTH_SHORT).show();
-                            }
 
-                        }
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
+                }
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
 
-                dialog.show();
-            }
+            dialog.show();
         });
     }
 
     private void _exportDatabases(RelativeLayout mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+        mCardView.setOnClickListener(v -> {
+            // Instantiate an AlertDialog.Builder with its constructor
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
-                // Chain together various setter methods to set the dialog characteristics
-                builder.setTitle(R.string.dialog_title_export_database);
+            // Chain together various setter methods to set the dialog characteristics
+            builder.setTitle(R.string.dialog_title_export_database);
 
-                // Add the buttons
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dialog.cancel();
-                    }
-                });
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        learnApiImplements._exportDateBaseFile();
-                        Toast.makeText(context, R.string.dialog_title_export_database, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
+            // Add the buttons
+            builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+                // User cancelled the dialog
+                dialog.cancel();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+                learnApiImplements._exportDateBaseFile();
+                Toast.makeText(context, R.string.dialog_title_export_database, Toast.LENGTH_SHORT).show();
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
 
-                dialog.show();
-            }
+            dialog.show();
         });
     }
 
     private void _resetCache(RelativeLayout mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Instantiate an AlertDialog.Builder with its constructor
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+        mCardView.setOnClickListener(v -> {
+            // Instantiate an AlertDialog.Builder with its constructor
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
-                // Chain together various setter methods to set the dialog characteristics
-                builder.setTitle(R.string.dialog_title_clear_cache_and_restart_app);
+            // Chain together various setter methods to set the dialog characteristics
+            builder.setTitle(R.string.dialog_title_clear_cache_and_restart_app);
 
-                // Add the buttons
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dialog.cancel();
-                    }
-                });
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //Clean cache
-                        learnApiImplements.cleanCache();
-                        //restart app
-                        Intent i = context.getPackageManager()
-                                .getLaunchIntentForPackage(context.getPackageName());
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        context.startActivity(i);
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
+            // Add the buttons
+            builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+                // User cancelled the dialog
+                dialog.cancel();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+                //Clean cache
+                learnApiImplements.cleanCache();
+                //restart app
+                Intent i = context.getPackageManager()
+                        .getLaunchIntentForPackage(context.getPackageName());
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(i);
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
 
-                dialog.show();
-            }
+            dialog.show();
         });
     }
 
@@ -694,40 +625,35 @@ public class RecyclerViewSettingListAdapter extends
 
         lbLimit.setText(items[index]);
         final int finalIndex = index;
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mCardView.setOnClickListener(v -> {
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
-                builder.setTitle(context.getString(R.string.dialog_title_change_speech_rate));
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+            builder.setTitle(context.getString(R.string.dialog_title_change_speech_rate));
 
 
-                builder.setSingleChoiceItems(items, finalIndex, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        float speechRate = 1.0f;
-                        if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
-                            speechRate = 0.7f;
-                        } else if (items[item].equals(context.getString(R.string.speech_rate_slow))) {
-                            speechRate = 0.9f;
-                        } else if (items[item].equals(context.getString(R.string.speech_rate_normal))) {
-                            speechRate = 1.0f;
-                        } else if (items[item].equals(context.getString(R.string.speech_rate_fast))) {
-                            speechRate = 1.1f;
-                        } else if (items[item].equals(context.getString(R.string.speech_rate_very_fast))) {
-                            speechRate = 1.3f;
-                        }
-                        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
-                        dialog.cancel();
-                        _reloadRecylerView();
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
+            builder.setSingleChoiceItems(items, finalIndex, (dialog, item) -> {
+                float speechRate = 1.0f;
+                if (items[item].equals(context.getString(R.string.speech_rate_very_slow))) {
+                    speechRate = 0.7f;
+                } else if (items[item].equals(context.getString(R.string.speech_rate_slow))) {
+                    speechRate = 0.9f;
+                } else if (items[item].equals(context.getString(R.string.speech_rate_normal))) {
+                    speechRate = 1.0f;
+                } else if (items[item].equals(context.getString(R.string.speech_rate_fast))) {
+                    speechRate = 1.1f;
+                } else if (items[item].equals(context.getString(R.string.speech_rate_very_fast))) {
+                    speechRate = 1.3f;
+                }
+                learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_SPEECH_RATE, String.valueOf(speechRate));
+                dialog.cancel();
+                _reloadRecylerView();
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
 
-                dialog.show();
+            dialog.show();
 
 
-            }
         });
     }
 
@@ -756,12 +682,7 @@ public class RecyclerViewSettingListAdapter extends
         }
         lbLimit.setText(context.getString(R.string.setting_limit_card_number, value));
         final int finalValue = value;
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _showDialogConfirmSetLimitCard(key, finalValue);
-            }
-        });
+        mCardView.setOnClickListener(v -> _showDialogConfirmSetLimitCard(key, finalValue));
 
     }
 
@@ -791,18 +712,14 @@ public class RecyclerViewSettingListAdapter extends
         builder.setView(viewDialog);
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
 
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                String limit = txtLimit.getText().toString();
-                learnApiImplements._insertOrUpdateToSystemTable(key, limit);
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            String limit = txtLimit.getText().toString();
+            learnApiImplements._insertOrUpdateToSystemTable(key, limit);
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -811,49 +728,44 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void changeLanguage(View mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
-                builder.setTitle(context.getString(R.string.change_language));
-                final CharSequence[] items = {context.getString(R.string.lang_english), context.getString(R.string.lang_viet)};
-                int index;
-                String lang = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
+        mCardView.setOnClickListener(v -> {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
+            builder.setTitle(context.getString(R.string.change_language));
+            final CharSequence[] items = {context.getString(R.string.lang_english), context.getString(R.string.lang_viet)};
+            int index;
+            String lang = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_LANGUAGE);
 
-                if (lang != null) {
-                    if (lang.equals(LazzyBeeShare.LANG_VI)) {
-                        index = 1;
-                        //Log.i(TAG, "lang:" + lang + ",index:" + index);
-                    } else {
-                        index = 0;
-                    }
-                } else {
+            if (lang != null) {
+                if (lang.equals(LazzyBeeShare.LANG_VI)) {
                     index = 1;
+                    //Log.i(TAG, "lang:" + lang + ",index:" + index);
+                } else {
+                    index = 0;
                 }
-
-
-                builder.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-                        firebaseAnalytics.setUserProperty("Selected_language", String.valueOf(items[item]));
-                        // Do something with the selection
-                        if (items[item] == context.getString(R.string.lang_english)) {
-                            //Log.i(TAG, getString(R.string.lang_english) + " click");
-                            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_LANGUAGE, LazzyBeeShare.LANG_EN);
-                            _showDialogConfirmRestartApp();
-                        } else if (items[item] == context.getString(R.string.lang_viet)) {
-                            //Log.i(TAG, getString(R.string.lang_viet) + " click");
-                            learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_LANGUAGE, LazzyBeeShare.LANG_VI);
-                            _showDialogConfirmRestartApp();
-                        }
-                        dialog.cancel();
-                    }
-                });
-                // Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
+            } else {
+                index = 1;
             }
+
+
+            builder.setSingleChoiceItems(items, index, (dialog, item) -> {
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                firebaseAnalytics.setUserProperty("Selected_language", String.valueOf(items[item]));
+                // Do something with the selection
+                if (items[item] == context.getString(R.string.lang_english)) {
+                    //Log.i(TAG, getString(R.string.lang_english) + " click");
+                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_LANGUAGE, LazzyBeeShare.LANG_EN);
+                    _showDialogConfirmRestartApp();
+                } else if (items[item] == context.getString(R.string.lang_viet)) {
+                    //Log.i(TAG, getString(R.string.lang_viet) + " click");
+                    learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_LANGUAGE, LazzyBeeShare.LANG_VI);
+                    _showDialogConfirmRestartApp();
+                }
+                dialog.cancel();
+            });
+            // Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
         });
 
     }
@@ -867,20 +779,16 @@ public class RecyclerViewSettingListAdapter extends
                 .setTitle(R.string.dialog_title_restart_app);
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //restart app
-                Intent i = context.getPackageManager()
-                        .getLaunchIntentForPackage(context.getPackageName());
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(i);
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            //restart app
+            Intent i = context.getPackageManager()
+                    .getLaunchIntentForPackage(context.getPackageName());
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(i);
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -901,32 +809,26 @@ public class RecyclerViewSettingListAdapter extends
         else {
             mSwitch.setChecked(false);
         }
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String value;
-                if (isChecked) {
-                    value = LazzyBeeShare.ON;
-                } else {
-                    value = LazzyBeeShare.OFF;
-                }
-                learnApiImplements._insertOrUpdateToSystemTable(key, value);
+        mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String value12;
+            if (isChecked) {
+                value12 = LazzyBeeShare.ON;
+            } else {
+                value12 = LazzyBeeShare.OFF;
             }
+            learnApiImplements._insertOrUpdateToSystemTable(key, value12);
         });
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(context, R.string.setting_auto_check_update, Toast.LENGTH_SHORT).show();
-                String value;
-                if (!mSwitch.isChecked()) {
-                    mSwitch.setChecked(true);
-                    value = LazzyBeeShare.ON;
-                } else {
-                    mSwitch.setChecked(false);
-                    value = LazzyBeeShare.OFF;
-                }
-                learnApiImplements._insertOrUpdateToSystemTable(key, value);
+        mCardView.setOnClickListener(v -> {
+            //Toast.makeText(context, R.string.setting_auto_check_update, Toast.LENGTH_SHORT).show();
+            String value1;
+            if (!mSwitch.isChecked()) {
+                mSwitch.setChecked(true);
+                value1 = LazzyBeeShare.ON;
+            } else {
+                mSwitch.setChecked(false);
+                value1 = LazzyBeeShare.OFF;
             }
+            learnApiImplements._insertOrUpdateToSystemTable(key, value1);
         });
     }
 
@@ -1024,14 +926,11 @@ public class RecyclerViewSettingListAdapter extends
     }
 
     private void _onClickCheckUpdate(View mCardView) {
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LazzyBeeShare.checkConn(context)) {
-                    _checkUpdate();
-                } else {
-                    Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
-                }
+        mCardView.setOnClickListener(v -> {
+            if (LazzyBeeShare.checkConn(context)) {
+                _checkUpdate();
+            } else {
+                Toast.makeText(context, R.string.failed_to_connect_to_server, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1055,23 +954,19 @@ public class RecyclerViewSettingListAdapter extends
                 .setTitle(R.string.dialog_title_update);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked Update button
-                //1.Download file from server
-                //2.Open database
-                //3.Upgade to my database
-                //4.Remove file update
-                _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
+        builder.setPositiveButton(R.string.btn_update, (dialog, id) -> {
+            // User clicked Update button
+            //1.Download file from server
+            //2.Open database
+            //3.Upgade to my database
+            //4.Remove file update
+            _updateDB(LazzyBeeShare.DOWNLOAD_UPDATE);
 
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -1082,32 +977,29 @@ public class RecyclerViewSettingListAdapter extends
 
     private void _downloadFile() {
         try {
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(activity, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String base_url = "http://222.255.29.25/lazzybee/";
-                    if (task.isSuccessful()) {
-                        base_url = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.BASE_URL_DB);
-                    }
-                    String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
-                    int version = LazzyBeeShare.DEFAULT_VERSION_DB;
-                    if (db_v != null) {
-                        version = Integer.valueOf(db_v);
-                    }
-                    String dbUpdateName = (version + 1) + ".db";
-                    String download_url = base_url + dbUpdateName;
-                    Log.i(TAG, "download_url=" + download_url);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(activity, task -> {
+                String base_url = "http://222.255.29.25/lazzybee/";
+                if (task.isSuccessful()) {
+                    base_url = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.BASE_URL_DB);
+                }
+                String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
+                int version = LazzyBeeShare.DEFAULT_VERSION_DB;
+                if (db_v != null) {
+                    version = Integer.valueOf(db_v);
+                }
+                String dbUpdateName = (version + 1) + ".db";
+                String download_url = base_url + dbUpdateName;
+                Log.i(TAG, "download_url=" + download_url);
 
-                    if (!base_url.isEmpty() || base_url != null) {
+                if (!base_url.isEmpty() || base_url != null) {
 
-                        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+                    DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
 
-                        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-                        downloadFileandUpdateDatabase.execute(download_url);
-                        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = thiz;
-                    } else {
-                        Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
-                    }
+                    //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+                    downloadFileandUpdateDatabase.execute(download_url);
+                    downloadFileandUpdateDatabase.downloadFileDatabaseResponse = thiz;
+                } else {
+                    Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
                 }
             });
 

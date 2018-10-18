@@ -70,35 +70,29 @@ public class DialogCompleteStudy extends DialogFragment {
             LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
         Button btnDone = (Button) view.findViewById(R.id.btnDone);
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().cancel();
-                if (iCompleteSutdy != null) {
-                    iCompleteSutdy.close();
-                } else {
-                    if (getActivity() != null) {
-                        getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000);
-                        getActivity().finish();
-                    }
+        btnDone.setOnClickListener(v -> {
+            getDialog().cancel();
+            if (iCompleteSutdy != null) {
+                iCompleteSutdy.close();
+            } else {
+                if (getActivity() != null) {
+                    getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000);
+                    getActivity().finish();
                 }
-
-
             }
+
+
         });
 
         return view;
     }
 
     private void _handlerCompleteStudyLinkClick(View view) {
-        view.findViewById(R.id.lbCompleteLink).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = getString(R.string.complele_text_display_link);
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
+        view.findViewById(R.id.lbCompleteLink).setOnClickListener(v -> {
+            String url = getString(R.string.complele_text_display_link);
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
         });
     }
 

@@ -156,18 +156,15 @@ public class MainActivity extends AppCompatActivity
                 .build();
         //load video
         mAd.setRewardedVideoAdListener(this);
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                String adv_streak_saver = null;
-                if (task.isSuccessful()) {
-                    adv_streak_saver = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_STREAK_SAVER);
-                }
-                if (adv_pub_id != null && adv_streak_saver != null) {
-                    mAd.loadAd(adv_pub_id + "/" + adv_streak_saver, adRequest);
-                }
-
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+            String adv_streak_saver = null;
+            if (task.isSuccessful()) {
+                adv_streak_saver = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_STREAK_SAVER);
             }
+            if (adv_pub_id != null && adv_streak_saver != null) {
+                mAd.loadAd(adv_pub_id + "/" + adv_streak_saver, adRequest);
+            }
+
         });
 
     }
@@ -258,21 +255,18 @@ public class MainActivity extends AppCompatActivity
 
 
         //get number in remote config firebase
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
-                if (task.isSuccessful()) {
-                    numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
-                }
-                //Check streack
-                if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
-                    //Show dialog view video to fill streak
-                    _showDialogConfirmFillStreak();
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+            int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
+            if (task.isSuccessful()) {
+                numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
+            }
+            //Check streack
+            if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
+                //Show dialog view video to fill streak
+                _showDialogConfirmFillStreak();
 
-                } else {
-                    Log.d(TAG, "Not record to fill streak");
-                }
+            } else {
+                Log.d(TAG, "Not record to fill streak");
             }
         });
 
@@ -282,25 +276,17 @@ public class MainActivity extends AppCompatActivity
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage(getString(R.string.play_video_to_save_streak));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mAd.isLoaded())//Ads is load to check
-                    mAd.show();
-                else {
-                    Log.d(TAG, "Ads save streak not loader");
-                    _fillStreak();
-                }
-                dialog.dismiss();
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            if (mAd.isLoaded())//Ads is load to check
+                mAd.show();
+            else {
+                Log.d(TAG, "Ads save streak not loader");
+                _fillStreak();
+            }
+            dialog.dismiss();
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, i) -> dialog.dismiss());
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 
@@ -312,31 +298,28 @@ public class MainActivity extends AppCompatActivity
         try {
             final String admob_pub_id = adv_pub_id;//"ca-app-pub-5245864792816840";
             final String[] adv_fullscreen_id = {LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID)};//"9210342219";
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        adv_fullscreen_id[0] = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
-                    }
-                    if (admob_pub_id != null && adv_fullscreen_id[0] != null) {
-                        String advId = admob_pub_id + "/" + adv_fullscreen_id[0];
-                        Log.d(TAG, "adv_fullscreen_id:" + advId);
-                        mInterstitialAd = new InterstitialAd(context);
-                        mInterstitialAd.setAdUnitId(advId);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    adv_fullscreen_id[0] = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
+                }
+                if (admob_pub_id != null && adv_fullscreen_id[0] != null) {
+                    String advId = admob_pub_id + "/" + adv_fullscreen_id[0];
+                    Log.d(TAG, "adv_fullscreen_id:" + advId);
+                    mInterstitialAd = new InterstitialAd(context);
+                    mInterstitialAd.setAdUnitId(advId);
 
-                        mInterstitialAd.setAdListener(new AdListener() {
-                            @Override
-                            public void onAdClosed() {
-                                requestNewInterstitial();
-                                _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
-                            }
-                        });
+                    mInterstitialAd.setAdListener(new AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            requestNewInterstitial();
+                            _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+                        }
+                    });
 
-                        requestNewInterstitial();
-                    } else {
-                        Log.d(TAG, "InterstitialAdId null");
-                        mInterstitialAd = null;
-                    }
+                    requestNewInterstitial();
+                } else {
+                    Log.d(TAG, "InterstitialAdId null");
+                    mInterstitialAd = null;
                 }
             });
 
@@ -464,12 +447,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar
                         .make(this.coordinatorLayout, messgage_congratilation, Snackbar.LENGTH_LONG);
         View snackBarView = snackbarCongraturation.getView();
-        snackBarView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbarCongraturation.dismiss();
-            }
-        });
+        snackBarView.setOnClickListener(v -> snackbarCongraturation.dismiss());
         snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
         new CountDownTimer(3000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -691,139 +669,115 @@ public class MainActivity extends AppCompatActivity
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
         final int[] seleted_index = {0};
         final int[] checker = {-1};
-        cbIt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 0;
-                } else {
-                    checker[0] = -2;
-                }
+        cbIt.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 0;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbEconomy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 1;
-                } else {
-                    checker[0] = -2;
-                }
+        cbEconomy.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 1;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbScience.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 2;
-                } else {
-                    checker[0] = -2;
-                }
+        cbScience.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 2;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbMedicine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 3;
-                } else {
-                    checker[0] = -2;
-                }
+        cbMedicine.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 3;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbIelts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 4;
-                } else {
-                    checker[0] = -2;
-                }
+        cbIelts.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 4;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbx600Toeic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    checker[0] = 5;
-                } else {
-                    checker[0] = -2;
-                }
+        cbx600Toeic.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                checker[0] = 5;
+            } else {
+                checker[0] = -2;
             }
         });
         builder.setView(mSelectMajor);
 
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-                String subjectSelected;
-                if (checker[0] > -1) {
-                    subjectSelected = String.valueOf(items_value[checker[0]]);
-                    //save my subjects
-                    dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
+        builder.setPositiveButton(R.string.save, (dialog, id) -> {
+            int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+            String subjectSelected;
+            if (checker[0] > -1) {
+                subjectSelected = String.valueOf(items_value[checker[0]]);
+                //save my subjects
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
 
-                    //reset incomming list
-                    dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
-                    LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(subjectSelected));
-                } else if (checker[0] == -2) {
-                    //save my subjects
-                    dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(subjectSelected));
+            } else if (checker[0] == -2) {
+                //save my subjects
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
 
-                    //reset incomming list
-                    dataBaseHelper._initIncomingCardIdList();
-                    LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(""));
-                }
-
-                dialog.cancel();
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdList();
+                LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(""));
             }
+
+            dialog.cancel();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
 
@@ -854,12 +808,7 @@ public class MainActivity extends AppCompatActivity
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage(Html.fromHtml(message));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 
@@ -950,26 +899,22 @@ public class MainActivity extends AppCompatActivity
                 .setTitle(R.string.dialog_title_update);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked Update button
-                //1.Download file from server
-                //2.Open database
-                //3.Upgade to my database
-                //4.Remove file update
-                if (type == LazzyBeeShare.DOWNLOAD_UPDATE) {
-                    _downloadFile();
-                } else {
-                    _updateDB(type);
-                }
+        builder.setPositiveButton(R.string.btn_update, (dialog, id) -> {
+            // User clicked Update button
+            //1.Download file from server
+            //2.Open database
+            //3.Upgade to my database
+            //4.Remove file update
+            if (type == LazzyBeeShare.DOWNLOAD_UPDATE) {
+                _downloadFile();
+            } else {
+                _updateDB(type);
+            }
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -1143,30 +1088,26 @@ public class MainActivity extends AppCompatActivity
                 .setTitle(R.string.dialog_title_learn_more);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                if (mInterstitialAd == null) {
-                    _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            // User clicked OK button
+            if (mInterstitialAd == null) {
+                _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+            } else {
+                if (mInterstitialAd.isLoaded()) {
+                    // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+                    mInterstitialAd.show();
+
                 } else {
-                    if (mInterstitialAd.isLoaded()) {
-                        // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
-                        mInterstitialAd.show();
+                    //ko load van sang study
+                    _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
 
-                    } else {
-                        //ko load van sang study
-                        _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
-
-                    }
                 }
+            }
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -1227,21 +1168,17 @@ public class MainActivity extends AppCompatActivity
                 .setTitle(R.string.title_backup_database);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.btnBackUp, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //  _updateDB(type);
-                @SuppressLint("HardwareIds") String device_id = Settings.Secure.getString(context.getContentResolver(),
-                        Settings.Secure.ANDROID_ID);
-                int mini = 1;
-                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
-                exportDatabaseToCSV.execute();
-            }
+        builder.setPositiveButton(R.string.btnBackUp, (dialog, id) -> {
+            //  _updateDB(type);
+            @SuppressLint("HardwareIds") String device_id = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            int mini = 1;
+            BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
+            exportDatabaseToCSV.execute();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -1292,31 +1229,23 @@ public class MainActivity extends AppCompatActivity
 
                 View snackBarView = snackbarTip.getView();
                 final String finalPopup_url = popup_url;
-                snackBarView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            snackbarTip.dismiss();
-                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
-                            startActivity(myIntent);
-                        } catch (ActivityNotFoundException e) {
-                            Log.e(TAG, "No application can handle this request."
-                                    + " Please install a webbrowser");
-                            //noinspection AccessStaticViaInstance
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                        }
+                snackBarView.setOnClickListener(v -> {
+                    try {
+                        snackbarTip.dismiss();
+                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
+                        startActivity(myIntent);
+                    } catch (ActivityNotFoundException e) {
+                        Log.e(TAG, "No application can handle this request."
+                                + " Please install a webbrowser");
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
                     }
                 });
                 snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
 
                 snackbarTip.show();
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        snackbarTip.dismiss();
-                    }
-                }, 7000);
+                handler.postDelayed(() -> snackbarTip.dismiss(), 7000);
 //                new CountDownTimer(3000, 1000) {
 //                    public void onTick(long millisUntilFinished) {
 //                    }
