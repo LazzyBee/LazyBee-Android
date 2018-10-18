@@ -84,7 +84,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
     private void getIncomingList() {
         final List<Card> vocabularies = dataBaseHelper._getIncomingListCard();
 
-        lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
+        lbCountReviewCard.setText(String.valueOf(getString(R.string.message_total_card_incoming) + vocabularies.size()));
         lbCountReviewCard.setTag(vocabularies.size());
         //Init Adapter
         incomingListAdapter =
@@ -293,7 +293,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
             List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
 
             //set count
-            lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + fillUpCards.size());
+            lbCountReviewCard.setText(String.valueOf(getString(R.string.message_total_card_incoming) + fillUpCards.size()));
             lbCountReviewCard.setTag(fillUpCards.size());
 
             //Reset adapter incoming list

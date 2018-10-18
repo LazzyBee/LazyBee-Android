@@ -228,7 +228,7 @@ public class DialogStatistics extends DialogFragment {
             TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
             ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
             //
-            lbCountStreak.setText(count + " " + getString(R.string.streak_day));
+            lbCountStreak.setText(String.valueOf(count + " " + getString(R.string.streak_day)));
 
             //set animation
             Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);

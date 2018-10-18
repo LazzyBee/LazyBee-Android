@@ -226,12 +226,12 @@ public class RecyclerViewSettingListAdapter extends
                     if (db_v != null) {
                         _dbVesion = Integer.valueOf(db_v);
                     }
-                    lbAppVersion.setText("AppVersion:" + BuildConfig.VERSION_NAME);
-                    lbDbVersion.setText("DBVersion:" + _dbVesion);
+                    lbAppVersion.setText(String.valueOf("AppVersion:" + BuildConfig.VERSION_NAME));
+                    lbDbVersion.setText(String.valueOf("DBVersion:" + _dbVesion));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    lbAppVersion.setText("AppVersion:" + versionName);
-                    lbDbVersion.setText("DBVersion:" + _dbVesion);
+                    lbAppVersion.setText(String.valueOf("AppVersion:" + versionName));
+                    lbDbVersion.setText(String.valueOf("DBVersion:" + _dbVesion));
                     //noinspection AccessStaticViaInstance
                     LazzyBeeSingleton.getCrashlytics().logException(e);
                 }

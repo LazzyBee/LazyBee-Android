@@ -184,7 +184,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
             learnApiImplements.saveIncomingCardIdList(learnApiImplements._converlistCardToListCardId(vocabularies));
 
             //set size
-            lbCountReviewCard.setText(context.getString(R.string.message_total_card_incoming) + vocabularies.size());
+            lbCountReviewCard.setText(String.valueOf(context.getString(R.string.message_total_card_incoming) + vocabularies.size()));
             lbCountReviewCard.setTag(vocabularies.size());
             //reset adapter
             //mRecyclerViewReviewTodayList.setAdapter(this);

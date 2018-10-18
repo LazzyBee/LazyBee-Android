@@ -101,9 +101,9 @@ public class DialogSetTimeShowAnswer extends DialogFragment {
         final ImageView imgDone7s = (ImageView) mSetTime7s.findViewById(R.id.imgDone7s);
 
         lbSetTimeNow.setText(context.getString(R.string.show_answer_now));
-        lbSetTime3s.setText(seconds.get(0) + "s");
-        lbSetTime5s.setText(seconds.get(1) + "s");
-        lbSetTime7s.setText(seconds.get(2) + "s");
+        lbSetTime3s.setText(String.valueOf(seconds.get(0) + "s"));
+        lbSetTime5s.setText(String.valueOf(seconds.get(1) + "s"));
+        lbSetTime7s.setText(String.valueOf(seconds.get(2) + "s"));
 
         switch (timeSet) {
             case -1:

@@ -132,7 +132,7 @@ public class NavigationDrawerFragment extends Fragment {
             String versionName = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName;
             TextView lbAppVersion = (TextView) view.findViewById(R.id.mVesionApp);
-            lbAppVersion.setText("Version:" + versionName);
+            lbAppVersion.setText(String.valueOf("Version:" + versionName));
 
             mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);

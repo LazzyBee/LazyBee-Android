@@ -1328,7 +1328,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 public void onTick(long millisUntilFinished) {
                     int second = Math.round((millisUntilFinished / 1000));
                     Log.d(TAG, "second:" + second);
-                    btnShowAnswer.setText(context.getString(R.string.show_answer) + String.valueOf(" (" + (second + 1) + "s)"));
+                    btnShowAnswer.setText(String.valueOf(context.getString(R.string.show_answer) + String.valueOf(" (" + (second + 1) + "s)")));
                 }
 
                 public void onFinish() {
@@ -1461,17 +1461,17 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     private void _setCountNew() {
         int countNew = todayList.size();
-        lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
+        lbCountNew.setText(String.valueOf(getString(R.string.study_new) + ": " + String.valueOf(countNew)));
     }
 
     private void _setCountAgain() {
         int countAgain = againList.size();
-        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+        lbCountAgain.setText(String.valueOf(getString(R.string.study_again) + ": " + String.valueOf(countAgain)));
     }
 
     private void _setCountDue() {
         int countDue = dueList.size();
-        lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
+        lbCountDue.setText(String.valueOf(getString(R.string.study_review) + ": " + String.valueOf(countDue)));
     }
 
     private void _shareCard() {

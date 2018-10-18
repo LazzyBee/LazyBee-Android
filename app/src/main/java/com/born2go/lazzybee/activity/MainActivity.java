@@ -540,7 +540,7 @@ public class MainActivity extends AppCompatActivity
             String versionName = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName;
             TextView lbAppVersion = (TextView) findViewById(R.id.mVesionApp);
-            lbAppVersion.setText("Version:" + versionName);
+            lbAppVersion.setText(String.valueOf("Version:" + versionName));
         } catch (PackageManager.NameNotFoundException e) {
             //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
