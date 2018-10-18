@@ -122,8 +122,7 @@ public class DialogCompleteStudy extends DialogFragment {
 
     private void _initStreakDays(View view, LayoutInflater inflater, int countStreak) {
         LinearLayout mDays = (LinearLayout) view.findViewById(R.id.mDays);
-        ArrayList<String> strings = new ArrayList<String>();
-        strings.addAll(Arrays.asList(context.getResources().getStringArray(R.array.days)));
+        ArrayList<String> strings = new ArrayList<String>(Arrays.asList(context.getResources().getStringArray(R.array.days)));
 
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
