@@ -1,6 +1,5 @@
 package com.born2go.lazzybee.algorithms;
 
-import com.born2go.lazzybee.algorithms.CardSched;
 import static org.junit.Assert.*;
 
 

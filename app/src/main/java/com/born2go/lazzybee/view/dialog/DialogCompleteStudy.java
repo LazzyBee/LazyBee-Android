@@ -2,7 +2,6 @@ package com.born2go.lazzybee.view.dialog;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -30,7 +29,6 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 @SuppressLint("ValidFragment")

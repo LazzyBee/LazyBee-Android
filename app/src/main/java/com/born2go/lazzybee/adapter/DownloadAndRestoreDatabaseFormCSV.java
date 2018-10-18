@@ -1,15 +1,12 @@
 package com.born2go.lazzybee.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
@@ -21,22 +18,15 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.utils.ZipManager;
 import com.opencsv.CSVReader;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by Hue on 12/17/2015.

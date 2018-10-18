@@ -1,13 +1,10 @@
 package com.born2go.lazzybee.db;
 
 import android.text.Html;
-import android.util.Log;
 
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import org.json.JSONObject;
-
-import static com.born2go.lazzybee.R.string.result;
 
 /**
  * Created by Hue on 7/1/2015.

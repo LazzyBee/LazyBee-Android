@@ -3,8 +3,6 @@ package com.born2go.lazzybee.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.born2go.lazzybee.R;

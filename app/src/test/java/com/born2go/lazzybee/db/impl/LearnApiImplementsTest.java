@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.db.impl;
 
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import org.junit.After;
 import org.junit.Before;

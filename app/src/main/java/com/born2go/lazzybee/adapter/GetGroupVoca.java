@@ -5,11 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 /**

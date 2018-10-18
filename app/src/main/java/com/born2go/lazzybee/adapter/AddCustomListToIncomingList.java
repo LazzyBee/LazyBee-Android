@@ -4,17 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
-import com.born2go.lazzybee.shared.LazzyBeeShare;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
