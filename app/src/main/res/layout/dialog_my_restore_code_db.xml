@@ -1,91 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:minHeight="1000px"
     android:orientation="vertical">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_gravity="left|top"
+        android:layout_gravity="top"
         android:background="@color/colorPrimary">
 
         <ImageView
+            android:id="@+id/mClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/mClose"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="14dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="14dp"
-            android:src="@drawable/ic_clear_white_36dp"
-            android:contentDescription="TODO" />
+            android:layout_marginLeft="14dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/ic_clear_white_36dp" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/successfully"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/grey_600"
+            android:textSize="18pt" />
+
+        <TextView
+            android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:weightSum="1">
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/message_using_backup_code"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey_600" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/successfully"
-                android:id="@+id/textView14"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/grey_600"
-                android:textSize="18pt" />
+        <TextView
+            android:id="@+id/lbMyRestoreCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/rau_xanh"
+            android:textSize="25pt" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/message_using_backup_code"
-                android:id="@+id/textView11"
-                android:layout_gravity="center"
-                android:textColor="@color/grey_600"
-                android:textAlignment="center"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp" />
+        <TextView
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/close"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey_600"
+            android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:id="@+id/lbMyRestoreCode"
-                android:layout_gravity="center"
-                android:textColor="@color/rau_xanh"
-                android:textSize="25pt" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/close"
-                android:id="@+id/btnClose"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/grey_600"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-</LinearLayout>
+</FrameLayout>

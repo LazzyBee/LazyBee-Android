@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-            <TableRow>
+            <TableRow tools:ignore="UselessParent">
 
                 <Button
                     android:id="@+id/btnEn"
