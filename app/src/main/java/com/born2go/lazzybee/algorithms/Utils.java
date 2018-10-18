@@ -42,25 +42,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
-import java.sql.Date;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,10 +66,9 @@ import java.util.zip.ZipFile;
 /**
  * TODO comments
  */
+@SuppressWarnings("DanglingJavadoc")
 public class Utils {
     enum SqlCommandType {SQL_INS, SQL_UPD, SQL_DEL}
-
-    ;
 
     // Used to format doubles with English's decimal separator system
     public static final Locale ENGLISH_LOCALE = new Locale("en_US");
@@ -328,7 +322,7 @@ public class Utils {
         sb.append("(");
         if (ids != null) {
             String s = Arrays.toString(ids);
-            sb.append(s.substring(1, s.length() - 1));
+            sb.append(s, 1, s.length() - 1);
         }
         sb.append(")");
         return sb.toString();
@@ -343,7 +337,7 @@ public class Utils {
         sb.append("(");
         if (ids != null) {
             String s = Arrays.toString(ids);
-            sb.append(s.substring(1, s.length() - 1));
+            sb.append(s, 1, s.length() - 1);
         }
         sb.append(")");
         return sb.toString();
@@ -357,7 +351,7 @@ public class Utils {
         sb.append("(");
         if (ids != null) {
             String s = Arrays.toString(ids);
-            sb.append(s.substring(1, s.length() - 1));
+            sb.append(s, 1, s.length() - 1);
         }
         sb.append(")");
         return sb.toString();
@@ -439,7 +433,7 @@ public class Utils {
         int mod;
         while (num != 0) {
             mod = num % len;
-            buf.append(table.substring(mod, mod + 1));
+            buf.append(table, mod, mod + 1);
             num = num / len;
         }
         return buf.toString();
@@ -707,35 +701,17 @@ public class Utils {
         printJSONObject(jsonObject, "-", null);
     }
 
-    public static void printJSONObject(JSONObject jsonObject, boolean writeToFile) {
-        BufferedWriter buff;
-        try {
-            buff = writeToFile ?
-                    new BufferedWriter(new FileWriter("/sdcard/payloadAndroid.txt"), 8192) : null;
-            try {
-                printJSONObject(jsonObject, "-", buff);
-            } finally {
-                if (buff != null) {
-                    buff.close();
-                }
-            }
-        } catch (IOException ioe) {
-            //Timber.e(ioe, "printJSONObject.IOException");
-        }
-    }
+
 
     private static void printJSONObject(JSONObject jsonObject, String indentation, BufferedWriter buff) {
         try {
-            @SuppressWarnings("unchecked") Iterator<String> keys = (Iterator<String>) jsonObject.keys();
+            @SuppressWarnings("unchecked") Iterator<String> keys = jsonObject.keys();
             TreeSet<String> orderedKeysSet = new TreeSet<>();
             while (keys.hasNext()) {
                 orderedKeysSet.add(keys.next());
             }
 
-            Iterator<String> orderedKeys = orderedKeysSet.iterator();
-            while (orderedKeys.hasNext()) {
-                String key = orderedKeys.next();
-
+            for (String key : orderedKeysSet) {
                 try {
                     Object value = jsonObject.get(key);
                     if (value instanceof JSONObject) {
@@ -761,51 +737,7 @@ public class Utils {
         }
     }
 
-    /*
-    public static void saveJSONObject(JSONObject jsonObject) throws IOException {
-        Timber.i("saveJSONObject");
-        BufferedWriter buff = new BufferedWriter(new FileWriter("/sdcard/jsonObjectAndroid.txt", true));
-        buff.write(jsonObject.toString());
-        buff.close();
-    }
-    */
 
-    /**
-     * Returns 1 if true, 0 if false
-     *
-     * @param b The boolean to convert to integer
-     * @return 1 if b is true, 0 otherwise
-     */
-    public static int booleanToInt(boolean b) {
-        return (b) ? 1 : 0;
-    }
-
-    /**
-     * Returns the effective date of the present moment.
-     * If the time is prior the cut-off time (9:00am by default as of 11/02/10) return yesterday,
-     * otherwise today
-     * Note that the Date class is java.sql.Date whose constructor sets hours, minutes etc to zero
-     *
-     * @param utcOffset The UTC offset in seconds we are going to use to determine today or yesterday.
-     * @return The date (with time set to 00:00:00) that corresponds to today in Anki terms
-     */
-    public static Date genToday(double utcOffset) {
-        // The result is not adjusted for timezone anymore, following libanki model
-        // Timezone adjustment happens explicitly in Deck.updateCutoff(), but not in Deck.checkDailyStats()
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-        cal.setTimeInMillis(System.currentTimeMillis() - (long) utcOffset * 1000L);
-        return Date.valueOf(df.format(cal.getTime()));
-    }
-
-    public static void printDate(String name, double date) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-        cal.setTimeInMillis((long) date * 1000);
-        //Timber.d("Value of %s: %s", name, cal.getTime().toGMTString());
-    }
 
     public static String doubleToTime(double value) {
         int time = (int) Math.round(value);
@@ -979,20 +911,8 @@ public class Utils {
             }
         }
 
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
+        try (FileChannel source = new FileInputStream(sourceFile).getChannel(); FileChannel destination = new FileOutputStream(destFile).getChannel()) {
             destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
         }
     }
 

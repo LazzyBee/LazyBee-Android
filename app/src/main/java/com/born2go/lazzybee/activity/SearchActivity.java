@@ -56,6 +56,7 @@ import java.util.List;
 import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
 import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
 
+@SuppressWarnings("deprecation")
 public class SearchActivity extends AppCompatActivity implements
         GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse, SwipeRefreshLayout.OnRefreshListener {
 
@@ -71,7 +72,7 @@ public class SearchActivity extends AppCompatActivity implements
     SearchView search;
     private Context context;
     String query_text;
-    int display_type = 0;
+    final int display_type = 0;
     private int ADD_TO_LEARN = 0;
     ConnectGdatabase connectGdatabase;
     View mViewAdv;
@@ -103,29 +104,30 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void _initActonBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
+    @SuppressWarnings("deprecation")
     private void _initRecyclerViewSearchResults() {
-        mRefeshSearch = (SwipeRefreshLayout) findViewById(R.id.mRefeshSearch);
+        mRefeshSearch = findViewById(R.id.mRefeshSearch);
         mRefeshSearch.setOnRefreshListener(this);
         //Init RecyclerView and Layout Manager
-        mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
+        mRecyclerViewSearchResults = findViewById(R.id.mRecyclerViewSearchResults);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
-        lbResultCount = (TextView) findViewById(R.id.lbResultCount);
-        lbMessageNotFound = (TextView) findViewById(R.id.lbMessageNotFound);
+        lbResultCount = findViewById(R.id.lbResultCount);
+        lbMessageNotFound = findViewById(R.id.lbMessageNotFound);
 
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(this, mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
+                TextView lbQuestion = view.findViewById(R.id.lbQuestion);
                 try {
                     //Cast tag lbQuestion to CardId
                     Card card = (Card) lbQuestion.getTag();
@@ -143,7 +145,7 @@ public class SearchActivity extends AppCompatActivity implements
 
             @Override
             public void onItemLongPress(View view, int position) {
-                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
+                TextView lbQuestion = view.findViewById(R.id.lbQuestion);
                 try {
                     //Cast tag lbQuestion to CardId
                     Card card = (Card) lbQuestion.getTag();
@@ -206,7 +208,7 @@ public class SearchActivity extends AppCompatActivity implements
         // search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
+        mSuggerstionCard = search.findViewById(R.id.search_src_text);
 
         if (mSuggerstionCard != null) {
             //set Enable Spelling Suggestions
@@ -225,7 +227,7 @@ public class SearchActivity extends AppCompatActivity implements
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Log.d(TAG, "close search view -Action:" + getIntent().getAction());
-                if (getIntent().getAction()!=null){
+                if (getIntent().getAction() != null) {
                     if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
                         _displayDictionary();
                     } else {
@@ -326,7 +328,8 @@ public class SearchActivity extends AppCompatActivity implements
 //        }
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+        if (imm != null)
+            imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         //***setOnQueryTextListener***
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -393,7 +396,8 @@ public class SearchActivity extends AppCompatActivity implements
             Log.d(TAG, "Intent.ACTION_SEARCH query:" + query_text);
             if (search != null) {
                 search.setQuery(query_text, false);
-                getSupportActionBar().setTitle(query_text);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(query_text);
             } else {
                 Log.d(TAG, "search view null");
             }
@@ -413,7 +417,8 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _displayDictionary() {
         //set Title
-        getSupportActionBar().setTitle(R.string.drawer_dictionary);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.drawer_dictionary);
 
         query_text = null;
         //Hide count results
@@ -437,7 +442,7 @@ public class SearchActivity extends AppCompatActivity implements
 //                }
 //                setAdapterListCard(cardList);
 //            } else
-            if (query != null || query.length() > 0) {
+            if (query != null) {
                 //connection with internet ok search in server first
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
@@ -460,7 +465,7 @@ public class SearchActivity extends AppCompatActivity implements
                         //Init Adapter
                         setAdapterListCard(cardList);
 
-                    } else if (result_count == 0) {//Check result_count==0 search in server
+                    } else {//Check result_count==0 search in server
                         lbResultCount.setVisibility(View.GONE);
                         mRecyclerViewSearchResults.setVisibility(View.GONE);
                         lbMessageNotFound.setVisibility(View.VISIBLE);
@@ -674,7 +679,10 @@ public class SearchActivity extends AppCompatActivity implements
                 search.clearFocus();
             }
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if (inputManager != null)
+                if (getCurrentFocus() != null)
+                    if (getCurrentFocus().getWindowToken() != null)
+                        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (Exception e) {
             //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
@@ -708,7 +716,7 @@ public class SearchActivity extends AppCompatActivity implements
                 if (admob_pub_id != null) {
                     if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
                         mViewAdv.setVisibility(View.GONE);
-                    } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
+                    } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
                         String advId = admob_pub_id + "/" + adv_id;
                         Log.i(TAG, "admob -AdUnitId:" + advId);
                         AdView mAdView = new AdView(context);
@@ -726,7 +734,7 @@ public class SearchActivity extends AppCompatActivity implements
 
                         mAdView.loadAd(adRequest);
 
-                        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
+                        RelativeLayout relativeLayout = findViewById(R.id.adView);
                         RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                         relativeLayout.addView(mAdView, adViewCenter);

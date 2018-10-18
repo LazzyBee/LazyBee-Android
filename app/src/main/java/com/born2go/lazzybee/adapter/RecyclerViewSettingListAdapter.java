@@ -43,25 +43,25 @@ public class RecyclerViewSettingListAdapter extends
         RecyclerView.Adapter<RecyclerViewSettingListAdapter.RecyclerViewSettingListAdapterViewHolder>
         implements DownloadFileandUpdateDatabase.DownloadFileDatabaseResponse {
     private static final String TAG = "SettingListAdapter";
-    Context context;
-    List<String> settings;
-    LearnApiImplements learnApiImplements;
-    DatabaseUpgrade databaseUpgrade;
-    int TYPE_LINE = -1;
-    int TYPE_LINE_CHILD = -2;
-    int TYPE_SUB_HEADER = 0;
-    int TYPE_SETTING_NAME = 1;
-    int TYPE_SETTING_SWITCH = 2;
-    int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
+    final Context context;
+    final List<String> settings;
+    final LearnApiImplements learnApiImplements;
+    final DatabaseUpgrade databaseUpgrade;
+    final int TYPE_LINE = -1;
+    final int TYPE_LINE_CHILD = -2;
+    final int TYPE_SUB_HEADER = 0;
+    final int TYPE_SETTING_NAME = 1;
+    final int TYPE_SETTING_SWITCH = 2;
+    final int TYPE_SETTING_NAME_WITH_DESCRIPTION = 3;
     private static final int TYPE_SETTING_SPEECH_RATE_SLIDE = 4;
     private static final int TYPE_SETTING_ABOUT = 5;
     private static final int TYPE_SETTING_NOTIFICATION = 6;
-    SettingActivity activity;
+    final SettingActivity activity;
     private String queryExportToCsv = "Select vocabulary.gid,vocabulary.e_factor,vocabulary.last_ivl,vocabulary.level,vocabulary.queue,vocabulary.rev_count " +
             "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0";
-    String device_id;
-    private RecyclerView mRecyclerViewSettings;
-    private RecyclerViewSettingListAdapter thiz;
+    final String device_id;
+    private final RecyclerView mRecyclerViewSettings;
+    private final RecyclerViewSettingListAdapter thiz;
 
     @SuppressLint("HardwareIds")
     public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
@@ -912,8 +912,8 @@ public class RecyclerViewSettingListAdapter extends
 
 
     public class RecyclerViewSettingListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-        private int viewType;
+        private final View view;
+        private final int viewType;
 
         public RecyclerViewSettingListAdapterViewHolder(View itemView, int viewType) {
             super(itemView);
