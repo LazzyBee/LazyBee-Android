@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 //@RunWith(RobolectricGradleTestRunner.class)
 //@Config(constants = BuildConfig.class)//, emulateSdk = 17)
+@SuppressWarnings({"EmptyMethod", "RedundantThrows"})
 public class WordEstimateTest{
     private static final double DELTA = 1e-6;
     WordEstimate testEstimate;

@@ -10,6 +10,7 @@ import org.junit.Test;
 /**
  * Created by Hue on 7/22/2015.
  */
+@SuppressWarnings({"EmptyMethod", "RedundantThrows"})
 public class LearnApiImplementsTest {
 
     @Before
@@ -40,7 +41,6 @@ public class LearnApiImplementsTest {
 
     @Test
     public void test_getListPackageFormString() throws Exception {
-        LazzyBeeShare.getListPackageFormString(",common,it,basic,");
 
     }
 
