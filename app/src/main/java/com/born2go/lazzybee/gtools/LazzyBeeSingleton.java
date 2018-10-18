@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.gtools;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 
@@ -27,6 +28,7 @@ public class LazzyBeeSingleton {
     public static TextToSpeech textToSpeech;
     public static ConnectGdatabase connectGdatabase;
     private static FirebaseAnalytics mFirebaseAnalytics;
+    @SuppressLint("StaticFieldLeak")
     private static FirebaseRemoteConfig mRemoteConfig;
     private static String amobPubId;
     private static Crashlytics mCrashlytics;
