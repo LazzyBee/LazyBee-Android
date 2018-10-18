@@ -75,7 +75,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.view_study_details, container, false);
@@ -216,13 +216,14 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return object == view;
         }
 
+        @NonNull
         @SuppressLint("SetJavaScriptEnabled")
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             // Inflate a new layout from our resources
             LayoutInflater inflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -274,7 +275,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
          * {@link View}.
          */
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
 

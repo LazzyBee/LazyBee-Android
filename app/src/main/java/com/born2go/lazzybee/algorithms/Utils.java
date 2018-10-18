@@ -686,7 +686,7 @@ public class Utils {
         File file = new File(destination);
 
         if (!file.createNewFile()) {
-
+            System.out.print("create file fails");
         }
 
 
@@ -983,7 +983,9 @@ public class Utils {
      */
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.exists()) {
-            if (destFile.createNewFile()) ;
+            if (destFile.createNewFile()){
+                System.out.print("create file fails");
+            }
         }
 
         FileChannel source = null;

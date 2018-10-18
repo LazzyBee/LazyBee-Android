@@ -153,7 +153,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.view_study_main, container, false);

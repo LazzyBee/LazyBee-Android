@@ -85,7 +85,9 @@ public class ZipManager {
         File f = new File(dir);
 
         if (!f.isDirectory()) {
-            if (f.mkdirs()) ;
+            if (f.mkdirs()){
+                System.out.print("mkdirs fails");
+            }
         }
     }
 }

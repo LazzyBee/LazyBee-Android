@@ -156,7 +156,9 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
 
         //delete file after update
         if (source != null)
-            source.delete();
+            if (source.delete()){
+                System.out.print("delete file");
+            }
 
 
     }
