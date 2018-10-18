@@ -16,5 +16,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtQuery"
         android:layout_weight="1"
-        android:textColor="@color/red_500" />
+        android:textColor="@color/red_500"
+        android:inputType="" />
 </LinearLayout>

@@ -8,5 +8,6 @@
         android:id="@+id/txtSearch"
         android:hint="@string/hint_search"
         android:singleLine="true"
-        android:imeOptions="actionSearch" />
+        android:imeOptions="actionSearch"
+        android:inputType="" />
 </LinearLayout>
