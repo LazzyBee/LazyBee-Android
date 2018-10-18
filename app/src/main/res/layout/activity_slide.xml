@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="110dp"
-        app:srcCompat="@drawable/ico_2000" />
+        app:srcCompat="@drawable/ico_2000"
+        android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/slider_desc"

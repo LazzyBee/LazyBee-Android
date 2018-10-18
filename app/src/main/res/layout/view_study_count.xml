@@ -67,7 +67,8 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_dictionary"
         android:layout_marginRight="11dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="TODO" />
 
 
 </RelativeLayout>

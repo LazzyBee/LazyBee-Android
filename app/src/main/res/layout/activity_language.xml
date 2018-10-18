@@ -28,7 +28,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:src="@drawable/ic_logo180" />
+            android:src="@drawable/ic_logo180"
+            android:contentDescription="TODO" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,7 +74,8 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/ic_eng_flag" />
+                    android:background="@drawable/ic_eng_flag"
+                    tools:ignore="ButtonStyle" />
 
                 <Button
                     android:id="@+id/btnVn"

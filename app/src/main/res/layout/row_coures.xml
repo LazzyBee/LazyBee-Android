@@ -10,7 +10,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="16dp"
-        android:src="@drawable/ic_graph" />
+        android:src="@drawable/ic_graph"
+        android:contentDescription="TODO" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

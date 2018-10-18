@@ -59,7 +59,8 @@
                 android:layout_alignBottom="@+id/mSlideSpeechRate"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="16dp" />
+                android:layout_marginLeft="16dp"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/lbSeekVaueChange"
@@ -70,7 +71,8 @@
                 android:layout_alignTop="@+id/mSlideSpeechRate"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="16dp" />
+                android:layout_marginRight="16dp"
+                android:contentDescription="TODO" />
 
         </RelativeLayout>
     </LinearLayout>

@@ -10,7 +10,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="16dp"
-        android:src="@drawable/ic_action_settings_white" />
+        android:src="@drawable/ic_action_settings_white"
+        android:contentDescription="TODO" />
 
     <TextView
         android:layout_width="wrap_content"
