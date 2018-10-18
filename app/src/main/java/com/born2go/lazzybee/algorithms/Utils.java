@@ -72,7 +72,9 @@ import java.util.zip.ZipFile;
  * TODO comments
  */
 public class Utils {
-    enum SqlCommandType { SQL_INS, SQL_UPD, SQL_DEL };
+    enum SqlCommandType {SQL_INS, SQL_UPD, SQL_DEL}
+
+    ;
 
     // Used to format doubles with English's decimal separator system
     public static final Locale ENGLISH_LOCALE = new Locale("en_US");
@@ -99,7 +101,8 @@ public class Utils {
     public static final int TIME_FORMAT_BEFORE = 2;
 
     /* Prevent class from being instantiated */
-    private Utils() { }
+    private Utils() {
+    }
 
     // Regex pattern used in removing tags from text before diff
     private static final Pattern stylePattern = Pattern.compile("(?s)<style.*?>.*?</style>");
@@ -113,40 +116,45 @@ public class Utils {
 
     public static final int FILE_COPY_BUFFER_SIZE = 2048;
 
-    /**The time in integer seconds. Pass scale=1000 to get milliseconds. */
+    /**
+     * The time in integer seconds. Pass scale=1000 to get milliseconds.
+     */
     public static double now() {
         return (System.currentTimeMillis() / 1000.0);
     }
 
 
-    /**The time in integer seconds. Pass scale=1000 to get milliseconds. */
+    /**
+     * The time in integer seconds. Pass scale=1000 to get milliseconds.
+     */
     public static long intNow() {
         return intNow(1);
     }
+
     public static long intNow(int scale) {
         return (long) (now() * scale);
     }
 
-    public static long durationInMillisec(long baseTime){
+    public static long durationInMillisec(long baseTime) {
         return intNow(1000) - baseTime;
     }
 
     private static double convertSecondsTo(int seconds, int type) {
         switch (type) {
-        case TIME_SECONDS:
-            return seconds;
-        case TIME_MINUTES:
-            return seconds / 60.0;
-        case TIME_HOURS:
-            return seconds / 3600.0;
-        case TIME_DAYS:
-            return seconds / 86400.0;
-        case TIME_MONTHS:
-            return seconds / 2592000.0;
-        case TIME_YEARS:
-            return seconds / 31536000.0;
-        default:
-            return 0;
+            case TIME_SECONDS:
+                return seconds;
+            case TIME_MINUTES:
+                return seconds / 60.0;
+            case TIME_HOURS:
+                return seconds / 3600.0;
+            case TIME_DAYS:
+                return seconds / 86400.0;
+            case TIME_MONTHS:
+                return seconds / 2592000.0;
+            case TIME_YEARS:
+                return seconds / 31536000.0;
+            default:
+                return 0;
         }
     }
 
@@ -177,8 +185,9 @@ public class Utils {
      * @return double with percentage sign
      */
     public static String fmtPercentage(Double value) {
-    return fmtPercentage(value, 0);
+        return fmtPercentage(value, 0);
     }
+
     public static String fmtPercentage(Double value, int point) {
         // only retrieve the percentage format the first time
         if (mCurrentPercentageFormat == null) {
@@ -195,6 +204,7 @@ public class Utils {
     public static String fmtDouble(Double value) {
         return fmtDouble(value, 1);
     }
+
     public static String fmtDouble(Double value, int point) {
         // only retrieve the number format the first time
         if (mCurrentNumberFormat == null) {
@@ -210,12 +220,15 @@ public class Utils {
     public static String fmtTimeSpan(int time, int unit) {
         return fmtTimeSpan(time, false, false, unit);
     }
+
     public static String fmtTimeSpan(int time) {
         return fmtTimeSpan(time, false, false, 99);
     }
+
     public static String fmtTimeSpan(int time, boolean _short) {
         return fmtTimeSpan(time, _short, false, 99);
     }
+
     public static String fmtTimeSpan(int time, boolean _short, boolean boldNumber, int unit) {
         int type;
         int point = 0;
@@ -254,6 +267,7 @@ public class Utils {
 
     /**
      * Strips a text from <style>...</style>, <script>...</script> and <_any_tag_> HTML tags.
+     *
      * @param s The HTML text to be cleaned.
      * @return The text without the aforementioned tags.
      */
@@ -286,6 +300,7 @@ public class Utils {
      * This should only affect substrings of the form &something; and not tags.
      * Internet rumour says that Html.fromHtml() doesn't cover all cases, but it doesn't get less
      * vague than that.
+     *
      * @param html The HTML escaped text
      * @return The text with its HTML entities unescaped.
      */
@@ -317,7 +332,9 @@ public class Utils {
     }
 
 
-    /** Given a list of integers, return a string '(int1,int2,...)'. */
+    /**
+     * Given a list of integers, return a string '(int1,int2,...)'.
+     */
     public static String ids2str(int[] ids) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
@@ -330,7 +347,9 @@ public class Utils {
     }
 
 
-    /** Given a list of integers, return a string '(int1,int2,...)'. */
+    /**
+     * Given a list of integers, return a string '(int1,int2,...)'.
+     */
     public static String ids2str(long[] ids) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
@@ -342,7 +361,9 @@ public class Utils {
         return sb.toString();
     }
 
-    /** Given a list of integers, return a string '(int1,int2,...)'. */
+    /**
+     * Given a list of integers, return a string '(int1,int2,...)'.
+     */
     public static String ids2str(Long[] ids) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
@@ -354,7 +375,9 @@ public class Utils {
         return sb.toString();
     }
 
-    /** Given a list of integers, return a string '(int1,int2,...)'. */
+    /**
+     * Given a list of integers, return a string '(int1,int2,...)'.
+     */
     public static <T> String ids2str(List<T> ids) {
         StringBuilder sb = new StringBuilder(512);
         sb.append("(");
@@ -372,7 +395,9 @@ public class Utils {
     }
 
 
-    /** Given a list of integers, return a string '(int1,int2,...)'. */
+    /**
+     * Given a list of integers, return a string '(int1,int2,...)'.
+     */
     public static String ids2str(JSONArray ids) {
         StringBuilder str = new StringBuilder(512);
         str.append("(");
@@ -395,7 +420,9 @@ public class Utils {
     }
 
 
-    /** LIBANKI: not in libanki */
+    /**
+     * LIBANKI: not in libanki
+     */
     public static long[] arrayList2array(List<Long> list) {
         long[] ar = new long[list.size()];
         int i = 0;
@@ -405,7 +432,9 @@ public class Utils {
         return ar;
     }
 
-    /** Return the first safe ID to use. */
+    /**
+     * Return the first safe ID to use.
+     */
 //    public static long maxID(AnkiDb db) {
 //        long now = intNow(1000);
 //        now = Math.max(now, db.queryLongScalar("SELECT MAX(id) FROM cards"));
@@ -434,7 +463,9 @@ public class Utils {
     }
 
 
-    /** return a base91-encoded 64bit random number */
+    /**
+     * return a base91-encoded 64bit random number
+     */
     public static String guid64() {
         return base91((new Random()).nextInt((int) (Math.pow(2, 61) - 1)));
     }
@@ -515,7 +546,9 @@ public class Utils {
         return split;
     }
 
-    /** Replace HTML line break tags with new lines. */
+    /**
+     * Replace HTML line break tags with new lines.
+     */
     public static String replaceLineBreak(String text) {
         return text.replaceAll("<br(\\s*\\/*)>", "\n");
     }
@@ -528,8 +561,10 @@ public class Utils {
     // tmpdir
     // tmpfile
     // namedtmp
+
     /**
      * Converts an InputStream to a String.
+     *
      * @param is InputStream to convert
      * @return String version of the InputStream
      */
@@ -614,6 +649,7 @@ public class Utils {
 
     /**
      * Compress data.
+     *
      * @param bytesToCompress is the byte array to compress.
      * @return a compressed byte array.
      * @throws IOException
@@ -645,11 +681,17 @@ public class Utils {
     /**
      * Utility method to write to a file.
      * Throws the exception, so we can report it in syncing log
+     *
      * @throws IOException
      */
     public static void writeToFile(InputStream source, String destination) throws IOException {
         //Timber.d("Creating new file... = %s", destination);
-        new File(destination).createNewFile();
+        File file = new File(destination);
+
+        if (!file.createNewFile()) {
+
+        }
+
 
         long startTimeMillis = System.currentTimeMillis();
         OutputStream output = new BufferedOutputStream(new FileOutputStream(destination));
@@ -658,9 +700,7 @@ public class Utils {
         byte[] buf = new byte[CHUNK_SIZE];
         long sizeBytes = 0;
         int len;
-        if (source == null) {
-            //Timber.e("writeToFile :: source is null!");
-        }
+
         while ((len = source.read(buf)) >= 0) {
             output.write(buf, 0, len);
             sizeBytes += len;
@@ -757,10 +797,10 @@ public class Utils {
     }
 
     /**
-     *  Returns the effective date of the present moment.
-     *  If the time is prior the cut-off time (9:00am by default as of 11/02/10) return yesterday,
-     *  otherwise today
-     *  Note that the Date class is java.sql.Date whose constructor sets hours, minutes etc to zero
+     * Returns the effective date of the present moment.
+     * If the time is prior the cut-off time (9:00am by default as of 11/02/10) return yesterday,
+     * otherwise today
+     * Note that the Date class is java.sql.Date whose constructor sets hours, minutes etc to zero
      *
      * @param utcOffset The UTC offset in seconds we are going to use to determine today or yesterday.
      * @return The date (with time set to 00:00:00) that corresponds to today in Anki terms
@@ -800,8 +840,9 @@ public class Utils {
      * Indicates whether the specified action can be used as an intent. This method queries the package manager for
      * installed packages that can respond to an intent with the specified action. If no suitable package is found, this
      * method returns false.
+     *
      * @param context The application's environment.
-     * @param action The Intent action to check for availability.
+     * @param action  The Intent action to check for availability.
      * @return True if an Intent with the specified action can be sent and responded to, false otherwise.
      */
     public static boolean isIntentAvailable(Context context, String action) {
@@ -828,7 +869,7 @@ public class Utils {
         if (mediaDir.length() != 0 && !mediaDir.equalsIgnoreCase("null")) {
             Uri mediaDirUri = Uri.fromFile(new File(mediaDir));
 
-            return mediaDirUri.toString() +"/";
+            return mediaDirUri.toString() + "/";
         }
         return "";
     }
@@ -850,6 +891,7 @@ public class Utils {
         }
         return results;
     }
+
     public static long[] toPrimitive(Collection<Long> array) {
         if (array == null) {
             return null;
@@ -890,17 +932,21 @@ public class Utils {
         return 4 * 60 * 60 - (cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET)) / 1000;
     }
 
-    /** Returns the filename without the extension. */
+    /**
+     * Returns the filename without the extension.
+     */
     public static String removeExtension(String filename) {
-      int dotPosition = filename.lastIndexOf('.');
-      if (dotPosition == -1) {
-        return filename;
-      }
-      return filename.substring(0, dotPosition);
+        int dotPosition = filename.lastIndexOf('.');
+        if (dotPosition == -1) {
+            return filename;
+        }
+        return filename.substring(0, dotPosition);
     }
 
 
-    /** Returns only the filename extension. */
+    /**
+     * Returns only the filename extension.
+     */
     public static String getFileExtension(String filename) {
         int dotPosition = filename.lastIndexOf('.');
         if (dotPosition == -1) {
@@ -909,15 +955,21 @@ public class Utils {
         return filename.substring(dotPosition);
     }
 
-    /** Removes any character that are not valid as deck names. */
+    /**
+     * Removes any character that are not valid as deck names.
+     */
     public static String removeInvalidDeckNameCharacters(String name) {
-        if (name == null) { return null; }
+        if (name == null) {
+            return null;
+        }
         // The only characters that we cannot absolutely allow to appear in the filename are the ones reserved in some
         // file system. Currently these are \, /, and :, in order to cover Linux, OSX, and Windows.
         return name.replaceAll("[:/\\\\]", "");
     }
 
-    /** Joins the given string values using the delimiter between them. */
+    /**
+     * Joins the given string values using the delimiter between them.
+     */
     public static String join(String delimiter, String... values) {
         StringBuilder sb = new StringBuilder();
         for (String value : values) {
@@ -931,13 +983,14 @@ public class Utils {
 
     /**
      * Simply copy a file to another location
+     *
      * @param sourceFile The source file
-     * @param destFile The destination file, doesn't need to exist yet.
+     * @param destFile   The destination file, doesn't need to exist yet.
      * @throws IOException
      */
     public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if(!destFile.exists()) {
-            destFile.createNewFile();
+        if (!destFile.exists()) {
+            if (destFile.createNewFile()) ;
         }
 
         FileChannel source = null;

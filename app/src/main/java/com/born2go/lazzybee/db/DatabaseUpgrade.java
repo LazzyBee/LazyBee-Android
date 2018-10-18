@@ -128,7 +128,10 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
         } else {
             File sdCard_dir = Environment.getExternalStorageDirectory();
             File dlDir = new File(sdCard_dir.getAbsolutePath());
-            dlDir.mkdirs();
+            boolean wasSuccessful = dlDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             source = new File(dlDir, DB_NAME);
             myInput = new FileInputStream(source);
         }

@@ -85,7 +85,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         Log.d(TAG, "Type export:" + ((type == 0) ? " Full" : " Mini"));
         exportDir = new File(Environment.getExternalStorageDirectory(), LazzyBeeShare.EMPTY);
         if (!exportDir.exists()) {
-            exportDir.mkdirs();
+            boolean wasSuccessful = exportDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
         }
 
         db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
@@ -150,7 +153,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         //File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
         File file = new File(exportDir, wordFileName);
         try {
-            file.createNewFile();
+            boolean wasSuccessful = file.createNewFile();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
             if (curCSV.getCount() > 0) {
                 if (curCSV.moveToFirst()) {
@@ -217,7 +223,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         boolean results = false;
         File file = new File(exportDir, streakFileName);
         try {
-            file.createNewFile();
+            boolean wasSuccessful = file.createNewFile();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
             SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
             Cursor curCSV = db.rawQuery(queryExportStreakTableToCsv, null);

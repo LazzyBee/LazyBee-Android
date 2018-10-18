@@ -141,7 +141,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             File sdCard_dir = Environment.getExternalStorageDirectory();
             File dlDir = new File(sdCard_dir.getAbsolutePath() + "/" + DOWNLOAD);
-            dlDir.mkdirs();
+            boolean wasSuccessful = dlDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
+
             File source = new File(dlDir, DB_UPDATE_NAME);
             myInput = new FileInputStream(source);
         }

@@ -85,7 +85,7 @@ public class ZipManager {
         File f = new File(dir);
 
         if (!f.isDirectory()) {
-            f.mkdirs();
+            if (f.mkdirs()) ;
         }
     }
 }
