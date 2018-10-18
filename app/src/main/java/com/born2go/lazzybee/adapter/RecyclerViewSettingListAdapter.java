@@ -160,9 +160,11 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_language))) {
                     lbLimit.setVisibility(View.GONE);
                     changeLanguage(mCardView);
-                } else if (setting.equals(context.getString(R.string.setting_about))) {
-
-                } else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
+                }
+//                else if (setting.equals(context.getString(R.string.setting_about))) {
+//
+//                }
+                else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                     lbLimit.setVisibility(View.GONE);
                     _resetCache(mCardView);
                 } else if (setting.equals(context.getString(R.string.setting_export_database))) {
@@ -588,8 +590,6 @@ public class RecyclerViewSettingListAdapter extends
                                 Toast.makeText(context, "Execute Error", Toast.LENGTH_SHORT).show();
                             }
 
-                        } else {
-                            //Toast.makeText(context, "Null", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

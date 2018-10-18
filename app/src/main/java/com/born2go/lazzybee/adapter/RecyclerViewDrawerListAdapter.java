@@ -120,11 +120,13 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                     mImg.setColorFilter(context.getResources().getColor(android.R.color.darker_gray));
 
                 }
-            } else if (holder.viewType == TYPE_ADD_COURCE) {
-
-            } else if (holder.viewType == TYPE_USER) {
-
-            } else if (holder.viewType == TYPE_TITLE_COURSE) {
+            }
+//            else if (holder.viewType == TYPE_ADD_COURCE) {
+//
+//            } else if (holder.viewType == TYPE_USER) {
+//
+//            }
+            else if (holder.viewType == TYPE_TITLE_COURSE) {
                 TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
                 lbDrawerName.setText(context.getString(R.string.my_course));
                 lbDrawerName.setTextSize(15f);

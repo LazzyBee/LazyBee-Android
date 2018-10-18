@@ -44,8 +44,6 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
         //setBackgroundColor
         if (position % 2 == 0) {
             view.setBackgroundColor(Color.parseColor("#ff009688"));
-        } else {
-
         }
 
 

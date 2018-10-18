@@ -127,9 +127,10 @@ public class RecyclerViewCustomStudyAdapter extends
 
                 } else if (setting.equals(context.getString(R.string.setting_my_level))) {
                     getLevelandShowDialogChangeLevel(mCardView, lbLimit);
-                } else if (setting.equals(context.getString(R.string.setting_position_meaning))) {
-                    // _showDialogSetPositionMeaning(mCardView, lbLimit);
                 }
+//                else if (setting.equals(context.getString(R.string.setting_position_meaning))) {
+//                    // _showDialogSetPositionMeaning(mCardView, lbLimit);
+//                }
             } else if (holder.viewType == TYPE_SETTING_MEANING_2) {
                 RelativeLayout mSetPositionMeaning = (RelativeLayout) view.findViewById(R.id.mSetPositionMeaning);
                 _getSettingDisplayMeaningAndUpdateWithSwitch(mCardView, mSetPositionMeaning);
@@ -489,9 +490,11 @@ public class RecyclerViewCustomStudyAdapter extends
                                         _reloadRecylerView();
                                     }
                                 }
-                            } else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
-
-                            } else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
+                            }
+//                            else if (key == LazzyBeeShare.KEY_SETTING_TODAY_REVIEW_CARD_LIMIT) {
+//
+//                            }
+                            else if (key == LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT) {
                                 String erorr_message = LazzyBeeShare.EMPTY;
                                 if (txtLimit.getText().toString() == null) {
                                     erorr_message = context.getString(R.string.custom_study_error_input_value);

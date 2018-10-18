@@ -150,12 +150,6 @@ public class SearchActivity extends AppCompatActivity implements
                 try {
                     //Cast tag lbQuestion to CardId
                     Card card = (Card) lbQuestion.getTag();
-                    String cardID = String.valueOf(card.getId());
-                    if (card.getId() > 0) {
-                        // _optionList(card);
-                    } else {
-                        Log.w(TAG, "card.getId()==0");
-                    }
                 } catch (Exception e) {
                     LazzyBeeShare.showErrorOccurred(context, "2_initRecyclerViewSearchResults", e);
                 }

@@ -885,7 +885,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-        } else if (queue == 10) {
         }
         mWebViewLeadDetails.setBackgroundColor(0);
         mWebViewLeadDetails.setScrollContainer(false);

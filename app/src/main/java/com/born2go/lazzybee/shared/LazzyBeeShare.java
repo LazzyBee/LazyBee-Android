@@ -588,9 +588,7 @@ public class LazzyBeeShare {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
         String mySubject = "common";
-        if (subject == null) {
-        } else if (subject.equals(LazzyBeeShare.EMPTY)) {
-        } else if (subject != null) {
+        if (subject != null) {
             mySubject = subject;
         }
         return mySubject;

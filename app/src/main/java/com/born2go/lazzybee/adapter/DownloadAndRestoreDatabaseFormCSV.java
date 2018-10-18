@@ -64,7 +64,10 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         zipManager = new ZipManager();
         exportDir = Environment.getExternalStorageDirectory();
         if (!exportDir.exists()) {
-            exportDir.mkdirs();
+            boolean wasSuccessful = exportDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
         }
     }
 
@@ -151,10 +154,10 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
 
             // expect HTTP 200 OK, so we don't mistakenly save error report
             // instead of the file
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//                return "Server returned HTTP " + connection.getResponseCode()
-//                        + " " + connection.getResponseMessage();
-            }
+//            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+////                return "Server returned HTTP " + connection.getResponseCode()
+////                        + " " + connection.getResponseMessage();
+//            }
 
             // this will be useful to display download percentage
             // might be -1: server did not report the length
