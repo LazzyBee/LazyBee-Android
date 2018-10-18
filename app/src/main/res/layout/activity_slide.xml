@@ -15,7 +15,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="110dp"
         app:srcCompat="@drawable/ico_2000"
-        android:contentDescription="TODO" />
+        android:contentDescription="TODO"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/slider_desc"

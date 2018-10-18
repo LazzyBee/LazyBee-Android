@@ -30,7 +30,8 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:src="@drawable/ic_logo180"
-            android:contentDescription="TODO" />
+            android:contentDescription="TODO"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="wrap_content"
