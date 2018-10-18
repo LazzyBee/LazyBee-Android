@@ -727,6 +727,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         mListener.completeLearn(b);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void _showFirstCard() {
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);

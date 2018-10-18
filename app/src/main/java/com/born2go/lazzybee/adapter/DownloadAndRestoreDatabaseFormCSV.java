@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -40,6 +41,7 @@ import java.net.URLConnection;
 /**
  * Created by Hue on 12/17/2015.
  */
+@SuppressLint("StaticFieldLeak")
 public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Integer> {
     private static final String TAG = DownloadAndRestoreDatabaseFormCSV.class.getSimpleName();
     Context context;

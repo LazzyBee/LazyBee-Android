@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.shared;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -725,7 +726,7 @@ public class LazzyBeeShare {
             String messageError = context.getString(R.string.an_error_occurred)
                     + "\t" + context.getClass().getName() + " in function " + function + "():" + e.getMessage();
             final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
-            String android_id = Settings.Secure.getString(context.getContentResolver(),
+            @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
             if (devices.contains(android_id)) {
                 Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();

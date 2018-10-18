@@ -39,7 +39,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "BackUpDatabaseToCSV";
     private final String backup_key;
-    private Activity activity;
+    Activity activity;
     private String device_id;
     private ProgressDialog dialog;
     ZipManager zipManager;

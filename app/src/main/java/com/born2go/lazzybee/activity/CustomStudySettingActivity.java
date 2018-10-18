@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,7 +35,7 @@ public class CustomStudySettingActivity extends AppCompatActivity {
         context = this;
 
         final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
-        String android_id = Settings.Secure.getString(context.getContentResolver(),
+        @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         if (devices.contains(android_id)) {
             Log.d(TAG, "Device " + android_id + " is DEV");

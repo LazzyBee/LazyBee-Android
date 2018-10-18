@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -69,6 +70,7 @@ public class RecyclerViewSettingListAdapter extends
     private RecyclerView mRecyclerViewSettings;
     private RecyclerViewSettingListAdapter thiz;
 
+    @SuppressLint("HardwareIds")
     public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
         this.activity = activity;
         this.context = context;

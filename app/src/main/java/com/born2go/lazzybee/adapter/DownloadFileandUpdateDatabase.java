@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -33,7 +34,7 @@ public class DownloadFileandUpdateDatabase extends AsyncTask<String, Void, Integ
     public interface DownloadFileDatabaseResponse {
         void processFinish(int code);
     }
-
+    @SuppressLint("StaticFieldLeak")
     Context context;
     ProgressDialog progressDialog;
     public DownloadFileDatabaseResponse downloadFileDatabaseResponse;

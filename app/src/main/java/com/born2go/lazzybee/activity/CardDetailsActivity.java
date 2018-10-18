@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -582,6 +583,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * @return Returns an Object representing the new page.  This does not
          * need to be a View, but can be some other container of the page.
          */
+        @SuppressLint("SetJavaScriptEnabled")
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             // Inflate a new layout from our resources

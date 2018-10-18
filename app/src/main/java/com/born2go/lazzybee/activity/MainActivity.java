@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -1239,7 +1240,7 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.btnBackUp, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //  _updateDB(type);
-                String device_id = Settings.Secure.getString(context.getContentResolver(),
+                @SuppressLint("HardwareIds") String device_id = Settings.Secure.getString(context.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
                 int mini = 1;
                 BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);

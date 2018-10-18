@@ -225,6 +225,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             return object == view;
         }
 
+        @SuppressLint("SetJavaScriptEnabled")
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             // Inflate a new layout from our resources
