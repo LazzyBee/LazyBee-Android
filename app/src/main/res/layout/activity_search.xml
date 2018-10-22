@@ -39,7 +39,8 @@
                 android:paddingTop="8dp"
                 android:text="@string/result"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/textcolorPrimary" />
+                android:textColor="@color/textcolorPrimary"
+                tools:ignore="RtlSymmetry" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/mRecyclerViewSearchResults"
