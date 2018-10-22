@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.StudyActivity;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
+import com.born2go.lazzybee.adapter.PackageCardPageFragmentAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -117,13 +118,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         }
     }
 
-
-//    @Override
-//    public void onAttach(Context activity) {
-//        super.onAttach(activity);
-//    }
-
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -196,6 +190,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         final Card card;
         final List<String> packages;
         private final Context context;
+        LayoutInflater layoutInflater;
 
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
@@ -224,15 +219,12 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             // Inflate a new layout from our resources
-            LayoutInflater inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = LayoutInflater.from(context);
             View view = null;
             if (inflater != null) {
                 if (position < 2) {
                     view = inflater.inflate(R.layout.page_package_card_item, container, false);
                     // Add the newly created View to the ViewPager
-                    container.addView(view);
-                    //
                     mDetailsWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
                     mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
@@ -262,11 +254,10 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                 } else {
                     view = inflater.inflate(R.layout.page_sponsor, container, false);
                     // Add the newly created View to the ViewPager
-                    container.addView(view);
                     _initAdView(view, AdSize.MEDIUM_RECTANGLE);
                 }
             }
-            // Return the View
+            container.addView(view);
             return view;
         }
 
@@ -284,7 +275,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private void _initAdView(final View mViewAdv, final AdSize banner) {
         try {
-            if (getActivity()!=null){
+            if (getActivity() != null) {
                 LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String admob_pub_id = null;//"ca-app-pub-5245864792816840";
                     String adv_banner_id = null;//"7733609014";
@@ -423,7 +414,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         try {
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
-            if (getActivity()!=null){
+            if (getActivity() != null) {
                 LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
                     if (task.isSuccessful()) {
