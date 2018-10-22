@@ -82,50 +82,8 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         return results;
     }
 
+    @SuppressLint("SdCardPath")
     private String _downloadFileRestoreDb() {
-//        String pathFileRestore = null;
-//        try {
-//            //get URL Download  by API
-//            DataServiceApi.GetDownloadUrl getDownloadUrl = LazzyBeeSingleton.connectGdatabase.getDataServiceApi().getDownloadUrl(code);
-//            DownloadTarget downloadTarget = getDownloadUrl.execute();
-//            String downloadTargetUrl = downloadTarget.getUrl();
-//            if (downloadTargetUrl != null) {
-//                Log.d(TAG, "download file restore url:" + downloadTargetUrl);
-//                URL u = new URL(downloadTargetUrl);
-//                File file = new File(exportDir.getAbsolutePath() + "/" + backupFileName);
-//                InputStream is = u.openStream();
-//
-//                DataInputStream dis = new DataInputStream(is);
-//
-//                byte[] buffer = new byte[1024];
-//                int length;
-//
-//                FileOutputStream fos = new FileOutputStream(file);
-//                while ((length = dis.read(buffer)) > 0) {
-//                    fos.write(buffer, 0, length);
-//                }
-//                fos.close();
-//                pathFileRestore = file.getPath();
-//                Log.d(TAG, "Download file restore complete.Path:" + pathFileRestore);
-//            } else {
-//                Log.d(TAG, "Download file restore fails");
-//            }
-//        } catch (MalformedURLException mue) {
-//            Log.e("SYNC getUpdate", "malformed url error", mue);
-//            LazzyBeeSingleton.getCrashlytics().logException(mue);
-//        } catch (IOException ioe) {
-//            Log.e("SYNC getUpdate", "io error", ioe);
-//            LazzyBeeSingleton.getCrashlytics().logException(ioe);
-//        } catch (SecurityException se) {
-//            Log.e("SYNC getUpdate", "security error", se);
-//            LazzyBeeSingleton.getCrashlytics().logException(se);
-//        } catch (Exception e) {
-//            Log.e(TAG, "exception error", e);
-//            LazzyBeeSingleton.getCrashlytics().logException(e);
-//        }
-//        return pathFileRestore;
-
-
         InputStream input = null;
         OutputStream output = null;
         HttpURLConnection connection = null;
