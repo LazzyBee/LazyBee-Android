@@ -421,8 +421,8 @@
         <item>@string/intro_activity_slide_5</item>
         <item>@string/intro_activity_slide_6</item>
     </string-array>
-    <string name="intro_activity_slide_1">LazzyBee sẽ giúp bạn học và nhớ được 2000 từ mới một năm ...</string>
-    <string name="intro_activity_slide_2">... chỉ cần bạn học 5 phút mỗi ngày</string>
+    <string name="intro_activity_slide_1">LazzyBee sẽ giúp bạn học và nhớ được 2000 từ mới một năm …</string>
+    <string name="intro_activity_slide_2">… chỉ cần bạn học 5 phút mỗi ngày</string>
     <string name="intro_activity_slide_3">Những từ bạn đã học sẽ không bị quên do được ôn lại đúng thời điểm</string>
     <string name="intro_activity_slide_4">Trong khi học, hãy vuốt sang trái để xem từ điển</string>
     <string name="intro_activity_slide_5">Đọc kỹ hướng dẫn sử dụng để hiểu về cách học đặc biệt của chúng tôi.</string>

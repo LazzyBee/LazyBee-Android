@@ -53,7 +53,7 @@
     <string name="dialog_title_learn_more">Lean more</string>
     <string name="dialog_message_learn_more">Do you really want to learn more?</string>
 
-    <string name="ok">Ok</string>
+    <string name="ok">@android:string/ok</string>
     <string name="cancel">Cancel</string>
     <string name="learned">Learned</string>
     <string name="done_card">Done</string>
@@ -587,7 +587,7 @@
         <item>@string/intro_activity_slide_6</item>
     </string-array>
     <string name="intro_activity_slide_1">LazzyBee helps you learn and remember 2000 new words per year</string>
-    <string name="intro_activity_slide_2">... If you spend 5 minutes each day</string>
+    <string name="intro_activity_slide_2">… If you spend 5 minutes each day</string>
     <string name="intro_activity_slide_3">Words you learned will never be forgotten due to in-time-review</string>
     <string name="intro_activity_slide_4">As you learn, swipe left to access embedded dictionary</string>
     <string name="intro_activity_slide_5">You read giudeline carefully to understand our special methoddology</string>
