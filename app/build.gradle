@@ -62,11 +62,11 @@ dependencies {
 
 
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
-    implementation 'org.apache.httpcomponents:httpcore:4.3.2'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.5'
     implementation 'org.apache.httpcomponents:httpmime:4.3.2'
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.google.firebase:firebase-ads:15.0.1'
-    implementation 'com.google.firebase:firebase-config:16.0.0'
+    implementation 'com.google.firebase:firebase-config:16.1.0'
 
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.http-client:google-http-client-android:1.23.0'
@@ -74,7 +74,7 @@ dependencies {
     implementation('com.google.http-client:google-http-client-gson:1.17.0-rc') { exclude module: 'httpclient' }
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     //    Butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
