@@ -105,7 +105,6 @@ public class RecyclerViewSettingListAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewSettingListAdapterViewHolder holder, int position) {
-
         View view = holder.view;
         RelativeLayout mCardView = view.findViewById(R.id.mCardView);
         TextView lbSettingName = view.findViewById(R.id.lbSettingName);
@@ -113,22 +112,12 @@ public class RecyclerViewSettingListAdapter extends
         final Switch mSwitch = view.findViewById(R.id.mSwitch);
         TextView lbLimit = view.findViewById(R.id.lbLimit);
         ImageView imageView = view.findViewById(R.id.imgGoto);
-
-        // Log.i(TAG, "Setting Name:" + setting);
-
-
         try {
             if (holder.viewType == TYPE_SUB_HEADER) {
                 lbSettingName.setText(settings.get(position));
-//                mSwitch.setVisibility(View.GONE);
-//                lbLimit.setVisibility(View.GONE);
-//                imageView.setVisibility(View.GONE);
-
                 lbSettingName.setTextSize(15f);
                 lbSettingName.setTextColor(context.getResources().getColor(R.color.color_sub_header));
             } else if (holder.viewType == TYPE_SETTING_NAME) {
-                //TODO:TYPE_SETTING_NAME_1
-
                 lbSettingName.setText(settings.get(position));
                 mSwitch.setVisibility(View.GONE);
                 lbLimit.setVisibility(View.GONE);
@@ -155,10 +144,8 @@ public class RecyclerViewSettingListAdapter extends
                 } else if (setting.equals(context.getString(R.string.setting_language))) {
                     lbLimit.setVisibility(View.GONE);
                     changeLanguage(mCardView);
+
                 }
-//                else if (setting.equals(context.getString(R.string.setting_about))) {
-//
-//                }
                 else if (setting.equals(context.getString(R.string.setting_reset_cache))) {
                     lbLimit.setVisibility(View.GONE);
                     _resetCache(mCardView);
@@ -734,7 +721,6 @@ public class RecyclerViewSettingListAdapter extends
             if (lang != null) {
                 if (lang.equals(LazzyBeeShare.LANG_VI)) {
                     index = 1;
-                    //Log.i(TAG, "lang:" + lang + ",index:" + index);
                 } else {
                     index = 0;
                 }
