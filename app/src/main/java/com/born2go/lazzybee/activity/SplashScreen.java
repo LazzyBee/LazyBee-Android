@@ -39,24 +39,32 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
         thiz = this;
 
+        Log.d(TAG, "Start Fetch");
         LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // After config data is successfully fetched, it must be activated before newly fetched
                         // values are returned.
                         LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
+                        Log.d(TAG, "Fetch Successful");
+                    } else {
+                        Log.d(TAG, "Fetch Failed");
                     }
                     _initSQlIte();
                     _changeLanguage();
                     _updateVersionDB();
-                    String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
-                    Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
-                    LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
-                    MobileAds.initialize(thiz, ADMOB_PUB_ID);
                     learnApiImplements._get100Card();
 
-                    startMainActivity(ADMOB_PUB_ID);
+                    String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                    initAppWithAmodPubId(ADMOB_PUB_ID);
                 });
+    }
+
+    private void initAppWithAmodPubId(String ADMOB_PUB_ID) {
+        Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
+        LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
+        MobileAds.initialize(thiz, ADMOB_PUB_ID);
+        startMainActivity(ADMOB_PUB_ID);
     }
 
     private void startMainActivity(String ADMOB_PUB_ID) {
@@ -94,45 +102,6 @@ public class SplashScreen extends Activity {
         alertDialog.show();
     }
 
-//    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
-//        @Override
-//        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
-//            // We load each container when it becomes available.
-//            Container container = containerHolder.getContainer();
-//            registerCallbacksForContainer(container);
-//        }
-//
-//        public static void registerCallbacksForContainer(Container container) {
-//            // Register two custom function call macros to the container.
-//            container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
-//            container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
-//            // Register a custom function call tag to the container.
-//            container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
-//        }
-//    }
-
-//    private static class CustomMacroCallback implements Container.FunctionCallMacroCallback {
-//        private int numCalls;
-//
-//        @Override
-//        public Object getValue(String name, Map<String, Object> parameters) {
-//            if ("increment".equals(name)) {
-//                return ++numCalls;
-//            } else if ("mod".equals(name)) {
-//                return (Long) parameters.get("key1") % Integer.valueOf((String) parameters.get("key2"));
-//            } else {
-//                throw new IllegalArgumentException("Custom macro name: " + name + " is not supported.");
-//            }
-//        }
-//    }
-
-//    private static class CustomTagCallback implements Container.FunctionCallTagCallback {
-//        @Override
-//        public void execute(String tagName, Map<String, Object> parameters) {
-//            // The code for firing this custom tag.
-//            Log.i("LazzyBee", "Custom function call tag :" + tagName + " is fired.");
-//        }
-//    }
 
     private void _initSQlIte() {
         Log.i(TAG, "Init SQlIte");
@@ -140,7 +109,7 @@ public class SplashScreen extends Activity {
         databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         try {
             myDbHelper._createDataBase();
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             //throw new Error("Unable to create database");
             //ioe.printStackTrace();
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
@@ -179,9 +148,7 @@ public class SplashScreen extends Activity {
         } else {
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.DEFAULT_VERSION_DB));
         }
-        if (gae_db_version != null) {
-            _gdbVesion = Integer.valueOf(gae_db_version);
-        }
+        _gdbVesion = Integer.valueOf(gae_db_version);
         if (_dbVesion > _gdbVesion) {
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(_dbVesion));
         }
