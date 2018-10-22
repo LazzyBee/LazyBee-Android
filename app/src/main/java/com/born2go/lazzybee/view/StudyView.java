@@ -175,9 +175,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     _showDialogTipAnswerCard();
                 }
 
-            } else if (studyAction.equals(LazzyBeeShare.REVERSE))
-
-            {
+            } else if (studyAction.equals(LazzyBeeShare.REVERSE)) {
                 showNextReverseCard();
             }
 
@@ -893,9 +891,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             final Card card = currentCard;
 
             Card cardFromDB = dataBaseHelper._getCardByID(String.valueOf(card.getId()));
-
             Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
             setDisplayCard(cardFromDB);
+
             //Show answer question
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue());
 

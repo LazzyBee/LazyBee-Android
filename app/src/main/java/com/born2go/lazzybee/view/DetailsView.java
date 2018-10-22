@@ -59,6 +59,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     MenuItem itemLearn;
 
     private final Context context;
+    private View viewAdv;
 
     public DetailsView(Context context, String tag) {
         // Required empty public constructor
@@ -82,7 +83,16 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         if (getActivity() != null)
             ((StudyActivity) getActivity()).setDetailViewTag(myTag);
         _defineDetailsView(view);
+
+        viewAdv = createPageSponser(inflater, container);
+
         return view;
+    }
+
+    private View createPageSponser(LayoutInflater inflater, ViewGroup container) {
+        View viewPageSponser = inflater.inflate(R.layout.page_sponsor, container, false);
+        _initAdView(viewPageSponser, AdSize.MEDIUM_RECTANGLE);
+        return viewPageSponser;
     }
 
     private void _defineDetailsView(View view) {
@@ -125,7 +135,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     public void setCard(Card card) {
-        // Log.d("DetailsView:", "dsadadad:" + card.toString());
         this.card = card;
         _displayCard(card);
     }
@@ -252,9 +261,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                         LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
                     }
                 } else {
-                    view = inflater.inflate(R.layout.page_sponsor, container, false);
-                    // Add the newly created View to the ViewPager
-                    _initAdView(view, AdSize.MEDIUM_RECTANGLE);
+                    view = viewAdv;
                 }
             }
             container.addView(view);
