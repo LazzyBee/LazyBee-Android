@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * More test, more accurate result
  *
  */
-@SuppressWarnings({"CanBeFinal", "UnusedReturnValue"})
+@SuppressWarnings({"CanBeFinal", "UnusedReturnValue", "EmptyMethod"})
 public class WordEstimate {
     public static double PRESUME_RATE = 1.1; /* Presume that user's voca is bigger than calculated number*/
     public static int MAX_LEVEL = 7;

@@ -197,6 +197,6 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
         }
 
 
-        return checkDB != null ? true : false;
+        return checkDB != null;
     }
 }

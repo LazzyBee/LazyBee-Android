@@ -177,10 +177,10 @@ public class DialogStatistics extends DialogFragment {
                 }
                 Column column = new Column(values);
 
-                boolean hasLabels = false;
-                column.setHasLabels(hasLabels);
-                boolean hasLabelForSelected = false;
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+//                boolean hasLabels = false;
+                column.setHasLabels(false);
+//                boolean hasLabelForSelected = false;
+                column.setHasLabelsOnlyForSelected(false);
 
                 columns.add(column);
 

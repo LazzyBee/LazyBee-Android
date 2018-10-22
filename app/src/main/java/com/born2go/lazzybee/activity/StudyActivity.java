@@ -17,7 +17,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
@@ -167,7 +166,7 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showDialogComplete() {
-        if (learn_more == false) {
+        if (!learn_more) {
             //Show dialog complete learn
             final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
