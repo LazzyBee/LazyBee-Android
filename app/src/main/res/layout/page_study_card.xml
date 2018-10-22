@@ -8,9 +8,9 @@
     <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
+        android:layout_marginStart="@dimen/cardview_study_margin_left"
         android:layout_marginTop="3dp"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
+        android:layout_marginEnd="@dimen/cardview_study_margin_right"
         android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
         android:visibility="visible"
         android:id="@+id/mCardViewCount">
@@ -29,8 +29,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/card_new_color"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="5dp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="5dp" />
 
             <TextView
                 android:id="@+id/lbAgain"
@@ -40,8 +40,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/card_again_color"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="41dp"
-                android:layout_marginRight="5dp" />
+                android:layout_marginStart="41dp"
+                android:layout_marginEnd="5dp" />
 
             <TextView
                 android:id="@+id/lbDue"
@@ -51,7 +51,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/card_due_color"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="66dp"
+                android:layout_marginStart="66dp"
                 tools:ignore="HardcodedText" />
 
         </RelativeLayout>
@@ -59,9 +59,9 @@
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
+        android:layout_marginStart="@dimen/cardview_study_margin_left"
         android:layout_marginTop="@dimen/cardview_study_margin_top"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
+        android:layout_marginEnd="@dimen/cardview_study_margin_right"
         android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
         android:layout_weight="1"
         card_view:cardCornerRadius="4dp">
@@ -74,8 +74,7 @@
             <WebView
                 android:id="@+id/mWebViewStudyConten"
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_height="match_parent" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

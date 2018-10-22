@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="65dp">
 
     <TextView
@@ -11,7 +12,8 @@
         android:layout_above="@+id/lbDbVersion"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="15dp" />
+        android:layout_marginStart="15dp"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,7 +22,8 @@
         android:textColor="#616161"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/lbAppVersion"
-        android:layout_alignStart="@+id/lbAppVersion" />
+        android:layout_alignStart="@+id/lbAppVersion"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,6 +33,7 @@
         android:textColor="#616161"
         android:layout_below="@+id/lbDbVersion"
         android:layout_alignLeft="@+id/lbDbVersion"
-        android:layout_alignStart="@+id/lbDbVersion" />
+        android:layout_alignStart="@+id/lbDbVersion"
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

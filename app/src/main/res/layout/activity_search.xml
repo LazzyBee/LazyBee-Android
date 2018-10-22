@@ -35,7 +35,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
                 android:paddingTop="8dp"
                 android:text="@string/result"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -49,8 +49,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/lbResultCount"
-                android:layout_weight="1"
-                android:visibility="visible" />
+                android:visibility="visible"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/lbMessageNotFound"

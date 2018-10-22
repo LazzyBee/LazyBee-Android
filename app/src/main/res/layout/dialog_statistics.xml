@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="left|top"
-        android:background="@color/color_title_dialog_statitsic">
+        android:background="@color/color_title_dialog_statitsic"
+        tools:ignore="RtlHardcoded">
 
         <ImageView
             android:id="@+id/mClose"
@@ -20,7 +21,8 @@
             android:layout_marginLeft="14dp"
             android:layout_marginStart="14dp"
             android:src="@drawable/ic_clear_white_36dp"
-            android:contentDescription="@string/todo" />
+            android:contentDescription="@string/todo"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/textView9"

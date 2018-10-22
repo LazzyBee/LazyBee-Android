@@ -35,11 +35,11 @@
         android:background="@drawable/bg_core_restore_list_input"
         android:gravity="left|top"
         android:paddingTop="5dp"
-        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
         android:textSize="14sp"
         android:paddingBottom="5dp"
         android:layout_marginTop="5dp"
         android:inputType=""
-        tools:ignore="LabelFor,RtlSymmetry"
+        tools:ignore="LabelFor,RtlHardcoded,RtlSymmetry,UnusedAttribute"
         android:importantForAutofill="no" />
 </LinearLayout>

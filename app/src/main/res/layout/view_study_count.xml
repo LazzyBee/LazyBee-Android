@@ -16,8 +16,6 @@
                     android:id="@+id/lbCountTotalVocabulary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
@@ -30,9 +28,8 @@
                     android:id="@+id/lbCountAgainInday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@string/zero"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/card_again_color" />
@@ -41,7 +38,6 @@
                     android:id="@+id/lbAgainDue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:text="@string/zero"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
@@ -53,8 +49,8 @@
                 android:id="@+id/lbTagetActionStudy"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
                 android:gravity="center_vertical"
                 android:text="New Text"
                 android:textColor="#d91e1e"
@@ -68,9 +64,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_dictionary"
-        android:layout_marginRight="11dp"
+        android:layout_marginEnd="11dp"
         android:visibility="gone"
-        android:contentDescription="@string/todo" />
+        android:contentDescription="@string/todo"
+        tools:ignore="RtlHardcoded" />
 
 
 </RelativeLayout>

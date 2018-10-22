@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:singleLine="true"
         android:text="@string/notification"
         android:textAppearance="?android:attr/textAppearanceSmall"

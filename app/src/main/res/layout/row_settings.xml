@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mCardView"
     android:layout_width="match_parent"
     android:layout_height="48dp"
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/mSwitch"
         android:singleLine="true"
         android:text="@string/notification"
@@ -26,7 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/lbSettingName"
         android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:id="@+id/lbLimit"
@@ -35,9 +37,9 @@
         android:layout_alignBaseline="@+id/lbSettingName"
         android:layout_alignTop="@+id/lbSettingName"
         android:layout_alignEnd="@+id/mSwitch"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:text="@string/zero"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorPrimary" />
@@ -51,5 +53,6 @@
         android:layout_centerVertical="true"
         android:contentDescription="@string/todo"
         android:src="@drawable/ic_arrow_right_teal"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:ignore="RtlHardcoded" />
 </RelativeLayout>

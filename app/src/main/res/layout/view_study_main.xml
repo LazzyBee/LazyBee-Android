@@ -30,7 +30,6 @@
             android:id="@+id/mWebViewLeadDetaisl"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:background="#fff" />
 
         <android.support.design.widget.FloatingActionButton
@@ -38,14 +37,12 @@
             android:id="@+id/mFloatActionButtonUserNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_gravity="end|bottom"
             android:src="@drawable/ic_note_white_24dp"
             android:visibility="gone"
             ads:backgroundTint="@color/background_btn_user_note"
-            ads:elevation="0dp" />
+            ads:elevation="0dp"
+            tools:ignore="RtlHardcoded" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/mHelp"
@@ -75,8 +72,8 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="@dimen/cardview_study_margin_bottom"
-        android:layout_marginLeft="@dimen/cardview_study_margin_left"
-        android:layout_marginRight="@dimen/cardview_study_margin_right"
+        android:layout_marginStart="@dimen/cardview_study_margin_left"
+        android:layout_marginEnd="@dimen/cardview_study_margin_right"
         android:layout_marginTop="@dimen/cardview_study_margin_top"
         android:visibility="gone">
 
@@ -106,7 +103,8 @@
                 android:singleLine="true"
                 android:text="@string/message_hellp_study"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/blue_500" />
+                android:textColor="@color/blue_500"
+                tools:ignore="TextViewEdits" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
