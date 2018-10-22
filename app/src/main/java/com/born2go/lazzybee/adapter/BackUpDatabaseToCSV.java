@@ -58,7 +58,6 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         backup_key = device_id.substring(device_id.length() - 6, device_id.length());
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
-        int type1 = type;
         Log.d(TAG, "Type export:" + ((type == 0) ? " Full" : " Mini"));
         exportDir = new File(Environment.getExternalStorageDirectory(), LazzyBeeShare.EMPTY);
         if (!exportDir.exists()) {

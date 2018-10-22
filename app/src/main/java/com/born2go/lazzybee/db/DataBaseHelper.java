@@ -374,11 +374,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         FileChannel source;
         FileChannel destination;
         String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;
-        ;
 
-        String backupDBPath = DB_NAME;
+
+        //String backupDBPath = DB_NAME;
         File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, "/" + DOWNLOAD + "/" + backupDBPath);
+        File backupDB = new File(sd, "/" + DOWNLOAD + "/" + DB_NAME);
         try {
             source = new FileInputStream(currentDB).getChannel();
             destination = new FileOutputStream(backupDB).getChannel();
