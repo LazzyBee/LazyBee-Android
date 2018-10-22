@@ -16,6 +16,7 @@ import com.born2go.lazzybee.activity.CardDetailsActivity;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.daimajia.swipe.SwipeLayout;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         TextView lbPronoun = view.findViewById(R.id.lbPronoun);
         LinearLayout mDetailsCard = view.findViewById(R.id.mDetailsCard);
 
-        final SwipeLayout swipeLayout = view.findViewById(R.id.swipeLayout);
+        final com.daimajia.swipe.SwipeLayout swipeLayout = view.findViewById(R.id.swipeLayout);
         //Define action card
         TextView lbIgnore = view.findViewById(R.id.lbIgnore);
         TextView lbLearned = view.findViewById(R.id.lbLearned);
