@@ -44,7 +44,7 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.mRecyclerViewReviewTodayList = mRecyclerViewReviewTodayList;
         this.lbCountReviewCard = lbCountReviewCard;
-        this.mySubject=LazzyBeeShare.getMySubject();
+        this.mySubject = LazzyBeeShare.getMySubject();
 
         List<Card> deafaultList = new ArrayList<>();
         List<Card> customList = new ArrayList<>();
@@ -181,7 +181,8 @@ public class RecyclerViewIncomingListAdapter extends RecyclerView.Adapter<Recycl
             lbCountReviewCard.setTag(vocabularies.size());
             //reset adapter
             //mRecyclerViewReviewTodayList.setAdapter(this);
-            mRecyclerViewReviewTodayList.getAdapter().notifyItemRemoved(position);
+            if (mRecyclerViewReviewTodayList.getAdapter() != null)
+                mRecyclerViewReviewTodayList.getAdapter().notifyItemRemoved(position);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "ignoreAndLearnedCard", e);
         }

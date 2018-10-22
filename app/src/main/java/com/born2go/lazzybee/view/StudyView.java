@@ -245,7 +245,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             Log.d(TAG, "Detais Tag:" + detailsTag);
             detailsView =
                     (DetailsView) getActivity().getSupportFragmentManager().findFragmentByTag(detailsTag);
-            detailsView.setCard(cardFromDB);
+            if (detailsView != null)
+                detailsView.setCard(cardFromDB);
         }
     }
 
