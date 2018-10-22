@@ -35,7 +35,7 @@
             android:layout_height="1dp"
             android:background="@color/grey_300"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"></LinearLayout>
+            android:layout_marginRight="16dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

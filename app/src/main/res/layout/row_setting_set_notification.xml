@@ -48,7 +48,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:background="@color/grey_300"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
