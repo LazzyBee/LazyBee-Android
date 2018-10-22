@@ -30,7 +30,7 @@ import java.net.URL;
 /**
  * Created by Hue on 12/17/2015.
  */
-@SuppressLint("StaticFieldLeak")
+@SuppressLint({"StaticFieldLeak","SdCardPath"})
 public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Integer> {
     private static final String TAG = DownloadAndRestoreDatabaseFormCSV.class.getSimpleName();
     final Context context;

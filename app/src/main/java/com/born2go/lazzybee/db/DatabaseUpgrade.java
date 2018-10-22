@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.db;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,6 +23,7 @@ import java.util.List;
 /**
  * Created by Hue on 8/13/2015.
  */
+@SuppressLint("SdCardPath")
 public class DatabaseUpgrade extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseUpgrade";
     public static final String DB_NAME = "update.db";

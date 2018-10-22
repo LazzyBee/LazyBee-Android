@@ -46,7 +46,8 @@ public class CardSched {
     /*
     Return string of next time to review corresponded to ease level
      */
-    public String _nextIvlStr(Card card, int ease,Context context) {
+    @SuppressLint("DefaultLocale")
+    public String _nextIvlStr(Card card, int ease, Context context) {
         String str;
         int ivl = nextIvlBySeconds(card, ease);
 

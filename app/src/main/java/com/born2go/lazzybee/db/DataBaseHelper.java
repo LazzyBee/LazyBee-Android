@@ -55,6 +55,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      * @param context
      */
+    @SuppressLint("SdCardPath")
     public DataBaseHelper(Context context) {
 
         super(context, DB_NAME, null, 1);
