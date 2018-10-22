@@ -364,7 +364,7 @@ public class NavigationDrawerFragment extends Fragment {
         private final OnItemClickListener mListener;
 
         interface OnItemClickListener {
-            public void onItemClick(View view, int position);
+             void onItemClick(View view, int position);
         }
 
         final GestureDetector mGestureDetector;

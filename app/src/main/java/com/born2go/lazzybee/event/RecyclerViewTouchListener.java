@@ -31,6 +31,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
 
                 return true;
             }
+
             @Override
             public void onLongPress(MotionEvent e) {
 //                    View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
@@ -68,10 +69,9 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
 
     }
 
-    public static interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-
-        public void onItemLongPress(View childView, int position);
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+        void onItemLongPress(View childView, int position);
     }
 }
 

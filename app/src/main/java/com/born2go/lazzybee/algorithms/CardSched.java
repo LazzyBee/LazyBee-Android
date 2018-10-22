@@ -116,7 +116,7 @@ public class CardSched {
         if(card.getQueue() != Card.QUEUE_REV2)
             return 0;
 
-        long due = card.getDue();;
+        long due = card.getDue();
         long now = Utils.intNow();
 
         long diff_day = (now - due)/SECONDS_PERDAY;
