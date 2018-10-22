@@ -16,6 +16,7 @@ import io.fabric.sdk.android.Fabric;
 public class LazzyBeeApplication extends MultiDexApplication {
     private static LazzyBeeApplication mSelf;
     private Gson mGSon;
+
     public LazzyBeeApplication() {
         super();
 
@@ -27,10 +28,15 @@ public class LazzyBeeApplication extends MultiDexApplication {
         //Initialize the initLazzyBeeSingleton
         mSelf = this;
         mGSon = new Gson();
-        initLazzyBeeSingleton();
+//        final Fabric fabric = new Fabric.Builder(this)
+//                .kits(new Crashlytics())
+//                .debuggable(true)  // Enables Crashlytics debugger
+//                .build();
+//        Fabric.with(fabric);
         Fabric.with(getApplicationContext(), new Crashlytics());
+        initLazzyBeeSingleton();
     }
-    
+
     protected void initLazzyBeeSingleton() {
         // Initialize the instance of TextToSpeechSingleton
         LazzyBeeSingleton.initInstance(getApplicationContext());
