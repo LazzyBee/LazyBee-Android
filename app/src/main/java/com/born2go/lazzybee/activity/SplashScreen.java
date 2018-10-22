@@ -164,7 +164,7 @@ public class SplashScreen extends Activity {
         boolean custom_list = sharedpreferences.getBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, false);
         if (!custom_list) {
             learnApiImplements.addColumCustomList();
-            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).commit();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).apply();
         }
 
     }
