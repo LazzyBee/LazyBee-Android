@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -255,7 +256,7 @@ public class NavigationDrawerFragment extends Fragment {
         // Defer code dependent on restoration of previous instance state.
         mDrawerLayout.post(() -> mDrawerToggle.syncState());
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     private void selectItem(int position) {
@@ -270,7 +271,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Activity context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             mCallbacks = (NavigationDrawerCallbacks) context;
