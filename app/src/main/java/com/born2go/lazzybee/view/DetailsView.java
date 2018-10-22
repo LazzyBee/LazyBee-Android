@@ -44,7 +44,6 @@ import java.util.List;
 public class DetailsView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "DetailsView";
-    private OnDetailsViewListener mListener;
     final String tag;
     private Card card;
 
@@ -130,7 +129,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        OnDetailsViewListener mListener = null;
     }
 
     public void setCard(Card card) {
@@ -227,41 +226,37 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             // Inflate a new layout from our resources
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View view = null;
-            if (inflater != null) {
-                if (position < 2) {
-                    view = inflater.inflate(R.layout.page_package_card_item, container, false);
-                    // Add the newly created View to the ViewPager
-                    mDetailsWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
-                    mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                    WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
-                    ws.setJavaScriptEnabled(true);
-                    try {
-                        String displayHTML = LazzyBeeShare.EMPTY;
-                        switch (position) {
-                            case 0:
-                                //dic VN
-                                if (card.getL_vn() != null) {
-                                    displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
-                                }
-                                break;
-                            case 1:
-                                //dic ENG
-                                if (card.getL_en() != null) {
-                                    displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
-                                }
-                                break;
-                        }
-                        //Log.i(TAG, "Tab Dic:" + displayHTML.);
-
-                        mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
-                    } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
+            LayoutInflater inflater = (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view;
+            if (position < 2) {
+                view = inflater.inflate(R.layout.page_package_card_item, container, false);
+                // Add the newly created View to the ViewPager
+                mDetailsWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
+                mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
+                ws.setJavaScriptEnabled(true);
+                try {
+                    String displayHTML = LazzyBeeShare.EMPTY;
+                    switch (position) {
+                        case 0:
+                            //dic VN
+                            if (card.getL_vn() != null) {
+                                displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_vn());
+                            }
+                            break;
+                        case 1:
+                            //dic ENG
+                            if (card.getL_en() != null) {
+                                displayHTML = LazzyBeeShare.getDictionaryHTML(card.getL_en());
+                            }
+                            break;
                     }
-                } else {
-                    view = viewAdv;
+                    mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
                 }
+            } else {
+                view = viewAdv;
             }
             container.addView(view);
             return view;
