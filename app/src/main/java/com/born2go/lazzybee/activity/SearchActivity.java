@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -161,14 +162,14 @@ public class SearchActivity extends AppCompatActivity implements
         //  mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
         mRecyclerViewSearchResults.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
                 super.onScrolled(recyclerView, dx, dy);
                 Log.i(TAG, "onScrolled");
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 // TODO Auto-generated method stub
                 //super.onScrollStateChanged(recyclerView, newState);
                 int firstPos = gridLayoutManager.findFirstCompletelyVisibleItemPosition();

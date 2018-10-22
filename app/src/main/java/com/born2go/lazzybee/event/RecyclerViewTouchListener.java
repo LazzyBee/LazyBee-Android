@@ -2,6 +2,7 @@ package com.born2go.lazzybee.event;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -45,7 +46,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
     }
 
     @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
         View child = rv.findChildViewUnder(e.getX(), e.getY());
 
         if (child != null && onItemClickListener != null && gestureDetector.onTouchEvent(e)) {
@@ -57,7 +58,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
     }
 
     @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
         Log.d(TAG, "onTouchEvent" + e);
     }
 
