@@ -220,6 +220,7 @@ public class NavigationDrawerFragment extends Fragment {
                     return;
                 }
 
+                //noinspection deprecation
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 

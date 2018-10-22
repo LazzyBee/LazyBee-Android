@@ -74,7 +74,7 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                 ImageView mImg = view.findViewById(R.id.mImg);
 
                 TextView lbNameCourse = view.findViewById(R.id.lbNameCourse);
-                TextView lbCount = view.findViewById(R.id.lbCountMyWord);
+                TextView lbCount = view.findViewById(R.id.lb_count_my_word);
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
                 lbCount.setVisibility(View.GONE);
                 if (objectList.get(position).equals("English Word")) {

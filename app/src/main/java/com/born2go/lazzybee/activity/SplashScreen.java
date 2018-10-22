@@ -52,7 +52,6 @@ public class SplashScreen extends Activity {
                     _initSQlIte();
                     _updateVersionDB();
                     _changeLanguage();
-                    learnApiImplements._get100Card();
 
                     String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
                     initAppWithAmodPubId(ADMOB_PUB_ID);
@@ -167,6 +166,7 @@ public class SplashScreen extends Activity {
             sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).apply();
         }
 
+        learnApiImplements._get100Card();
     }
 
     private void _changeLanguage() {
