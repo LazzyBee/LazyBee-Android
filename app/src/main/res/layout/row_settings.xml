@@ -38,7 +38,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
-        android:text="0"
+        android:text="@string/zero"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorPrimary" />
 
@@ -49,7 +49,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/todo"
         android:src="@drawable/ic_arrow_right_teal"
         android:visibility="gone" />
 </RelativeLayout>

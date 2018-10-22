@@ -71,7 +71,7 @@
 
     <!--Dialog Done card-->
     <string name="dialog_title_delete_card">Delete card</string>
-    <string name="dialog_message_delete_card">Are you sure to delete card: %s!</string>
+    <string name="dialog_message_delete_card">Are you sure to delete card: {%s}!</string>
     <string name="message_learnt_card_sucessful">Card changes to learned</string>
 
     <!--Dialog Change Language-->
@@ -120,7 +120,7 @@
     <string name="setting_language" translatable="false">Language/Ngôn ngữ</string>
     <string name="setting_lines" translatable="false">LINE</string>
     <string name="setting_lines_child" translatable="false">LINE CHILD</string>
-    <string name="setting_limit_card_number">%d Card</string>
+    <string name="setting_limit_card_number">{%d} Card</string>
 
     <string name="dialog_message_setting_today_new_card_limit_by">Today\'s new card limit by</string>
     <string name="dialog_message_setting_today_review_card_limit_by">Today review card limit by</string>
@@ -133,7 +133,7 @@
 
     <string name="my_course">My Course</string>
     <string name="message_congratulations_with_tip" formatted="false">Click %1s to learn more and click %2s to view learned cards</string>
-    <string name="message_congratulations_continue">Click %s to study</string>
+    <string name="message_congratulations_continue">Click {%s} to study</string>
     <string name="message_congratulations" translatable="false">congratulations</string>
 
     <string name="drawer_user" translatable="false">user</string>
@@ -345,7 +345,7 @@
 
 
     <string name="message_error_back_before_card" translatable="false">Error back before card</string>
-    <string name="number_row_updated" translatable="false">%d row updated</string>
+    <string name="number_row_updated" translatable="false">{%d} row updated</string>
     <string name="drawer_about" translatable="false">About</string>
     <string name="title_activity_about" translatable="false">AboutActivity</string>
     <string name="setting_update_db_form_query" translatable="false">Update by Query</string>
@@ -592,6 +592,20 @@
     <string name="intro_activity_slide_4">As you learn, swipe left to access embedded dictionary</string>
     <string name="intro_activity_slide_5">You read giudeline carefully to understand our special methoddology</string>
     <string name="intro_activity_slide_6">GOOD LUCK!!!</string>
-
+    <string name="todo" translatable="false">TODO</string>
+    <string name="days_1000" translatable="false">10000 days</string>
+    <string name="mon" translatable="false">Mon</string>
+    <string name="input_query" translatable="false">Input query:</string>
+    <string name="now" translatable="false">Now</string>
+    <string name="search_opition" translatable="false">Search Option</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="page" translatable="false">Page:</string>
+    <string name="zero_word" translatable="false">0 word</string>
+    <string name="description" translatable="false">Description</string>
+    <string name="question" translatable="false">Question</string>
+    <string name="answer" translatable="false">answer</string>
+    <string name="level" translatable="false">Level</string>
+    <string name="learn" translatable="false">Learn</string>
+    <string name="pronoun" translatable="false">pronoun</string>
 
 </resources>

@@ -10,7 +10,7 @@
         android:id="@+id/streak_ring"
         android:layout_gravity="center"
         android:src="@drawable/streak_ring1"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/todo" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -19,12 +19,12 @@
         android:layout_gravity="center"
         android:src="@drawable/hive"
         android:layout_marginBottom="15dp"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/todo" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10000 days"
+        android:text="@string/days_1000"
         android:id="@+id/lbCountStreak"
         android:layout_gravity="center"
         android:textColor="@color/grey_600"

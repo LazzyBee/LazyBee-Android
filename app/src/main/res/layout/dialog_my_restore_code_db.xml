@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="14dp"
             android:layout_marginLeft="14dp"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/todo"
             android:src="@drawable/ic_clear_white_36dp" />
     </RelativeLayout>
 

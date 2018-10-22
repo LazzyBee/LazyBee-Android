@@ -27,7 +27,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="16dp"
                     android:src="@drawable/bee_rotate"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:id="@+id/textView6"

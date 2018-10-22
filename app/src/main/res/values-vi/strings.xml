@@ -49,7 +49,7 @@
     <string name="notification">Thông báo</string>
     <!--<string name="language">Ngôn ngữ/Language</string>-->
 
-    <string name="dialog_message_delete_card">Bạn có muốn xóa từ này?</string>
+    <string name="dialog_message_delete_card">Bạn có muốn xóa từ này {%s}?</string>
     <string name="message_learnt_card_sucessful">Đã học xong thẻ!</string>
 
     <string name="dialog_title_delete_card">Xóa từ</string>
@@ -84,7 +84,7 @@
     <string name="setting_limit_card_number">%d Thẻ</string>
 
     <string name="message_congratulations_with_tip" formatted="false">Bấm vào %1s để học tiếp,bấm vào %2s để xem lại thẻ đã học</string>
-    <string name="message_congratulations_continue" formatted="false">Bấm %s để học tiếp</string>
+    <string name="message_congratulations_continue">Bấm {%s} để học tiếp</string>
 
     <string name="setting_max_learn_more_per_day">Số thẻ học thêm</string>
     <string name="dialog_message_setting_max_learn_more_per_day_by">Thay đổi số thẻ học thêm</string>

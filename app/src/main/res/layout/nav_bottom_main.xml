@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView16"
         android:layout_centerHorizontal="true"
-        android:text="1.4.4"
         android:textStyle="bold"
         android:textSize="10sp"
         android:textAppearance="?android:attr/textAppearanceSmall"

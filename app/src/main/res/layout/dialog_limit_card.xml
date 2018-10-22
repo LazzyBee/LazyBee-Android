@@ -34,6 +34,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/lbEror"
         android:textColor="@color/red_500"
-        android:textSize="12dp" />
+        android:textSize="12sp" />
 
 </LinearLayout>

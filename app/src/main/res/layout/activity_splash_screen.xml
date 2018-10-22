@@ -28,7 +28,7 @@
             android:id="@+id/imageView3"
             android:src="@drawable/ic_logo180"
             android:layout_gravity="center"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/todo" />
 
         <ProgressBar
             android:layout_width="wrap_content"

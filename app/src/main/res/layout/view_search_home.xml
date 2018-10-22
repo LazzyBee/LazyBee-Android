@@ -31,6 +31,6 @@
         android:tint="@android:color/white"
         android:layout_alignParentTop="false"
         android:layout_centerVertical="true"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/todo" />
 
 </RelativeLayout>

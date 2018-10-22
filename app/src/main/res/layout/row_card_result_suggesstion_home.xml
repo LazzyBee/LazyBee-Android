@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:singleLine="true"
-        android:text="Question"
+        android:text="@string/question"
         android:textColor="#757575"
         android:textSize="20sp" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/lbQuestion"
         android:singleLine="true"
-        android:text="answer"
+        android:text="@string/answer"
         android:textColor="#757575" />
 
     <TextView
@@ -35,7 +35,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="3dp"
         android:background="@color/blue_500"
-        android:text="Level"
+        android:text="@string/level"
         android:textColor="#ffffff"
         android:visibility="gone" />
 
@@ -50,7 +50,7 @@
         android:layout_toLeftOf="@+id/level"
         android:layout_toStartOf="@+id/level"
         android:background="@color/colorPrimary"
-        android:text="Learn"
+        android:text="@string/learn"
         android:textColor="#ffffff"
         android:visibility="gone" />
 
@@ -63,7 +63,7 @@
         android:layout_marginLeft="15dp"
         android:layout_toEndOf="@+id/lbQuestion"
         android:layout_toRightOf="@+id/lbQuestion"
-        android:text="pronoun"
+        android:text="@string/pronoun"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ff060606"
         android:visibility="gone" />

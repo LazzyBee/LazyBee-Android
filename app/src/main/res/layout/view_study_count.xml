@@ -33,7 +33,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="16dp"
-                    android:text="0"
+                    android:text="@string/zero"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/card_again_color" />
 
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:text="0"
+                    android:text="@string/zero"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/card_due_color" />
 
@@ -70,7 +70,7 @@
         android:src="@drawable/ic_dictionary"
         android:layout_marginRight="11dp"
         android:visibility="gone"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/todo" />
 
 
 </RelativeLayout>

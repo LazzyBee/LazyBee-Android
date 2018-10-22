@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="110dp"
         app:srcCompat="@drawable/ico_2000"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/todo"
         tools:ignore="HardcodedText" />
 
     <TextView

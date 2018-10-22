@@ -21,7 +21,7 @@
             android:layout_marginLeft="14dp"
             android:layout_marginStart="14dp"
             android:src="@drawable/ic_clear_white_36dp"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/todo" />
     </RelativeLayout>
 
     <WebView
