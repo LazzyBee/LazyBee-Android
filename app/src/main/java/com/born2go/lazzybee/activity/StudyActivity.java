@@ -288,7 +288,6 @@ public class StudyActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                newText.trim();
                 if (newText.trim().length() > 2) {
 
                     String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
