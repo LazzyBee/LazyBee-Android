@@ -26,7 +26,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
                 Log.d(TAG, "onSingleTapUp" + e);
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && onItemClickListener != null) {
-                    onItemClickListener.onItemClick(child, recyclerView.getChildPosition(child));
+                    onItemClickListener.onItemClick(child, recyclerView.getChildAdapterPosition(child));
                 }
 
                 return true;
@@ -36,7 +36,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
 //                    View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && onItemClickListener != null) {
-                    onItemClickListener.onItemLongPress(child, recyclerView.getChildPosition(child));
+                    onItemClickListener.onItemLongPress(child, recyclerView.getChildAdapterPosition(child));
                 }
                 Log.d(TAG, "onLongPress" + e);
 
@@ -50,7 +50,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
         View child = rv.findChildViewUnder(e.getX(), e.getY());
 
         if (child != null && onItemClickListener != null && gestureDetector.onTouchEvent(e)) {
-            onItemClickListener.onItemClick(child, rv.getChildPosition(child));
+            onItemClickListener.onItemClick(child, rv.getChildAdapterPosition(child));
         }
 
         Log.d(TAG, "onInterceptTouchEvent" + e);
