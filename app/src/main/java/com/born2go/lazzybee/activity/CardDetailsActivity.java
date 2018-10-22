@@ -225,21 +225,6 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
         }
 
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand");
-                return true;
-            }
-
-        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
