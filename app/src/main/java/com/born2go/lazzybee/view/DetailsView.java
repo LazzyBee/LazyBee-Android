@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.StudyActivity;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
-import com.born2go.lazzybee.adapter.PackageCardPageFragmentAdapter;
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
