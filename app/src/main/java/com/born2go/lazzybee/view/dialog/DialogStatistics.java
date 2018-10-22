@@ -45,22 +45,29 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-@SuppressLint("ValidFragment")
 public class DialogStatistics extends DialogFragment {
 
     public static final String TAG = "DialogStatistics";
-    RelativeLayout mStatistic, mChart;
+    View mStatistic, mChart;
     TextView mlazzybee;
     private ColumnChartView chart;
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
-    private final Context context;
+    private Context context;
     Button btnShare;
 
-    public DialogStatistics(Context context) {
-        this.context = context;
+    public DialogStatistics() {
     }
 
+    public static DialogStatistics newInstance() {
+        return new DialogStatistics();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -82,7 +89,7 @@ public class DialogStatistics extends DialogFragment {
                 screenViewChart();
                 _shareCard();
 
-                if(getActivity()!=null){
+                if (getActivity() != null) {
                     FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
                     firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
                 }
