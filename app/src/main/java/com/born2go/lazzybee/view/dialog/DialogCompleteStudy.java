@@ -35,10 +35,13 @@ import java.util.Calendar;
 public class DialogCompleteStudy extends DialogFragment {
 
     private static final String TAG = "DialogCompleteStudy";
-    private final Context context;
+    private Context context;
 
-    public DialogCompleteStudy(Context context) {
-        this.context = context;
+    public DialogCompleteStudy() {
+    }
+
+    public static DialogCompleteStudy newInstance() {
+        return new DialogCompleteStudy();
     }
 
     public interface ICompleteSutdy {
@@ -46,6 +49,7 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     ICompleteSutdy iCompleteSutdy;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -259,5 +263,6 @@ public class DialogCompleteStudy extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         iCompleteSutdy = (ICompleteSutdy) context;
+        this.context = context;
     }
 }

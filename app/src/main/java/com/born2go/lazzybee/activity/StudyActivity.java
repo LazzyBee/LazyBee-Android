@@ -168,7 +168,7 @@ public class StudyActivity extends AppCompatActivity
     private void _showDialogComplete() {
         if (!learn_more) {
             //Show dialog complete learn
-            final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
+            final DialogCompleteStudy dialogCompleteStudy =DialogCompleteStudy.newInstance();
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
 
             int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
