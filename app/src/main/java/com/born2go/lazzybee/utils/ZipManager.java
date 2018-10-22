@@ -76,7 +76,7 @@ public class ZipManager {
             zin.close();
             unzip = true;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e.getMessage());
         }
         return unzip;
     }
