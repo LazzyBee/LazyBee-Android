@@ -12,6 +12,7 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.Locale;
 
@@ -72,10 +73,18 @@ public class LazzyBeeSingleton {
     }
 
     public static FirebaseAnalytics getFirebaseAnalytics() {
+        if (mFirebaseAnalytics == null)
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         return mFirebaseAnalytics;
     }
 
     public static FirebaseRemoteConfig getFirebaseRemoteConfig() {
+        if (mRemoteConfig == null) {
+            mRemoteConfig = FirebaseRemoteConfig.getInstance();
+            FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                    .setDeveloperModeEnabled(false)
+                    .build();
+        }
         return mRemoteConfig;
     }
 
