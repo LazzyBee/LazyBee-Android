@@ -1,5 +1,7 @@
 package com.born2go.lazzybee.db;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Html;
 
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -9,7 +11,7 @@ import org.json.JSONObject;
 /**
  * Created by Hue on 7/1/2015.
  */
-public class Card {
+public class Card implements Parcelable {
 
     int id;
     long gId;/*"global unique id */
@@ -334,4 +336,74 @@ public class Card {
         }
         return example;
     }
+
+    protected Card(Parcel in) {
+        id = in.readInt();
+        gId = in.readLong();
+        question = in.readString();
+        answers = in.readString();
+        status = in.readInt();
+        queue = in.readInt();
+        categories = in.readString();
+        subcat = in.readString();
+        _package = in.readString();
+        level = in.readInt();
+        rev_count = in.readInt();
+        factor = in.readInt();
+        last_ivl = in.readInt();
+        due = in.readLong();
+        user_note = in.readString();
+        l_vn = in.readString();
+        l_en = in.readString();
+        pronoun = in.readString();
+        meaning = in.readString();
+        explain = in.readString();
+        example = in.readString();
+        custom_list = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeLong(gId);
+        dest.writeString(question);
+        dest.writeString(answers);
+        dest.writeInt(status);
+        dest.writeInt(queue);
+        dest.writeString(categories);
+        dest.writeString(subcat);
+        dest.writeString(_package);
+        dest.writeInt(level);
+        dest.writeInt(rev_count);
+        dest.writeInt(factor);
+        dest.writeInt(last_ivl);
+        dest.writeLong(due);
+        dest.writeString(user_note);
+        dest.writeString(l_vn);
+        dest.writeString(l_en);
+        dest.writeString(pronoun);
+        dest.writeString(meaning);
+        dest.writeString(explain);
+        dest.writeString(example);
+        dest.writeByte((byte) (custom_list ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Card> CREATOR = new Parcelable.Creator<Card>() {
+        @Override
+        public Card createFromParcel(Parcel in) {
+            return new Card(in);
+        }
+
+        @Override
+        public Card[] newArray(int size) {
+            return new Card[size];
+        }
+    };
+
 }
