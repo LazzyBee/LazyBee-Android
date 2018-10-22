@@ -190,7 +190,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         mLayoutButton.setVisibility(View.GONE);
         btnNextReverseCard.setVisibility(View.VISIBLE);
         mListener.setCurrentCard(currentCard);
-        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+        setVisibityUserNote();
         imgGotoDictionary.setVisibility(View.VISIBLE);
         setEnableShowDictionary(true);
         //set Dictionary card
@@ -200,14 +200,21 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     }
 
+
     private void onClickShowAnswer() {
         btnNextReverseCard.setVisibility(View.GONE);
         setEnableShowDictionary(true);
         answerDisplay = true;
         _showAnswer();
         mListener.setCurrentCard(currentCard);
-        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+
         imgGotoDictionary.setVisibility(View.VISIBLE);
+        setVisibityUserNote();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setVisibityUserNote() {
+        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
     }
 
     private void _showDialogTipAnswerCard() {
@@ -679,9 +686,14 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             _handlerTimeShowAswerButton();
             //
             mShowAnswer.setVisibility(View.VISIBLE);
-            mFloatActionButtonUserNote.setVisibility(View.GONE);
             imgGotoDictionary.setVisibility(View.GONE);
+            setVisibityUserNoteGONE();
         });
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setVisibityUserNoteGONE() {
+        mFloatActionButtonUserNote.setVisibility(View.GONE);
     }
 
 
@@ -1029,7 +1041,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                         " to queue " + beforeCard.getQueue());
 
                 _nextCard(currentQueue);//next Card by Queue
-                mFloatActionButtonUserNote.setVisibility(View.GONE);
+                //mFloatActionButtonUserNote.setVisibility(View.GONE);
+                setVisibityUserNoteGONE();
                 imgGotoDictionary.setVisibility(View.GONE);
 
             } else {
@@ -1444,7 +1457,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
 
-            if (getActivity()!=null){
+            if (getActivity() != null) {
                 LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
                     if (task.isSuccessful()) {
