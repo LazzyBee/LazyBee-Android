@@ -41,8 +41,6 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
     private final boolean debug;
     private final String backupFileName = "backup.zip";
     private String dotZip = ".zip";
-    private final String wordFileName = "word.csv";
-    private final String streakFileName = "streak.csv";
     final String backupCVSFileName = "backup.csv";
     final File exportDir;
 
@@ -198,8 +196,10 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
         String fileImport = exportDir.getPath() + "/";
         boolean unzip = zipManager.unzip(path, fileImport);
         if (unzip) {
+            String wordFileName = "word.csv";
             String wordFilePath = exportDir.getPath() + "/" + wordFileName;
             String backupCVSFilePath = exportDir.getPath() + "/" + backupCVSFileName;
+            String streakFileName = "streak.csv";
             String streakFilePath = exportDir.getPath() + "/" + streakFileName;
             // File backUpFileCsv = new File(backupCVSFilePath);
             File wordFileCsv = new File(wordFilePath);

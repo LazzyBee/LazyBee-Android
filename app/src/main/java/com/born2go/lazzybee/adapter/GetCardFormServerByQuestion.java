@@ -19,14 +19,13 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
 
     private static final String TAG = "GetCardFormServer";
     private final ProgressDialog dialog;
-    private final LearnApiImplements learnApiImplements;
     private final ConnectGdatabase connectGdatabase;
     public GetCardFormServerByQuestionResponse delegate = null;
     private final String msg_Loading;
 
     public GetCardFormServerByQuestion(Context context, Card card) {
         dialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
-        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
         if (card != null)
             msg_Loading = context.getString(R.string.msg_find_card_question, card.getQuestion());

@@ -20,7 +20,6 @@ public class IntroActivity extends AppCompatActivity {
 
     private TextView[] mDots;
 
-    private SliderAdapter sliderAdapter;
     private Button mSliderButton;
 
     private int mCurrentPage;
@@ -35,7 +34,7 @@ public class IntroActivity extends AppCompatActivity {
         mDotLayout = findViewById(R.id.dotsLayout);
         mSliderButton = findViewById(R.id.sliderBtn);
 
-        sliderAdapter = new SliderAdapter(this);
+        SliderAdapter sliderAdapter = new SliderAdapter(this);
         mSliderViewPaper.setAdapter(sliderAdapter);
 
         addDotsIndicator(0);

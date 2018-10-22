@@ -42,7 +42,6 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
     private static final String TAG = "IncomingList";
     private Context context;
     private LearnApiImplements dataBaseHelper;
-    private RecyclerViewIncomingListAdapter incomingListAdapter;
     private IncomingListActivity thiz;
 
     private RecyclerView mRecyclerViewReviewTodayList;
@@ -83,9 +82,8 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         lbCountReviewCard.setText(String.valueOf(getString(R.string.message_total_card_incoming) + vocabularies.size()));
         lbCountReviewCard.setTag(vocabularies.size());
         //Init Adapter
-        incomingListAdapter =
-                new RecyclerViewIncomingListAdapter
-                        (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
+        RecyclerViewIncomingListAdapter incomingListAdapter = new RecyclerViewIncomingListAdapter
+                (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
 
         //Set data and add Touch Listener
 

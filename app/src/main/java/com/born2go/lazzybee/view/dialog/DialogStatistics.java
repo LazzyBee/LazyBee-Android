@@ -52,11 +52,8 @@ public class DialogStatistics extends DialogFragment {
     RelativeLayout mStatistic, mChart;
     TextView mlazzybee;
     private ColumnChartView chart;
-    private ColumnChartData data;
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
-    private final boolean hasLabels = false;
-    private final boolean hasLabelForSelected = false;
     private final Context context;
     Button btnShare;
 
@@ -180,13 +177,15 @@ public class DialogStatistics extends DialogFragment {
                 }
                 Column column = new Column(values);
 
+                boolean hasLabels = false;
                 column.setHasLabels(hasLabels);
+                boolean hasLabelForSelected = false;
                 column.setHasLabelsOnlyForSelected(hasLabelForSelected);
 
                 columns.add(column);
 
             }
-            data = new ColumnChartData(columns);
+            ColumnChartData data = new ColumnChartData(columns);
             Axis axeX = new Axis(axisXValues);
             Axis axisTop = new Axis(axisTopValues).setHasLines(true);
             axisTop.setName(context.getString(R.string.dialog_statistical_total, total));

@@ -16,7 +16,6 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 public class GetGroupVoca extends AsyncTask<Long, Void, GroupVoca> {
     private static final String TAG = "GetGroupVoca";
     private final ProgressDialog dialog;
-    private final LearnApiImplements learnApiImplements;
     private final ConnectGdatabase connectGdatabase;
 
     public interface IGetGroupVoca {
@@ -28,7 +27,7 @@ public class GetGroupVoca extends AsyncTask<Long, Void, GroupVoca> {
     public GetGroupVoca(Context context) {
         dialog = new ProgressDialog(context);
         dialog.setCancelable(false);
-        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
     }
 
