@@ -50,8 +50,8 @@ public class SplashScreen extends Activity {
                         Log.d(TAG, "Fetch Failed");
                     }
                     _initSQlIte();
-                    _changeLanguage();
                     _updateVersionDB();
+                    _changeLanguage();
                     learnApiImplements._get100Card();
 
                     String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
