@@ -19,7 +19,6 @@ import com.born2go.lazzybee.shared.SharedPrefs;
 import com.google.android.gms.ads.MobileAds;
 
 
-import java.io.IOException;
 import java.util.Locale;
 
 
@@ -139,7 +138,7 @@ public class SplashScreen extends Activity {
 
         //get version in DB
         int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
-        int _gdbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
+        int _gdbVesion;
         String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
 
 

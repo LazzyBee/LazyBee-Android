@@ -1,6 +1,5 @@
 package com.born2go.lazzybee.shared;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -12,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.text.Spanned;
@@ -31,10 +29,8 @@ import com.born2go.lazzybee.utils.NotificationReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 /**
