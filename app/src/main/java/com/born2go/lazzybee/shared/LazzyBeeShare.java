@@ -522,8 +522,9 @@ public class LazzyBeeShare {
         boolean DEBUG = false;
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_DEBUG_INFOR);
-        if (value.equals(ON)) {
-            DEBUG = true;
+        if (value != null) {
+            if (value.equals(ON))
+                DEBUG = true;
         }
         return DEBUG;
     }
@@ -668,14 +669,9 @@ public class LazzyBeeShare {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
                     + "\t" + context.getClass().getName() + " in function " + function + "():" + e.getMessage();
-            final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
-            @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(context.getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-            if (devices.contains(android_id)) {
-                Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
-                Log.e(TAG, messageError);
-                e.printStackTrace();
-            }
+            Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, messageError);
+            e.printStackTrace();
             //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         } catch (Exception ex) {
