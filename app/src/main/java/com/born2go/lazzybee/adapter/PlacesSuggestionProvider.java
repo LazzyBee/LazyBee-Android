@@ -81,7 +81,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
         // Use the UriMatcher to see what kind of query we have
         switch (uriMatcher.match(uri)) {
             case SUGGEST_CARD:
-                if (uri.getLastPathSegment()!=null){
+                if (uri.getLastPathSegment() != null) {
                     String query = uri.getLastPathSegment().toLowerCase().trim();
                     Log.d(LOG_TAG, "query:" + query);
                     MatrixCursor cursor = new MatrixCursor(SUGGEST_COLUMNS, 1);
@@ -107,7 +107,8 @@ public class PlacesSuggestionProvider extends ContentProvider {
                         }
 
                     }
-                    cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                    if (getContext().getContentResolver() != null)
+                        cursor.setNotificationUri(getContext().getContentResolver(), uri);
                     return cursor;
                 }
 
