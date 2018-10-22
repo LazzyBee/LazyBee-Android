@@ -138,8 +138,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         this.mViewPager = mViewPager;
         this.screenSlidePagerAdapter = screenSlidePagerAdapter;
         this.studyAction = intent.getAction();
-        _initDatabase();
-        _initTextToSpeech();
+
     }
 
     public static StudyView newInstance(Context context, Intent intent, DisableScrollingViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
@@ -665,8 +664,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.VALUE, String.valueOf("" + (dueCount + againCount)));
                 mFirebaseAnalytics.logEvent("Count_review_per_day", bundle);
-
-
             }
 
 
@@ -1124,6 +1121,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        _initDatabase();
+        _initTextToSpeech();
         _initSettingUser();
     }
 

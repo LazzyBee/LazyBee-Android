@@ -256,8 +256,6 @@ public class StudyActivity extends AppCompatActivity
         }
 
 
-
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -421,9 +419,9 @@ public class StudyActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0)
+            if (position == 0) {
                 return StudyView.newInstance(context, getIntent(), mViewPager, ScreenSlidePagerAdapter.this, currentCard);
-            else {
+            } else {
                 return DetailsView.newInstance(context, "details");
 
             }
