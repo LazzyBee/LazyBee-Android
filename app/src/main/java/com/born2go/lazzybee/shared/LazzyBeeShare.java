@@ -40,6 +40,7 @@ public class LazzyBeeShare {
 
     public static final int COURSE_ID_TEST = 100;
     public static final String LEARN_MORE = "LEARN_MORE";
+    public static final String APP_NOTIFICATION_CHANNEL = "LZ_2018_01";
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
     public static final String CARDID = "cardId";

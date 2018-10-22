@@ -62,7 +62,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         //Define notification
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, LazzyBeeShare.APP_NOTIFICATION_CHANNEL)
                         .setSmallIcon(R.drawable.ic_logo_green)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(message)
