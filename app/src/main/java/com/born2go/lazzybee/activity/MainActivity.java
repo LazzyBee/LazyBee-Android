@@ -788,7 +788,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showHelp() {
-        DialogHelp dialogHelp = new DialogHelp();
+        DialogHelp dialogHelp = DialogHelp.newDialog();
         dialogHelp.show(getSupportFragmentManager(), DialogHelp.TAG);
     }
 

@@ -6,11 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.SliderAdapter;
@@ -38,7 +36,7 @@ public class IntroActivity extends AppCompatActivity {
         mDotLayout = findViewById(R.id.dotsLayout);
         mSliderButton = findViewById(R.id.sliderBtn);
 
-        SliderAdapter sliderAdapter = new SliderAdapter(this);
+        SliderAdapter sliderAdapter = new SliderAdapter(this,getSupportFragmentManager());
         mSliderViewPaper.setAdapter(sliderAdapter);
 
         addDotsIndicator(0);
