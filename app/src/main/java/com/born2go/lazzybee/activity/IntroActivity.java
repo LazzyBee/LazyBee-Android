@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.adapter.SliderAdapter;
@@ -15,6 +18,7 @@ import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 public class IntroActivity extends AppCompatActivity {
 
+    private static final String TAG = IntroActivity.class.getSimpleName();
     private ViewPager mSliderViewPaper;
     private LinearLayout mDotLayout;
 
@@ -42,15 +46,16 @@ public class IntroActivity extends AppCompatActivity {
         mSliderViewPaper.addOnPageChangeListener(viewlistener);
 
         mSliderButton.setOnClickListener(view -> {
-
-            mSliderViewPaper.setCurrentItem(mCurrentPage + 1);
-            if (mSliderButton.getText().equals(getString(R.string.intro_activity_get_started))) {
+            Log.d(TAG, mCurrentPage + ":" + mSliderViewPaper.getCurrentItem());
+            if (mCurrentPage == 5 && mSliderViewPaper.getCurrentItem() == 5) {
                 String ADMOB_PUB_ID = LazzyBeeShare.EMPTY;
                 if (getIntent() != null) {
                     ADMOB_PUB_ID = getIntent().getStringExtra(LazzyBeeShare.ADMOB_PUB_ID);
                 }
                 startMainActivity(ADMOB_PUB_ID);
             }
+            mSliderViewPaper.setCurrentItem(mCurrentPage + 1);
+
         });
     }
 
@@ -97,21 +102,12 @@ public class IntroActivity extends AppCompatActivity {
 
             mCurrentPage = i;
 
-            if (i == 0) {
-
-                mSliderButton.setEnabled(true);
-                mSliderButton.setText(getString(R.string.intro_activity_next));
-
-            } else if (i == mDots.length - 1) {
-
+            if (i == mDots.length - 1) {
                 mSliderButton.setEnabled(true);
                 mSliderButton.setText(getString(R.string.intro_activity_get_started));
-
             } else {
-
                 mSliderButton.setEnabled(true);
                 mSliderButton.setText(getString(R.string.intro_activity_next));
-
             }
         }
 
