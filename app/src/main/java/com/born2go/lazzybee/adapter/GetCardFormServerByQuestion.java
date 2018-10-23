@@ -18,15 +18,14 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
 
     private static final String TAG = "GetCardFormServer";
-    private ProgressDialog dialog;
-    private LearnApiImplements learnApiImplements;
-    private ConnectGdatabase connectGdatabase;
+    private final ProgressDialog dialog;
+    private final ConnectGdatabase connectGdatabase;
     public GetCardFormServerByQuestionResponse delegate = null;
-    private String msg_Loading;
+    private final String msg_Loading;
 
     public GetCardFormServerByQuestion(Context context, Card card) {
         dialog = new ProgressDialog(context, ProgressDialog.STYLE_SPINNER);
-        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
         if (card != null)
             msg_Loading = context.getString(R.string.msg_find_card_question, card.getQuestion());
@@ -77,7 +76,7 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
             card.setQuestion(voca.getQ());
             card.setAnswers(voca.getA());
             card.setPackage(voca.getPackages());
-            card.setLevel(Integer.valueOf(voca.getLevel()));
+            card.setLevel(voca.getLevel());
 
 
             card.setId(_card.getId());
@@ -95,6 +94,7 @@ public class GetCardFormServerByQuestion extends AsyncTask<Card, Void, Card> {
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             return null;
         }

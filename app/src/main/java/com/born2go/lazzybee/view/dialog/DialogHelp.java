@@ -2,10 +2,10 @@ package com.born2go.lazzybee.view.dialog;
 
 
 import android.app.Dialog;
-import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -18,9 +18,7 @@ import android.widget.ImageView;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class DialogHelp extends DialogFragment {
 
 
@@ -30,9 +28,12 @@ public class DialogHelp extends DialogFragment {
         // Required empty public constructor
     }
 
+    public static DialogHelp newDialog() {
+        return new DialogHelp();
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.dialog_help, container, false);
@@ -43,26 +44,17 @@ public class DialogHelp extends DialogFragment {
         //set style
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
-        WebView mWebViewHelp = (WebView) view.findViewById(R.id.mWebViewHelp);
-        FloatingActionButton mFloatClose = (FloatingActionButton) view.findViewById(R.id.mFloatClose);
-        ImageView mClose= (ImageView) view.findViewById(R.id.mClose);
+        WebView mWebViewHelp = view.findViewById(R.id.mWebViewHelp);
+        FloatingActionButton mFloatClose = view.findViewById(R.id.mFloatClose);
+        ImageView mClose = view.findViewById(R.id.mClose);
         mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
 
-        mClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        mClose.setOnClickListener(v -> getDialog().dismiss());
 
-        mFloatClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        mFloatClose.setOnClickListener(v -> getDialog().dismiss());
         return view;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -70,8 +62,10 @@ public class DialogHelp extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 

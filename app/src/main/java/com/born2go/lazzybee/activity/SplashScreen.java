@@ -3,13 +3,10 @@ package com.born2go.lazzybee.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -18,12 +15,10 @@ import com.born2go.lazzybee.db.DatabaseUpgrade;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
+import com.born2go.lazzybee.shared.SharedPrefs;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 
-import java.io.IOException;
 import java.util.Locale;
 
 
@@ -40,35 +35,51 @@ public class SplashScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_splash_screen);
         thiz = this;
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // After config data is successfully fetched, it must be activated before newly fetched
-                            // values are returned.
-                            LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
-                        }
-                        _initSQlIte();
-                        _changeLanguage();
-                        _updateVersionDB();
-                        String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
-                        Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
-                        LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
-                        MobileAds.initialize(thiz, ADMOB_PUB_ID);
-                        learnApiImplements._get100Card();
 
-                        startMainActivity(ADMOB_PUB_ID);
+        Log.d(TAG, "Start Fetch");
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // After config data is successfully fetched, it must be activated before newly fetched
+                        // values are returned.
+                        LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
+                        Log.d(TAG, "Fetch Successful");
+                    } else {
+                        Log.d(TAG, "Fetch Failed");
                     }
+                    _initSQlIte();
+                    _updateVersionDB();
+                    _changeLanguage();
+
+                    String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                    initAppWithAmodPubId(ADMOB_PUB_ID);
                 });
     }
 
+    private void initAppWithAmodPubId(String ADMOB_PUB_ID) {
+        Log.d(TAG, "ADMOB_PUB_ID:" + ADMOB_PUB_ID);
+        LazzyBeeSingleton.setAmobPubId(ADMOB_PUB_ID);
+        MobileAds.initialize(thiz, ADMOB_PUB_ID);
+        startMainActivity(ADMOB_PUB_ID);
+    }
+
     private void startMainActivity(String ADMOB_PUB_ID) {
-        // Start your app main activity
-        Intent i = new Intent(SplashScreen.this, MainActivity.class);
+        boolean select_display_language = SharedPrefs.getInstance().get("SELECT_DISPLAY_LANGUAGE", Boolean.class, false);
+        Intent i;
+        if (select_display_language) {
+            boolean display_intro = SharedPrefs.getInstance().get("DISPLAY_INTRO", Boolean.class, false);
+            if (display_intro) {
+                i = new Intent(SplashScreen.this, MainActivity.class);
+            } else {
+                SharedPrefs.getInstance().put("DISPLAY_INTRO", true);
+                i = new Intent(SplashScreen.this, IntroActivity.class);
+            }
+        } else {
+            SharedPrefs.getInstance().put("SELECT_DISPLAY_LANGUAGE", true);
+            i = new Intent(SplashScreen.this, LanguageActivity.class);
+        }
         i.putExtra(LazzyBeeShare.ADMOB_PUB_ID, ADMOB_PUB_ID);
         startActivity(i);
         this.finish();
@@ -84,53 +95,11 @@ public class SplashScreen extends Activity {
         alertDialog.setTitle("Error");
         alertDialog.setMessage(getResources().getString(stringKey));
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                "OK", (dialog, which) -> {
                 });
         alertDialog.show();
     }
 
-//    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
-//        @Override
-//        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
-//            // We load each container when it becomes available.
-//            Container container = containerHolder.getContainer();
-//            registerCallbacksForContainer(container);
-//        }
-//
-//        public static void registerCallbacksForContainer(Container container) {
-//            // Register two custom function call macros to the container.
-//            container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
-//            container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
-//            // Register a custom function call tag to the container.
-//            container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
-//        }
-//    }
-
-//    private static class CustomMacroCallback implements Container.FunctionCallMacroCallback {
-//        private int numCalls;
-//
-//        @Override
-//        public Object getValue(String name, Map<String, Object> parameters) {
-//            if ("increment".equals(name)) {
-//                return ++numCalls;
-//            } else if ("mod".equals(name)) {
-//                return (Long) parameters.get("key1") % Integer.valueOf((String) parameters.get("key2"));
-//            } else {
-//                throw new IllegalArgumentException("Custom macro name: " + name + " is not supported.");
-//            }
-//        }
-//    }
-
-//    private static class CustomTagCallback implements Container.FunctionCallTagCallback {
-//        @Override
-//        public void execute(String tagName, Map<String, Object> parameters) {
-//            // The code for firing this custom tag.
-//            Log.i("LazzyBee", "Custom function call tag :" + tagName + " is fired.");
-//        }
-//    }
 
     private void _initSQlIte() {
         Log.i(TAG, "Init SQlIte");
@@ -138,10 +107,11 @@ public class SplashScreen extends Activity {
         databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         try {
             myDbHelper._createDataBase();
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             //throw new Error("Unable to create database");
             //ioe.printStackTrace();
             Log.e(TAG, "Unable to create database:" + ioe.getMessage());
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(ioe);
 
         }
@@ -163,22 +133,20 @@ public class SplashScreen extends Activity {
         String gae_db_version = "6";//LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.GAE_DB_VERSION);
         Log.i(TAG, "Get gae_db_version on TaskManager =" + gae_db_version);
 //        //put GAE_DB_VERSION to Client
-        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, (gae_db_version == null || gae_db_version.isEmpty()) ? String.valueOf(0) : gae_db_version);
+        learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.GAE_DB_VERSION, gae_db_version.isEmpty() ? String.valueOf(0) : gae_db_version);
 
         //get version in DB
         int _dbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
-        int _gdbVesion = LazzyBeeShare.DEFAULT_VERSION_DB;
+        int _gdbVesion;
         String db_v = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.DB_VERSION);
 
 
         if (db_v != null) {
             _dbVesion = Integer.valueOf(db_v);
-        } else if (db_v == null) {
+        } else {
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(LazzyBeeShare.DEFAULT_VERSION_DB));
         }
-        if (gae_db_version != null) {
-            _gdbVesion = Integer.valueOf(gae_db_version);
-        }
+        _gdbVesion = Integer.valueOf(gae_db_version);
         if (_dbVesion > _gdbVesion) {
             learnApiImplements._insertOrUpdateToSystemTable(LazzyBeeShare.DB_VERSION, String.valueOf(_dbVesion));
         }
@@ -195,9 +163,10 @@ public class SplashScreen extends Activity {
         boolean custom_list = sharedpreferences.getBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, false);
         if (!custom_list) {
             learnApiImplements.addColumCustomList();
-            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).commit();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).apply();
         }
 
+        learnApiImplements._get100Card();
     }
 
     private void _changeLanguage() {

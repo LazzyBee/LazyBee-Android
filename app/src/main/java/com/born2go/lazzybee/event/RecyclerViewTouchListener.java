@@ -2,6 +2,7 @@ package com.born2go.lazzybee.event;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,9 +14,9 @@ import android.view.View;
  */
 
 public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
-    private String TAG = "RecylerTouchListener";
-    GestureDetector gestureDetector;
-    private OnItemClickListener onItemClickListener;
+    private final String TAG = "RecylerTouchListener";
+    final GestureDetector gestureDetector;
+    private final OnItemClickListener onItemClickListener;
 
     public RecyclerViewTouchListener(Context context, final RecyclerView recyclerView, final OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -25,17 +26,18 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
                 Log.d(TAG, "onSingleTapUp" + e);
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && onItemClickListener != null) {
-                    onItemClickListener.onItemClick(child, recyclerView.getChildPosition(child));
+                    onItemClickListener.onItemClick(child, recyclerView.getChildAdapterPosition(child));
                 }
 
                 return true;
             }
+
             @Override
             public void onLongPress(MotionEvent e) {
 //                    View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && onItemClickListener != null) {
-                    onItemClickListener.onItemLongPress(child, recyclerView.getChildPosition(child));
+                    onItemClickListener.onItemLongPress(child, recyclerView.getChildAdapterPosition(child));
                 }
                 Log.d(TAG, "onLongPress" + e);
 
@@ -45,11 +47,11 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
     }
 
     @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
         View child = rv.findChildViewUnder(e.getX(), e.getY());
 
         if (child != null && onItemClickListener != null && gestureDetector.onTouchEvent(e)) {
-            onItemClickListener.onItemClick(child, rv.getChildPosition(child));
+            onItemClickListener.onItemClick(child, rv.getChildAdapterPosition(child));
         }
 
         Log.d(TAG, "onInterceptTouchEvent" + e);
@@ -57,7 +59,7 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
     }
 
     @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
         Log.d(TAG, "onTouchEvent" + e);
     }
 
@@ -67,10 +69,9 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
 
     }
 
-    public static interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-
-        public void onItemLongPress(View childView, int position);
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+        void onItemLongPress(View childView, int position);
     }
 }
 

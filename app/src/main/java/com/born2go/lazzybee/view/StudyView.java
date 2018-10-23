@@ -46,8 +46,6 @@ import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.view.dialog.DialogFirstShowAnswer;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     private final Context context;
     private final String studyAction;
     private OnStudyViewListener mListener;
-    private Card card;
+    private final Card card;
     private LearnApiImplements dataBaseHelper;
 
     TextToSpeech textToSpeech;
@@ -96,11 +94,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     CardView mCardViewHelpandAdMod;
     CardView mShowAnswer;
 
-    List<Card> todayList = new ArrayList<Card>();
-    List<Card> againList = new ArrayList<Card>();
-    List<Card> dueList = new ArrayList<Card>();
-    List<Card> cardListAddDueToDay = new ArrayList<Card>();
-    List<Card> reverseList = new ArrayList<Card>();
+    List<Card> todayList = new ArrayList<>();
+    List<Card> againList = new ArrayList<>();
+    List<Card> dueList = new ArrayList<>();
+    final List<Card> cardListAddDueToDay = new ArrayList<>();
+    final List<Card> reverseList = new ArrayList<>();
     //Current Card
     Card currentCard = new Card();
     //Define before card
@@ -112,11 +110,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     FloatingActionButton mHelp;
 
 
-    private Intent intent;
-    StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
+    private final Intent intent;
+    final StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
 
     DetailsView detailsView;
-    DisableScrollingViewPager mViewPager;
+    final DisableScrollingViewPager mViewPager;
 
     int widthStudyDisplay = -1, heightStudyDisplay = -1;
     String mySubject = "common";
@@ -125,7 +123,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     int sTimeShowAnswer;
     CardView btnNextReverseCard;
     private View mCount;
-    private FirebaseAnalytics mFirebaseAnalytics=LazzyBeeSingleton.getFirebaseAnalytics();
+    private final FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
 
     public void setBeforeCard(Card beforeCard) {
@@ -140,8 +138,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         this.mViewPager = mViewPager;
         this.screenSlidePagerAdapter = screenSlidePagerAdapter;
         this.studyAction = intent.getAction();
-        _initDatabase();
-        _initTextToSpeech();
+
     }
 
     public static StudyView newInstance(Context context, Intent intent, DisableScrollingViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
@@ -153,7 +150,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.view_study_main, container, false);
@@ -164,7 +161,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private boolean firstTime = false;
-    private View.OnClickListener showAnswer = new View.OnClickListener() {
+    private final View.OnClickListener showAnswer = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -177,9 +174,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     _showDialogTipAnswerCard();
                 }
 
-            } else if (studyAction.equals(LazzyBeeShare.REVERSE))
-
-            {
+            } else if (studyAction.equals(LazzyBeeShare.REVERSE)) {
                 showNextReverseCard();
             }
 
@@ -192,7 +187,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         mLayoutButton.setVisibility(View.GONE);
         btnNextReverseCard.setVisibility(View.VISIBLE);
         mListener.setCurrentCard(currentCard);
-        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+        setVisibityUserNote();
         imgGotoDictionary.setVisibility(View.VISIBLE);
         setEnableShowDictionary(true);
         //set Dictionary card
@@ -202,47 +197,35 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     }
 
+
     private void onClickShowAnswer() {
         btnNextReverseCard.setVisibility(View.GONE);
         setEnableShowDictionary(true);
         answerDisplay = true;
         _showAnswer();
         mListener.setCurrentCard(currentCard);
-        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
+
         imgGotoDictionary.setVisibility(View.VISIBLE);
+        setVisibityUserNote();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setVisibityUserNote() {
+        mFloatActionButtonUserNote.setVisibility(View.VISIBLE);
     }
 
     private void _showDialogTipAnswerCard() {
         DialogFirstShowAnswer firstShowAnswer = new DialogFirstShowAnswer(context);
-        firstShowAnswer.show(getFragmentManager(), "");
+        if (getFragmentManager() != null)
+            firstShowAnswer.show(getFragmentManager(), "");
 
     }
 
     private void _handlerButtonAnswer() {
-        btnHard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_HARD);
-            }
-        });
-        btnEasy3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_EASY);
-            }
-        });
-        btnAgain0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_AGAIN);
-            }
-        });
-        btnGood2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _processingAnswerCard(Card.EASE_GOOD);
-            }
-        });
+        btnHard1.setOnClickListener(v -> _processingAnswerCard(Card.EASE_HARD));
+        btnEasy3.setOnClickListener(v -> _processingAnswerCard(Card.EASE_EASY));
+        btnAgain0.setOnClickListener(v -> _processingAnswerCard(Card.EASE_AGAIN));
+        btnGood2.setOnClickListener(v -> _processingAnswerCard(Card.EASE_GOOD));
     }
 
     private void _processingAnswerCard(final int ea) {
@@ -256,11 +239,14 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void setDisplayCard(Card cardFromDB) {
-        String detailsTag = ((StudyActivity) getActivity()).getDetailViewTag();
-        Log.d(TAG, "Detais Tag:" + detailsTag);
-        detailsView =
-                (DetailsView) getActivity().getSupportFragmentManager().findFragmentByTag(detailsTag);
-        detailsView.setCard(cardFromDB);
+        if (getActivity() != null) {
+            String detailsTag = ((StudyActivity) getActivity()).getDetailViewTag();
+            Log.d(TAG, "Detais Tag:" + detailsTag);
+            detailsView =
+                    (DetailsView) getActivity().getSupportFragmentManager().findFragmentByTag(detailsTag);
+            if (detailsView != null)
+                detailsView.setCard(cardFromDB);
+        }
     }
 
     @Override
@@ -328,33 +314,34 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void _initView(final View view) {
-        container = (LinearLayout) view.findViewById(R.id.container);
+        container = view.findViewById(R.id.container);
         //init button
-        mShowAnswer = (CardView) view.findViewById(R.id.mShowAnswer);
-        btnNextReverseCard = (CardView) view.findViewById(R.id.btnNextReverseCard);
+        mShowAnswer = view.findViewById(R.id.mShowAnswer);
+        btnNextReverseCard = view.findViewById(R.id.btnNextReverseCard);
         mCount = view.findViewById(R.id.mCount);
 
-        btnShowAnswer = (TextView) view.findViewById(R.id.lbShowAnswer);
-        mLayoutButton = (LinearLayout) view.findViewById(R.id.mLayoutButton);
+        btnShowAnswer = view.findViewById(R.id.lbShowAnswer);
+        mLayoutButton = view.findViewById(R.id.mLayoutButton);
 
-        btnAgain0 = (TextView) view.findViewById(R.id.btnAgain0);
-        btnHard1 = (TextView) view.findViewById(R.id.btnHard1);
-        btnGood2 = (TextView) view.findViewById(R.id.btnGood2);
-        btnEasy3 = (TextView) view.findViewById(R.id.btnEasy3);
+        btnAgain0 = view.findViewById(R.id.btnAgain0);
+        btnHard1 = view.findViewById(R.id.btnHard1);
+        btnGood2 = view.findViewById(R.id.btnGood2);
+        btnEasy3 = view.findViewById(R.id.btnEasy3);
 
         // init lbCount
-        lbCountNew = (TextView) view.findViewById(R.id.lbCountTotalVocabulary);
-        lbCountAgain = (TextView) view.findViewById(R.id.lbCountAgainInday);
-        lbCountDue = (TextView) view.findViewById(R.id.lbAgainDue);
+        lbCountNew = view.findViewById(R.id.lbCountTotalVocabulary);
+        lbCountAgain = view.findViewById(R.id.lbCountAgainInday);
+        lbCountDue = view.findViewById(R.id.lbAgainDue);
 
-        imgGotoDictionary = (ImageView) view.findViewById(R.id.imgGotoDictionary);
+        imgGotoDictionary = view.findViewById(R.id.imgGotoDictionary);
         imgGotoDictionary.setColorFilter(context.getResources().getColor(R.color.card_due_color));
 
         final View mDisplay = view.findViewById(R.id.mDisplay);
 
 
-        mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewLeadDetaisl);
+        mWebViewLeadDetails = view.findViewById(R.id.mWebViewLeadDetaisl);
 
         //get widthStudyDisplay heightStudyDisplay display
         ViewTreeObserver observer = mDisplay.getViewTreeObserver();
@@ -362,10 +349,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             @Override
             public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT < 16)
-                    mDisplay.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                else
-                    mDisplay.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mDisplay.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 int width = mDisplay.getMeasuredWidth();
                 int height = mDisplay.getMeasuredHeight();
@@ -375,11 +359,11 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             }
         });
 
-        mCardViewHelpandAdMod = (CardView) view.findViewById(R.id.mCardViewHelpandAdMod);
+        mCardViewHelpandAdMod = view.findViewById(R.id.mCardViewHelpandAdMod);
 
-        mFloatActionButtonUserNote = (FloatingActionButton) view.findViewById(R.id.mFloatActionButtonUserNote);
+        mFloatActionButtonUserNote = view.findViewById(R.id.mFloatActionButtonUserNote);
 
-        mHelp = (FloatingActionButton) view.findViewById(R.id.mHelp);
+        mHelp = view.findViewById(R.id.mHelp);
 
         _handlerNote();
 
@@ -461,22 +445,12 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerShowHelpShowAnswer() {
-        mHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogHelp();
-            }
-        });
+        mHelp.setOnClickListener(view -> showDialogHelp());
     }
 
 
     private void _handlerShowHelpAnswer(final String hard, final String medium, final String easy) {
-        mHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogAnswerHelp(hard, medium, easy);
-            }
-        });
+        mHelp.setOnClickListener(view -> showDialogAnswerHelp(hard, medium, easy));
     }
 
     private void showDialogAnswerHelp(String hard, String medium, String easy) {
@@ -484,33 +458,34 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         WebView webView = new WebView(getContext());
         webView.loadData(html, "text/html; charset=UTF-8", null);
 
-        new MaterialDialog.Builder(getActivity())
-                .customView(webView, true)
-                .positiveText(R.string.ok)
-                .positiveColor(getResources().getColor(R.color.button_green_color))
-                .theme(Theme.LIGHT)
-                .build().show();
+        if (getActivity() != null) {
+            new MaterialDialog.Builder(getActivity())
+                    .customView(webView, true)
+                    .positiveText(R.string.ok)
+                    .positiveColor(getResources().getColor(R.color.button_green_color))
+                    .theme(Theme.LIGHT)
+                    .build().show();
+        }
 
     }
 
 
     private void showDialogHelp() {
-        new MaterialDialog.Builder(getActivity())
-                .content(Html.fromHtml(getString(R.string.try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare)))
-                .positiveText(getString(R.string.ok))
-                .positiveColor(getResources().getColor(R.color.button_green_color))
-                .theme(Theme.LIGHT)
-                .build().show();
+        if (getActivity() != null)
+            new MaterialDialog.Builder(getActivity())
+                    .content(Html.fromHtml(getString(R.string.try_to_remember_meaning_of_the_word_after_that_press_Show_answer_to_compare)))
+                    .positiveText(getString(R.string.ok))
+                    .positiveColor(getResources().getColor(R.color.button_green_color))
+                    .theme(Theme.LIGHT)
+                    .build().show();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void _handlerNote() {
         //Handler onclick
-        mFloatActionButtonUserNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener._displayUserNote(currentCard);
-                Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
-            }
+        mFloatActionButtonUserNote.setOnClickListener(v -> {
+            mListener._displayUserNote(currentCard);
+            Log.d(TAG, "Current Position:" + v.getX() + "\t:\t" + v.getY());
         });
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -592,12 +567,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerImgGotoDictionary() {
-        imgGotoDictionary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setCurrentItem(1);
-            }
-        });
+        imgGotoDictionary.setOnClickListener(v -> mViewPager.setCurrentItem(1));
 
     }
 
@@ -636,7 +606,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
             } else {
                 mCount.setVisibility(View.VISIBLE);
-                int againCount = 0, dueCount = 0, todayCount = 0;//Define count again
+                int againCount = 0, dueCount, todayCount;//Define count again
                 //get lean_more form intern
                 learn_more = intent.getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
 
@@ -651,7 +621,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 dueCount = dueList.size(); //Define Count due
                 int numberAgainCard = total_learn_per_day - dueCount;
                 Log.d(TAG, "numberAgainCard:" + numberAgainCard);
-                todayList = new ArrayList<Card>();
+                todayList = new ArrayList<>();
 
                 if (numberAgainCard > 0) {
                     againList = dataBaseHelper._getListCardByQueue(Card.QUEUE_LNR1, numberAgainCard);
@@ -694,8 +664,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.VALUE, String.valueOf("" + (dueCount + againCount)));
                 mFirebaseAnalytics.logEvent("Count_review_per_day", bundle);
-
-
             }
 
 
@@ -705,21 +673,23 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerNextCardReverse() {
-        btnNextReverseCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reverseList.remove(0);//Remove revese
-                reverseList.add(dataBaseHelper.getReverseCard());//get new random reverse Card
-                _showBtnAnswer();
-                setEnableShowDictionary(false);
-                _nextReverseCard();
-                _handlerTimeShowAswerButton();
-                //
-                mShowAnswer.setVisibility(View.VISIBLE);
-                mFloatActionButtonUserNote.setVisibility(View.GONE);
-                imgGotoDictionary.setVisibility(View.GONE);
-            }
+        btnNextReverseCard.setOnClickListener(v -> {
+            reverseList.remove(0);//Remove revese
+            reverseList.add(dataBaseHelper.getReverseCard());//get new random reverse Card
+            _showBtnAnswer();
+            setEnableShowDictionary(false);
+            _nextReverseCard();
+            _handlerTimeShowAswerButton();
+            //
+            mShowAnswer.setVisibility(View.VISIBLE);
+            imgGotoDictionary.setVisibility(View.GONE);
+            setVisibityUserNoteGONE();
         });
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setVisibityUserNoteGONE() {
+        mFloatActionButtonUserNote.setVisibility(View.GONE);
     }
 
 
@@ -727,6 +697,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         mListener.completeLearn(b);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void _showFirstCard() {
         WebSettings ws = mWebViewLeadDetails.getSettings();
         ws.setJavaScriptEnabled(true);
@@ -828,6 +799,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     private void _nextAgainCard() {
         try {
             Log.i(TAG, "---------_nextAgainCard--------");
@@ -885,7 +857,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             lbCountDue.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
             lbCountAgain.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
             lbCountNew.setPaintFlags(Paint.LINEAR_TEXT_FLAG);
-        } else if (queue == 10) {
         }
         mWebViewLeadDetails.setBackgroundColor(0);
         mWebViewLeadDetails.setScrollContainer(false);
@@ -918,9 +889,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             final Card card = currentCard;
 
             Card cardFromDB = dataBaseHelper._getCardByID(String.valueOf(card.getId()));
-
             Log.i(TAG, "btnShowAnswer question=" + card.getQuestion() + ",queue=" + card.getQueue() + ",queue db:" + cardFromDB.getQueue());
             setDisplayCard(cardFromDB);
+
             //Show answer question
             _loadWebView(LazzyBeeShare.getAnswerHTML(context, cardFromDB, mySubject, sDEBUG, sPOSITION_MEANING), card.getQueue());
 
@@ -1066,7 +1037,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                         " to queue " + beforeCard.getQueue());
 
                 _nextCard(currentQueue);//next Card by Queue
-                mFloatActionButtonUserNote.setVisibility(View.GONE);
+                //mFloatActionButtonUserNote.setVisibility(View.GONE);
+                setVisibityUserNoteGONE();
                 imgGotoDictionary.setVisibility(View.GONE);
 
             } else {
@@ -1149,6 +1121,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        _initDatabase();
+        _initTextToSpeech();
         _initSettingUser();
     }
 
@@ -1330,7 +1304,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                 public void onTick(long millisUntilFinished) {
                     int second = Math.round((millisUntilFinished / 1000));
                     Log.d(TAG, "second:" + second);
-                    btnShowAnswer.setText(context.getString(R.string.show_answer) + String.valueOf(" (" + (second + 1) + "s)"));
+                    btnShowAnswer.setText(String.valueOf(context.getString(R.string.show_answer) + String.valueOf(" (" + (second + 1) + "s)")));
                 }
 
                 public void onFinish() {
@@ -1372,7 +1346,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     case Card.QUEUE_NEW_CRAM0:
                         Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_NEW_CRAM0");
 
-                        List<Card> cloneTodayList = new ArrayList<Card>(todayList); //Define clone todayList
+                        List<Card> cloneTodayList = new ArrayList<>(todayList); //Define clone todayList
                         int clonetodayCount = cloneTodayList.size();
 
                         todayList.clear(); //Clear Data
@@ -1393,7 +1367,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     case Card.QUEUE_LNR1:
                         Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_LNR1");
 
-                        List<Card> cloneAgainList = new ArrayList<Card>(againList);//Define clone againList
+                        List<Card> cloneAgainList = new ArrayList<>(againList);//Define clone againList
                         int agianCount = cloneAgainList.size();
 
                         againList.clear();//Clear Data
@@ -1414,7 +1388,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     case Card.QUEUE_REV2:
                         Log.i(TAG, "_backToBeforeCard\t Queue=Card.QUEUE_REV2");
 
-                        List<Card> cloneDuelist = new ArrayList<Card>(dueList);//Define clone duelist
+                        List<Card> cloneDuelist = new ArrayList<>(dueList);//Define clone duelist
                         int dueCount = cloneDuelist.size();
 
                         dueList.clear();//Clear Data
@@ -1463,17 +1437,17 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
     private void _setCountNew() {
         int countNew = todayList.size();
-        lbCountNew.setText(getString(R.string.study_new) + ": " + String.valueOf(countNew));
+        lbCountNew.setText(String.valueOf(getString(R.string.study_new) + ": " + String.valueOf(countNew)));
     }
 
     private void _setCountAgain() {
         int countAgain = againList.size();
-        lbCountAgain.setText(getString(R.string.study_again) + ": " + String.valueOf(countAgain));
+        lbCountAgain.setText(String.valueOf(getString(R.string.study_again) + ": " + String.valueOf(countAgain)));
     }
 
     private void _setCountDue() {
         int countDue = dueList.size();
-        lbCountDue.setText(getString(R.string.study_review) + ": " + String.valueOf(countDue));
+        lbCountDue.setText(String.valueOf(getString(R.string.study_review) + ": " + String.valueOf(countDue)));
     }
 
     private void _shareCard() {
@@ -1481,9 +1455,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
 
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+            if (getActivity() != null) {
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
                     if (task.isSuccessful()) {
                         server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
@@ -1494,7 +1467,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     }
 
                     //define base url with question
-                    base_url_sharing[0] = base_url_sharing[0] +"/"+ currentCard.getQuestion();
+                    base_url_sharing[0] = base_url_sharing[0] + "/" + currentCard.getQuestion();
                     Log.i(TAG, "Sharing URL:" + base_url_sharing[0]);
 
                     //Share card
@@ -1503,8 +1476,8 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
                     sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
-                }
-            });
+                });
+            }
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);

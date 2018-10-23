@@ -30,8 +30,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +44,7 @@ import java.util.List;
 public class DetailsView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "DetailsView";
-    private OnDetailsViewListener mListener;
-    String tag;
+    final String tag;
     private Card card;
 
     View mViewAdv;
@@ -59,7 +56,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     MenuItem itemIgnore;
     MenuItem itemLearn;
 
-    private Context context;
+    private final Context context;
+    private View viewAdv;
 
     public DetailsView(Context context, String tag) {
         // Required empty public constructor
@@ -75,22 +73,32 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.view_study_details, container, false);
         String myTag = getTag();
-        ((StudyActivity) getActivity()).setDetailViewTag(myTag);
+        if (getActivity() != null)
+            ((StudyActivity) getActivity()).setDetailViewTag(myTag);
         _defineDetailsView(view);
+
+        viewAdv = createPageSponser(inflater, container);
+
         return view;
+    }
+
+    private View createPageSponser(LayoutInflater inflater, ViewGroup container) {
+        View viewPageSponser = inflater.inflate(R.layout.page_sponsor, container, false);
+        _initAdView(viewPageSponser, AdSize.MEDIUM_RECTANGLE);
+        return viewPageSponser;
     }
 
     private void _defineDetailsView(View view) {
         try {
             mViewAdv = view.findViewById(R.id.mCardViewAdv);
             _initAdView(mViewAdv, AdSize.BANNER);
-            mDetailsViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-            mDetailsSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+            mDetailsViewPager = view.findViewById(R.id.viewpager);
+            mDetailsSlidingTabLayout = view.findViewById(R.id.sliding_tabs);
             mDetailsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -118,21 +126,13 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         }
     }
 
-
-//    @Override
-//    public void onAttach(Context activity) {
-//        super.onAttach(activity);
-//    }
-
-
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        OnDetailsViewListener mListener = null;
     }
 
     public void setCard(Card card) {
-        // Log.d("DetailsView:", "dsadadad:" + card.toString());
         this.card = card;
         _displayCard(card);
     }
@@ -194,9 +194,10 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     }
 
     class PackageCardPageAdapter extends PagerAdapter {
-        Card card;
-        List<String> packages;
-        private Context context;
+        final Card card;
+        final List<String> packages;
+        private final Context context;
+        LayoutInflater layoutInflater;
 
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
@@ -204,11 +205,6 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
             packages = Arrays.asList(context.getString(R.string.dictionary_vn_en), context.getString(R.string.dictionary_en_en), "Sponsor");
         }
 
-        @Override
-        public int getItemPosition(Object object) {
-
-            return super.getItemPosition(object);
-        }
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -221,22 +217,21 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return object == view;
         }
 
+        @NonNull
+        @SuppressLint("SetJavaScriptEnabled")
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             // Inflate a new layout from our resources
-            LayoutInflater inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view;
             if (position < 2) {
                 view = inflater.inflate(R.layout.page_package_card_item, container, false);
                 // Add the newly created View to the ViewPager
-                container.addView(view);
-                //
-                mDetailsWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
+                mDetailsWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
                 mDetailsWebViewLeadDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                 WebSettings ws = mDetailsWebViewLeadDetails.getSettings();
                 ws.setJavaScriptEnabled(true);
@@ -256,19 +251,14 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                             }
                             break;
                     }
-                    //Log.i(TAG, "Tab Dic:" + displayHTML.);
-
                     mDetailsWebViewLeadDetails.loadDataWithBaseURL(LazzyBeeShare.ASSETS, displayHTML, LazzyBeeShare.mime, LazzyBeeShare.encoding, null);
                 } catch (Exception e) {
                     LazzyBeeShare.showErrorOccurred(context, "instantiateItem", e);
                 }
             } else {
-                view = inflater.inflate(R.layout.page_sponsor, container, false);
-                // Add the newly created View to the ViewPager
-                container.addView(view);
-                _initAdView(view, AdSize.MEDIUM_RECTANGLE);
+                view = viewAdv;
             }
-            // Return the View
+            container.addView(view);
             return view;
         }
 
@@ -278,7 +268,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
          * {@link View}.
          */
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
 
@@ -286,9 +276,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
 
     private void _initAdView(final View mViewAdv, final AdSize banner) {
         try {
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+            if (getActivity() != null) {
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String admob_pub_id = null;//"ca-app-pub-5245864792816840";
                     String adv_banner_id = null;//"7733609014";
                     if (task.isComplete()) {
@@ -298,7 +287,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                     if (admob_pub_id != null) {
                         if (adv_banner_id == null || adv_banner_id.equals(LazzyBeeShare.EMPTY)) {
                             mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_banner_id != null || adv_banner_id.length() > 1 || !adv_banner_id.equals(LazzyBeeShare.EMPTY) || !adv_banner_id.isEmpty()) {
+                        } else if (!adv_banner_id.equals(LazzyBeeShare.EMPTY)) {
                             String advId = admob_pub_id + "/" + adv_banner_id;
                             Log.i(TAG, "admob -AdUnitId:" + advId);
                             AdView mAdView = new AdView(context);
@@ -349,7 +338,7 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                                 }
                             });
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) mViewAdv.findViewById(R.id.adView));
+                            RelativeLayout relativeLayout = mViewAdv.findViewById(R.id.adView);
                             RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
                             relativeLayout.addView(mAdView, adViewCenter);
@@ -361,8 +350,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
-                }
-            });
+                });
+            }
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
@@ -426,10 +415,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         try {
             //get base url in Task Manager
             final String[] base_url_sharing = {LazzyBeeShare.DEFAULTS_BASE_URL_SHARING};
-
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+            if (getActivity() != null) {
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(getActivity(), task -> {
                     String server_base_url_sharing = null;//"http://www.lazzybee.com/vdict";
                     if (task.isSuccessful()) {
                         server_base_url_sharing = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.SERVER_BASE_URL_SHARING);
@@ -449,8 +436,8 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
                     sendIntent.putExtra(Intent.EXTRA_TEXT, base_url_sharing[0]);
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
-                }
-            });
+                });
+            }
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_shareCard", e);

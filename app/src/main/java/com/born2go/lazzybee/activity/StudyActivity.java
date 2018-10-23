@@ -3,7 +3,6 @@ package com.born2go.lazzybee.activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,10 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
@@ -56,7 +55,7 @@ public class StudyActivity extends AppCompatActivity
     private static final String TAG = "StudyActivity";
     private static final String GA_SCREEN = "aStudyScreen";
     private Context context;
-    private FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
+    private final FirebaseAnalytics mFirebaseAnalytics = LazzyBeeSingleton.getFirebaseAnalytics();
 
     LearnApiImplements dataBaseHelper;
 
@@ -107,16 +106,17 @@ public class StudyActivity extends AppCompatActivity
 
 
     private void _initActonBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
     private void _trackerApplication() {
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("screenName", (String) GA_SCREEN);
+            bundle.putString("screenName", GA_SCREEN);
             mFirebaseAnalytics.logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
@@ -155,13 +155,10 @@ public class StudyActivity extends AppCompatActivity
         builder.setTitle("Ops!");
         builder.setMessage("Complete study!!!");
         builder.setCancelable(false);
-        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                setResult(RESULT_CANCELED, new Intent());
-                finish();
-            }
+        builder.setNegativeButton(R.string.ok, (dialog, which) -> {
+            dialog.dismiss();
+            setResult(RESULT_CANCELED, new Intent());
+            finish();
         });
         Dialog dialog = builder.create();
         dialog.show();
@@ -169,9 +166,9 @@ public class StudyActivity extends AppCompatActivity
     }
 
     private void _showDialogComplete() {
-        if (learn_more == false) {
+        if (!learn_more) {
             //Show dialog complete learn
-            final DialogCompleteStudy dialogCompleteStudy = new DialogCompleteStudy(context);
+            final DialogCompleteStudy dialogCompleteStudy =DialogCompleteStudy.newInstance();
             dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
 
             int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
@@ -192,8 +189,8 @@ public class StudyActivity extends AppCompatActivity
 
 
     private void _initView() {
-        container = (LinearLayout) findViewById(R.id.container);
-        mViewPager = (DisableScrollingViewPager) findViewById(R.id.viewpager);
+        container = findViewById(R.id.container);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPagingEnabled(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -244,7 +241,7 @@ public class StudyActivity extends AppCompatActivity
 //        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
             autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
@@ -259,65 +256,44 @@ public class StudyActivity extends AppCompatActivity
         }
 
 
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand");
-                return true;
-            }
-
-        });
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.trim() != null) {
-                    if (query.trim().length() > 2) {
-                        Intent intent = new Intent(context, SearchActivity.class);
-                        intent.setAction(Intent.ACTION_SEARCH);
-                        intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY, query);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
-                    }
-                    return true;
-                } else
-                    return false;
+                if (query.trim().length() > 2) {
+                    Intent intent = new Intent(context, SearchActivity.class);
+                    intent.setAction(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                    intent.putExtra(SearchManager.QUERY, query);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.trim() != null) {
-                    if (newText.trim().length() > 2) {
+                if (newText.trim().length() > 2) {
 
-                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                                + KEY_QUESTION + " like '" + newText + "%' OR "
-                                + KEY_QUESTION + " like '% " + newText + "%'"
-                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+                    String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                            + KEY_QUESTION + " like '" + newText + "%' OR "
+                            + KEY_QUESTION + " like '% " + newText + "%'"
+                            + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                        try {
-                            Cursor cursor = db.rawQuery(likeQuery, null);
-                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                            searchView.setSuggestionsAdapter(suggestionCardAdapter);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                        } finally {
-                            Log.d(TAG, "query suggetion");
-                        }
-
+                    SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery(likeQuery, null);
+                        SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                        searchView.setSuggestionsAdapter(suggestionCardAdapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
+                    } finally {
+                        Log.d(TAG, "query suggetion");
                     }
-                    return true;
-                } else
-                    return false;
+
+                }
+                return true;
             }
         });
 
@@ -434,7 +410,7 @@ public class StudyActivity extends AppCompatActivity
 
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private final DisableScrollingViewPager mViewPager;
-        private int pageCount = 2;
+        private final int pageCount = 2;
 
         public ScreenSlidePagerAdapter(FragmentManager fm, DisableScrollingViewPager mViewPager) {
             super(fm);
@@ -443,9 +419,9 @@ public class StudyActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0)
+            if (position == 0) {
                 return StudyView.newInstance(context, getIntent(), mViewPager, ScreenSlidePagerAdapter.this, currentCard);
-            else {
+            } else {
                 return DetailsView.newInstance(context, "details");
 
             }
@@ -457,10 +433,6 @@ public class StudyActivity extends AppCompatActivity
             return pageCount;
         }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-        }
 
         private Fragment mCurrentFragment;
 
@@ -469,7 +441,7 @@ public class StudyActivity extends AppCompatActivity
         }
 
         @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             if (getCurrentFragment() != object) {
                 mCurrentFragment = ((Fragment) object);
             }
@@ -488,27 +460,19 @@ public class StudyActivity extends AppCompatActivity
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
         View viewDialog = View.inflate(context, R.layout.view_dialog_user_note, null);
-        final EditText txtUserNote = (EditText) viewDialog.findViewById(R.id.txtUserNote);
+        final EditText txtUserNote = viewDialog.findViewById(R.id.txtUserNote);
 
         txtUserNote.setText(currentCard.getUser_note());
 
         builder.setView(viewDialog);
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String user_note = txtUserNote.getText().toString();
-                currentCard.setUser_note(user_note);
-                dataBaseHelper._updateUserNoteCard(currentCard);
-                ((StudyView) pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
-                dialog.dismiss();
-            }
+        builder.setPositiveButton(R.string.save, (dialog, which) -> {
+            String user_note = txtUserNote.getText().toString();
+            currentCard.setUser_note(user_note);
+            dataBaseHelper._updateUserNoteCard(currentCard);
+            ((StudyView) pagerAdapter.getCurrentFragment()).setResetUserNote(user_note);
+            dialog.dismiss();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 

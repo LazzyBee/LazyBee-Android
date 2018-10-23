@@ -2,10 +2,8 @@ package com.born2go.lazzybee.activity;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,8 +33,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -46,7 +42,6 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
     private static final String TAG = "IncomingList";
     private Context context;
     private LearnApiImplements dataBaseHelper;
-    private RecyclerViewIncomingListAdapter incomingListAdapter;
     private IncomingListActivity thiz;
 
     private RecyclerView mRecyclerViewReviewTodayList;
@@ -64,11 +59,11 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
 
         //Init RecyclerView and Layout Manager
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mRecyclerViewReviewTodayList = (RecyclerView) findViewById(R.id.mRecyclerViewReviewTodayList);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        mRecyclerViewReviewTodayList = findViewById(R.id.mRecyclerViewReviewTodayList);
         mRecyclerViewReviewTodayList.setLayoutManager(new LinearLayoutManager(context));
 
-        lbCountReviewCard = (TextView) findViewById(R.id.lbCountReviewCard);
+        lbCountReviewCard = findViewById(R.id.lbCountReviewCard);
         try {
             //get review List Card today
             getIncomingList();
@@ -84,12 +79,11 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
     private void getIncomingList() {
         final List<Card> vocabularies = dataBaseHelper._getIncomingListCard();
 
-        lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + vocabularies.size());
+        lbCountReviewCard.setText(String.valueOf(getString(R.string.message_total_card_incoming) + vocabularies.size()));
         lbCountReviewCard.setTag(vocabularies.size());
         //Init Adapter
-        incomingListAdapter =
-                new RecyclerViewIncomingListAdapter
-                        (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
+        RecyclerViewIncomingListAdapter incomingListAdapter = new RecyclerViewIncomingListAdapter
+                (context, mRecyclerViewReviewTodayList, vocabularies, lbCountReviewCard);
 
         //Set data and add Touch Listener
 
@@ -134,27 +128,21 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         builder.setTitle(R.string.msg_restore_word_list);
         builder.setMessage(R.string.msg_please_input_restore_word_list_code);
         View view = LayoutInflater.from(context).inflate(R.layout.code_restore_list_word, null);
-        final EditText codeRestore = (EditText) view.findViewById(R.id.codeRestore);
+        final EditText codeRestore = view.findViewById(R.id.codeRestore);
         builder.setView(view);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                hideKeyBoard();
-                dialog.dismiss();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+            hideKeyBoard();
+            dialog.dismiss();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // hideKeyBoard();
-                dialog.dismiss();
-                String strCode = codeRestore.getText().toString();
-                if (strCode.length() > 0) {
-                    Long code = Long.valueOf(strCode);
-                    GetGroupVoca getGroupVoca = new GetGroupVoca(context);
-                    getGroupVoca.execute(code);
-                    getGroupVoca.iGetGroupVoca = thiz;
-                }
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            // hideKeyBoard();
+            dialog.dismiss();
+            String strCode = codeRestore.getText().toString();
+            if (strCode.length() > 0) {
+                Long code = Long.valueOf(strCode);
+                GetGroupVoca getGroupVoca = new GetGroupVoca(context);
+                getGroupVoca.execute(code);
+                getGroupVoca.iGetGroupVoca = thiz;
             }
         });
         Dialog dialog = builder.create();
@@ -165,7 +153,8 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -173,7 +162,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
         try {
             Bundle bundle = new Bundle();
             bundle.putString("screenName", (String) GA_SCREEN);
-            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName",bundle);
+            LazzyBeeSingleton.getFirebaseAnalytics().logEvent("screenName", bundle);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_trackerApplication", e);
         }
@@ -198,62 +187,60 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
             final View mViewAdv = findViewById(R.id.mViewAdv);
             //get value form remote config
             final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String adv_id = null;
-                    if (task.isComplete()) {
-                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
-                    }
-                    if (admob_pub_id != null) {
-                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                            mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                            String advId = admob_pub_id + "/" + adv_id;
-                            Log.i(TAG, "admob -AdUnitId:" + advId);
-                            AdView mAdView = new AdView(context);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                String adv_id = null;
+                if (task.isComplete()) {
+                    adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                }
+                if (admob_pub_id != null) {
+                    if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        mViewAdv.setVisibility(View.GONE);
+                    } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        String advId = admob_pub_id + "/" + adv_id;
+                        Log.i(TAG, "admob -AdUnitId:" + advId);
+                        AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.BANNER);
-                            mAdView.setAdUnitId(advId);
+                        mAdView.setAdSize(AdSize.BANNER);
+                        mAdView.setAdUnitId(advId);
 
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                                    .addTestDevice("467009F00ED542DDA1694F88F807A79A")
-                                    .build();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                .addTestDevice("467009F00ED542DDA1694F88F807A79A")
+                                .build();
 
-                            mAdView.loadAd(adRequest);
+                        mAdView.loadAd(adRequest);
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                            relativeLayout.addView(mAdView, adViewCenter);
+                        RelativeLayout relativeLayout = findViewById(R.id.adView);
+                        RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                        relativeLayout.addView(mAdView, adViewCenter);
 
-                            mAdView.setAdListener(new AdListener() {
-                                @Override
-                                public void onAdLoaded() {
-                                    // Code to be executed when an ad finishes loading.
-                                    Log.d(TAG, "onAdLoaded");
-                                    mViewAdv.setVisibility(View.VISIBLE);
-                                }
+                        mAdView.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                // Code to be executed when an ad finishes loading.
+                                Log.d(TAG, "onAdLoaded");
+                                mViewAdv.setVisibility(View.VISIBLE);
+                            }
 
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad "+errorCode);
-                                    mViewAdv.setVisibility(View.GONE);
-                                }
-                            });
-                        } else {
-                            mViewAdv.setVisibility(View.GONE);
-                        }
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                // Code to be executed when an ad request fails.
+                                Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                                mViewAdv.setVisibility(View.GONE);
+                            }
+                        });
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
-                }});
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
+                }
+            });
 
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_initAdView", e);
@@ -293,7 +280,7 @@ public class IncomingListActivity extends AppCompatActivity implements GetGroupV
             List<Card> fillUpCards = dataBaseHelper._getIncomingListCard();
 
             //set count
-            lbCountReviewCard.setText(getString(R.string.message_total_card_incoming) + fillUpCards.size());
+            lbCountReviewCard.setText(String.valueOf(getString(R.string.message_total_card_incoming) + fillUpCards.size()));
             lbCountReviewCard.setTag(fillUpCards.size());
 
             //Reset adapter incoming list

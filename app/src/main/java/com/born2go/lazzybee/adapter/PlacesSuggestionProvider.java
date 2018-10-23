@@ -6,9 +6,9 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.born2go.lazzybee.db.Card;
@@ -48,12 +48,12 @@ public class PlacesSuggestionProvider extends ContentProvider {
     private Map<String, String> CardMap;
 
     @Override
-    public int delete(Uri uri, String arg1, String[] arg2) {
+    public int delete(@NonNull Uri uri, String arg1, String[] arg2) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         switch (uriMatcher.match(uri)) {
             case SUGGEST_CARD:
                 return SearchManager.SUGGEST_MIME_TYPE;
@@ -63,7 +63,7 @@ public class PlacesSuggestionProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues arg1) {
+    public Uri insert(@NonNull Uri uri, ContentValues arg1) {
         throw new UnsupportedOperationException();
     }
 
@@ -74,19 +74,19 @@ public class PlacesSuggestionProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         Log.d(LOG_TAG, "uri = " + uri);
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         // Use the UriMatcher to see what kind of query we have
         switch (uriMatcher.match(uri)) {
             case SUGGEST_CARD:
-                String query = uri.getLastPathSegment().toLowerCase().trim();
-                Log.d(LOG_TAG, "query:" + query);
-                MatrixCursor cursor = new MatrixCursor(SUGGEST_COLUMNS, 1);
+                if (uri.getLastPathSegment() != null) {
+                    String query = uri.getLastPathSegment().toLowerCase().trim();
+                    Log.d(LOG_TAG, "query:" + query);
+                    MatrixCursor cursor = new MatrixCursor(SUGGEST_COLUMNS, 1);
 
-                List<Card> cards;
-                if (query != null || query.length() > 1) {
+                    List<Card> cards;
                     if (query.equals("search_suggest_query")) {
                         Log.d(LOG_TAG, "query=search_suggest_query");
                         cards = learnApiImplements._recentSuggestionCard();
@@ -107,25 +107,18 @@ public class PlacesSuggestionProvider extends ContentProvider {
                         }
 
                     }
-                } else {
-                    Log.d(LOG_TAG, "query null or empty");
-                    cards = learnApiImplements._recentSuggestionCard();
-                    for (int i = 0; i < cards.size(); i++) {
-                        Card card = cards.get(i);
-                        String meaning = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_MEANING);
-                        String pronoun = LazzyBeeShare._getValueFromKey(card.getAnswers(), LazzyBeeShare.CARD_PRONOUN);
-                        cursor.addRow(new String[]{String.valueOf(card.getId()), card.getQuestion(), meaning, pronoun, String.valueOf(card.getId())});
-                    }
+                    if (getContext().getContentResolver() != null)
+                        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                    return cursor;
                 }
-                cursor.setNotificationUri(getContext().getContentResolver(), uri);
-                return cursor;
+
             default:
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
     }
 
     @Override
-    public int update(Uri uri, ContentValues arg1, String arg2, String[] arg3) {
+    public int update(@NonNull Uri uri, ContentValues arg1, String arg2, String[] arg3) {
         throw new UnsupportedOperationException();
     }
 }

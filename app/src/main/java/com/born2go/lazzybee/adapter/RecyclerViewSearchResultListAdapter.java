@@ -2,6 +2,7 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,9 @@ import java.util.List;
  */
 public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<RecyclerViewSearchResultListAdapter.RecyclerViewSearchResultListAdapterViewHolder> {
     private static final String TAG = "SearchAdapter";
-    private List<Card> vocabularies;
-    private Context context;
-    private String mySubject;
+    private final List<Card> vocabularies;
+    private final Context context;
+    private final String mySubject;
 
     public RecyclerViewSearchResultListAdapter(Context context, List<Card> vocabularies) {
         this.context = context;
@@ -34,29 +35,29 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
         this.mySubject=LazzyBeeShare.getMySubject();
     }
 
+    @NonNull
     @Override
-    public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewSearchResultListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_list_result, parent, false); //Inflating the layout
-        RecyclerViewSearchResultListAdapterViewHolder recyclerViewReviewTodayListAdapterViewHolder = new RecyclerViewSearchResultListAdapterViewHolder(view);
-        return recyclerViewReviewTodayListAdapterViewHolder;
+        return new RecyclerViewSearchResultListAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewSearchResultListAdapterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewSearchResultListAdapterViewHolder holder, final int position) {
         //
         final View view = holder.view;
-        TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
-        TextView lbMeaning = (TextView) view.findViewById(R.id.lbAnswer);
-        TextView level = (TextView) view.findViewById(R.id.level);
-        TextView learned = (TextView) view.findViewById(R.id.learned);
-        TextView lbPronoun = (TextView) view.findViewById(R.id.lbPronoun);
-        LinearLayout mDetailsCard = (LinearLayout) view.findViewById(R.id.mDetailsCard);
+        TextView lbQuestion = view.findViewById(R.id.lbQuestion);
+        TextView lbMeaning = view.findViewById(R.id.lbAnswer);
+        TextView level = view.findViewById(R.id.level);
+        TextView learned = view.findViewById(R.id.learned);
+        TextView lbPronoun = view.findViewById(R.id.lbPronoun);
+        LinearLayout mDetailsCard = view.findViewById(R.id.mDetailsCard);
 
-        final SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipeLayout);
+        final com.daimajia.swipe.SwipeLayout swipeLayout = view.findViewById(R.id.swipeLayout);
         //Define action card
-        TextView lbIgnore = (TextView) view.findViewById(R.id.lbIgnore);
-        TextView lbLearned = (TextView) view.findViewById(R.id.lbLearned);
-        TextView lbAdd = (TextView) view.findViewById(R.id.lbAdd);
+        TextView lbIgnore = view.findViewById(R.id.lbIgnore);
+        TextView lbLearned = view.findViewById(R.id.lbLearned);
+        TextView lbAdd = view.findViewById(R.id.lbAdd);
         lbIgnore.setVisibility(View.GONE);
         lbLearned.setVisibility(View.GONE);
         try {
@@ -84,30 +85,24 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
                 learned.setText(context.getResources().getString(R.string.new_card));
             }
             learned.setVisibility(View.GONE);
-            mDetailsCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String cardId = String.valueOf(card.getId());
-                    Intent intent = new Intent(context, CardDetailsActivity.class);
-                    intent.putExtra(LazzyBeeShare.CARDID, cardId);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    context.startActivity(intent);
-                }
+            mDetailsCard.setOnClickListener(v -> {
+                String cardId = String.valueOf(card.getId());
+                Intent intent = new Intent(context, CardDetailsActivity.class);
+                intent.putExtra(LazzyBeeShare.CARDID, cardId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
             });
 
             //Handel action add card to learn
-            lbAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        LazzyBeeSingleton.learnApiImplements._addCardIdToQueueList(card);
-                        notifyItemChanged(position);
-                        Toast.makeText(context, context.getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
-                    }
-
+            lbAdd.setOnClickListener(v -> {
+                try {
+                    LazzyBeeSingleton.learnApiImplements._addCardIdToQueueList(card);
+                    notifyItemChanged(position);
+                    Toast.makeText(context, context.getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    LazzyBeeShare.showErrorOccurred(context, "1_onBindViewHolder", e);
                 }
+
             });
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onBindViewHolder", e);
@@ -120,7 +115,7 @@ public class RecyclerViewSearchResultListAdapter extends RecyclerView.Adapter<Re
     }
 
     public class RecyclerViewSearchResultListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
+        private final View view;
 
         public RecyclerViewSearchResultListAdapterViewHolder(View itemView) {
             super(itemView);

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.MainActivity;
+import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 /**
  * Created by Hue on 9/4/2015.
@@ -43,7 +44,7 @@ public class MyAlarmService extends Service {
         Intent intent1 = new Intent(this.getApplicationContext(), MainActivity.class);
         intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this,LazzyBeeShare.APP_NOTIFICATION_CHANNEL)
                 .setSmallIcon(R.drawable.ic_drawer)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_message)).setAutoCancel(true);

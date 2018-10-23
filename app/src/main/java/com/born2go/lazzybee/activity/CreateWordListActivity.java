@@ -33,7 +33,7 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
             wordList = getIntent().getExtras().getString(WORD_LIST);
         }
 
-        txtwordList = (EditText) findViewById(R.id.txtWordList);
+        txtwordList = findViewById(R.id.txtWordList);
         if (wordList != null) {
             txtwordList.setText(wordList);
         }
@@ -66,6 +66,7 @@ public class CreateWordListActivity extends AppCompatActivity implements AddCust
     private void inputNewWordList() {
         //hide keyborad
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
         imm.hideSoftInputFromWindow(txtwordList.getWindowToken(), 0);
 
         //

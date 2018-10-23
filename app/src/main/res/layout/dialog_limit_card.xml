@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp"
@@ -15,10 +17,6 @@
         android:id="@+id/lbSettingLimitName"
         android:maxLines="3"
         android:textColor="@color/colorPrimary"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toRightOf="@+id/txtLimit"
         android:textSize="18sp" />
 
     <EditText
@@ -27,9 +25,8 @@
         android:id="@+id/txtLimit"
         android:inputType="number"
         android:textColor="@color/colorPrimary"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
-        android:layout_below="@+id/lbSettingLimitName" />
+        tools:ignore="LabelFor,UnusedAttribute"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,9 +34,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/lbEror"
         android:textColor="@color/red_500"
-        android:textSize="12dp"
-        android:layout_below="@+id/lbSettingLimitName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="12sp" />
 
 </LinearLayout>

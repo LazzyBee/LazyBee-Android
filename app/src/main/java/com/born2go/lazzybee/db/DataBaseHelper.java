@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.db;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,7 +21,6 @@ import java.nio.channels.FileChannel;
  * Created by Hue on 6/29/2015.
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private static DataBaseHelper globalDB;
     private static final String TABLE_VOCABULARY = "vocabulary";    //The Android's default system path of your application database.
     private static final String TAG = "DataBaseHelper";
     private static final String SDCARD = "sdcard";
@@ -28,10 +28,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATA = "data";
     private static final String PACKAGE = "com.born2go.lazzybee";
     private static final String DATABASE = "databases";
-    public static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
+    public static String DB_PATH;//= "/data/data/com.born2go.lazzybee/databases/";
 
-    public static String DB_NAME = "english.db";
-    public static String DB_UPDATE_NAME = "update.db";
+    public static final String DB_NAME = "english.db";
+    public static final String DB_UPDATE_NAME = "update.db";
 
     private SQLiteDatabase myDataBase;
 
@@ -55,23 +55,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      * @param context
      */
+    @SuppressLint("SdCardPath")
     public DataBaseHelper(Context context) {
 
         super(context, DB_NAME, null, 1);
         this.myContext = context;
+        if (android.os.Build.VERSION.SDK_INT >= 17) {
+            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+        } else {
+            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+        }
     }
 
-    public static DataBaseHelper getGlobalDB() {
-        if (globalDB == null) {//Init DB here
-            //TODO: Work out
-        }
-        return globalDB;
-    }
 
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      */
-    public void _createDataBase() throws IOException {
+    public void _createDataBase() {
         String myPath = DB_PATH + DB_NAME;
         boolean dbExist = checkDataBase(myPath);
 
@@ -105,21 +105,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public boolean checkDataBase(String myPath) {
 
-        SQLiteDatabase checkDB = null;
-
-        try {
-            // String myPath = DB_PATH + DB_NAME;
-            checkDB = openDataBase(myPath);
-        } catch (SQLiteException e) {
-            //database does't exist yet.
-            Log.e(TAG, "database does't exist yet:" + e.getMessage());
-        }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-
-
-        return checkDB != null ? true : false;
+//        SQLiteDatabase checkDB = null;
+//
+//        try {
+//            // String myPath = DB_PATH + DB_NAME;
+//            checkDB = openDataBase(myPath);
+//        } catch (SQLiteException e) {
+//            //database does't exist yet.
+//            Log.e(TAG, "database does't exist yet:" + e.getMessage());
+//        }
+//        if (checkDB != null) {
+//            checkDB.close();
+//        }
+//
+//        File dbFile = new File(DB_PATH + DB_NAME);
+//        return checkDB != null ? true : false;
+        File dbFile = new File(DB_PATH + DB_NAME);
+        //Log.v("dbFile", dbFile + "   "+ dbFile.exists());
+        return dbFile.exists();
     }
 
     /**
@@ -139,7 +142,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             File sdCard_dir = Environment.getExternalStorageDirectory();
             File dlDir = new File(sdCard_dir.getAbsolutePath() + "/" + DOWNLOAD);
-            dlDir.mkdirs();
+            boolean wasSuccessful = dlDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
+
             File source = new File(dlDir, DB_UPDATE_NAME);
             myInput = new FileInputStream(source);
         }
@@ -192,36 +199,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    /**
-     * Dplace le fichier source dans le fichier rsultat
-     */
-    public static boolean moveFile(File source, File destination) {
-        if (!destination.exists()) {
-            // On essaye avec renameTo
-            boolean result = source.renameTo(destination);
-            if (!result) {
-                // On essaye de copier
-                try {
-                    result = true;
-                    result &= copyFile(source, destination);
-                    if (result) result &= source.delete();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return (result);
-        } else {
-            // Si le fichier destination existe, on annule ...
-            return (false);
-        }
-    }
 
     public static boolean copyFile(File source, File dest) {
         try {
             // Declaration et ouverture des flux
-            FileInputStream sourceFile = new FileInputStream(source);
 
-            try {
+            try (FileInputStream sourceFile = new FileInputStream(source)) {
                 FileOutputStream destinationFile = null;
 
                 try {
@@ -235,10 +218,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         destinationFile.write(buffer, 0, nbLecture);
                     }
                 } finally {
-                    destinationFile.close();
+                    if (destinationFile != null)
+                        destinationFile.close();
                 }
-            } finally {
-                sourceFile.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -251,7 +233,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public SQLiteDatabase openDataBase(String myPath) throws SQLException {
         //Open the database
         return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
     }
 
     @Override
@@ -373,6 +354,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        }
 //        return card;
 //    }
+    @SuppressLint("SdCardPath")
     void _upgrageDatabase() {
         SQLiteDatabase checkInDowload = null;
         try {
@@ -390,13 +372,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void _exportDatabase() {
         File sd = Environment.getExternalStorageDirectory();
         File data = Environment.getDataDirectory();
-        FileChannel source = null;
-        FileChannel destination = null;
-        String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;;
+        FileChannel source;
+        FileChannel destination;
+        String currentDBPath = "/data/com.born2go.lazzybee/databases/" + DB_NAME;
 
-        String backupDBPath = DB_NAME;
+
+        //String backupDBPath = DB_NAME;
         File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, "/" + DOWNLOAD + "/" + backupDBPath);
+        File backupDB = new File(sd, "/" + DOWNLOAD + "/" + DB_NAME);
         try {
             source = new FileInputStream(currentDB).getChannel();
             destination = new FileOutputStream(backupDB).getChannel();

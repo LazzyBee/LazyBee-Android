@@ -3,8 +3,6 @@ package com.born2go.lazzybee.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.born2go.lazzybee.R;
@@ -22,25 +20,11 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        WebView mWebViewHelp = (WebView) findViewById(R.id.mWebViewHelp);
+        WebView mWebViewHelp = findViewById(R.id.mWebViewHelp);
         mWebViewHelp.loadUrl(LazzyBeeShare.ASSETS + "lazzybee_guide.htm");
         this.context = this;
         _trackerApplication();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     private void _trackerApplication() {
         try {

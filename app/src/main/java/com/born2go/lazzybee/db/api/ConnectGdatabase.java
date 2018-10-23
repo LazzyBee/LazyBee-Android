@@ -3,18 +3,13 @@ package com.born2go.lazzybee.db.api;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi.GetVocaById;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi.GetVocaByQ;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.DataServiceApi.ListVoca;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.VocaCollection;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 /*
  *  connect to google database by endpoints client libs
@@ -30,6 +25,7 @@ public class ConnectGdatabase {
     final String applicationName = "Lazzybee";
 
 
+    @SuppressWarnings("ConstantConditions")
     public DataServiceApi getDataServiceApi() {
         HttpTransport transport;
         JsonFactory gsonFactory;

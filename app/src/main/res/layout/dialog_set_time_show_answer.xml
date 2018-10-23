@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:background="#ffffff"
@@ -13,7 +14,8 @@
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:paddingTop="8dp"
+        tools:ignore="RtlHardcoded">
 
         <ImageView
             android:id="@+id/mClose"
@@ -22,7 +24,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_clear_white_36dp" />
+            android:src="@drawable/ic_clear_white_36dp"
+            android:contentDescription="@string/todo"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/lbSave"
@@ -33,7 +37,9 @@
             android:layout_centerVertical="true"
             android:text="@string/save"
             android:textColor="@color/white"
-            android:textSize="10pt" />
+            android:textSize="10pt"
+            tools:ignore="RelativeOverlap,RtlHardcoded"
+            />
     </RelativeLayout>
 
 
@@ -82,9 +88,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:singleLine="false"
-                android:text="Now"
+                android:text="@string/now"
                 android:textColor="@color/grey_600"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                tools:ignore="RtlHardcoded"
+                />
 
             <ImageView
                 android:id="@+id/imgDone"
@@ -94,7 +102,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_done_teal_500_36dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:contentDescription="@string/todo"
+                tools:ignore="RtlHardcoded"/>
         </RelativeLayout>
 
         <include
@@ -121,8 +131,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:singleLine="false"
-                android:text="Now"
-                android:textColor="@color/grey_600" />
+                android:text="@string/now"
+                android:textColor="@color/grey_600"
+                tools:ignore="RtlHardcoded"/>
 
             <ImageView
                 android:id="@+id/imgDone3s"
@@ -132,7 +143,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_done_teal_500_36dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:contentDescription="@string/todo"
+                tools:ignore="RtlHardcoded"/>
         </RelativeLayout>
         <include
             android:layout_width="fill_parent"
@@ -157,8 +170,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:singleLine="false"
-                android:text="Now"
-                android:textColor="@color/grey_600" />
+                android:text="@string/now"
+                android:textColor="@color/grey_600"
+                tools:ignore="RtlHardcoded"/>
 
             <ImageView
                 android:id="@+id/imgDone5s"
@@ -168,7 +182,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_done_teal_500_36dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:contentDescription="@string/todo"
+                tools:ignore="RtlHardcoded"/>
         </RelativeLayout>
         <include
             android:layout_width="fill_parent"
@@ -193,8 +209,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:singleLine="false"
-                android:text="Now"
-                android:textColor="@color/grey_600" />
+                android:text="@string/now"
+                android:textColor="@color/grey_600"
+                tools:ignore="RtlHardcoded"/>
 
             <ImageView
                 android:id="@+id/imgDone7s"
@@ -204,7 +221,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_done_teal_500_36dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:contentDescription="@string/todo"
+                tools:ignore="RtlHardcoded"/>
         </RelativeLayout>
         <include
             android:layout_width="fill_parent"

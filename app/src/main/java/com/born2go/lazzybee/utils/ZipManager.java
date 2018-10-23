@@ -19,7 +19,7 @@ public class ZipManager {
 
     public boolean zip(String[] _files, String zipFileName) {
         try {
-            BufferedInputStream origin = null;
+            BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFileName);
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
                     dest));
@@ -56,7 +56,7 @@ public class ZipManager {
         try {
             FileInputStream fin = new FileInputStream(_zipFile);
             ZipInputStream zin = new ZipInputStream(fin);
-            ZipEntry ze = null;
+            ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
 
                 //create dir if required while unzipping
@@ -76,7 +76,7 @@ public class ZipManager {
             zin.close();
             unzip = true;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e.getMessage());
         }
         return unzip;
     }
@@ -85,7 +85,9 @@ public class ZipManager {
         File f = new File(dir);
 
         if (!f.isDirectory()) {
-            f.mkdirs();
+            if (f.mkdirs()){
+                System.out.print("mkdirs fails");
+            }
         }
     }
 }

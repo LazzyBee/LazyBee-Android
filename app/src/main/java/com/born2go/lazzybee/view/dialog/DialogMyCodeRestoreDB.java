@@ -5,18 +5,15 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
-import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 /**
  * Created by Hue on 1/7/2016.
@@ -26,7 +23,7 @@ public class DialogMyCodeRestoreDB extends DialogFragment {
 
 
     public static final String TAG = "DialogMyCodeRestoreDB";
-    private String code;
+    private final String code;
 
     public DialogMyCodeRestoreDB(String code) {
         this.code = code;
@@ -44,15 +41,10 @@ public class DialogMyCodeRestoreDB extends DialogFragment {
         //set style
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
-        ImageView mClose = (ImageView) view.findViewById(R.id.mClose);
-        TextView lbMyRestoreCode = (TextView) view.findViewById(R.id.lbMyRestoreCode);
+        ImageView mClose = view.findViewById(R.id.mClose);
+        TextView lbMyRestoreCode = view.findViewById(R.id.lbMyRestoreCode);
         lbMyRestoreCode.setText(code);
-        View.OnClickListener closeDialog = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        };
+        View.OnClickListener closeDialog = v -> getDialog().dismiss();
         mClose.setOnClickListener(closeDialog);
         view.findViewById(R.id.btnClose).setOnClickListener(closeDialog);
         return view;
@@ -65,8 +57,10 @@ public class DialogMyCodeRestoreDB extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 }

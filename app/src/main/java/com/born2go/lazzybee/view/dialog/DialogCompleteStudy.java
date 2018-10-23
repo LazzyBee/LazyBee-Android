@@ -2,7 +2,6 @@ package com.born2go.lazzybee.view.dialog;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -30,7 +29,6 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 @SuppressLint("ValidFragment")
@@ -39,8 +37,11 @@ public class DialogCompleteStudy extends DialogFragment {
     private static final String TAG = "DialogCompleteStudy";
     private Context context;
 
-    public DialogCompleteStudy(Context context) {
-        this.context = context;
+    public DialogCompleteStudy() {
+    }
+
+    public static DialogCompleteStudy newInstance() {
+        return new DialogCompleteStudy();
     }
 
     public interface ICompleteSutdy {
@@ -48,6 +49,7 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     ICompleteSutdy iCompleteSutdy;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,46 +73,40 @@ public class DialogCompleteStudy extends DialogFragment {
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
-        Button btnDone = (Button) view.findViewById(R.id.btnDone);
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().cancel();
-                if (iCompleteSutdy != null) {
-                    iCompleteSutdy.close();
-                } else {
-                    if (getActivity() != null) {
-                        getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000);
-                        getActivity().finish();
-                    }
+        Button btnDone = view.findViewById(R.id.btnDone);
+        btnDone.setOnClickListener(v -> {
+            getDialog().cancel();
+            if (iCompleteSutdy != null) {
+                iCompleteSutdy.close();
+            } else {
+                if (getActivity() != null) {
+                    getActivity().setResult(LazzyBeeShare.CODE_COMPLETE_STUDY_1000);
+                    getActivity().finish();
                 }
-
-
             }
+
+
         });
 
         return view;
     }
 
     private void _handlerCompleteStudyLinkClick(View view) {
-        view.findViewById(R.id.lbCompleteLink).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = getString(R.string.complele_text_display_link);
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
+        view.findViewById(R.id.lbCompleteLink).setOnClickListener(v -> {
+            String url = getString(R.string.complele_text_display_link);
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
         });
     }
 
     private void _initStreakCount(View view, int count) {
         //Define view
         View mCount = view.findViewById(R.id.mCount);
-        TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
-        ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
+        TextView lbCountStreak = mCount.findViewById(R.id.lbCountStreak);
+        ImageView streak_ring = mCount.findViewById(R.id.streak_ring);
         //
-        lbCountStreak.setText(count + " " + getString(R.string.streak_day));
+        lbCountStreak.setText(String.valueOf(count + " " + getString(R.string.streak_day)));
 
         //set animation
         Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);
@@ -121,9 +117,7 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private void _initStreakDays(View view, LayoutInflater inflater, int countStreak) {
-        LinearLayout mDays = (LinearLayout) view.findViewById(R.id.mDays);
-        ArrayList<String> strings = new ArrayList<String>();
-        strings.addAll(Arrays.asList(context.getResources().getStringArray(R.array.days)));
+        LinearLayout mDays = view.findViewById(R.id.mDays);
 
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
@@ -131,9 +125,9 @@ public class DialogCompleteStudy extends DialogFragment {
         int startofDay = (int) (LazzyBeeShare.getStartOfDayInMillis() / 1000);
         Log.d(TAG, "Count of streak:" + countStreak);
         Log.d(TAG, "Start of the day:" + startofDay);
-        ArrayList<Boolean> showDays = new ArrayList<Boolean>();
+        ArrayList<Boolean> showDays = new ArrayList<>();
 
-        String showDay = LazzyBeeShare.EMPTY;
+        StringBuilder showDay = new StringBuilder(LazzyBeeShare.EMPTY);
         if (countStreak > 7) {
             //full day learn
             showDays.add(true);
@@ -150,14 +144,14 @@ public class DialogCompleteStudy extends DialogFragment {
                 String streakDayCount = "SELECT Count(day) FROM streak where day = " + day;
                 if (LazzyBeeSingleton.learnApiImplements._queryCount(streakDayCount) == 1) {
                     showDays.add(true);
-                    showDay += true + "\t";
+                    showDay.append(true + "\t");
                 } else {
                     showDays.add(false);
-                    showDay += false + "\t";
+                    showDay.append(false + "\t");
                 }
             }
             showDays.add(true);
-            showDay += true + "\t";
+            showDay.append(true + "\t");
         }
         Log.d(TAG, "Show day no soft =" + showDay);
         for (int i = 0; i < weeks.size(); i++) {
@@ -165,8 +159,8 @@ public class DialogCompleteStudy extends DialogFragment {
             String _day = weeks.get(i);//define dayOfWeek
 
             FrameLayout _mDayRing = (FrameLayout) inflater.inflate(R.layout.day_ring, null);
-            ImageView _dayRing = (ImageView) _mDayRing.findViewById(R.id.dayRing);
-            TextView _lbDay = (TextView) _mDayRing.findViewById(R.id.lbDay);
+            ImageView _dayRing = _mDayRing.findViewById(R.id.dayRing);
+            TextView _lbDay = _mDayRing.findViewById(R.id.lbDay);
             _lbDay.setText(_day);
 
             boolean showRing = showDays.get(i);//define show ring
@@ -177,7 +171,7 @@ public class DialogCompleteStudy extends DialogFragment {
     }
 
     private ArrayList<String> _defineWeekbyDayOfWeek(int dayOfWeek) {
-        ArrayList<String> days = new ArrayList<String>();
+        ArrayList<String> days = new ArrayList<>();
         {
             switch (dayOfWeek) {
                 case Calendar.MONDAY:
@@ -258,8 +252,10 @@ public class DialogCompleteStudy extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 
@@ -267,5 +263,6 @@ public class DialogCompleteStudy extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         iCompleteSutdy = (ICompleteSutdy) context;
+        this.context = context;
     }
 }

@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_search_option"
         android:icon="@drawable/ic_add_white_24dp"
-        android:title="Search Option"
+        android:title="@string/search_opition"
         app:showAsAction="ifRoom|withText">
         <menu>
             <group>

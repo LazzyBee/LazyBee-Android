@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +32,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_LINES = 6;
     private static final int TYPE_HELP = 7;
 
-    List<String> objectList;
-    Context context;
-    LearnApiImplements learnApiImplements;
+    final List<String> objectList;
+    final Context context;
+    final LearnApiImplements learnApiImplements;
 
     public RecyclerViewDrawerListAdapter(Context context, List<String> objectList) {
         this.objectList = objectList;
@@ -41,8 +42,9 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
     }
 
+    @NonNull
     @Override
-    public RecyclerViewDrawerListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewDrawerListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = null;
         if (viewType == TYPE_COURSE) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coures, parent, false); //Inflating the layout
@@ -61,19 +63,18 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
         } else if (viewType == TYPE_HELP) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_drawer_icon, parent, false);
         }
-        RecyclerViewDrawerListAdapterViewHolder recyclerViewDrawerListAdapterViewHolder = new RecyclerViewDrawerListAdapterViewHolder(v, viewType);
-        return recyclerViewDrawerListAdapterViewHolder;
+        return new RecyclerViewDrawerListAdapterViewHolder(v, viewType);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewDrawerListAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewDrawerListAdapterViewHolder holder, int position) {
         try {
             View view = holder.view;
             if (holder.viewType == TYPE_COURSE) {
-                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                ImageView mImg = view.findViewById(R.id.mImg);
 
-                TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
-                TextView lbCount = (TextView) view.findViewById(R.id.lbCountMyWord);
+                TextView lbNameCourse = view.findViewById(R.id.lbNameCourse);
+                TextView lbCount = view.findViewById(R.id.lb_count_my_word);
                 lbNameCourse.setText(String.valueOf(objectList.get(position)));
                 lbCount.setVisibility(View.GONE);
                 if (objectList.get(position).equals("English Word")) {
@@ -120,31 +121,33 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
                     mImg.setColorFilter(context.getResources().getColor(android.R.color.darker_gray));
 
                 }
-            } else if (holder.viewType == TYPE_ADD_COURCE) {
-
-            } else if (holder.viewType == TYPE_USER) {
-
-            } else if (holder.viewType == TYPE_TITLE_COURSE) {
-                TextView lbDrawerName = (TextView) view.findViewById(R.id.lbDrawerName);
+            }
+//            else if (holder.viewType == TYPE_ADD_COURCE) {
+//
+//            } else if (holder.viewType == TYPE_USER) {
+//
+//            }
+            else if (holder.viewType == TYPE_TITLE_COURSE) {
+                TextView lbDrawerName = view.findViewById(R.id.lbDrawerName);
                 lbDrawerName.setText(context.getString(R.string.my_course));
                 lbDrawerName.setTextSize(15f);
                 lbDrawerName.setTextColor(context.getResources().getColor(R.color.grey_300));
             } else if (holder.viewType == TYPE_SETTING) {
-                ImageView mNoti = (ImageView) view.findViewById(R.id.mNoti);
+                ImageView mNoti = view.findViewById(R.id.mNoti);
                 if (learnApiImplements._checkUpdateDataBase()) {
                     mNoti.setVisibility(View.VISIBLE);
                 } else {
                     mNoti.setVisibility(View.GONE);
                 }
             } else if (holder.viewType == TYPE_ABOUT) {
-                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                ImageView mImg = view.findViewById(R.id.mImg);
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_about));
-                TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
+                TextView lbDrawerName = view.findViewById(R.id.mTextView);
                 lbDrawerName.setText(context.getString(R.string.setting_about));
             } else if (holder.viewType == TYPE_HELP) {
-                ImageView mImg = (ImageView) view.findViewById(R.id.mImg);
+                ImageView mImg = view.findViewById(R.id.mImg);
                 mImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_help));
-                TextView lbDrawerName = (TextView) view.findViewById(R.id.mTextView);
+                TextView lbDrawerName = view.findViewById(R.id.mTextView);
                 lbDrawerName.setText(context.getString(R.string.drawer_help));
             }
 
@@ -189,8 +192,8 @@ public class RecyclerViewDrawerListAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public class RecyclerViewDrawerListAdapterViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-        private int viewType;
+        private final View view;
+        private final int viewType;
 
         public RecyclerViewDrawerListAdapterViewHolder(View itemView, int viewType) {
             super(itemView);

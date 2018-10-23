@@ -6,7 +6,6 @@
     <fragment
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:name="com.born2go.lazzybee.fragment.FragmentListCourse"
         android:id="@+id/fragment4"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />

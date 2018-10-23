@@ -1,9 +1,9 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,7 +24,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,13 +63,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
 import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
@@ -85,7 +81,6 @@ public class MainActivity extends AppCompatActivity
         RewardedVideoAdListener {
 
     private Context context;
-    ;
     private static final String TAG = "MainActivity";
     private static final Object GA_SCREEN = "aHomeScreen";
 
@@ -114,7 +109,6 @@ public class MainActivity extends AppCompatActivity
 
     SearchView mSearchCardBox;
     private CoordinatorLayout coordinatorLayout;
-    private FloatingActionButton floatingActionButton;
     private String adv_pub_id;
 
 
@@ -138,8 +132,6 @@ public class MainActivity extends AppCompatActivity
 
         _trackerApplication();
 
-        _goHome();
-
         _initAdvFillStreak();
 
         _checkFillStreak();
@@ -158,18 +150,15 @@ public class MainActivity extends AppCompatActivity
                 .build();
         //load video
         mAd.setRewardedVideoAdListener(this);
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                String adv_streak_saver = null;
-                if (task.isSuccessful()) {
-                    adv_streak_saver = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_STREAK_SAVER);
-                }
-                if (adv_pub_id != null && adv_streak_saver != null) {
-                    mAd.loadAd(adv_pub_id + "/" + adv_streak_saver, adRequest);
-                }
-
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+            String adv_streak_saver = null;
+            if (task.isSuccessful()) {
+                adv_streak_saver = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_STREAK_SAVER);
             }
+            if (adv_pub_id != null && adv_streak_saver != null) {
+                mAd.loadAd(adv_pub_id + "/" + adv_streak_saver, adRequest);
+            }
+
         });
 
     }
@@ -177,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
     private void _initDictinarySearchBox() {
         //Define Search Dictionary box
-        mSearchCardBox = (SearchView) findViewById(R.id.mSearchCard);
+        mSearchCardBox = findViewById(R.id.mSearchCard);
         mSearchCardBox.setIconifiedByDefault(false);
         mSearchCardBox.setQueryHint(getString(R.string.drawer_dictionary));
 
@@ -186,32 +175,30 @@ public class MainActivity extends AppCompatActivity
 
         //mSearchCardBox.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) mSearchCardBox.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete autoCompleteTextView = mSearchCardBox.findViewById(R.id.search_src_text);
 
         autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
         //Custom search
         // Hide icon search in searchView and set clear text icon
-        ImageView search_close_btn = (ImageView) mSearchCardBox.findViewById(R.id.search_close_btn);
+        ImageView search_close_btn = mSearchCardBox.findViewById(R.id.search_close_btn);
         if (search_close_btn != null) {
             search_close_btn.setImageDrawable(LazzyBeeShare.getDraweble(context, R.drawable.ic_clear_black_18dp));
         }
-        ImageView magImage = (ImageView) mSearchCardBox.findViewById(R.id.search_mag_icon);
+        ImageView magImage = mSearchCardBox.findViewById(R.id.search_mag_icon);
         if (magImage != null) {
             magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
             magImage.setVisibility(View.GONE);
         }
         //set color..
-        if (autoCompleteTextView != null) {
-            //set Enable Spelling Suggestions
-            autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-            int color = Color.parseColor("#FFFFFF");
-            Drawable drawable = autoCompleteTextView.getDropDownBackground();
-            drawable.setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.MULTIPLY);
+        //set Enable Spelling Suggestions
+        autoCompleteTextView.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+        int color = Color.parseColor("#FFFFFF");
+        Drawable drawable = autoCompleteTextView.getDropDownBackground();
+        drawable.setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.MULTIPLY);
 
-            autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
-            autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
-            autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
-        }
+        autoCompleteTextView.setDropDownBackgroundDrawable(drawable);
+        autoCompleteTextView.setTextColor(getResources().getColor(R.color.grey_900));
+        autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.grey_600));
 
         //query
         mSearchCardBox.setOnQueryTextListener(this);
@@ -262,21 +249,18 @@ public class MainActivity extends AppCompatActivity
 
 
         //get number in remote config firebase
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
-                if (task.isSuccessful()) {
-                    numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
-                }
-                //Check streack
-                if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
-                    //Show dialog view video to fill streak
-                    _showDialogConfirmFillStreak();
+        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+            int numberToFillSteak = 0;// Integer.valueOf(LazzyBeeShare.DEFAULT_STREAK_SAVER);
+            if (task.isSuccessful()) {
+                numberToFillSteak = Integer.valueOf(LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.STREAK_SAVER));
+            }
+            //Check streack
+            if (dataBaseHelper.getTotalDayStudy() > numberToFillSteak && dataBaseHelper._getCountStreak() < numberToFillSteak) {
+                //Show dialog view video to fill streak
+                _showDialogConfirmFillStreak();
 
-                } else {
-                    Log.d(TAG, "Not record to fill streak");
-                }
+            } else {
+                Log.d(TAG, "Not record to fill streak");
             }
         });
 
@@ -286,25 +270,17 @@ public class MainActivity extends AppCompatActivity
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage(getString(R.string.play_video_to_save_streak));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mAd.isLoaded())//Ads is load to check
-                    mAd.show();
-                else {
-                    Log.d(TAG, "Ads save streak not loader");
-                    _fillStreak();
-                }
-                dialog.dismiss();
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            if (mAd.isLoaded())//Ads is load to check
+                mAd.show();
+            else {
+                Log.d(TAG, "Ads save streak not loader");
+                _fillStreak();
+            }
+            dialog.dismiss();
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, i) -> dialog.dismiss());
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 
@@ -316,31 +292,28 @@ public class MainActivity extends AppCompatActivity
         try {
             final String admob_pub_id = adv_pub_id;//"ca-app-pub-5245864792816840";
             final String[] adv_fullscreen_id = {LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID)};//"9210342219";
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        adv_fullscreen_id[0] = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
-                    }
-                    if (admob_pub_id != null && adv_fullscreen_id[0] != null) {
-                        String advId = admob_pub_id + "/" + adv_fullscreen_id[0];
-                        Log.d(TAG, "adv_fullscreen_id:" + advId);
-                        mInterstitialAd = new InterstitialAd(context);
-                        mInterstitialAd.setAdUnitId(advId);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    adv_fullscreen_id[0] = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_FULLSCREEB_ID);
+                }
+                if (admob_pub_id != null && adv_fullscreen_id[0] != null) {
+                    String advId = admob_pub_id + "/" + adv_fullscreen_id[0];
+                    Log.d(TAG, "adv_fullscreen_id:" + advId);
+                    mInterstitialAd = new InterstitialAd(context);
+                    mInterstitialAd.setAdUnitId(advId);
 
-                        mInterstitialAd.setAdListener(new AdListener() {
-                            @Override
-                            public void onAdClosed() {
-                                requestNewInterstitial();
-                                _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
-                            }
-                        });
+                    mInterstitialAd.setAdListener(new AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            requestNewInterstitial();
+                            _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+                        }
+                    });
 
-                        requestNewInterstitial();
-                    } else {
-                        Log.d(TAG, "InterstitialAdId null");
-                        mInterstitialAd = null;
-                    }
+                    requestNewInterstitial();
+                } else {
+                    Log.d(TAG, "InterstitialAdId null");
+                    mInterstitialAd = null;
                 }
             });
 
@@ -367,7 +340,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void _setUpNotification(boolean nextday) {
+    private void _setUpNotification() {
         Log.i(TAG, "---------setUpNotification-------");
         try {
             int hour = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_HOUR_NOTIFICATION);
@@ -378,7 +351,7 @@ public class MainActivity extends AppCompatActivity
 
 
             Calendar calendar = Calendar.getInstance();
-            if (hour <= currentHour || nextday) {
+            if (hour <= currentHour) {
                 calendar.add(Calendar.DATE, 1);
             }
             // Define a time
@@ -404,14 +377,14 @@ public class MainActivity extends AppCompatActivity
     private void _initSettingApplication() {
         adv_pub_id = getIntent().getStringExtra(LazzyBeeShare.ADMOB_PUB_ID);
         sharedpreferences = getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
-        if (_checkSetting(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE)) {
+        if (_checkSetting()) {
             _checkUpdate();
         }
         LazzyBeeShare._cancelNotification(context);
         boolean first_run_app = sharedpreferences.getBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, false);
         if (!first_run_app) {
             _showHelp();
-            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).commit();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_FIRST_RUN_APP, true).apply();
             dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_NOTIFICTION, LazzyBeeShare.ON);
             LazzyBeeShare._setUpNotification(context, LazzyBeeShare.DEFAULT_HOUR_NOTIFICATION, LazzyBeeShare.DEFAULT_MINUTE_NOTIFICATION);
         }
@@ -420,7 +393,7 @@ public class MainActivity extends AppCompatActivity
         boolean custom_list = sharedpreferences.getBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, false);
         if (!custom_list) {
             dataBaseHelper.addColumCustomList();
-            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).commit();
+            sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).apply();
         }
 
 
@@ -435,8 +408,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private boolean _checkSetting(String key) {
-        String auto = dataBaseHelper._getValueFromSystemByKey(key);
+    private boolean _checkSetting() {
+        String auto = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_AUTO_CHECK_UPDATE);
         if (auto == null) {
             return false;
         } else if (auto.equals(LazzyBeeShare.ON)) {
@@ -449,11 +422,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _intInterfaceView() {
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+        coordinatorLayout = findViewById(R.id
                 .coordinatorLayout);
 //        container = (FrameLayout) findViewById(R.id.mContainer);
 //        container.requestFocus();
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setPadding(0, 0, 0, 0);
     }
 
@@ -468,12 +441,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar
                         .make(this.coordinatorLayout, messgage_congratilation, Snackbar.LENGTH_LONG);
         View snackBarView = snackbarCongraturation.getView();
-        snackBarView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbarCongraturation.dismiss();
-            }
-        });
+        snackBarView.setOnClickListener(v -> snackbarCongraturation.dismiss());
         snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
         new CountDownTimer(3000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -487,7 +455,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //_initNavigationDrawerFragment(toolbar);
 
@@ -496,9 +464,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @SuppressWarnings("deprecation")
     private void _initDrawer(Toolbar toolbar) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -521,8 +490,6 @@ public class MainActivity extends AppCompatActivity
                         mMajor = context.getString(R.string.subject_ielts);
                     else if (mMajorValue.equals(context.getString(R.string.subject_600_toeic_value)))
                         mMajor = context.getString(R.string.subject_600toeic);
-                    else
-                        mMajor = null;
                 }
                 if (mMajor != null) {
                     mItemSelectMajor.setTitle(context.getString(R.string.drawer_subject) + " (" + mMajor + ")");
@@ -541,9 +508,10 @@ public class MainActivity extends AppCompatActivity
         try {
             String versionName = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName;
-            TextView lbAppVersion = (TextView) findViewById(R.id.mVesionApp);
-            lbAppVersion.setText("Version:" + versionName);
+            TextView lbAppVersion = findViewById(R.id.mVesionApp);
+            lbAppVersion.setText(String.valueOf("Version:" + versionName));
         } catch (PackageManager.NameNotFoundException e) {
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
         }
@@ -557,26 +525,6 @@ public class MainActivity extends AppCompatActivity
         myDbHelper = LazzyBeeSingleton.dataBaseHelper;
         databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         dataBaseHelper = LazzyBeeSingleton.learnApiImplements;
-    }
-
-
-    /**
-     * Init NavigationDrawerFragment
-     *
-     * @param toolbar
-     */
-    private void _initNavigationDrawerFragment(Toolbar toolbar) {
-        try {
-//            mNavigationDrawerFragment = (NavigationDrawerFragment)
-//                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-//            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//            // Set up the drawer.
-//            mNavigationDrawerFragment.setUp(
-//                    R.id.navigation_drawer, toolbar,
-//                    drawerLayout);
-        } catch (Exception e) {
-            LazzyBeeShare.showErrorOccurred(context, "_initNavigationDrawerFragment", e);
-        }
     }
 
 
@@ -640,14 +588,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void _goHome() {
-        //getSupportFragmentManager().beginTransaction().add(R.id.mContainer, new ViewHome()).commit();
-    }
 
     private void _showStatistical() {
         LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_LEARNING_PROGRESS, new Bundle());
         try {
-            DialogStatistics dialogStatistics = new DialogStatistics(MainActivity.this);
+            DialogStatistics dialogStatistics = DialogStatistics.newInstance();
             dialogStatistics.show(getSupportFragmentManager(), DialogStatistics.TAG);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_showStatistical", e);
@@ -658,12 +603,12 @@ public class MainActivity extends AppCompatActivity
     private void showSelectMajor() {
         LazzyBeeSingleton.getFirebaseAnalytics().logEvent(LazzyBeeShare.FA_OPEN_CHOOSE_MAJOR, new Bundle());
         View mSelectMajor = View.inflate(context, R.layout.view_select_major, null);
-        final CheckBox cbIt = (CheckBox) mSelectMajor.findViewById(R.id.cbIt);
-        final CheckBox cbEconomy = (CheckBox) mSelectMajor.findViewById(R.id.cbEconomy);
-        final CheckBox cbScience = (CheckBox) mSelectMajor.findViewById(R.id.cbScience);
-        final CheckBox cbMedicine = (CheckBox) mSelectMajor.findViewById(R.id.cbMedicine);
-        final CheckBox cbIelts = (CheckBox) mSelectMajor.findViewById(R.id.cbIelts);
-        final CheckBox cbx600Toeic = (CheckBox) mSelectMajor.findViewById(R.id.cbx600Toeic);
+        final CheckBox cbIt = mSelectMajor.findViewById(R.id.cbIt);
+        final CheckBox cbEconomy = mSelectMajor.findViewById(R.id.cbEconomy);
+        final CheckBox cbScience = mSelectMajor.findViewById(R.id.cbScience);
+        final CheckBox cbMedicine = mSelectMajor.findViewById(R.id.cbMedicine);
+        final CheckBox cbIelts = mSelectMajor.findViewById(R.id.cbIelts);
+        final CheckBox cbx600Toeic = mSelectMajor.findViewById(R.id.cbx600Toeic);
 
         //get my subbject
         String my_subject = dataBaseHelper._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
@@ -696,139 +641,115 @@ public class MainActivity extends AppCompatActivity
         final CharSequence[] items_value = context.getResources().getStringArray(R.array.subjects_value);
         final int[] seleted_index = {0};
         final int[] checker = {-1};
-        cbIt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 0;
-                } else {
-                    checker[0] = -2;
-                }
+        cbIt.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 0;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbEconomy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 1;
-                } else {
-                    checker[0] = -2;
-                }
+        cbEconomy.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 1;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbScience.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 2;
-                } else {
-                    checker[0] = -2;
-                }
+        cbScience.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 2;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbMedicine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbIelts.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 3;
-                } else {
-                    checker[0] = -2;
-                }
+        cbMedicine.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbIelts.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 3;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbIelts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbx600Toeic.setChecked(false);
-                    checker[0] = 4;
-                } else {
-                    checker[0] = -2;
-                }
+        cbIelts.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbx600Toeic.setChecked(false);
+                checker[0] = 4;
+            } else {
+                checker[0] = -2;
             }
         });
-        cbx600Toeic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
-                    // Put some meat on the sandwich
-                    cbIt.setChecked(false);
-                    cbEconomy.setChecked(false);
-                    cbScience.setChecked(false);
-                    cbMedicine.setChecked(false);
-                    cbIelts.setChecked(false);
-                    checker[0] = 5;
-                } else {
-                    checker[0] = -2;
-                }
+        cbx600Toeic.setOnClickListener(v -> {
+            boolean checked = ((CheckBox) v).isChecked();
+            if (checked) {
+                // Put some meat on the sandwich
+                cbIt.setChecked(false);
+                cbEconomy.setChecked(false);
+                cbScience.setChecked(false);
+                cbMedicine.setChecked(false);
+                cbIelts.setChecked(false);
+                checker[0] = 5;
+            } else {
+                checker[0] = -2;
             }
         });
         builder.setView(mSelectMajor);
 
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
-                String subjectSelected;
-                if (checker[0] > -1) {
-                    subjectSelected = String.valueOf(items_value[checker[0]]);
-                    //save my subjects
-                    dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
+        builder.setPositiveButton(R.string.save, (dialog, id) -> {
+            int mylevel = dataBaseHelper.getSettingIntergerValuebyKey(LazzyBeeShare.KEY_SETTING_MY_LEVEL);
+            String subjectSelected;
+            if (checker[0] > -1) {
+                subjectSelected = String.valueOf(items_value[checker[0]]);
+                //save my subjects
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, subjectSelected);
 
-                    //reset incomming list
-                    dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
-                    LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(subjectSelected));
-                } else if (checker[0] == -2) {
-                    //save my subjects
-                    dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdListbyLevelandSubject(mylevel, subjectSelected);
+                LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(subjectSelected));
+            } else if (checker[0] == -2) {
+                //save my subjects
+                dataBaseHelper._insertOrUpdateToSystemTable(LazzyBeeShare.KEY_SETTING_MY_SUBJECT, LazzyBeeShare.EMPTY);
 
-                    //reset incomming list
-                    dataBaseHelper._initIncomingCardIdList();
-                    LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(""));
-                }
-
-                dialog.cancel();
+                //reset incomming list
+                dataBaseHelper._initIncomingCardIdList();
+                LazzyBeeSingleton.getFirebaseAnalytics().setUserProperty("Selected_major", String.valueOf(""));
             }
+
+            dialog.cancel();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
 
@@ -859,12 +780,7 @@ public class MainActivity extends AppCompatActivity
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle("Ops!");
         builder.setMessage(Html.fromHtml(message));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         // Get the AlertDialog from create()
         final AlertDialog dialog = builder.create();
 
@@ -872,15 +788,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void _showHelp() {
-        DialogHelp dialogHelp = new DialogHelp();
+        DialogHelp dialogHelp = DialogHelp.newDialog();
         dialogHelp.show(getSupportFragmentManager(), DialogHelp.TAG);
-    }
-
-
-    public void _restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(getString(R.string.app_name));
     }
 
 
@@ -933,7 +842,7 @@ public class MainActivity extends AppCompatActivity
             if (dataBaseHelper._checkUpdateDataBase()) {
                 Log.i(TAG, "Co Update");
                 Toast.makeText(context, "Co Update", Toast.LENGTH_SHORT).show();
-                _showComfirmUpdateDatabase(LazzyBeeShare.DOWNLOAD_UPDATE);
+                _showComfirmUpdateDatabase();
                 return true;
             } else {
                 Toast.makeText(context, "Khong co Update", Toast.LENGTH_SHORT).show();
@@ -946,7 +855,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void _showComfirmUpdateDatabase(final int type) {
+    private void _showComfirmUpdateDatabase() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
 
@@ -955,26 +864,18 @@ public class MainActivity extends AppCompatActivity
                 .setTitle(R.string.dialog_title_update);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked Update button
-                //1.Download file from server
-                //2.Open database
-                //3.Upgade to my database
-                //4.Remove file update
-                if (type == LazzyBeeShare.DOWNLOAD_UPDATE) {
-                    _downloadFile();
-                } else {
-                    _updateDB(type);
-                }
+        builder.setPositiveButton(R.string.btn_update, (dialog, id) -> {
+            // User clicked Update button
+            //1.Download file from server
+            //2.Open database
+            //3.Upgade to my database
+            //4.Remove file update
+            _downloadFile();
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -996,6 +897,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             Log.e(TAG, "Update DB Error:" + e.getMessage());
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
 
@@ -1020,16 +922,13 @@ public class MainActivity extends AppCompatActivity
         String download_url = base_url + dbUpdateName;
         Log.i(TAG, "download_url=" + download_url);
 
-        if (!base_url.isEmpty() || base_url != null) {
 
-            DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
+        DownloadFileandUpdateDatabase downloadFileandUpdateDatabase = new DownloadFileandUpdateDatabase(context, version + 1);
 
-            //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
-            downloadFileandUpdateDatabase.execute(download_url);
-            downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
-        } else {
-            Toast.makeText(context, R.string.message_download_database_fail, Toast.LENGTH_SHORT).show();
-        }
+        //downloadFileandUpdateDatabase.execute(LazzyBeeShare.URL_DATABASE_UPDATE);
+        downloadFileandUpdateDatabase.execute(download_url);
+        downloadFileandUpdateDatabase.downloadFileDatabaseResponse = this;
+
     }
 
 
@@ -1058,12 +957,6 @@ public class MainActivity extends AppCompatActivity
         this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     @Override
     protected void onStop() {
@@ -1152,30 +1045,26 @@ public class MainActivity extends AppCompatActivity
                 .setTitle(R.string.dialog_title_learn_more);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                if (mInterstitialAd == null) {
-                    _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            // User clicked OK button
+            if (mInterstitialAd == null) {
+                _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
+            } else {
+                if (mInterstitialAd.isLoaded()) {
+                    // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+                    mInterstitialAd.show();
+
                 } else {
-                    if (mInterstitialAd.isLoaded()) {
-                        // Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
-                        mInterstitialAd.show();
+                    //ko load van sang study
+                    _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
 
-                    } else {
-                        //ko load van sang study
-                        _gotoStudy(getResources().getInteger(R.integer.goto_study_code1));
-
-                    }
                 }
+            }
 
-            }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -1201,7 +1090,7 @@ public class MainActivity extends AppCompatActivity
 
                 //Reset notification
                 LazzyBeeShare._cancelNotification(context);
-                _setUpNotification(true);
+                _setUpNotification();
 
                 int count = dataBaseHelper._getCountStreak();
                 Log.d(TAG, "Congratilation study LazzyBee,Streak count:" + count);
@@ -1219,7 +1108,7 @@ public class MainActivity extends AppCompatActivity
                 //Save time congratilation in SharedPreferences
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, new Date().getTime());
-                editor.commit();
+                editor.apply();
 
             } else {
                 Log.d(TAG, "Not congratilation study LazzyBee");
@@ -1236,21 +1125,17 @@ public class MainActivity extends AppCompatActivity
                 .setTitle(R.string.title_backup_database);
 
         // Add the buttons
-        builder.setPositiveButton(R.string.btnBackUp, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //  _updateDB(type);
-                String device_id = Settings.Secure.getString(context.getContentResolver(),
-                        Settings.Secure.ANDROID_ID);
-                int mini = 1;
-                BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
-                exportDatabaseToCSV.execute();
-            }
+        builder.setPositiveButton(R.string.btnBackUp, (dialog, id) -> {
+            //  _updateDB(type);
+            @SuppressLint("HardwareIds") String device_id = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            int mini = 1;
+            BackUpDatabaseToCSV exportDatabaseToCSV = new BackUpDatabaseToCSV(activity, context, device_id, mini);
+            exportDatabaseToCSV.execute();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -1294,37 +1179,30 @@ public class MainActivity extends AppCompatActivity
 //                }
 //
 //            }
-            if (popup_text != null) {
-                snackbarTip =
-                        Snackbar
-                                .make(this.coordinatorLayout, popup_text, Snackbar.LENGTH_INDEFINITE);
 
-                View snackBarView = snackbarTip.getView();
-                final String finalPopup_url = popup_url;
-                snackBarView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            snackbarTip.dismiss();
-                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
-                            startActivity(myIntent);
-                        } catch (ActivityNotFoundException e) {
-                            Log.e(TAG, "No application can handle this request."
-                                    + " Please install a webbrowser");
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                        }
-                    }
-                });
-                snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
+            snackbarTip =
+                    Snackbar
+                            .make(this.coordinatorLayout, popup_text, Snackbar.LENGTH_INDEFINITE);
 
-                snackbarTip.show();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        snackbarTip.dismiss();
-                    }
-                }, 7000);
+            View snackBarView = snackbarTip.getView();
+            final String finalPopup_url = popup_url;
+            snackBarView.setOnClickListener(v -> {
+                try {
+                    snackbarTip.dismiss();
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalPopup_url));
+                    startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e(TAG, "No application can handle this request."
+                            + " Please install a webbrowser");
+                    //noinspection AccessStaticViaInstance
+                    LazzyBeeSingleton.getCrashlytics().logException(e);
+                }
+            });
+            snackBarView.setBackgroundColor(getResources().getColor(R.color.snackbar_background_color));
+
+            snackbarTip.show();
+            Handler handler = new Handler();
+            handler.postDelayed(() -> snackbarTip.dismiss(), 7000);
 //                new CountDownTimer(3000, 1000) {
 //                    public void onTick(long millisUntilFinished) {
 //                    }
@@ -1333,9 +1211,7 @@ public class MainActivity extends AppCompatActivity
 //
 //                    }
 //                }.start();
-            } else {
-                Log.e(TAG, "popup_text null");
-            }
+
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_showDialogTip", e);
         }
@@ -1393,7 +1269,8 @@ public class MainActivity extends AppCompatActivity
 
             //show keyboard
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mSearchCardBox, InputMethodManager.SHOW_IMPLICIT);
+            if (imm != null)
+                imm.showSoftInput(mSearchCardBox, InputMethodManager.SHOW_IMPLICIT);
         }
 
     }
@@ -1410,7 +1287,10 @@ public class MainActivity extends AppCompatActivity
     public void _hideKeyboard() {
         //hide keyboad
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        if (inputManager != null)
+            if (getCurrentFocus() != null)
+                if (getCurrentFocus().getWindowToken() != null)
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public void onBtnStudyReverseOnClick(View view) {
@@ -1449,9 +1329,9 @@ public class MainActivity extends AppCompatActivity
         this.startActivityForResult(intent, LazzyBeeShare.ACTION_CODE_GOTO_STUDY);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings({"StatementWithEmptyBody", "ConstantConditions"})
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
@@ -1472,29 +1352,23 @@ public class MainActivity extends AppCompatActivity
             _showHelp();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (query.trim() != null) {
-            if (query.trim().length() > 2) {
-                Intent intent = new Intent(this, SearchActivity.class);
-                intent.setAction(Intent.ACTION_SEARCH);
-                intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                intent.putExtra(SearchManager.QUERY, query);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
-                return true;
-            } else {
-                Log.d(TAG, "query is short");
-                return false;
-            }
-
+        if (query.trim().length() > 2) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            intent.setAction(Intent.ACTION_SEARCH);
+            intent.putExtra(SearchActivity.QUERY_TEXT, query);
+            intent.putExtra(SearchManager.QUERY, query);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            this.startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+            return true;
         } else {
-            Log.d(TAG, "query is empty");
+            Log.d(TAG, "query is short");
             return false;
         }
     }
@@ -1505,35 +1379,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean searchCard(String query) {
-        if (query.trim() != null) {
-            if (query.trim().length() > 2) {
+        if (query.trim().length() > 2) {
 
-                String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                        + KEY_QUESTION + " like '" + query + "%' OR "
-                        + KEY_QUESTION + " like '% " + query + "%'"
-                        + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+            String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                    + KEY_QUESTION + " like '" + query + "%' OR "
+                    + KEY_QUESTION + " like '% " + query + "%'"
+                    + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                try {
-                    Cursor cursor = db.rawQuery(likeQuery, null);
-                    SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                    mSearchCardBox.setSuggestionsAdapter(suggestionCardAdapter);
-                } catch (Exception e) {
-                    LazzyBeeSingleton.getCrashlytics().logException(e);
-                    e.printStackTrace();
-                } finally {
-                    Log.d(TAG, "query suggetion");
-                }
-                return true;
-            } else {
-                Log.d(TAG, "query is short");
-                return false;
+            SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+            try {
+                Cursor cursor = db.rawQuery(likeQuery, null);
+                SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                mSearchCardBox.setSuggestionsAdapter(suggestionCardAdapter);
+            } catch (Exception e) {
+                //noinspection AccessStaticViaInstance
+                LazzyBeeSingleton.getCrashlytics().logException(e);
+                e.printStackTrace();
+            } finally {
+                Log.d(TAG, "query suggetion");
             }
-
+            return true;
         } else {
-            Log.d(TAG, "query is empty");
+            Log.d(TAG, "query is short");
             return false;
         }
+
     }
 
     @Override

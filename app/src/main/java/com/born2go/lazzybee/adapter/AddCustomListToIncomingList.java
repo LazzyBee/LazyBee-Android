@@ -4,17 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
-import com.born2go.lazzybee.shared.LazzyBeeShare;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +22,10 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
     private static final String TAG = AddCustomListToIncomingList.class.getSimpleName();
     private final ProgressDialog dialog;
 
-    List<String> incomingList = new ArrayList<>();
-    List<String> newIncomingList = new ArrayList<>();
-    List<String> defaultIncomingLists = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final List<String> newIncomingList = new ArrayList<>();
 
-    LearnApiImplements learnApiImplements;
-    private Context context;
+    private final LearnApiImplements learnApiImplements;
 
     public interface IAddCustomListToIncomingList {
         void processFinish();
@@ -42,7 +35,6 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
 
 
     public AddCustomListToIncomingList(Context context) {
-        this.context = context;
         dialog = new ProgressDialog(context);
         dialog.setCancelable(false);
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
@@ -150,7 +142,7 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
             card.setQuestion(voca.getQ());
             card.setAnswers(voca.getA());
             card.setPackage(voca.getPackages());
-            card.setLevel(Integer.valueOf(voca.getLevel()));
+            card.setLevel(voca.getLevel());
             card.setL_en(voca.getLEn());
             card.setL_vn(voca.getLVn());
 
@@ -159,6 +151,7 @@ public class AddCustomListToIncomingList extends AsyncTask<GroupVoca, Void, Void
         } catch (Exception e) {
             Log.e(TAG, "Error getVoca:" + e.getMessage());
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             return null;
         }

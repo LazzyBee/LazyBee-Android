@@ -1,5 +1,7 @@
 package com.born2go.lazzybee.adapter;
 
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,35 +18,33 @@ import java.util.List;
  */
 public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<RecyclerViewListCourseAdapter.RecyclerViewListCourseAdapterViewHoler> {
     private static final String TAG = "ListCourseAdapter";
-    List<Course> objectList;
+    final List<Course> objectList;
 
     public RecyclerViewListCourseAdapter(List<Course> objectList) {
         this.objectList = objectList;
     }
 
+    @NonNull
     @Override
-    public RecyclerViewListCourseAdapterViewHoler onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewListCourseAdapterViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coures, parent, false); //Inflating the layout
         //init viewholder
-        RecyclerViewListCourseAdapterViewHoler recyclerViewListCourseAdapterViewHoler = new RecyclerViewListCourseAdapterViewHoler(view);
-        return recyclerViewListCourseAdapterViewHoler;
+        return new RecyclerViewListCourseAdapterViewHoler(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewListCourseAdapterViewHoler holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewListCourseAdapterViewHoler holder, int position) {
         //get view form holder
         View view = holder.view;
         //init lbNameCourse
-        TextView lbNameCourse = (TextView) view.findViewById(R.id.lbNameCourse);
+        TextView lbNameCourse = view.findViewById(R.id.lbNameCourse);
         //get course form list by position
         Course course = objectList.get(position);
         //set data
         lbNameCourse.setText(course.getName());
         //setBackgroundColor
         if (position % 2 == 0) {
-            view.setBackgroundColor(R.color.material_deep_teal_500);
-        } else {
-
+            view.setBackgroundColor(Color.parseColor("#ff009688"));
         }
 
 
@@ -56,7 +56,7 @@ public class RecyclerViewListCourseAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public class RecyclerViewListCourseAdapterViewHoler extends RecyclerView.ViewHolder {
-        private View view;
+        private final View view;
 
         public RecyclerViewListCourseAdapterViewHoler(View itemView) {
             super(itemView);

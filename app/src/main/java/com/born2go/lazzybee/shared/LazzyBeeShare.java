@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.text.Spanned;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.Course;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.utils.NotificationReceiver;
@@ -31,12 +29,8 @@ import com.born2go.lazzybee.utils.NotificationReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -46,6 +40,7 @@ public class LazzyBeeShare {
 
     public static final int COURSE_ID_TEST = 100;
     public static final String LEARN_MORE = "LEARN_MORE";
+    public static final String APP_NOTIFICATION_CHANNEL = "LZ_2018_01";
     private static final String TAG = "LazzyBeeShare";
     public static final String EMPTY = "";
     public static final String CARDID = "cardId";
@@ -141,18 +136,18 @@ public class LazzyBeeShare {
     public static final String KEY_SETTING_AUTO_PLAY_SOUND = "auto_play_sound";
     public static final int TO_HTML_0 = 0;
     public static final int TO_SPEECH_1 = 1;
-    public static final long CACHE_EXPIRATION = 3600l;
-    public static final String ADV_STREAK_SAVER ="adv_streak_saver" ;
+    public static final long CACHE_EXPIRATION = 3600L;
+    public static final String ADV_STREAK_SAVER = "adv_streak_saver";
     public static final String DEFAULT_STREAK_SAVER = "7";
     public static final String STREAK_SAVER = "streak_saver";
     public static final String ADV_BANNER_ID = "adv_banner_id";
 
 
-    public static String mime = "text/html";
-    public static String encoding = "utf-8";
+    public static final String mime = "text/html";
+    public static final String encoding = "utf-8";
 
 
-    public static String ASSETS = "file:///android_asset/";
+    public static final String ASSETS = "file:///android_asset/";
     public static final int DEFAULT_MAX_NEW_LEARN_PER_DAY = 5;
     public static final int MAX_REVIEW_LEARN_PER_DAY = 10;
 
@@ -174,8 +169,7 @@ public class LazzyBeeShare {
     //https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28
     public static final String URL_DATABASE_UPDATE = "https://docs.google.com/uc?export=download&id=0B34E3-aHBkuFSEJOREdDQ2VLQ28";
 
-    static SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-    public static String BASE_URL_DB = "base_url";
+    public static final String BASE_URL_DB = "base_url";
     public static String ADV_ENABLE = "adv_enable";
 
 
@@ -184,13 +178,13 @@ public class LazzyBeeShare {
     public static String POPUP_URL = "popup_url";
 
     static TextToSpeech textToSpeech;
-    public static String GOTO_DICTIONARY = "GOTO_DICTIONARY";
+    public static final String GOTO_DICTIONARY = "GOTO_DICTIONARY";
 
-    public static String ADMOB_PUB_ID = "adv_pub_id";
+    public static final String ADMOB_PUB_ID = "adv_pub_id";
 
-    public static String ADV_DEFAULT_ID = "adv_default_id";
+    public static final String ADV_DEFAULT_ID = "adv_default_id";
 
-    public static String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
+    public static final String ADV_FULLSCREEB_ID = "adv_fullscreen_id";
     public static String ADV_DICTIONARY_ID = "adv_dictionary_id";
     public static String ADV_LEARN_DETAIL_ID = "adv_learndetail_id";
     public static String ADV_SPONSOR_UNIT_ID = "sponsor_unit";
@@ -201,10 +195,10 @@ public class LazzyBeeShare {
     public static final String ADV_DICTIONARY_LIST_ID = ADV_DEFAULT_ID;
     public static final String ADV_DETAILS_ID = ADV_DEFAULT_ID;
 
-    public static String MyPREFERENCES = "LazzyBee";
-    public static String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
+    public static final String MyPREFERENCES = "LazzyBee";
+    public static final String KEY_TIME_COMPLETE_LEARN = "timeCompleteLearn";
 
-    public static String QUEUE_LIST = "queue_List";
+    public static final String QUEUE_LIST = "queue_List";
 
     public static final String FA_OPEN_A_NOTE = "Open_aNote";
     public static final String FA_OPEN_CHOOSE_MAJOR = "Open_aChooseMajor";
@@ -229,23 +223,7 @@ public class LazzyBeeShare {
 
     public static final String FA_OPEN_TEST_YOUR_VOCA = "Open_aTestYouVoca";
     public static final String FA_OPEN_LEARNING_PROGRESS = "Open_aLearingProgress";
-    public static String SERVER_BASE_URL_SHARING="server_base_url_sharing";
-
-
-    /**
-     * Init data demo List Course
-     */
-    public static List<Course> initListCourse() {
-        List<Course> courses = new ArrayList<Course>();
-        courses.add(new Course("Spain"));
-        courses.add(new Course("Italia"));
-        courses.add(new Course("Korea"));
-        courses.add(new Course("Japan"));
-        courses.add(new Course("USA"));
-        courses.add(new Course("Lao"));
-        courses.add(new Course("Thailand"));
-        return courses;
-    }
+    public static final String SERVER_BASE_URL_SHARING = "server_base_url_sharing";
 
 
     /**
@@ -281,58 +259,45 @@ public class LazzyBeeShare {
         }
 
         String autoPlay = ((mAutoPlaySound.equals(ON)) ? "onload='question.playQuestion()'" : "");
-        String html =
-                "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<head>\n" +
-                        "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
-                        "name=\"viewport\">\n" +
-                        "</head>\n" +
-                        "<body  " + autoPlay + " >\n" +
-                        "<div style='width:100%'>\n" +
+        return "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                "name=\"viewport\">\n" +
+                "</head>\n" +
+                "<body  " + autoPlay + " >\n" +
+                "<div style='width:100%'>\n" +
 
-                        "<div style='float:left;width: 90%;text-align: center;'>" +
-                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt;font-weight: bold;'>" + card.getQuestion() + "</span>" +
+                "<div style='float:left;width: 90%;text-align: center;'>" +
+                "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt;font-weight: bold;'>" + card.getQuestion() + "</span>" +
 
-                        (containPakage ? "<br><span>" + (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) + "</span>" : "") +
+                (containPakage ? "<br><span>" + (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) + "</span>" : "") +
 
-                        "</div>" +
-                        "<div style='float:left;width: 10%;padding-top: 10px;text-align: end;'><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></div>" +
-//                        "<div style='float:left;width:90%;'>\n" +
-//                        (!mySubject.equals("common") ? "[" + mySubject + "] " : EMPTY) +
-//                        "<center><strong style='font-size:" + context.getResources().getDimension(R.dimen.study_question_size) + "pt'>" + question + "</strong></center>\n" +
-//                        "</div>\n" +
-//                        "<div style='float:left;width:10%'>\n" +
-//                        "<a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/><p>\n" +
-//                        "</div>\n" +
-
-                        "</div>\n" +
-                        "</body>\n" +
-                        "</html>";
-        //Log.v(TAG, html);
-        return html;
+                "</div>" +
+                "<div style='float:left;width: 10%;padding-top: 10px;text-align: end;'><a onclick='question.playQuestion();'><img src='ic_speaker_red.png'/></div>" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     public static String _getReverseQuestionDisplay(Context context, Card card) {
 
-        String html =
-                "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<head>\n" +
-                        "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
-                        "name=\"viewport\">\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "<div style='width:100%'>\n" +
-
-                        "<div style='float:left;width: 90%;text-align: center;'>" +
-                        "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_reverse_question_size) + "pt;font-weight: bold;'>" + _getValueFromKey(card.getAnswers(), CARD_MEANING) + "</span>" +
-                        "</div>" +
-                        "</div>\n" +
-                        "</body>\n" +
-                        "</html>";
         //Log.v(TAG, html);
-        return html;
+        return "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
+                "name=\"viewport\">\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<div style='width:100%'>\n" +
+
+                "<div style='float:left;width: 90%;text-align: center;'>" +
+                "<span style='font-size:" + context.getResources().getDimension(R.dimen.study_reverse_question_size) + "pt;font-weight: bold;'>" + _getValueFromKey(card.getAnswers(), CARD_MEANING) + "</span>" +
+                "</div>" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
     }
 
 
@@ -346,7 +311,7 @@ public class LazzyBeeShare {
 
             //get value by key
             if (key.equals(CARD_PRONOUN))
-                value = answerObj.getString(key).toString();
+                value = answerObj.getString(key);
             else {
                 value = Html.fromHtml(commonObj.getString(key)).toString();
 
@@ -361,26 +326,6 @@ public class LazzyBeeShare {
 
     }
 
-
-    /*
-    * Conver package ,pacakage,...
-    * to list String
-    *
-    * */
-    public static List<String> getListPackageFormString(String aPackage) {
-        List<String> packages = new ArrayList<String>();
-
-        //split package
-        String[] splitPackage = aPackage.split(",");
-
-        for (int i = 1; i < splitPackage.length; i++) {
-            String pack = splitPackage[i];
-            //System.out.println("-Package:" + pack);
-            packages.add(pack);
-        }
-
-        return packages;
-    }
 
     /**
      * init HTML answer
@@ -401,17 +346,16 @@ public class LazzyBeeShare {
     }
 
     public static String getAnswerHTMLwithPackage(Context context, Card card, String packages, boolean sDisplayPosition, boolean DEBUG, boolean POSITION_MEANING, boolean onload) {
-        String html = null;
+        String html;
         String pronoun = card.getPronoun();
         String meaning = card.getMeaningWithHtml(packages);
 
-        Log.d(TAG,"----meaning"+meaning);
-        String explain = card.getExplain(packages,LazzyBeeShare.TO_HTML_0);
-        String example = card.getExample(packages,LazzyBeeShare.TO_HTML_0);
+        Log.d(TAG, "----meaning" + meaning);
+        String explain = card.getExplain(packages, LazzyBeeShare.TO_HTML_0);
+        String example = card.getExample(packages, LazzyBeeShare.TO_HTML_0);
 
         String explainTagA = EMPTY;
         String exampleTagA = EMPTY;
-        String imageURL = EMPTY;
         String debug = "</body>\n</html>\n";
         String user_note = "";
         String _example = context.getResources().getString(R.string.example);
@@ -453,20 +397,21 @@ public class LazzyBeeShare {
         String meaningUP = EMPTY;
         String meaningDOWN = EMPTY;
         if (sDisplayPosition) {
+            String regex = String.valueOf("</?(p){1}.*?/?>");
             if (!POSITION_MEANING) {
                 meaningUP = "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll(regex, "") + "</em></font>\n" +
                         "</div>";
                 meaningDOWN = EMPTY;
-                 Log.d(TAG, "meaningUP:" + meaningUP);
+                Log.d(TAG, "meaningUP:" + meaningUP);
             } else {
                 meaningUP = EMPTY;
                 meaningDOWN = "<div style='float:left;width:90%;text-align: center;'>\n" +
                         "<font size='4' color='black'>" + (!packages.equals("common") ? "[" + packages + "] " : EMPTY) + "</font>\n" +
-                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll("</?(p){1}.*?/?>", "") + "</em></font>\n" +
+                        "<font size='4' color='blue'>" + "<em>" + meaning.replaceAll(regex, "") + "</em></font>\n" +
                         "</div>";
-                 Log.d(TAG, "meaningDOWN:" + meaningDOWN);
+                Log.d(TAG, "meaningDOWN:" + meaningDOWN);
             }
         }
 
@@ -476,7 +421,7 @@ public class LazzyBeeShare {
                 "<meta content=\"width=device-width, initial-scale=1.0, user-scalable=yes\"\n" +
                 "name=\"viewport\">\n" +
                 "</head>\n" +
-                "<body " + ((onload == true) ? "onload='question.playQuestion()'" : "") + ">\n" +
+                "<body " + ((onload) ? "onload='question.playQuestion()'" : "") + ">\n" +
                 "   <div style='width:100%'>\n" +
 
                 "       <div style='float:left;width:90%;text-align: center;'>\n" +
@@ -493,7 +438,7 @@ public class LazzyBeeShare {
                 "       <div style='width:90%'>\n" +
                 "       </div>\n" +
 
-                "           <p style=\"text-align: center;\">" + imageURL + "</p>\n" +
+                "           <p style=\"text-align: center;\">" + EMPTY + "</p>\n" +
 
                 "       <div style=\"float:left;width:100%\">\n" +
 //                "            <div style=\"float:left;width:100%\"><strong>" + _explain + "</strong></div>\n" +
@@ -555,8 +500,7 @@ public class LazzyBeeShare {
     private static String getDate(long time) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        String date = DateFormat.format("dd/MM/yyyy", cal).toString();
-        return date;
+        return DateFormat.format("dd/MM/yyyy", cal).toString();
     }
 
     public static boolean getPositionMeaning() {
@@ -565,9 +509,7 @@ public class LazzyBeeShare {
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_POSITION_MEANIG);
         if (value == null)
             POSITION_MEANING = true;
-        else if (value.equals(UP)) {
-            POSITION_MEANING = false;
-        } else if (value.equals(DOWN)) {
+        else if (value.equals(DOWN)) {
             POSITION_MEANING = true;
         }
         return POSITION_MEANING;
@@ -577,12 +519,9 @@ public class LazzyBeeShare {
         boolean DEBUG = false;
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String value = learnApiImplements._getValueFromSystemByKey(KEY_SETTING_DEBUG_INFOR);
-        if (value == null)
-            DEBUG = false;
-        else if (value.equals(ON)) {
-            DEBUG = true;
-        } else if (value.equals(OFF)) {
-            DEBUG = false;
+        if (value != null) {
+            if (value.equals(ON))
+                DEBUG = true;
         }
         return DEBUG;
     }
@@ -591,9 +530,7 @@ public class LazzyBeeShare {
         LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         String subject = learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_MY_SUBJECT);
         String mySubject = "common";
-        if (subject == null) {
-        } else if (subject.equals(LazzyBeeShare.EMPTY)) {
-        } else if (subject != null) {
+        if (subject != null) {
             mySubject = subject;
         }
         return mySubject;
@@ -729,37 +666,33 @@ public class LazzyBeeShare {
         try {
             String messageError = context.getString(R.string.an_error_occurred)
                     + "\t" + context.getClass().getName() + " in function " + function + "():" + e.getMessage();
-            final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
-            String android_id = Settings.Secure.getString(context.getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-            if (devices.contains(android_id)) {
-                Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
-                Log.e(TAG, messageError);
-                e.printStackTrace();
-            }
+            Toast.makeText(context, messageError, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, messageError);
+            e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         } catch (Exception ex) {
             Log.e(TAG, "showErrorOccurred Erorr:" + ex.getMessage());
             ex.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(ex);
         }
     }
 
     public static String getHTMLButtonAnswer(Context context, String ivlStr, String strLevel, int color) {
-        String btnanswer_string =
+        return
                 "<font color='" + ((color == R.color.color_level_btn_answer) ? context.getResources().getColor(R.color.white) :
                         context.getResources().getColor(R.color.color_level_btn_answer_disable)) + "'>"
                         + ivlStr + "</font>" +
                         "<br/>" +
                         "<font color='" + context.getResources().getColor(color) + "'>" + strLevel.toUpperCase() + "</font>";
-        //Log.i(TAG, "Button Answer string:" + btnanswer_string);
-        return btnanswer_string;
 
 
     }
+
     /*
- *Java Scrip Object Question
- * */
+     *Java Scrip Object Question
+     * */
     public static class JsObjectQuestion {
         @JavascriptInterface
         public String toString() {
@@ -768,8 +701,8 @@ public class LazzyBeeShare {
     }
 
     /*
-   *Java Scrip Object explain
-   * */
+     *Java Scrip Object explain
+     * */
     public static class JsObjectExplain {
         @JavascriptInterface
         public String toString() {
@@ -779,8 +712,8 @@ public class LazzyBeeShare {
     }
 
     /*
-  *Java Scrip Object example
-  * */
+     *Java Scrip Object example
+     * */
     public static class JsObjectExample {
         @JavascriptInterface
         public String toString() {
@@ -843,7 +776,7 @@ public class LazzyBeeShare {
     private static void _textToSpeechUnder20(String text, float v) {
         if (textToSpeech == null)
             textToSpeech = LazzyBeeSingleton.textToSpeech;
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
         textToSpeech.setSpeechRate(v);
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, map);
@@ -853,9 +786,8 @@ public class LazzyBeeShare {
     private static void _textToSpeechGreater21(String text, float v) {
         if (textToSpeech == null)
             textToSpeech = LazzyBeeSingleton.textToSpeech;
-        String utteranceId = EMPTY;
         textToSpeech.setSpeechRate(v);
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, EMPTY);
     }
 
     public static Intent getOpenFacebookIntent(Context context) {
@@ -875,17 +807,20 @@ public class LazzyBeeShare {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, AlarmManager.INTERVAL_DAY, pendingIntent);
+        if (alarmManager != null)
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     public static void _cancelNotification(Context context) {
         try {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            notificationManager.cancelAll();
+            if (notificationManager != null)
+                notificationManager.cancelAll();
             Intent intent = new Intent(context, NotificationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.cancel(pendingIntent);
+            if (alarmManager != null)
+                alarmManager.cancel(pendingIntent);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
@@ -896,7 +831,7 @@ public class LazzyBeeShare {
         Log.i(TAG, "---------setUpNotification-------");
         try {
             SharedPreferences sharedPreferences = context.getSharedPreferences(LazzyBeeShare.MyPREFERENCES, Context.MODE_PRIVATE);
-            int time = (int) (sharedPreferences.getLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, 0l) / 1000);
+            int time = (int) (sharedPreferences.getLong(LazzyBeeShare.KEY_TIME_COMPLETE_LEARN, 0L) / 1000);
             boolean nextday = false;
             if (time >= (getStartOfDayInMillis() / 1000) && time <= getEndOfDayInSecond()) {
                 nextday = true;
@@ -951,8 +886,7 @@ public class LazzyBeeShare {
         long range = (long) aEnd - (long) aStart + 1;
         // compute a fraction of the range, 0 <= frac < range
         long fraction = (long) (range * aRandom.nextDouble());
-        int randomNumber = (int) (fraction + aStart);
-        return randomNumber;
+        return (int) (fraction + aStart);
     }
 
     public static boolean checkConn(Context ctx) {
@@ -968,14 +902,18 @@ public class LazzyBeeShare {
 //        return false;
         ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         // test for connection
-        if (cm.getActiveNetworkInfo() != null
-                && cm.getActiveNetworkInfo().isAvailable()
-                && cm.getActiveNetworkInfo().isConnected()) {
-            return true;
-        } else {
-            Log.v(TAG, "Internet Connection Not Present");
-            return false;
-        }
+        if (cm != null)
+            if (cm.getActiveNetworkInfo() != null) {
+                if (cm.getActiveNetworkInfo() != null
+                        && cm.getActiveNetworkInfo().isAvailable()
+                        && cm.getActiveNetworkInfo().isConnected()) {
+                    return true;
+                } else {
+                    Log.v(TAG, "Internet Connection Not Present");
+                    return false;
+                }
+            } else return false;
+        else return false;
     }
 
     public static Spanned fromHtml(String html) {

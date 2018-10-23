@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:layout_height="56dp"
@@ -18,7 +19,7 @@
         <include
             layout="@layout/swipe_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"></include>
+            android:layout_height="match_parent"/>
         <!--</android.support.v7.widget.CardView>-->
 
 
@@ -51,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:singleLine="true"
-                android:text="Question"
+                android:text="@string/question"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -61,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lbQuestion"
                 android:singleLine="true"
-                android:text="answer"
+                android:text="@string/answer"
                 android:textColor="#757575"
                 android:textSize="12sp" />
 
@@ -73,26 +74,26 @@
                 android:layout_alignBottom="@+id/lbQuestion"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="3dp"
+                android:layout_marginStart="3dp"
                 android:background="@color/blue_500"
-                android:text="Level"
+                android:text="@string/level"
                 android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/learned"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/lbQuestion"
-
                 android:layout_alignTop="@+id/level"
-
                 android:layout_toLeftOf="@+id/level"
                 android:layout_toStartOf="@+id/level"
                 android:background="@color/colorPrimary"
-                android:text="Learn"
+                android:text="@string/learn"
                 android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:ignore="RelativeOverlap,RtlHardcoded" />
 
             <TextView
                 android:id="@+id/lbPronoun"
@@ -100,11 +101,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/lbQuestion"
                 android:layout_marginStart="200dp"
-                android:text="pronoun"
+                android:text="@string/pronoun"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/grey_900"
                 android:layout_marginLeft="150dp"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>
         <!--</android.support.v7.widget.CardView>-->

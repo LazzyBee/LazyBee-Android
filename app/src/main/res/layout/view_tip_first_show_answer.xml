@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
@@ -7,18 +8,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/mTarget"
+        android:background="#C0000000"
         android:layout_alignParentTop="true">
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical" android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="8dp"
-            android:layout_gravity="center_vertical|bottom"
-            android:layout_above="@+id/mTarget"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="#C0000000"
-            android:gravity="bottom"
-            android:paddingBottom="16dp">
+        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:orientation="vertical" android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:paddingTop="8dp"-->
+            <!--android:layout_gravity="center_vertical|bottom"-->
+            <!--android:layout_above="@+id/mTarget"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:background="#C0000000"-->
+            <!--android:gravity="bottom"-->
+            <!--android:paddingBottom="16dp">-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -27,8 +29,8 @@
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
                 android:paddingTop="24dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center_vertical|bottom"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp">
 
@@ -37,18 +39,19 @@
                     android:layout_height="wrap_content"
                     android:text="@string/msg_tip_answer_card"
                     android:id="@+id/textView17"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="#000"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginBottom="24dp" />
+                    android:layout_marginBottom="24dp"
+                    tools:ignore="RtlHardcoded" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:text="@string/got_it"
                     android:id="@+id/btnGotIt"
-                    android:textColor="@color/accent_material_light"
+                    android:textColor="#ff009688"
                     android:layout_below="@+id/textView17"
                     android:layout_alignRight="@+id/textView17"
                     android:layout_alignEnd="@+id/textView17"
@@ -57,24 +60,26 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="8dp"
                     android:textStyle="bold"
-                    android:textAllCaps="true"/>
+                    android:textAllCaps="true"
+                    tools:ignore="RtlHardcoded" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:text="@string/cancel"
                     android:id="@+id/btnCancel"
-                    android:textColor="@color/accent_material_light"
+                    android:textColor="#ff009688"
                     android:gravity="center"
                     android:layout_below="@+id/textView17"
                     android:layout_toLeftOf="@+id/btnGotIt"
                     android:layout_toStartOf="@+id/btnGotIt"
                     android:textStyle="bold"
-                    android:layout_marginRight="8dp"
-                    android:textAllCaps="true"/>
+                    android:layout_marginEnd="8dp"
+                    android:textAllCaps="true"
+                    tools:ignore="RtlHardcoded" />
 
             </RelativeLayout>
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
     </FrameLayout>
 
 
@@ -86,7 +91,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/mTarget">
+        android:id="@+id/mTarget"
+        tools:ignore="RtlHardcoded">
 
     </LinearLayout>
 

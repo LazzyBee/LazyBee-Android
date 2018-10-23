@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mLayoutButton"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -15,42 +16,44 @@
         android:id="@+id/btnAgain0"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_weight="1.23"
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnAgainClick"
-        android:paddingRight="5dp"
+        android:paddingEnd="5dp"
         android:text="@string/EASE_AGAIN"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:focusable="true"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/btnHard1"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_weight="1.23"
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnHardClick"
-        android:paddingRight="5dp"
+        android:paddingEnd="5dp"
         android:text="@string/EASE_HARD"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:focusable="true"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/btnGood2"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnGoodClick"
         android:text="@string/EASE_GOOD"
         android:textColor="@color/white"
-        android:layout_weight="1.23" />
+        android:layout_weight="1.23"
+        android:focusable="true" />
 
     <TextView
         android:id="@+id/btnEasy3"
@@ -60,8 +63,8 @@
         android:background="@drawable/bg_button_answer"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onbtnEasyClick"
         android:text="@string/EASE_EASY"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:focusable="true" />
 
 </LinearLayout>

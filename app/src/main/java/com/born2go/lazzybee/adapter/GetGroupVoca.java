@@ -5,11 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.born2go.lazzybee.db.Card;
 import com.born2go.lazzybee.db.api.ConnectGdatabase;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.GroupVoca;
-import com.born2go.lazzybee.gdatabase.server.dataServiceApi.model.Voca;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 
 /**
@@ -17,9 +15,8 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
  */
 public class GetGroupVoca extends AsyncTask<Long, Void, GroupVoca> {
     private static final String TAG = "GetGroupVoca";
-    private ProgressDialog dialog;
-    private LearnApiImplements learnApiImplements;
-    private ConnectGdatabase connectGdatabase;
+    private final ProgressDialog dialog;
+    private final ConnectGdatabase connectGdatabase;
 
     public interface IGetGroupVoca {
         void processFinish(GroupVoca groupVoca);
@@ -30,7 +27,7 @@ public class GetGroupVoca extends AsyncTask<Long, Void, GroupVoca> {
     public GetGroupVoca(Context context) {
         dialog = new ProgressDialog(context);
         dialog.setCancelable(false);
-        learnApiImplements = LazzyBeeSingleton.learnApiImplements;
+        LearnApiImplements learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         connectGdatabase = LazzyBeeSingleton.connectGdatabase;
     }
 

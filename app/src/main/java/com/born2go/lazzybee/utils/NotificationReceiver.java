@@ -22,9 +22,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
     private static final String TAG = "NotificationReceiver";
-    public static String NOTIFICATION_ID = "notification-id";
+    public static final String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";
-    public static String NOTIFICATION_WHEN = "when";
+    public static final String NOTIFICATION_WHEN = "when";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -44,11 +44,11 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        String message=context.getString(R.string.notification_message);
+        String message;
         try {
             //Container container = LazzyBeeSingleton.getContainerHolder().getContainer();
 //            if (container == null) {
-                message = context.getString(R.string.notification_message);
+            message = context.getString(R.string.notification_message);
 //            } else {
 //                message = container.getString(LazzyBeeShare.NOTIFY_TEXT);
 //                if (message == null) {
@@ -62,7 +62,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         //Define notification
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, LazzyBeeShare.APP_NOTIFICATION_CHANNEL)
                         .setSmallIcon(R.drawable.ic_logo_green)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(message)
@@ -71,18 +71,24 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         mBuilder.setContentIntent(pendingIntent);
         try {
-            //Noti Notification
-            String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
-            if (onoffNotification.equals(LazzyBeeShare.ON))
-                notificationManager.notify(id, mBuilder.build());
-            else if (onoffNotification.equals(LazzyBeeShare.OFF))
-                Log.d(TAG, "Off notification");
-            else {
-                Log.d(TAG, "Notification null-->ON");
-                notificationManager.notify(id, mBuilder.build());
+            if (notificationManager != null) {
+                //Noti Notification
+                String onoffNotification = LazzyBeeSingleton.learnApiImplements._getValueFromSystemByKey(LazzyBeeShare.KEY_SETTING_NOTIFICTION);
+                switch (onoffNotification) {
+                    case LazzyBeeShare.ON:
+                        notificationManager.notify(id, mBuilder.build());
+                        break;
+                    case LazzyBeeShare.OFF:
+                        Log.d(TAG, "Off notification");
+                        break;
+                    default:
+                        Log.d(TAG, "Notification null-->ON");
+                        notificationManager.notify(id, mBuilder.build());
+                        break;
+                }
             }
         } catch (Exception e) {
-
+            System.out.print(e.getMessage());
         }
 
 

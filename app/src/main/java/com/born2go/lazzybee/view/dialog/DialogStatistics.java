@@ -1,7 +1,6 @@
 package com.born2go.lazzybee.view.dialog;
 
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +21,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
@@ -44,28 +43,32 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-@SuppressLint("ValidFragment")
 public class DialogStatistics extends DialogFragment {
 
     public static final String TAG = "DialogStatistics";
-    RelativeLayout mStatistic, mChart;
+    View mStatistic, mChart;
     TextView mlazzybee;
     private ColumnChartView chart;
-    private ColumnChartData data;
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
-    private boolean hasLabels = false;
-    private boolean hasLabelForSelected = false;
     private Context context;
     Button btnShare;
 
-    public DialogStatistics(Context context) {
+    public DialogStatistics() {
+    }
+
+    public static DialogStatistics newInstance() {
+        return new DialogStatistics();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         this.context = context;
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_statistics, container, false);
         final Dialog dialog = getDialog();
@@ -78,25 +81,20 @@ public class DialogStatistics extends DialogFragment {
             MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.magic);
             mediaPlayer.start();
 
-            btnShare = (Button) view.findViewById(R.id.btnShared);
-            btnShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            btnShare = view.findViewById(R.id.btnShared);
+            btnShare.setOnClickListener(v -> {
 
-                    screenViewChart();
-                    _shareCard();
+                screenViewChart();
+                _shareCard();
 
+                if (getActivity() != null) {
                     FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
                     firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, new Bundle());
+                }
 
-                }
+
             });
-            view.findViewById(R.id.mClose).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+            view.findViewById(R.id.mClose).setOnClickListener(v -> dialog.dismiss());
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "onCreateView", e);
         }
@@ -132,11 +130,11 @@ public class DialogStatistics extends DialogFragment {
     }
 
     private void _initChart(View view) {
-        mStatistic = (RelativeLayout) view.findViewById(R.id.mStatistic);
-        mChart = (RelativeLayout) view.findViewById(R.id.mChart);
-        chart = (ColumnChartView) view.findViewById(R.id.chart);
+        mStatistic = view.findViewById(R.id.mStatistic);
+        mChart = view.findViewById(R.id.mChart);
+        chart = view.findViewById(R.id.chart);
         chart.setZoomEnabled(false);
-        mlazzybee = (TextView) view.findViewById(R.id.mlazzybee);
+        mlazzybee = view.findViewById(R.id.mlazzybee);
         generateDefaultData();
     }
 
@@ -147,27 +145,30 @@ public class DialogStatistics extends DialogFragment {
         if (d != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            d.getWindow().setLayout(width, height);
-            d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (d.getWindow() != null) {
+                d.getWindow().setLayout(width, height);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private void generateDefaultData() {
         try {
             List<Integer> listCountCardbyLevel = LazzyBeeSingleton.learnApiImplements._getListCountCardbyLevel();
             // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
-            List<Column> columns = new ArrayList<Column>();
+            List<Column> columns = new ArrayList<>();
             List<SubcolumnValue> values;
 
 
-            List<AxisValue> axisXValues = new ArrayList<AxisValue>();
-            List<AxisValue> axisTopValues = new ArrayList<AxisValue>();
-            List<AxisValue> axisYValues = new ArrayList<AxisValue>();
+            List<AxisValue> axisXValues = new ArrayList<>();
+            List<AxisValue> axisTopValues = new ArrayList<>();
+
             //Gestion of the two axes for the graphic
 
             int total = 0;
             for (int i = 0; i < listCountCardbyLevel.size(); ++i) {
-                values = new ArrayList<SubcolumnValue>();
+                values = new ArrayList<>();
                 int count = listCountCardbyLevel.get(i);
                 total += count;
                 axisXValues.add(new AxisValue(i).setLabel(String.valueOf(i + 1)));
@@ -181,15 +182,15 @@ public class DialogStatistics extends DialogFragment {
                 }
                 Column column = new Column(values);
 
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+//                boolean hasLabels = false;
+                column.setHasLabels(false);
+//                boolean hasLabelForSelected = false;
+                column.setHasLabelsOnlyForSelected(false);
 
                 columns.add(column);
 
             }
-            axisYValues.add(new AxisValue(listCountCardbyLevel.size()).setLabel(String.valueOf(total)));
-
-            data = new ColumnChartData(columns);
+            ColumnChartData data = new ColumnChartData(columns);
             Axis axeX = new Axis(axisXValues);
             Axis axisTop = new Axis(axisTopValues).setHasLines(true);
             axisTop.setName(context.getString(R.string.dialog_statistical_total, total));
@@ -223,10 +224,10 @@ public class DialogStatistics extends DialogFragment {
             int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
             //Define view
             View mCount = view.findViewById(R.id.mCount);
-            TextView lbCountStreak = (TextView) mCount.findViewById(R.id.lbCountStreak);
-            ImageView streak_ring = (ImageView) mCount.findViewById(R.id.streak_ring);
+            TextView lbCountStreak = mCount.findViewById(R.id.lbCountStreak);
+            ImageView streak_ring = mCount.findViewById(R.id.streak_ring);
             //
-            lbCountStreak.setText(count + " " + getString(R.string.streak_day));
+            lbCountStreak.setText(String.valueOf(count + " " + getString(R.string.streak_day)));
 
             //set animation
             Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_indefinitely);

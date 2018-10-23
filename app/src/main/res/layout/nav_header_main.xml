@@ -10,5 +10,6 @@
         android:layout_height="120dp"
         android:id="@+id/imageView2"
         android:src="@drawable/ic_banner"
-        android:background="@color/white" />
+        android:background="@color/white"
+        android:contentDescription="@string/todo" />
 </LinearLayout>

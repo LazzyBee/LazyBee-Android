@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.db;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,13 +23,14 @@ import java.util.List;
 /**
  * Created by Hue on 8/13/2015.
  */
+@SuppressLint("SdCardPath")
 public class DatabaseUpgrade extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseUpgrade";
-    public static String DB_NAME = "update.db";
+    public static final String DB_NAME = "update.db";
     private static final String TABLE_SYSTEM = "system";
-    public static String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
+    public static final String DB_PATH = "/data/data/com.born2go.lazzybee/databases/";
 
-    Context context;
+    final Context context;
 
     public DatabaseUpgrade(Context context) {
         super(context, DB_NAME, null, 1);
@@ -43,18 +45,17 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
     }
 
     public int _getVersionDB() {
-        try {
-            int version = 0;
-            String selectValueByKey = "SELECT value FROM " + TABLE_SYSTEM + " where key = '" + LazzyBeeShare.DB_VERSION + "'";
-            SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT value FROM system where key = ";
+        String selectValueByKey = query + LazzyBeeShare.DB_VERSION;
+        int version = 0;
+        try (Cursor cursor = db.rawQuery(selectValueByKey, null)) {
             //Todo query for cursor
-            Cursor cursor = db.rawQuery(selectValueByKey, null);
             if (cursor.moveToFirst()) {
                 if (cursor.getCount() > 0)
                     do {
                         //TODO:get data from sqlite
-                        int value = cursor.getInt(0);
-                        version = value;
+                        version = cursor.getInt(0);
                     } while (cursor.moveToNext());
             }
             return version;
@@ -67,30 +68,36 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
     }
 
     private List<Card> _getListCardQueryString(String query) {
-        List<Card> datas = new ArrayList<Card>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            List<Card> datas = new ArrayList<>();
+            SQLiteDatabase db = this.getReadableDatabase();
 
-        //query for cursor
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            if (cursor.getCount() > 0)
-                do {
-                    Card card = new Card();
-                    card.setId(cursor.getInt(0));
+            //query for cursor
+            cursor = db.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getCount() > 0)
+                    do {
+                        Card card = new Card();
+                        card.setId(cursor.getInt(0));
 
-                    card.setQuestion(cursor.getString(1));
-                    card.setAnswers(cursor.getString(2));
+                        card.setQuestion(cursor.getString(1));
+                        card.setAnswers(cursor.getString(2));
 
-                    card.setPackage(cursor.getString(3));
-                    card.setLevel(cursor.getInt(4));
-                    card.setL_en(cursor.getString(5));
-                    card.setL_vn(cursor.getString(6));
-                    datas.add(card);
+                        card.setPackage(cursor.getString(3));
+                        card.setLevel(cursor.getInt(4));
+                        card.setL_en(cursor.getString(5));
+                        card.setL_vn(cursor.getString(6));
+                        datas.add(card);
 
-                } while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
+            }
+            Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
+            return datas;
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
-        Log.i(TAG, "Query String: " + query + " --Result card count:" + datas.size());
-        return datas;
     }
 
     @Override
@@ -117,7 +124,10 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
         } else {
             File sdCard_dir = Environment.getExternalStorageDirectory();
             File dlDir = new File(sdCard_dir.getAbsolutePath());
-            dlDir.mkdirs();
+            boolean wasSuccessful = dlDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             source = new File(dlDir, DB_NAME);
             myInput = new FileInputStream(source);
         }
@@ -142,7 +152,9 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
 
         //delete file after update
         if (source != null)
-            source.delete();
+            if (source.delete()){
+                System.out.print("delete file");
+            }
 
 
     }
@@ -187,6 +199,6 @@ public class DatabaseUpgrade extends SQLiteOpenHelper {
         }
 
 
-        return checkDB != null ? true : false;
+        return checkDB != null;
     }
 }

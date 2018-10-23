@@ -1,6 +1,5 @@
 package com.born2go.lazzybee.algorithms;
 
-import com.born2go.lazzybee.algorithms.CardSched;
 import static org.junit.Assert.*;
 
 
@@ -17,11 +16,13 @@ import java.lang.System;
 /**
  * Created by nobody on 7/21/2015.
  */
+@SuppressWarnings("EmptyMethod")
 public class CardSchedTest extends CardSched{
     CardSched scheduler;
     Card cardLast_ivl3days;
     Card cardLast_ivl23days;
 
+    @SuppressWarnings("RedundantThrows")
     @Before
     public void setUp() throws Exception {
         scheduler = new CardSched();

@@ -18,7 +18,6 @@ package com.born2go.lazzybee.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -71,7 +70,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private static final int TAB_VIEW_PADDING_DIPS = 10;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
 
-    private int mTitleOffset;
+    private final int mTitleOffset;
 
     private int mTabViewLayoutId;
     private int mTabViewTextViewId;
@@ -161,7 +160,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         mViewPager = viewPager;
         if (viewPager != null) {
-            viewPager.setOnPageChangeListener(new InternalViewPagerListener());
+            viewPager.addOnPageChangeListener(new InternalViewPagerListener());
             populateTabStrip();
         }
     }
@@ -177,19 +176,15 @@ public class SlidingTabLayout extends HorizontalScrollView {
         textView.setTypeface(Typeface.DEFAULT_BOLD);
         textView.setTextColor(getResources().getColor(R.color.white));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // If we're running on Honeycomb or newer, then we can use the Theme's
-            // selectableItemBackground to ensure that the View has a pressed state
-            TypedValue outValue = new TypedValue();
-            getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground,
-                    outValue, true);
-            textView.setBackgroundResource(outValue.resourceId);
-        }
+        // If we're running on Honeycomb or newer, then we can use the Theme's
+        // selectableItemBackground to ensure that the View has a pressed state
+        TypedValue outValue = new TypedValue();
+        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground,
+                outValue, true);
+        textView.setBackgroundResource(outValue.resourceId);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            // If we're running on ICS or newer, enable all-caps to match the Action Bar tab style
-            textView.setAllCaps(true);
-        }
+        // If we're running on ICS or newer, enable all-caps to match the Action Bar tab style
+        textView.setAllCaps(true);
 
         int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
         textView.setPadding(padding, padding, padding, padding);
@@ -201,30 +196,32 @@ public class SlidingTabLayout extends HorizontalScrollView {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final OnClickListener tabClickListener = new TabClickListener();
 
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View tabView = null;
-            TextView tabTitleView = null;
+       if (adapter!=null){
+           for (int i = 0; i < adapter.getCount(); i++) {
+               View tabView = null;
+               TextView tabTitleView = null;
 
-            if (mTabViewLayoutId != 0) {
-                // If there is a custom tab view layout id set, try and inflate it
-                tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                        false);
-                tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
-            }
+               if (mTabViewLayoutId != 0) {
+                   // If there is a custom tab view layout id set, try and inflate it
+                   tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
+                           false);
+                   tabTitleView = tabView.findViewById(mTabViewTextViewId);
+               }
 
-            if (tabView == null) {
-                tabView = createDefaultTabView(getContext());
-            }
+               if (tabView == null) {
+                   tabView = createDefaultTabView(getContext());
+               }
 
-            if (tabTitleView == null && TextView.class.isInstance(tabView)) {
-                tabTitleView = (TextView) tabView;
-            }
+               if (tabTitleView == null && TextView.class.isInstance(tabView)) {
+                   tabTitleView = (TextView) tabView;
+                   tabTitleView.setText(adapter.getPageTitle(i));
+               }
 
-            tabTitleView.setText(adapter.getPageTitle(i));
-            tabView.setOnClickListener(tabClickListener);
+               tabView.setOnClickListener(tabClickListener);
 
-            mTabStrip.addView(tabView);
-        }
+               mTabStrip.addView(tabView);
+           }
+       }
     }
 
     @Override

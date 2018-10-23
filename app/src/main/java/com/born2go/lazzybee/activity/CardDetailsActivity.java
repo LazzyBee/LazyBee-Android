@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
@@ -45,8 +45,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
@@ -78,20 +76,21 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = this;
 
-        container = (LinearLayout) findViewById(R.id.container);
+        container = findViewById(R.id.container);
 
         learnApiImplements = LazzyBeeSingleton.learnApiImplements;
 
         _initSettingUser();
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mViewPager = findViewById(R.id.viewpager);
+        mSlidingTabLayout = findViewById(R.id.sliding_tabs);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         _displayCard(getCarID());
 
@@ -133,61 +132,58 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             mViewAdv = findViewById(R.id.mViewAdv);
             //get value form remote config
             final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String adv_id = null;
-                    if (task.isComplete()) {
-                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
-                    }
-                    if (admob_pub_id != null) {
-                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                            mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                            String advId = admob_pub_id + "/" + adv_id;
-                            Log.i(TAG, "admob -AdUnitId:" + advId);
-                            AdView mAdView = new AdView(context);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                String adv_id = null;
+                if (task.isComplete()) {
+                    adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                }
+                if (admob_pub_id != null) {
+                    if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        mViewAdv.setVisibility(View.GONE);
+                    } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        String advId = admob_pub_id + "/" + adv_id;
+                        Log.i(TAG, "admob -AdUnitId:" + advId);
+                        AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.BANNER);
-                            mAdView.setAdUnitId(advId);
+                        mAdView.setAdSize(AdSize.BANNER);
+                        mAdView.setAdUnitId(advId);
 
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                                    .build();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                .build();
 
-                            mAdView.loadAd(adRequest);
+                        mAdView.loadAd(adRequest);
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                            relativeLayout.addView(mAdView, adViewCenter);
-                            mAdView.setAdListener(new AdListener() {
-                                @Override
-                                public void onAdLoaded() {
-                                    // Code to be executed when an ad finishes loading.
-                                    Log.d(TAG, "onAdLoaded");
-                                    mViewAdv.setVisibility(View.VISIBLE);
-                                }
+                        RelativeLayout relativeLayout = findViewById(R.id.adView);
+                        RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                        relativeLayout.addView(mAdView, adViewCenter);
+                        mAdView.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                // Code to be executed when an ad finishes loading.
+                                Log.d(TAG, "onAdLoaded");
+                                mViewAdv.setVisibility(View.VISIBLE);
+                            }
 
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad "+errorCode);
-                                    mViewAdv.setVisibility(View.GONE);
-                                }
-                            });
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                // Code to be executed when an ad request fails.
+                                Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                                mViewAdv.setVisibility(View.GONE);
+                            }
+                        });
 
 
-                        } else {
-                            mViewAdv.setVisibility(View.GONE);
-                        }
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
                 }
             });
 
@@ -214,7 +210,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
         //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        SearchView.SearchAutoComplete autoCompleteTextView = (SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
 
         if (autoCompleteTextView != null) {
             autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
@@ -228,65 +224,45 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
             autoCompleteTextView.setTextColor(getResources().getColor(R.color.auto_complete_text_view_text_color));
         }
 
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand");
-                return true;
-            }
-
-        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.trim() != null) {
-                    if (query.trim().length() > 2) {
-                        Intent intent = new Intent(context, SearchActivity.class);
-                        intent.setAction(Intent.ACTION_SEARCH);
-                        intent.putExtra(SearchActivity.QUERY_TEXT, query);
-                        intent.putExtra(SearchManager.QUERY, query);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
-                    }
-                    return true;
-                } else
-                    return false;
+                if (query.trim().length() > 2) {
+                    Intent intent = new Intent(context, SearchActivity.class);
+                    intent.setAction(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchActivity.QUERY_TEXT, query);
+                    intent.putExtra(SearchManager.QUERY, query);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivityForResult(intent, LazzyBeeShare.CODE_SEARCH_RESULT);
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.trim() != null) {
-                    if (newText.trim().length() > 2) {
+                if (newText.trim().length() > 2) {
 
-                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                                + KEY_QUESTION + " like '" + newText + "%' OR "
-                                + KEY_QUESTION + " like '% " + newText + "%'"
-                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+                    String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                            + KEY_QUESTION + " like '" + newText + "%' OR "
+                            + KEY_QUESTION + " like '% " + newText + "%'"
+                            + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                        try {
-                            Cursor cursor = db.rawQuery(likeQuery, null);
-                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                            searchView.setSuggestionsAdapter(suggestionCardAdapter);
-                        } catch (Exception e) {
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                            e.printStackTrace();
-                        } finally {
-                            Log.d(TAG, "query suggetion");
-                        }
-
+                    SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery(likeQuery, null);
+                        SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                        searchView.setSuggestionsAdapter(suggestionCardAdapter);
+                    } catch (Exception e) {
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
+                        e.printStackTrace();
+                    } finally {
+                        Log.d(TAG, "query suggetion");
                     }
-                    return true;
-                } else
-                    return false;
+
+                }
+                return true;
             }
         });
 
@@ -365,16 +341,10 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 card = learnApiImplements._getCardByID(cardId);
 
             //get base url in Task Manager
-            String base_url_sharing = LazzyBeeShare.DEFAULTS_BASE_URL_SHARING;
             String server_base_url_sharing = "http://www.lazzybee.com/vdict";
-            //LazzyBeeSingleton.getContainerHolder().getContainer().getString(LazzyBeeShare.BASE_URL_SHARING);
-            if (server_base_url_sharing != null) {
-                if (server_base_url_sharing.length() > 0)
-                    base_url_sharing = server_base_url_sharing;
-            }
 
             //define base url with question
-            base_url_sharing = base_url_sharing + card.getQuestion();
+            String base_url_sharing = server_base_url_sharing + card.getQuestion();
             Log.i(TAG, "Sharing URL:" + base_url_sharing);
 
             //Share card
@@ -506,6 +476,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
                 Toast.makeText(context, getString(R.string.message_update_card_successful), Toast.LENGTH_SHORT).show();
 
                 //set Result code for updated List card
+                //noinspection ConstantConditions
                 setResult(getResources().getInteger(R.integer.code_card_details_updated), new Intent(this, this.getIntent().getComponent().getClass()));
             } else {
                 Toast.makeText(context, getString(R.string.message_update_card_fails), Toast.LENGTH_SHORT).show();
@@ -532,9 +503,9 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
     }
 
     class PackageCardPageAdapter extends PagerAdapter {
-        Card card;
-        List<String> packages;
-        private Context context;
+        final Card card;
+        final List<String> packages;
+        private final Context context;
 
         public PackageCardPageAdapter(Context context, Card card) {
             this.card = card;
@@ -566,7 +537,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * @return true if <code>view</code> is associated with the key object <code>object</code>
          */
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return object == view;
         }
 
@@ -582,15 +553,17 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * @return Returns an Object representing the new page.  This does not
          * need to be a View, but can be some other container of the page.
          */
+        @NonNull
+        @SuppressLint("SetJavaScriptEnabled")
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             // Inflate a new layout from our resources
             View view = getLayoutInflater().inflate(R.layout.page_package_card_item, container, false);
 
             // Add the newly created View to the ViewPager
             container.addView(view);
             //
-            mWebViewLeadDetails = (WebView) view.findViewById(R.id.mWebViewCardDetails);
+            mWebViewLeadDetails = view.findViewById(R.id.mWebViewCardDetails);
             WebSettings ws = mWebViewLeadDetails.getSettings();
             ws.setJavaScriptEnabled(true);
             _addJavascriptInterface(card);
@@ -670,7 +643,7 @@ public class CardDetailsActivity extends AppCompatActivity implements GetCardFor
          * {@link View}.
          */
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
             // Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
         }

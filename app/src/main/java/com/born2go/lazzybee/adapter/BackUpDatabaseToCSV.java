@@ -1,9 +1,9 @@
 package com.born2go.lazzybee.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -35,63 +35,60 @@ import java.io.FileWriter;
 /**
  * Created by Hue on 12/16/2015.
  */
+@SuppressLint("StaticFieldLeak")
 public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "BackUpDatabaseToCSV";
     private final String backup_key;
-    private Activity activity;
-    private Context context;
-    private String device_id;
-    private ProgressDialog dialog;
-    ZipManager zipManager;
-    // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
-    private String queryExportWordTableToCsvFull = "Select " +
-            "vocabulary.gid," +
-            "vocabulary.queue," +
-            "vocabulary.due," +
-            "vocabulary.rev_count," +
-            "vocabulary.last_ivl," +
-            "vocabulary.e_factor," +
-            "vocabulary.user_note, " +
-            "vocabulary.level " +
-            "from vocabulary where vocabulary.gid not null";
-    private int type;
-    private String queryExportWordTableToCsv = "Select " +
-            "vocabulary.gid," +
-            "vocabulary.queue," +
-            "vocabulary.due," +
-            "vocabulary.rev_count," +
-            "vocabulary.last_ivl," +
-            "vocabulary.e_factor," +
-            "vocabulary.user_note, " +
-            "vocabulary.level " +
-            "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
-    private String queryExportStreakTableToCsv = "select day from streak";
+    Activity activity;
+    private final String device_id;
+    private final ProgressDialog dialog;
+    final ZipManager zipManager;
 
-    private String wordFileName = "word.csv";
-    private String streakFileName = "streak.csv";
+    private final String wordFileName = "word.csv";
+    private final String streakFileName = "streak.csv";
     private String backupFileName = "backup.zip";
-    File exportDir;
-    private String dotZip = ".zip";
+    final File exportDir;
+    private final String dotZip;
 
-    private SQLiteDatabase db;
-    private Cursor curCSV;
+    private final Cursor curCSV;
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
-        this.activity = activity;
-        this.context = context;
         this.device_id = device_id;
         backup_key = device_id.substring(device_id.length() - 6, device_id.length());
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
-        this.type = type;
         Log.d(TAG, "Type export:" + ((type == 0) ? " Full" : " Mini"));
         exportDir = new File(Environment.getExternalStorageDirectory(), LazzyBeeShare.EMPTY);
         if (!exportDir.exists()) {
-            exportDir.mkdirs();
+            boolean wasSuccessful = exportDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
         }
 
-        db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+        // word.gid, word.queue, word.due,word.revCount, word.lastInterval, word.eFactor, userNote
+        String queryExportWordTableToCsvFull = "Select " +
+                "vocabulary.gid," +
+                "vocabulary.queue," +
+                "vocabulary.due," +
+                "vocabulary.rev_count," +
+                "vocabulary.last_ivl," +
+                "vocabulary.e_factor," +
+                "vocabulary.user_note, " +
+                "vocabulary.level " +
+                "from vocabulary where vocabulary.gid not null";
+        String queryExportWordTableToCsv = "Select " +
+                "vocabulary.gid," +
+                "vocabulary.queue," +
+                "vocabulary.due," +
+                "vocabulary.rev_count," +
+                "vocabulary.last_ivl," +
+                "vocabulary.e_factor," +
+                "vocabulary.user_note, " +
+                "vocabulary.level " +
+                "from vocabulary where vocabulary.queue = -1 OR vocabulary.queue = -2 OR vocabulary.queue > 0 AND vocabulary.gid not null";
         curCSV = db.rawQuery((type == 0) ? queryExportWordTableToCsvFull : queryExportWordTableToCsv, null);
         dotZip = "_" + curCSV.getCount() + ".zip";
 
@@ -106,15 +103,15 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        if (LazzyBeeShare.checkConn(context)) {
+        if (LazzyBeeShare.checkConn(activity)) {
             if (_exportToCSV()) {
-                Log.d(TAG, "Export db to csv:" + context.getString(R.string.successfully));
+                Log.d(TAG, "Export db to csv:" + activity.getString(R.string.successfully));
                 if (_zipFileBackUp()) {
-                    Log.d(TAG, "Zip backup file:" + context.getString(R.string.successfully));
+                    Log.d(TAG, "Zip backup file:" + activity.getString(R.string.successfully));
                     boolean resultsBackupFile = postFile(exportDir.getPath() + "/" + backup_key + dotZip);
                     _deleteFile();
                     if (resultsBackupFile) {
-                        Log.d(TAG, "Post backup file:" + context.getString(R.string.successfully));
+                        Log.d(TAG, "Post backup file:" + activity.getString(R.string.successfully));
                         return true;
                     } else {
                         Log.d(TAG, "Post backup file:Fails");
@@ -153,7 +150,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         //File file = new File(exportDir, ((type == 0) ? "Full_" : "")+(LazzyBeeShare.getStartOfDayInMillis() / 1000) + ".csv");
         File file = new File(exportDir, wordFileName);
         try {
-            file.createNewFile();
+            boolean wasSuccessful = file.createNewFile();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
             if (curCSV.getCount() > 0) {
                 if (curCSV.moveToFirst()) {
@@ -201,6 +201,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             results = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(sqlEx);
         }
         return results;
@@ -220,9 +221,13 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
         boolean results = false;
         File file = new File(exportDir, streakFileName);
         try {
-            file.createNewFile();
+            boolean wasSuccessful = file.createNewFile();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file), ',', '\0', ',', ",\n");
             SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+            String queryExportStreakTableToCsv = "select day from streak";
             Cursor curCSV = db.rawQuery(queryExportStreakTableToCsv, null);
             if (curCSV.getCount() > 0) {
                 if (curCSV.moveToFirst()) {
@@ -241,6 +246,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             results = true;
         } catch (Exception sqlEx) {
             Log.e(TAG, sqlEx.getMessage(), sqlEx);
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(sqlEx);
         }
         return results;
@@ -265,15 +271,10 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void _showDialogFailsBackupDatabase() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.DialogLearnMore);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity, R.style.DialogLearnMore);
         builder.setTitle(R.string.try_again);
         builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         android.support.v7.app.AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -309,6 +310,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
             }
         } catch (Exception e) {
             Log.d(TAG, "Post file backup to Server Fails");
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
             e.printStackTrace();
         }

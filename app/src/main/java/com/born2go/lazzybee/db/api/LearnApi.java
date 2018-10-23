@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Created by Hue on 7/8/2015.
  */
+@SuppressWarnings("SameReturnValue")
 public interface LearnApi {
     /**
      * Get card by ID form sqlite

@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.algorithms;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.born2go.lazzybee.R;
@@ -45,7 +46,8 @@ public class CardSched {
     /*
     Return string of next time to review corresponded to ease level
      */
-    public String _nextIvlStr(Card card, int ease,Context context) {
+    @SuppressLint("DefaultLocale")
+    public String _nextIvlStr(Card card, int ease, Context context) {
         String str;
         int ivl = nextIvlBySeconds(card, ease);
 
@@ -83,6 +85,7 @@ public class CardSched {
     /**
      * Ideal next interval by days for CARD, given EASE > 0
      */
+    @SuppressLint("Assert")
     public int _nextIntervalByDays(Card card, int ease) {
         assert (ease > EASE_AGAIN && ease <= EASE_EASY);
 
@@ -98,7 +101,8 @@ public class CardSched {
             interval = ivl_hard;
         } else if (ease == EASE_GOOD) {
             interval = ivl_good;
-        } else if (ease == EASE_EASY) {
+        } else //noinspection ConstantConditions
+            if (ease == EASE_EASY) {
             interval = ivl_easy;
         }
         // Should we maximize the interval?
@@ -113,7 +117,7 @@ public class CardSched {
         if(card.getQueue() != Card.QUEUE_REV2)
             return 0;
 
-        long due = card.getDue();;
+        long due = card.getDue();
         long now = Utils.intNow();
 
         long diff_day = (now - due)/SECONDS_PERDAY;

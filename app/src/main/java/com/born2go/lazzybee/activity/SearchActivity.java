@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,8 +49,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -60,6 +57,7 @@ import java.util.List;
 import static com.born2go.lazzybee.db.DataBaseHelper.KEY_QUESTION;
 import static com.born2go.lazzybee.db.impl.LearnApiImplements.TABLE_VOCABULARY;
 
+@SuppressWarnings("deprecation")
 public class SearchActivity extends AppCompatActivity implements
         GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse, SwipeRefreshLayout.OnRefreshListener {
 
@@ -75,7 +73,7 @@ public class SearchActivity extends AppCompatActivity implements
     SearchView search;
     private Context context;
     String query_text;
-    int display_type = 0;
+    final int display_type = 0;
     private int ADD_TO_LEARN = 0;
     ConnectGdatabase connectGdatabase;
     View mViewAdv;
@@ -107,28 +105,30 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     private void _initActonBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
+    @SuppressWarnings("deprecation")
     private void _initRecyclerViewSearchResults() {
-        mRefeshSearch = (SwipeRefreshLayout) findViewById(R.id.mRefeshSearch);
+        mRefeshSearch = findViewById(R.id.mRefeshSearch);
         mRefeshSearch.setOnRefreshListener(this);
         //Init RecyclerView and Layout Manager
-        mRecyclerViewSearchResults = (RecyclerView) findViewById(R.id.mRecyclerViewSearchResults);
+        mRecyclerViewSearchResults = findViewById(R.id.mRecyclerViewSearchResults);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewSearchResults.getContext(), 1);
 
         //init LbResult Count
-        lbResultCount = (TextView) findViewById(R.id.lbResultCount);
-        lbMessageNotFound = (TextView) findViewById(R.id.lbMessageNotFound);
+        lbResultCount = findViewById(R.id.lbResultCount);
+        lbMessageNotFound = findViewById(R.id.lbMessageNotFound);
 
         //Init Touch Listener
         RecyclerViewTouchListener recyclerViewTouchListener = new RecyclerViewTouchListener(this, mRecyclerViewSearchResults, new RecyclerViewTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
+                TextView lbQuestion = view.findViewById(R.id.lbQuestion);
                 try {
                     //Cast tag lbQuestion to CardId
                     Card card = (Card) lbQuestion.getTag();
@@ -146,16 +146,10 @@ public class SearchActivity extends AppCompatActivity implements
 
             @Override
             public void onItemLongPress(View view, int position) {
-                TextView lbQuestion = (TextView) view.findViewById(R.id.lbQuestion);
+                TextView lbQuestion = view.findViewById(R.id.lbQuestion);
                 try {
                     //Cast tag lbQuestion to CardId
                     Card card = (Card) lbQuestion.getTag();
-                    String cardID = String.valueOf(card.getId());
-                    if (card.getId() > 0) {
-                        // _optionList(card);
-                    } else {
-                        Log.w(TAG, "card.getId()==0");
-                    }
                 } catch (Exception e) {
                     LazzyBeeShare.showErrorOccurred(context, "2_initRecyclerViewSearchResults", e);
                 }
@@ -168,13 +162,14 @@ public class SearchActivity extends AppCompatActivity implements
         //  mRecyclerViewSearchResults.addOnItemTouchListener(recyclerViewTouchListener);
         mRecyclerViewSearchResults.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
                 super.onScrolled(recyclerView, dx, dy);
+                Log.i(TAG, "onScrolled");
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 // TODO Auto-generated method stub
                 //super.onScrollStateChanged(recyclerView, newState);
                 int firstPos = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
@@ -214,7 +209,7 @@ public class SearchActivity extends AppCompatActivity implements
         // search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         // Theme the SearchView's AutoCompleteTextView drop down. For some reason this wasn't working in styles.xml
-        mSuggerstionCard = (SearchView.SearchAutoComplete) search.findViewById(R.id.search_src_text);
+        mSuggerstionCard = search.findViewById(R.id.search_src_text);
 
         if (mSuggerstionCard != null) {
             //set Enable Spelling Suggestions
@@ -233,10 +228,12 @@ public class SearchActivity extends AppCompatActivity implements
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Log.d(TAG, "close search view -Action:" + getIntent().getAction());
-                if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
-                    _displayDictionary();
-                } else {
-                    onBackPressed();
+                if (getIntent().getAction() != null) {
+                    if (getIntent().getAction().equals(LazzyBeeShare.ACTION_GOTO_DICTIONARY)) {
+                        _displayDictionary();
+                    } else {
+                        onBackPressed();
+                    }
                 }
                 return true;
             }
@@ -258,30 +255,28 @@ public class SearchActivity extends AppCompatActivity implements
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.trim() != null) {
-                    if (newText.trim().length() > 2) {
+                if (newText.trim().length() > 2) {
 
-                        String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
-                                + KEY_QUESTION + " like '" + newText + "%' OR "
-                                + KEY_QUESTION + " like '% " + newText + "%'"
-                                + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
+                    String likeQuery = "SELECT vocabulary.id,vocabulary.question,vocabulary.answers,vocabulary.level,rowid _id FROM " + TABLE_VOCABULARY + " WHERE "
+                            + KEY_QUESTION + " like '" + newText + "%' OR "
+                            + KEY_QUESTION + " like '% " + newText + "%'"
+                            + " ORDER BY " + KEY_QUESTION + " LIMIT 50";
 
-                        SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
-                        try {
-                            Cursor cursor = db.rawQuery(likeQuery, null);
-                            SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
-                            search.setSuggestionsAdapter(suggestionCardAdapter);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            LazzyBeeSingleton.getCrashlytics().logException(e);
-                        } finally {
-                            Log.d(TAG, "query suggetion");
-                        }
-
+                    SQLiteDatabase db = LazzyBeeSingleton.dataBaseHelper.getReadableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery(likeQuery, null);
+                        SuggestionCardAdapter suggestionCardAdapter = new SuggestionCardAdapter(context, cursor);
+                        search.setSuggestionsAdapter(suggestionCardAdapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //noinspection AccessStaticViaInstance
+                        LazzyBeeSingleton.getCrashlytics().logException(e);
+                    } finally {
+                        Log.d(TAG, "query suggetion");
                     }
-                    return true;
-                } else
-                    return false;
+
+                }
+                return true;
             }
         });
 
@@ -334,7 +329,8 @@ public class SearchActivity extends AppCompatActivity implements
 //        }
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+        if (imm != null)
+            imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         //***setOnQueryTextListener***
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -401,7 +397,8 @@ public class SearchActivity extends AppCompatActivity implements
             Log.d(TAG, "Intent.ACTION_SEARCH query:" + query_text);
             if (search != null) {
                 search.setQuery(query_text, false);
-                getSupportActionBar().setTitle(query_text);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(query_text);
             } else {
                 Log.d(TAG, "search view null");
             }
@@ -421,7 +418,8 @@ public class SearchActivity extends AppCompatActivity implements
 
     private void _displayDictionary() {
         //set Title
-        getSupportActionBar().setTitle(R.string.drawer_dictionary);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.drawer_dictionary);
 
         query_text = null;
         //Hide count results
@@ -445,12 +443,12 @@ public class SearchActivity extends AppCompatActivity implements
 //                }
 //                setAdapterListCard(cardList);
 //            } else
-            if (query != null || query.length() > 0) {
+            if (query != null) {
                 //connection with internet ok search in server first
                 if (LazzyBeeShare.checkConn(context)) {
                     Card cardFormDB = new Card();
                     cardFormDB.setQuestion(query);
-                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context,cardFormDB);
+                    GetCardFormServerByQuestion getCardFormServerByQuestion = new GetCardFormServerByQuestion(context, cardFormDB);
                     getCardFormServerByQuestion.execute(cardFormDB);
                     getCardFormServerByQuestion.delegate = this;
                 } else {
@@ -468,7 +466,7 @@ public class SearchActivity extends AppCompatActivity implements
                         //Init Adapter
                         setAdapterListCard(cardList);
 
-                    } else if (result_count == 0) {//Check result_count==0 search in server
+                    } else {//Check result_count==0 search in server
                         lbResultCount.setVisibility(View.GONE);
                         mRecyclerViewSearchResults.setVisibility(View.GONE);
                         lbMessageNotFound.setVisibility(View.VISIBLE);
@@ -479,7 +477,7 @@ public class SearchActivity extends AppCompatActivity implements
 
             } else {
                 lbResultCount.setVisibility(View.GONE);
-                List<Card> cardList = new ArrayList<Card>();
+                List<Card> cardList = new ArrayList<>();
                 setAdapterListCard(cardList);
             }
         } catch (Exception e) {
@@ -502,17 +500,15 @@ public class SearchActivity extends AppCompatActivity implements
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogLearnMore);
         builder.setTitle(card.getQuestion());
         final CharSequence[] items = {getString(R.string.action_add_to_learn), getString(R.string.action_learnt)};
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                //
-                if (items[item] == getString(R.string.action_add_to_learn)) {
-                    _addCardToQueue(card);
-                } else if (items[item] == getString(R.string.action_learnt)) {
-                    _doneCard(card);
-                }
-                _search(query_text, display_type, false);
-                dialog.cancel();
+        builder.setItems(items, (dialog, item) -> {
+            //
+            if (items[item] == getString(R.string.action_add_to_learn)) {
+                _addCardToQueue(card);
+            } else if (items[item] == getString(R.string.action_learnt)) {
+                _doneCard(card);
             }
+            _search(query_text, display_type, false);
+            dialog.cancel();
         });
 
         // Get the AlertDialog from create()
@@ -531,20 +527,16 @@ public class SearchActivity extends AppCompatActivity implements
                 .setTitle(R.string.dialog_title_delete_card);
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Update Queue_list in system table
-                card.setQueue(Card.QUEUE_DONE_2);
-                dataBaseHelper._updateCard(card);
-                String action = getString(R.string.done_card);
-                Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            //Update Queue_list in system table
+            card.setQueue(Card.QUEUE_DONE_2);
+            dataBaseHelper._updateCard(card);
+            String action = getString(R.string.done_card);
+            Toast.makeText(context, action, Toast.LENGTH_SHORT).show();
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -561,20 +553,16 @@ public class SearchActivity extends AppCompatActivity implements
                 .setTitle(getString(R.string.dialog_title_add_to_learn));
 
         // Add the buttons
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                dialog.cancel();
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User cancelled the dialog
+            dialog.cancel();
         });
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Update Queue_list in system table
-                dataBaseHelper._addCardIdToQueueList(card);
-                Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
-                ADD_TO_LEARN = 1;
-                setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            //Update Queue_list in system table
+            dataBaseHelper._addCardIdToQueueList(card);
+            Toast.makeText(context, getString(R.string.message_action_add_card_to_learn_complete, card.getQuestion()), Toast.LENGTH_SHORT).show();
+            ADD_TO_LEARN = 1;
+            setResult(LazzyBeeShare.CODE_SEARCH_RESULT, new Intent());
         });
         // Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
@@ -586,7 +574,7 @@ public class SearchActivity extends AppCompatActivity implements
     @Override
     public void processFinish(Card card) {
         try {
-            List<Card> cardList = new ArrayList<Card>();
+            List<Card> cardList = new ArrayList<>();
             int result_count;
             boolean cardNull = false;
             if (card != null) {
@@ -604,7 +592,7 @@ public class SearchActivity extends AppCompatActivity implements
             List<Card> cardResultSearchFromDb = dataBaseHelper._searchCardOrGotoDictionary(this.query_text, display_type);
             if (cardResultSearchFromDb.size() > 0) {
                 //Clone result search card form db
-                List<Card> cloneSearchResults = new ArrayList<Card>(cardResultSearchFromDb);
+                List<Card> cloneSearchResults = new ArrayList<>(cardResultSearchFromDb);
                 if (!cardNull) {
                     for (Card cardDB : cardResultSearchFromDb) {
                         if (cardDB.getId() == (card.getId())) {
@@ -635,12 +623,7 @@ public class SearchActivity extends AppCompatActivity implements
                         + " <br/> " + getString(R.string.to_add);
                 lbMessageNotFound.setText(LazzyBeeShare.fromHtml(msg_not_found));
 
-                lbMessageNotFound.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                       gotoAddWord();
-                    }
-                });
+                lbMessageNotFound.setOnClickListener(view -> gotoAddWord());
                 _trackerWorkNotFound();
             }
         } catch (Exception e) {
@@ -655,8 +638,9 @@ public class SearchActivity extends AppCompatActivity implements
             startActivity(myIntent);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, "No application can handle this request."
-                    + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                    + " Please install a webbrowser", Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
     }
@@ -696,8 +680,12 @@ public class SearchActivity extends AppCompatActivity implements
                 search.clearFocus();
             }
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if (inputManager != null)
+                if (getCurrentFocus() != null)
+                    if (getCurrentFocus().getWindowToken() != null)
+                        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (Exception e) {
+            //noinspection AccessStaticViaInstance
             LazzyBeeSingleton.getCrashlytics().logException(e);
         }
     }
@@ -721,60 +709,57 @@ public class SearchActivity extends AppCompatActivity implements
             mViewAdv = findViewById(R.id.mViewAdv);
             //get value form remote config
             final String admob_pub_id = LazzyBeeSingleton.getAmobPubId();
-            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    String adv_id = null;
-                    if (task.isComplete()) {
-                        adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
-                    }
-                    if (admob_pub_id != null) {
-                        if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
-                            mViewAdv.setVisibility(View.GONE);
-                        } else if (adv_id != null || adv_id.length() > 1 || !adv_id.equals(LazzyBeeShare.EMPTY) || !adv_id.isEmpty()) {
-                            String advId = admob_pub_id + "/" + adv_id;
-                            Log.i(TAG, "admob -AdUnitId:" + advId);
-                            AdView mAdView = new AdView(context);
+            LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION).addOnCompleteListener(this, task -> {
+                String adv_id = null;
+                if (task.isComplete()) {
+                    adv_id = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADV_BANNER_ID);
+                }
+                if (admob_pub_id != null) {
+                    if (adv_id == null || adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        mViewAdv.setVisibility(View.GONE);
+                    } else if (!adv_id.equals(LazzyBeeShare.EMPTY)) {
+                        String advId = admob_pub_id + "/" + adv_id;
+                        Log.i(TAG, "admob -AdUnitId:" + advId);
+                        AdView mAdView = new AdView(context);
 
-                            mAdView.setAdSize(AdSize.BANNER);
-                            mAdView.setAdUnitId(advId);
+                        mAdView.setAdSize(AdSize.BANNER);
+                        mAdView.setAdUnitId(advId);
 
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[0])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[1])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[2])
-                                    .addTestDevice(getResources().getStringArray(R.array.devices)[3])
-                                    .build();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[0])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[1])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[2])
+                                .addTestDevice(getResources().getStringArray(R.array.devices)[3])
+                                .build();
 
-                            mAdView.loadAd(adRequest);
+                        mAdView.loadAd(adRequest);
 
-                            RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.adView));
-                            RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
-                            relativeLayout.addView(mAdView, adViewCenter);
+                        RelativeLayout relativeLayout = findViewById(R.id.adView);
+                        RelativeLayout.LayoutParams adViewCenter = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        adViewCenter.addRule(RelativeLayout.CENTER_IN_PARENT);
+                        relativeLayout.addView(mAdView, adViewCenter);
 
-                            mAdView.setAdListener(new AdListener() {
-                                @Override
-                                public void onAdLoaded() {
-                                    // Code to be executed when an ad finishes loading.
-                                    Log.d(TAG, "onAdLoaded");
-                                    mViewAdv.setVisibility(View.VISIBLE);
-                                }
+                        mAdView.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                // Code to be executed when an ad finishes loading.
+                                Log.d(TAG, "onAdLoaded");
+                                mViewAdv.setVisibility(View.VISIBLE);
+                            }
 
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    // Code to be executed when an ad request fails.
-                                    Log.d(TAG, "onAdFailedToLoad " + errorCode);
-                                    mViewAdv.setVisibility(View.GONE);
-                                }
-                            });
-                        } else {
-                            mViewAdv.setVisibility(View.GONE);
-                        }
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                // Code to be executed when an ad request fails.
+                                Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                                mViewAdv.setVisibility(View.GONE);
+                            }
+                        });
                     } else {
                         mViewAdv.setVisibility(View.GONE);
                     }
+                } else {
+                    mViewAdv.setVisibility(View.GONE);
                 }
             });
 

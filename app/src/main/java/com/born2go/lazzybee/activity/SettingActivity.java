@@ -1,6 +1,7 @@
 package com.born2go.lazzybee.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +33,7 @@ public class SettingActivity extends AppCompatActivity {
     private static final Object GA_SCREEN = "aSettingScreen";
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
+    private static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -51,10 +52,10 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void initSettingView() {
-        mRecyclerViewSettings = (RecyclerView) findViewById(R.id.mRecyclerViewSettings);
+        mRecyclerViewSettings = findViewById(R.id.mRecyclerViewSettings);
         final List<String> settings;
         final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
-        String android_id = Settings.Secure.getString(context.getContentResolver(),
+        @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         Log.d(TAG, "Android id:" + android_id);
         if (devices.contains(android_id)) {
@@ -75,9 +76,6 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_setting, menu);
-
         return true;
     }
 
@@ -131,10 +129,13 @@ public class SettingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 159) {
             if (resultCode == RESULT_OK) {
-                String fileSelectPath = data.getData().getPath();
-                if (fileSelectPath != null) {
-                    DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, true, fileSelectPath, fileSelectPath);
-                    importDatabaseFormCSV.execute();
+                if (data.getData() != null)
+                {
+                    String fileSelectPath = data.getData().getPath();
+                    if (fileSelectPath != null) {
+                        DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, true, fileSelectPath, fileSelectPath);
+                        importDatabaseFormCSV.execute();
+                    }
                 }
             }
         }

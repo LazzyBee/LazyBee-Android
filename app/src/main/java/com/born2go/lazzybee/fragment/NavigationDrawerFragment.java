@@ -1,11 +1,11 @@
 package com.born2go.lazzybee.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -100,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
@@ -109,7 +109,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             this.context = getActivity();
             //init List Object
-            final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
+            @SuppressWarnings("ConstantConditions") final List<String> objects = Arrays.asList(context.getResources().getStringArray(R.array.drawer_list));
 
 //        objects.add(LazzyBeeShare.DRAWER_USER);
 //        objects.add(LazzyBeeShare.DRAWER_TITLE_COURSE);
@@ -122,7 +122,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
             //init mRecyclerViewDrawerList
-            final RecyclerView mRecyclerViewDrawerList = (RecyclerView) view.findViewById(R.id.mRecyclerViewDrawerList);
+            final RecyclerView mRecyclerViewDrawerList = view.findViewById(R.id.mRecyclerViewDrawerList);
             //init GridLayoutManager
             GridLayoutManager gridLayoutManager = new GridLayoutManager(mRecyclerViewDrawerList.getContext(), 1);
             //init Adapter
@@ -131,41 +131,39 @@ public class NavigationDrawerFragment extends Fragment {
             //set version app
             String versionName = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName;
-            TextView lbAppVersion = (TextView) view.findViewById(R.id.mVesionApp);
-            lbAppVersion.setText("Version:" + versionName);
+            TextView lbAppVersion = view.findViewById(R.id.mVesionApp);
+            lbAppVersion.setText(String.valueOf("Version:" + versionName));
 
             mRecyclerViewDrawerList.setLayoutManager(gridLayoutManager);
             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
             mRecyclerViewDrawerList.addOnItemTouchListener(
-                    new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            Object o = objects.get(position);
-                            if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
-                                selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
-                            } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
-                                selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_about))) {
-                                selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_dictionary))) {
-                                selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
-                            } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
-                                selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
-                            } else if (o instanceof Course) {
-                                selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_subject))) {
-                                selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_help))) {
-                                selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_statistical))) {
-                                selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_home))) {
-                                selectItem(LazzyBeeShare.DRAWER_HOME_INDEX);
-                            } else if (o.equals(getString(R.string.drawer_test_your_voca))) {
-                                selectItem(LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX);
-                            }
-
+                    new RecyclerItemClickListener(context, (view1, position) -> {
+                        Object o = objects.get(position);
+                        if (o.equals(LazzyBeeShare.DRAWER_ADD_COURSE)) {
+                            selectItem(LazzyBeeShare.DRAWER_ADD_COURSE_INDEX);
+                        } else if (o.equals(LazzyBeeShare.DRAWER_SETTING)) {
+                            selectItem(LazzyBeeShare.DRAWER_SETTINGS_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_about))) {
+                            selectItem(LazzyBeeShare.DRAWER_ABOUT_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_dictionary))) {
+                            selectItem(LazzyBeeShare.DRAWER_DICTIONARY_INDEX);
+                        } else if (o.equals(LazzyBeeShare.DRAWER_USER)) {
+                            selectItem(LazzyBeeShare.DRAWER_USER_INDEX);
+                        } else //noinspection ConstantConditions
+                            if (o instanceof Course) {
+                            selectItem(LazzyBeeShare.DRAWER_COURSE_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_subject))) {
+                            selectItem(LazzyBeeShare.DRAWER_MAJOR_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_help))) {
+                            selectItem(LazzyBeeShare.DRAWER_HELP_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_statistical))) {
+                            selectItem(LazzyBeeShare.DRAWER_STATISTICAL_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_home))) {
+                            selectItem(LazzyBeeShare.DRAWER_HOME_INDEX);
+                        } else if (o.equals(getString(R.string.drawer_test_your_voca))) {
+                            selectItem(LazzyBeeShare.DRAWER_TEST_YOUR_VOCA_INDEX);
                         }
+
                     })
             );
             mRecyclerViewDrawerList.setAdapter(recyclerViewDrawerListAdapter);
@@ -186,6 +184,7 @@ public class NavigationDrawerFragment extends Fragment {
      * @param toolbar
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
+    @SuppressWarnings("ConstantConditions")
     public void setUp(int fragmentId, Toolbar toolbar, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
@@ -221,6 +220,7 @@ public class NavigationDrawerFragment extends Fragment {
                     return;
                 }
 
+                //noinspection deprecation
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
@@ -253,14 +253,9 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Defer code dependent on restoration of previous instance state.
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
+        mDrawerLayout.post(() -> mDrawerToggle.syncState());
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     private void selectItem(int position) {
@@ -275,7 +270,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Activity context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             mCallbacks = (NavigationDrawerCallbacks) context;
@@ -291,7 +286,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
@@ -308,7 +303,6 @@ public class NavigationDrawerFragment extends Fragment {
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
@@ -349,6 +343,7 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(true);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
@@ -365,13 +360,13 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-        private OnItemClickListener mListener;
+        private final OnItemClickListener mListener;
 
         interface OnItemClickListener {
-            public void onItemClick(View view, int position);
+             void onItemClick(View view, int position);
         }
 
-        GestureDetector mGestureDetector;
+        final GestureDetector mGestureDetector;
 
         public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
             mListener = listener;
@@ -384,7 +379,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         @Override
-        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+        public boolean onInterceptTouchEvent(@NonNull RecyclerView view, @NonNull MotionEvent e) {
             View childView = view.findChildViewUnder(e.getX(), e.getY());
             if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
                 mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
@@ -393,7 +388,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         @Override
-        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        public void onTouchEvent(@NonNull RecyclerView view, @NonNull MotionEvent motionEvent) {
         }
 
         @Override

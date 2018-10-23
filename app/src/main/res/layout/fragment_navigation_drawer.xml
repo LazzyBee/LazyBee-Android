@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,18 +9,19 @@
         android:layout_height="120dp"
         android:id="@+id/imageView2"
         android:src="@drawable/ic_banner"
-        android:background="@color/white" />
+        android:background="@color/white"
+        android:contentDescription="@string/todo" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_600"></LinearLayout>
+        android:background="@color/grey_600"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mRecyclerViewDrawerList"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:background="@color/grey_900"
         android:layout_weight="1" />
 
@@ -49,7 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="1.4.4"
             android:id="@+id/mVesionApp"
             android:layout_below="@+id/textView16"
             android:layout_centerHorizontal="true" />

@@ -2,29 +2,31 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:layout_gravity="center">
 
     <ImageView
+        android:id="@+id/streak_ring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/streak_ring"
         android:layout_gravity="center"
+        android:contentDescription="@string/todo"
         android:src="@drawable/streak_ring1" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/hive"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
         android:layout_gravity="center"
-        android:src="@drawable/hive"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginBottom="15dp"
+        android:contentDescription="@string/todo"
+        android:src="@drawable/hive" />
 
     <TextView
+        android:id="@+id/lbCountStreak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10000 days"
-        android:id="@+id/lbCountStreak"
         android:layout_gravity="center"
-        android:textColor="@color/grey_600"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="30dp"
+        android:text="@string/days_1000"
+        android:textColor="@color/grey_600" />
 </FrameLayout>
