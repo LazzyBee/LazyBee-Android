@@ -2,8 +2,8 @@ package com.born2go.lazzybee.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +12,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.born2go.lazzybee.R;
+import com.born2go.lazzybee.view.dialog.DialogHelp;
 
 public class SliderAdapter extends PagerAdapter {
 
     final Context context;
+    private FragmentManager fragmentManager;
     LayoutInflater layoutInflater;
 
-    public SliderAdapter(Context context) {
+    public SliderAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
-        slider_desc=context.getResources().getStringArray(R.array.intro);
+        this.fragmentManager = fragmentManager;
+        slider_desc = context.getResources().getStringArray(R.array.intro);
+
     }
 
-    public final int[] slider_images ={
+    public final int[] slider_images = {
             R.drawable.ico_2000,
             R.drawable.ico_five_min,
             R.drawable.ico_time_for_review,
@@ -41,13 +45,13 @@ public class SliderAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
-        return  view == o;
+        return view == o;
     }
 
     @SuppressWarnings("ConstantConditions")
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position){
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         //noinspection AccessStaticViaInstance
         layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.activity_slide, container, false);
@@ -72,9 +76,8 @@ public class SliderAdapter extends PagerAdapter {
     }
 
     public void optionDialog() {
-
-        Log.e("click", "optionDialog: ");
-
+        DialogHelp dialogHelp = DialogHelp.newDialog();
+        dialogHelp.show(fragmentManager, DialogHelp.TAG);
     }
 
 }
