@@ -573,7 +573,7 @@
     </string>
     <string name="hello" translatable="false">XIN CHÀO CÁC BẠN</string>
     <string name="choose_vn" translatable="false">Chọn ngôn ngữ tiếng việt</string>
-    <string name="choose_en" translatable="true">Choose display language</string>
+    <string name="choose_en" translatable="false">Choose display language</string>
 
     <!--intro_activity-->
     <string name="intro_activity_next">Next</string>
