@@ -572,7 +572,7 @@
         ]]>
     </string>
     <string name="hello" translatable="false">XIN CHÀO CÁC BẠN</string>
-    <string name="choose_vn" translatable="false">Chọn ngôn ngữ tiếng việt</string>
+    <string name="choose_vn" translatable="false">Chọn ngôn ngữ hiển thị</string>
     <string name="choose_en" translatable="false">Choose display language</string>
 
     <!--intro_activity-->
@@ -587,10 +587,10 @@
         <item>@string/intro_activity_slide_6</item>
     </string-array>
     <string name="intro_activity_slide_1">LazzyBee helps you learn and remember 2000 new words per year</string>
-    <string name="intro_activity_slide_2">… If you spend 5 minutes each day</string>
-    <string name="intro_activity_slide_3">Words you learned will never be forgotten due to in-time-review</string>
+    <string name="intro_activity_slide_2">… if you JUST spend 5 minutes each day</string>
+    <string name="intro_activity_slide_3">Words you learned will NEVER be forgotten due to in-time-review</string>
     <string name="intro_activity_slide_4">As you learn, swipe left to access embedded dictionary</string>
-    <string name="intro_activity_slide_5">You read giudeline carefully to understand our special methoddology</string>
+    <string name="intro_activity_slide_5">You should read guideline carefully to understand our special methodology</string>
     <string name="intro_activity_slide_6">GOOD LUCK!!!</string>
     <string name="todo" translatable="false">TODO</string>
     <string name="days_1000" translatable="false">10000 days</string>
