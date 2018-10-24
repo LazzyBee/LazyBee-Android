@@ -38,7 +38,6 @@ import com.afollestad.materialdialogs.Theme;
 import com.born2go.lazzybee.R;
 import com.born2go.lazzybee.activity.CardDetailsActivity;
 import com.born2go.lazzybee.activity.StudyActivity;
-import com.born2go.lazzybee.adapter.DisableScrollingViewPager;
 import com.born2go.lazzybee.adapter.GetCardFormServerByQuestion;
 import com.born2go.lazzybee.algorithms.CardSched;
 import com.born2go.lazzybee.db.Card;
@@ -60,15 +59,17 @@ import static com.born2go.lazzybee.db.Card.QUEUE_NEW_CRAM0;
  * {@link OnStudyViewListener} interface
  * to handle interaction events.
  */
-@SuppressLint("ValidFragment")
 public class StudyView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "StudyView";
+    private static final String ARR_STUDY_ACTION = "studyAction";
+    private static final String ARR_LEARN_MORE = "learn_more";
+    private static final String ARR_CARD = "card";
     private final CardSched cardSched = new CardSched();
-    private final Context context;
-    private final String studyAction;
+    Context context;
+    private  String studyAction;
     private OnStudyViewListener mListener;
-    private final Card card;
+    private  Card card;
     private LearnApiImplements dataBaseHelper;
 
     TextToSpeech textToSpeech;
@@ -109,12 +110,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     FloatingActionButton mFloatActionButtonUserNote;
     FloatingActionButton mHelp;
 
-
-    private final Intent intent;
-    final StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter;
-
     DetailsView detailsView;
-    final DisableScrollingViewPager mViewPager;
 
     int widthStudyDisplay = -1, heightStudyDisplay = -1;
     String mySubject = "common";
@@ -130,22 +126,39 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         this.beforeCard = beforeCard;
     }
 
-    @SuppressLint("ValidFragment")
-    public StudyView(Context context, Intent intent, DisableScrollingViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
-        this.card = card;
-        this.context = context;
-        this.intent = intent;
-        this.mViewPager = mViewPager;
-        this.screenSlidePagerAdapter = screenSlidePagerAdapter;
-        this.studyAction = intent.getAction();
 
+
+    public StudyView() {
     }
 
-    public static StudyView newInstance(Context context, Intent intent, DisableScrollingViewPager mViewPager, StudyActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter, Card card) {
+    public static StudyView newInstance(String studyAction, boolean learn_more, Card card) {
         Bundle args = new Bundle();
-        StudyView fragment = new StudyView(context, intent, mViewPager, screenSlidePagerAdapter, card);
+        args.putString(ARR_STUDY_ACTION, studyAction);
+        args.putBoolean(ARR_LEARN_MORE, learn_more);
+        args.putParcelable(ARR_CARD, card);
+        StudyView fragment = new StudyView();
         fragment.setArguments(args);
         return fragment;
+    }
+
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        _initDatabase();
+        _initTextToSpeech();
+        _initSettingUser();
+
+        if (getArguments()==null)
+            return;
+
+        studyAction=getArguments().getString(ARR_STUDY_ACTION);
+        learn_more=getArguments().getBoolean(ARR_LEARN_MORE);
+        card=getArguments().getParcelable(ARR_CARD);
+
+
     }
 
 
@@ -250,9 +263,10 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        mListener = (OnStudyViewListener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mListener = (OnStudyViewListener) context;
+        this.context = context;
     }
 
 
@@ -308,6 +322,9 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
 
         void setCurrentCard(Card card);
 
+        void setEnableShowDictionary(boolean enableShowDictionary);
+
+        void gotoPage(int pageIndex);
     }
 
     private void _initDatabase() {
@@ -567,13 +584,16 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
     }
 
     private void _handlerImgGotoDictionary() {
-        imgGotoDictionary.setOnClickListener(v -> mViewPager.setCurrentItem(1));
+        imgGotoDictionary.setOnClickListener(v -> {
+            //mViewPager.setCurrentItem(1);
+            mListener.gotoPage(1);
+        });
 
     }
 
     private void setEnableShowDictionary(boolean enable) {
         //true to show Dicionary
-        mViewPager.setPagingEnabled(enable);
+        mListener.setEnableShowDictionary(enable);
     }
 
     private void setDisplaySize(int width, int height) {
@@ -607,9 +627,6 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
             } else {
                 mCount.setVisibility(View.VISIBLE);
                 int againCount = 0, dueCount, todayCount;//Define count again
-                //get lean_more form intern
-                learn_more = intent.getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
-
                 //get custom setting study
                 int limit_today = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TODAY_NEW_CARD_LIMIT);
                 int total_learn_per_day = dataBaseHelper._getCustomStudySetting(LazzyBeeShare.KEY_SETTING_TOTAL_CARD_LEARN_PRE_DAY_LIMIT);
@@ -1117,14 +1134,7 @@ public class StudyView extends Fragment implements GetCardFormServerByQuestion.G
         }, "example");
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        _initDatabase();
-        _initTextToSpeech();
-        _initSettingUser();
-    }
+
 
     private void _initSettingUser() {
         mySubject = LazzyBeeShare.getMySubject();
