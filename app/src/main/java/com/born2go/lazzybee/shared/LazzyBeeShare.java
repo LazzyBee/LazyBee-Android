@@ -900,20 +900,22 @@ public class LazzyBeeShare {
 //            return false;
 //        }
 //        return false;
-        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        // test for connection
-        if (cm != null)
-            if (cm.getActiveNetworkInfo() != null) {
-                if (cm.getActiveNetworkInfo() != null
-                        && cm.getActiveNetworkInfo().isAvailable()
-                        && cm.getActiveNetworkInfo().isConnected()) {
-                    return true;
-                } else {
-                    Log.v(TAG, "Internet Connection Not Present");
-                    return false;
-                }
-            } else return false;
-        else return false;
+        if (ctx != null) {
+            ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+            // test for connection
+            if (cm != null)
+                if (cm.getActiveNetworkInfo() != null) {
+                    if (cm.getActiveNetworkInfo() != null
+                            && cm.getActiveNetworkInfo().isAvailable()
+                            && cm.getActiveNetworkInfo().isConnected()) {
+                        return true;
+                    } else {
+                        Log.v(TAG, "Internet Connection Not Present");
+                        return false;
+                    }
+                } else return false;
+            else return false;
+        } else return false;
     }
 
     public static Spanned fromHtml(String html) {
