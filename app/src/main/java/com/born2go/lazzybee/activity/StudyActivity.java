@@ -424,7 +424,7 @@ public class StudyActivity extends AppCompatActivity
             if (position == 0) {
                 return StudyView.newInstance(getIntent().getAction(), learn_more, currentCard);
             } else {
-                return DetailsView.newInstance(context, "details");
+                return DetailsView.newInstance();
             }
         }
 
