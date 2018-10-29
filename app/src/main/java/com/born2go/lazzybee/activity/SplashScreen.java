@@ -1,5 +1,6 @@
 package com.born2go.lazzybee.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.born2go.lazzybee.R;
@@ -17,45 +19,59 @@ import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
 import com.born2go.lazzybee.shared.SharedPrefs;
 import com.google.android.gms.ads.MobileAds;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 
 import java.util.Locale;
 
 
-public class SplashScreen extends Activity {
+public class SplashScreen extends AppCompatActivity {
     private static final String TAG = "SplashScreen";
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 300;
     private static int GTM_TIME_OUT = 2000;
     DataBaseHelper myDbHelper;
-    DatabaseUpgrade databaseUpgrade;
     LearnApiImplements learnApiImplements;
     private SplashScreen thiz;
+    private static final String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         thiz = this;
+        RxPermissions rxPermissions = new RxPermissions(SplashScreen.this);
+        rxPermissions.requestEach(PERMISSIONS_STORAGE).subscribe(permission -> {
+            if (permission.granted) {
+                Log.d(TAG, "Start Fetch");
+                LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                // After config data is successfully fetched, it must be activated before newly fetched
+                                // values are returned.
+                                LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
+                                Log.d(TAG, "Fetch Successful");
+                            } else {
+                                Log.d(TAG, "Fetch Failed");
+                            }
+                            _initSQlIte();
+                            _updateVersionDB();
+                            _changeLanguage();
 
-        Log.d(TAG, "Start Fetch");
-        LazzyBeeSingleton.getFirebaseRemoteConfig().fetch(LazzyBeeShare.CACHE_EXPIRATION)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // After config data is successfully fetched, it must be activated before newly fetched
-                        // values are returned.
-                        LazzyBeeSingleton.getFirebaseRemoteConfig().activateFetched();
-                        Log.d(TAG, "Fetch Successful");
-                    } else {
-                        Log.d(TAG, "Fetch Failed");
-                    }
-                    _initSQlIte();
-                    _updateVersionDB();
-                    _changeLanguage();
+                            String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
+                            initAppWithAmodPubId(ADMOB_PUB_ID);
+                        });
+            } else if (permission.shouldShowRequestPermissionRationale) {
+                finish();
+                System.exit(0);
+            } else {
+                Log.d(TAG, "");
+            }
+        });
 
-                    String ADMOB_PUB_ID = LazzyBeeSingleton.getFirebaseRemoteConfig().getString(LazzyBeeShare.ADMOB_PUB_ID);
-                    initAppWithAmodPubId(ADMOB_PUB_ID);
-                });
     }
 
     private void initAppWithAmodPubId(String ADMOB_PUB_ID) {
@@ -103,8 +119,7 @@ public class SplashScreen extends Activity {
 
     private void _initSQlIte() {
         Log.i(TAG, "Init SQlIte");
-        myDbHelper = LazzyBeeSingleton.dataBaseHelper;
-        databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
+        myDbHelper = LazzyBeeSingleton.getDataBaseHelper();
         try {
             myDbHelper._createDataBase();
         } catch (Exception ioe) {
@@ -166,7 +181,12 @@ public class SplashScreen extends Activity {
             sharedpreferences.edit().putBoolean(LazzyBeeShare.KEY_CUSTOM_LIST, true).apply();
         }
 
-        learnApiImplements._get100Card();
+        try {
+            learnApiImplements._get100Card();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void _changeLanguage() {
