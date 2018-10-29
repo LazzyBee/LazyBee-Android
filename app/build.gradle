@@ -82,6 +82,9 @@ dependencies {
 
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
 
+    //    rxpermissions
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
 
 }
 apply plugin: 'com.google.gms.google-services'
