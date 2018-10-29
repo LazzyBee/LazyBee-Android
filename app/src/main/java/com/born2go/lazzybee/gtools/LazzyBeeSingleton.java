@@ -45,7 +45,7 @@ public class LazzyBeeSingleton {
     @SuppressWarnings({"AccessStaticViaInstance", "WeakerAccess"})
     public LazzyBeeSingleton(Context context) {
         this.context = context;
-        dataBaseHelper = new DataBaseHelper(context);
+        dataBaseHelper=new DataBaseHelper(context);
         databaseUpgrade = new DatabaseUpgrade(context);
         learnApiImplements = new LearnApiImplements(context);
         textToSpeech = new TextToSpeech(context, status -> {
@@ -103,8 +103,10 @@ public class LazzyBeeSingleton {
     }
 
     public static LearnApiImplements getLearnApiImplements() {
-        if (learnApiImplements == null)
-            learnApiImplements = new LearnApiImplements(context);
         return learnApiImplements;
+    }
+
+    public static DataBaseHelper getDataBaseHelper() {
+        return dataBaseHelper;
     }
 }
