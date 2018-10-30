@@ -63,16 +63,14 @@ public class RecyclerViewSettingListAdapter extends
     private final RecyclerView mRecyclerViewSettings;
     private final RecyclerViewSettingListAdapter thiz;
 
-    @SuppressLint("HardwareIds")
-    public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, RecyclerView mRecyclerViewSettings) {
+    public RecyclerViewSettingListAdapter(SettingActivity activity, Context context, List<String> settings, String android_id, RecyclerView mRecyclerViewSettings) {
         this.activity = activity;
         this.context = context;
         this.settings = settings;
         this.learnApiImplements = LazzyBeeSingleton.learnApiImplements;
         this.databaseUpgrade = LazzyBeeSingleton.databaseUpgrade;
         this.mRecyclerViewSettings = mRecyclerViewSettings;
-        device_id = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        this.device_id = android_id;
         this.thiz = this;
 
     }

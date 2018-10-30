@@ -96,8 +96,8 @@ public class DownloadAndRestoreDatabaseFormCSV extends AsyncTask<Void, Void, Int
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
-//            connection.setInstanceFollowRedirects(true);  //you still need to handle redirect manully.
-//            HttpURLConnection.setFollowRedirects(true);
+            connection.setInstanceFollowRedirects(true);  //you still need to handle redirect manully.
+            HttpURLConnection.setFollowRedirects(true);
 
             // expect HTTP 200 OK, so we don't mistakenly save error report
             // instead of the file

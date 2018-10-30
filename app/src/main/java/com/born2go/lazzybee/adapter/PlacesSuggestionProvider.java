@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.born2go.lazzybee.db.Card;
-import com.born2go.lazzybee.db.DataBaseHelper;
 import com.born2go.lazzybee.db.impl.LearnApiImplements;
 import com.born2go.lazzybee.gtools.LazzyBeeSingleton;
 import com.born2go.lazzybee.shared.LazzyBeeShare;
@@ -27,7 +26,6 @@ public class PlacesSuggestionProvider extends ContentProvider {
 
     // UriMatcher constant for search suggestions
     private static final int SUGGEST_CARD = 1;
-    DataBaseHelper dataBaseHelper;
 
     private static final UriMatcher uriMatcher;
 
@@ -69,7 +67,6 @@ public class PlacesSuggestionProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        dataBaseHelper = new DataBaseHelper(getContext());
         return true;
     }
 

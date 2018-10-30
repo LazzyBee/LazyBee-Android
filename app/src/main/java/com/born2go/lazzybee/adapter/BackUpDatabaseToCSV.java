@@ -40,7 +40,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "BackUpDatabaseToCSV";
     private final String backup_key;
-    Activity activity;
+    final Activity activity;
     private final String device_id;
     private final ProgressDialog dialog;
     final ZipManager zipManager;
@@ -55,6 +55,7 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
 
     public BackUpDatabaseToCSV(Activity activity, Context context, String device_id, int type) {
         this.device_id = device_id;
+        this.activity=activity;
         backup_key = device_id.substring(device_id.length() - 6, device_id.length());
         dialog = new ProgressDialog(context);
         zipManager = new ZipManager();
@@ -271,12 +272,21 @@ public class BackUpDatabaseToCSV extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void _showDialogFailsBackupDatabase() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity, R.style.DialogLearnMore);
-        builder.setTitle(R.string.try_again);
-        builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
-        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
-        android.support.v7.app.AlertDialog dialog = builder.create();
-        dialog.show();
+        try {
+            if (activity == null) {
+                Log.e(TAG, "activti null");
+                return;
+            }
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity, R.style.DialogLearnMore);
+            builder.setTitle(R.string.try_again);
+            builder.setMessage(R.string.failed_to_connect_to_server_can_not_back_up_database);
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+            android.support.v7.app.AlertDialog dialog = builder.create();
+            dialog.show();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            //e.printStackTrace();
+        }
     }
 
     private boolean postFile(String fileName) {

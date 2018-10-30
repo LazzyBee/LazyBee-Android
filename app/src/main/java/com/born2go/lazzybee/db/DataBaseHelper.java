@@ -61,9 +61,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, 1);
         this.myContext = context;
         if (android.os.Build.VERSION.SDK_INT >= 17) {
-            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+            DB_PATH = context.getApplicationInfo().dataDir + "/databases/" + DB_NAME;//context.getDatabasePath(DB_NAME).getAbsolutePath();
         } else {
-            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/" + DB_NAME;
         }
     }
 
@@ -72,9 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * Creates a empty database on the system and rewrites it with your own database.
      */
     public void _createDataBase() {
-        String myPath = DB_PATH + DB_NAME;
-        boolean dbExist = checkDataBase(myPath);
-
+        boolean dbExist = checkDataBase();
         if (dbExist) {
             //do nothing - database already exist
             Log.i(TAG, "database already exist");
@@ -84,11 +82,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             //of your application so we are gonna be able to overwrite that database with our database.
             this.getReadableDatabase();
 //            Log.e(TAG, "copyDataBase");
-
             try {
-
                 copyDataBase(0);
-
             } catch (IOException e) {
                 Log.e(TAG, "Error copying database:" + e.getMessage());
                 throw new Error("Error copying database");
@@ -98,30 +93,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    /**
-     * Check if the database already exist to avoid re-copying the file each time you open the application.
-     *
-     * @return true if it exists, false if it doesn't
-     */
-    public boolean checkDataBase(String myPath) {
-
-//        SQLiteDatabase checkDB = null;
-//
-//        try {
-//            // String myPath = DB_PATH + DB_NAME;
-//            checkDB = openDataBase(myPath);
-//        } catch (SQLiteException e) {
-//            //database does't exist yet.
-//            Log.e(TAG, "database does't exist yet:" + e.getMessage());
-//        }
-//        if (checkDB != null) {
-//            checkDB.close();
-//        }
-//
-//        File dbFile = new File(DB_PATH + DB_NAME);
-//        return checkDB != null ? true : false;
-        File dbFile = new File(DB_PATH + DB_NAME);
-        //Log.v("dbFile", dbFile + "   "+ dbFile.exists());
+    public boolean checkDataBase() {
+        File dbFile = new File(DB_PATH);
         return dbFile.exists();
     }
 
@@ -152,7 +125,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
 //        // Path to the just created empty db
-        String outFileName = DB_PATH + DB_NAME;
+        String outFileName = DB_PATH;
 
         //Open the empty db as the output stream
         OutputStream myOutput = new FileOutputStream(outFileName);
@@ -168,35 +141,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         myOutput.flush();
         myOutput.close();
         myInput.close();
-
-
-        //get Source file
-//        File sdCard = Environment.getExternalStorageDirectory();
-//        File dir_download = new File(sdCard.getAbsolutePath() + "/" + DOWNLOAD);
-//        Log.e(TAG, "dir_download path:" + dir_download.getAbsolutePath());
-//        dir_download.mkdirs();
-//        File source = new File(dir_download, DB_NAME);
-//
-//        //get destination file
-//        File root = Environment.getRootDirectory();
-//        File dir_data = new File(root.getAbsolutePath() + "/" + DATA + "/" + DATA + "/" + PACKAGE + "/" + DATABASE);
-//        Log.e(TAG, "Data path:" + dir_data.getAbsolutePath());
-//        dir_data.mkdirs();
-//        File destination = new File(dir_data, DB_NAME);
-//
-//        //Move file
-//
-//        if (moveFile(source, destination)) {
-//            //Thanh cong
-//
-//            Log.e(TAG, "Move thanh cong");
-//        } else {
-//            //That bai
-//
-//            Log.e(TAG, "Move that bai");
-//        }
-
-
     }
 
 
@@ -232,7 +176,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public SQLiteDatabase openDataBase(String myPath) throws SQLException {
         //Open the database
-        return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
     @Override
@@ -255,105 +199,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-    // to you to create adapters for your views.
-//    public List<Card> _getListCard() {
-//        List<Card> datas = new ArrayList<Card>();
-//        //select query
-//        String selectQuery = "SELECT  * FROM " + TABLE_VOCABULARY;
-//        //select limit 5 row
-//        String selectLimitQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " LIMIT 5 ";
-//
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        //query for cursor
-//        Cursor cursor = db.rawQuery(selectLimitQuery, null);
-//        if (cursor.moveToFirst()) {
-//            if (cursor.getCount() > 0)
-//                do {
-//                    //get data from sqlite
-//                    int id = cursor.getInt(0);
-//                    String question = cursor.getString(1);
-//                    String answers = cursor.getString(2);
-//                    String categories = cursor.getString(3);
-//                    String subcat = cursor.getString(4);
-//                    Card card = new Card(id, question, answers, categories, subcat, 1);
-//                    datas.add(card);
-//                } while (cursor.moveToNext());
-//        }
-//        return datas;
-//    }
-//
-//
-//
-//    /**
-//     * Get Review List Today
-//     * <p>List vocabulary complete in today</p>
-//     */
-//    public List<Card> getReviewListVocabulary() {
-//        return _getListCard();
-//    }
-//
-//    /**
-//     * Seach vocabulary
-//     */
-//    public List<Card> _searchCard(String query) {
-//        List<Card> datas = new ArrayList<Card>();
-//
-//        //select like query
-//        String likeQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_QUESTION + " like '%" + query + "%'";
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        //query for cursor
-//        Cursor cursor = db.rawQuery(likeQuery, null);
-//        if (cursor.moveToFirst()) {
-//            if (cursor.getCount() > 0)
-//                do {
-//                    //get data from sqlite
-//                    int id = cursor.getInt(0);
-//                    String question = cursor.getString(1);
-//                    String answers = cursor.getString(2);
-//                    String categories = cursor.getString(3);
-//                    String subcat = cursor.getString(4);
-//                    Card card = new Card(id, question, answers, categories, subcat, 1);
-//                    datas.add(card);
-//                } while (cursor.moveToNext());
-//        }
-//        return datas;
-//    }
-//
-//    /**
-//     * Get card by ID form sqlite
-//     *
-//     * @param cardId
-//     */
-//    public Card _getCardByID(String cardId) {
-//        Card card = new Card();
-//
-//        String selectbyIDQuery = "SELECT  * FROM " + TABLE_VOCABULARY + " WHERE " + KEY_ID + " = " + cardId;
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        //query for cursor
-//        Cursor cursor = db.rawQuery(selectbyIDQuery, null);
-//        if (cursor.moveToFirst()) {
-//            if (cursor.getCount() > 0)
-//                do {
-//                    //get data from sqlite
-//                    int id = cursor.getInt(0);
-//                    String question = cursor.getString(1);
-//                    String answers = cursor.getString(2);
-//                    String categories = cursor.getString(3);
-//                    String subcat = cursor.getString(4);
-//                    // Card card = new Card(id, question, answers, categories, subcat, 1);
-//                    card.setId(id);
-//                    card.setQuestion(question);
-//                    card.setAnswers(answers);
-//                    card.setCategories(categories);
-//                    card.setSubcat(subcat);
-//                } while (cursor.moveToNext());
-//        }
-//        return card;
-//    }
     @SuppressLint("SdCardPath")
     void _upgrageDatabase() {
         SQLiteDatabase checkInDowload = null;
@@ -390,5 +235,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.disableWriteAheadLogging();
     }
 }

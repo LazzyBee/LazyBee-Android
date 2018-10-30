@@ -69,8 +69,8 @@ public class StudyActivity extends AppCompatActivity
     int completeStudy = 0;
 
     LinearLayout container;
-    DisableScrollingViewPager mViewPager;
-    ScreenSlidePagerAdapter pagerAdapter;
+    public DisableScrollingViewPager mViewPager;
+    public ScreenSlidePagerAdapter pagerAdapter;
 
     private String detailViewTag;
 
@@ -97,7 +97,7 @@ public class StudyActivity extends AppCompatActivity
         try {
             //get lean_more form intern
             learn_more = getIntent().getBooleanExtra(LazzyBeeShare.LEARN_MORE, false);
-            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), mViewPager);
+            pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), learn_more, mViewPager);
             mViewPager.setAdapter(pagerAdapter);
         } catch (Exception e) {
             LazzyBeeShare.showErrorOccurred(context, "_definePagerStudy()", e);
@@ -168,8 +168,8 @@ public class StudyActivity extends AppCompatActivity
     private void _showDialogComplete() {
         if (!learn_more) {
             //Show dialog complete learn
-            final DialogCompleteStudy dialogCompleteStudy =DialogCompleteStudy.newInstance();
-            dialogCompleteStudy.show(getFragmentManager().beginTransaction(), LazzyBeeShare.EMPTY);
+            final DialogCompleteStudy dialogCompleteStudy = DialogCompleteStudy.newInstance();
+            dialogCompleteStudy.show(getFragmentManager(), LazzyBeeShare.EMPTY);
 
             int count = LazzyBeeSingleton.learnApiImplements._getCountStreak();
             Bundle bundle = new Bundle();
@@ -411,21 +411,21 @@ public class StudyActivity extends AppCompatActivity
     public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         private final DisableScrollingViewPager mViewPager;
         private final int pageCount = 2;
+        private final Boolean learn_more;
 
-        public ScreenSlidePagerAdapter(FragmentManager fm, DisableScrollingViewPager mViewPager) {
+        public ScreenSlidePagerAdapter(FragmentManager fm, boolean learn_more, DisableScrollingViewPager mViewPager) {
             super(fm);
             this.mViewPager = mViewPager;
+            this.learn_more = learn_more;
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return StudyView.newInstance(context, getIntent(), mViewPager, ScreenSlidePagerAdapter.this, currentCard);
+                return StudyView.newInstance(getIntent().getAction(), learn_more, currentCard);
             } else {
-                return DetailsView.newInstance(context, "details");
-
+                return DetailsView.newInstance();
             }
-
         }
 
         @Override
@@ -494,4 +494,13 @@ public class StudyActivity extends AppCompatActivity
         currentCard = card;
     }
 
+    @Override
+    public void setEnableShowDictionary(boolean enableShowDictionary) {
+        mViewPager.setPagingEnabled(enableShowDictionary);
+    }
+
+    @Override
+    public void gotoPage(int pageIndex) {
+        mViewPager.setCurrentItem(pageIndex);
+    }
 }

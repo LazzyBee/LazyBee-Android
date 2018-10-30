@@ -40,11 +40,11 @@ import java.util.List;
  * {@link OnDetailsViewListener} interface
  * to handle interaction events.
  */
-@SuppressLint("ValidFragment")
 public class DetailsView extends Fragment implements GetCardFormServerByQuestion.GetCardFormServerByQuestionResponse {
 
     private static final String TAG = "DetailsView";
-    final String tag;
+    private static final String ARR_TAG = "tag";
+
     private Card card;
 
     View mViewAdv;
@@ -56,20 +56,15 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
     MenuItem itemIgnore;
     MenuItem itemLearn;
 
-    private final Context context;
+    private Context context;
     private View viewAdv;
 
-    public DetailsView(Context context, String tag) {
-        // Required empty public constructor
-        this.tag = tag;
-        this.context = context;
+    public DetailsView() {
+
     }
 
-    public static DetailsView newInstance(Context context, String tag) {
-        Bundle args = new Bundle();
-        DetailsView fragment = new DetailsView(context, tag);
-        fragment.setArguments(args);
-        return fragment;
+    public static DetailsView newInstance() {
+        return new DetailsView();
     }
 
     @Override
@@ -358,6 +353,11 @@ public class DetailsView extends Fragment implements GetCardFormServerByQuestion
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

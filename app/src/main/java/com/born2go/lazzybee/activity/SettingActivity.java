@@ -51,11 +51,12 @@ public class SettingActivity extends AppCompatActivity {
         _trackerApplication();
     }
 
+    @SuppressLint("HardwareIds")
     private void initSettingView() {
         mRecyclerViewSettings = findViewById(R.id.mRecyclerViewSettings);
         final List<String> settings;
         final List<String> devices = Arrays.asList(context.getResources().getStringArray(R.array.devices_dev_id));
-        @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(context.getContentResolver(),
+        String android_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         Log.d(TAG, "Android id:" + android_id);
         if (devices.contains(android_id)) {
@@ -66,7 +67,7 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
-        mSettingListAdapter = new RecyclerViewSettingListAdapter(this, context, settings, mRecyclerViewSettings);
+        mSettingListAdapter = new RecyclerViewSettingListAdapter(SettingActivity.this, context, settings, android_id, mRecyclerViewSettings);
 
         mRecyclerViewSettings.setLayoutManager(gridLayoutManager);
         mRecyclerViewSettings.setAdapter(mSettingListAdapter);
@@ -129,8 +130,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 159) {
             if (resultCode == RESULT_OK) {
-                if (data.getData() != null)
-                {
+                if (data.getData() != null) {
                     String fileSelectPath = data.getData().getPath();
                     if (fileSelectPath != null) {
                         DownloadAndRestoreDatabaseFormCSV importDatabaseFormCSV = new DownloadAndRestoreDatabaseFormCSV(context, true, fileSelectPath, fileSelectPath);

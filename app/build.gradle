@@ -9,7 +9,7 @@ android {
         applicationId "com.born2go.lazzybee"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 67
+        versionCode 70
         versionName "1.7.8"
         multiDexEnabled true
     }
@@ -81,6 +81,9 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+
+    //    rxpermissions
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
 
 }
