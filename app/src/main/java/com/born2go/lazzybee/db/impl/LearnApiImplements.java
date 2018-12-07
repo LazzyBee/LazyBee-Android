@@ -1139,8 +1139,15 @@ public class LearnApiImplements implements LearnApi {
             }
             incomingList.addAll(customListId);
             int sizeDefault = 100 - customSize;
-            for (int i = 0; i < sizeDefault; i++) {
-                incomingList.add(clone_DefaultList.get(i));
+            //Hoavq add check to clear crash:
+            // https://console.firebase.google.com/u/0/project/lazeebee-977/crashlytics/app/android:com.born2go.lazzybee/issues/5c09328bf8b88c2963c7c2f1?time=last-seven-days&sessionId=5C0932A6037D00014F7B39CC388242C2_DNE_0_v2
+            if (clone_DefaultList.size() > 0 && sizeDefault > 0)
+            {
+                if (sizeDefault > clone_DefaultList.size())
+                    sizeDefault = clone_DefaultList.size();
+                for (int i = 0; i < sizeDefault; i++) {
+                    incomingList.add(clone_DefaultList.get(i));
+                }
             }
         } else {
             incomingList.addAll(clone_DefaultList);

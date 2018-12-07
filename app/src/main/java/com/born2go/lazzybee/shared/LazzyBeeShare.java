@@ -388,10 +388,10 @@ public class LazzyBeeShare {
 //            // e.printStackTrace();
 //        }
 
-        if (!explain.isEmpty()) {
+        if (explain != null && !explain.isEmpty()) {
             explainTagA = "<p style=''><a onclick='explain.speechExplain();'><img src='ic_speaker_red.png'/></a></p>";
         }
-        if (!example.isEmpty()) {
+        if (example !=null && !example.isEmpty()) {
             exampleTagA = "<p style=''><a onclick='example.speechExample();'><img src='ic_speaker_red.png'/></a></p>";
         }
         String meaningUP = EMPTY;
